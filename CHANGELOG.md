@@ -4,7 +4,10 @@
 
 ## 🚧 Unreleased
 
-_🗓️ Updated October 8, 2026_
+_🗓️ Updated October 11, 2026_
+
+### U1 — local usability (launcher only)
+- Added `plex.cmd` and `plex.ps1` to launch one inference request against an explicitly selected trained checkpoint and matching tokenizer, reusing the existing `complete` command. Includes Windows setup/troubleshooting instructions. No training, model, tokenizer, schema or evaluation changes; interactive terminal and feedback functionality remain out of scope.
 
 ### 🧬 Phase 3 — file-conditioned coding
 - Corrected the P3-01 Save Changes target, pinned its 4,264-byte candidate identity in code and contract, protected LF checkout bytes, and preserved the superseded review. Added explicit replacement scoring, authorization/provenance checks, repository-rooted CLI paths, and 14 passing focused regressions. The corrected frozen-tokenizer review remains 46–77 tokens including EOS; no training occurred.

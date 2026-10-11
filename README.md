@@ -205,6 +205,20 @@ Additional scoped guardrails live in:
 - [training/AGENTS.md](training/AGENTS.md)
 - [docs/AGENTS.md](docs/AGENTS.md)
 
+## Start Plex locally — U1.1 Windows launcher
+
+A **single-prompt launcher** now wraps Plex's existing trained-checkpoint generation command. It does not retrain the model, modify files, or start a chat session.
+
+First run `uv sync --project training` in PowerShell if the environment is not installed. Then **double-click [plex.cmd](plex.cmd)** in the repository folder. The launcher prompts for your local trained checkpoint, matching tokenizer folder, and one coding request.
+
+You can also start it in PowerShell using existing local paths:
+
+~~~powershell
+.\plex.ps1 -Checkpoint "PATH\TO\TRAINED_CHECKPOINT.pt" -BundleDir "PATH\TO\MATCHING_TOKENIZER_BUNDLE" -Prompt "Write a JavaScript function that adds two numbers."
+~~~
+
+Plex's weights and tokenizer artifacts are stored locally and are **not included in this GitHub repository**. The current command displays the model's raw JSON completion. See [U1.1 launcher instructions](docs/USABILITY-U1-LAUNCH.md) for setup, limitations, and troubleshooting. Steps U1.2–U1.5 are not implemented by this launcher.
+
 ## Training workspace
 
 The Python training workspace lives under:
