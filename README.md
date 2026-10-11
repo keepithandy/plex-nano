@@ -205,19 +205,35 @@ Additional scoped guardrails live in:
 - [training/AGENTS.md](training/AGENTS.md)
 - [docs/AGENTS.md](docs/AGENTS.md)
 
-## Start Plex locally — U1.1 Windows launcher
+## Start and interact with Plex locally — U1.1 + U1.2
 
-A **single-prompt launcher** now wraps Plex's existing trained-checkpoint generation command. It does not retrain the model, modify files, or start a chat session.
+Plex now has a simple **interactive Windows terminal** for practicing with an
+existing trained checkpoint. You can enter several coding requests in one
+session; the model and tokenizer are loaded only once. Outputs are real,
+unfiltered model continuations, **not evidence of reliable coding ability**.
 
-First run `uv sync --project training` in PowerShell if the environment is not installed. Then **double-click [plex.cmd](plex.cmd)** in the repository folder. The launcher prompts for your local trained checkpoint, matching tokenizer folder, and one coding request.
-
-You can also start it in PowerShell using existing local paths:
+Run uv sync --project training once if your Python environment is not
+installed. Then **double-click [plex.cmd](plex.cmd)** and provide the paths
+to your locally saved trained .pt checkpoint and matching tokenizer folder.
+Or open PowerShell at the repository root:
 
 ~~~powershell
-.\plex.ps1 -Checkpoint "PATH\TO\TRAINED_CHECKPOINT.pt" -BundleDir "PATH\TO\MATCHING_TOKENIZER_BUNDLE" -Prompt "Write a JavaScript function that adds two numbers."
+.\plex.ps1 -Checkpoint ".\training\artifacts\request-grounded\p2-48-first-run\checkpoints\step-0100.pt" -BundleDir ".\training\artifacts\request-grounded\p2-48-training-bundle"
 ~~~
 
-Plex's weights and tokenizer artifacts are stored locally and are **not included in this GitHub repository**. The current command displays the model's raw JSON completion. See [U1.1 launcher instructions](docs/USABILITY-U1-LAUNCH.md) for setup, limitations, and troubleshooting. Steps U1.2–U1.5 are not implemented by this launcher.
+These are example paths for the existing P2-48 run; replace them if
+your artifact directory differs. After loading, type a coding request at
+the "You >" prompt. Commands include /help, /file PATH (read-only file context),
+/clear, /new and /exit.
+
+Each request is independent: there is **no multi-turn memory** yet. Plex does
+not overwrite files or store prompt logs. You can still request the old
+single-prompt JSON result using -Prompt or -Once with plex.ps1.
+
+Detailed setup and troubleshooting: [Windows launcher](docs/USABILITY-U1-LAUNCH.md)
+and [interactive terminal](docs/USABILITY-U1-INTERACTIVE.md).
+Training, evaluation sets, checkpoint weights, and tokenizer remain unchanged.
+Usability steps U1.3–U1.5 are separate future work.
 
 ## Training workspace
 

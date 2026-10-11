@@ -1,10 +1,11 @@
-# Plex Nano - Step U1.1: launch a single local inference request on Windows.
+# Plex Nano - U1.2: interactive terminal by default; -Prompt / -Once for single request.
 # No training, checkpoint changes, or automatic model selection.
 [CmdletBinding()]
 param(
     [string] $Checkpoint = "",
     [string] $BundleDir = "",
     [string] $Prompt = "",
+    [switch] $Once,
     [ValidateSet("auto", "cpu", "cuda")] [string] $Device = "auto",
     [ValidateRange(1, 256)] [int] $MaxNewTokens = 64,
     [ValidateRange(0, 10)] [double] $Temperature = 0
@@ -54,26 +55,41 @@ try {
         throw "The tokenizer bundle must be a folder."
     }
 
-    if (-not $Prompt.Trim()) {
+    # Default: interactive terminal. Preserve U1.1 single-shot with -Prompt or -Once.
+    $singlePrompt = $Once.IsPresent -or -not [string]::IsNullOrWhiteSpace($Prompt)
+    if ($singlePrompt -and -not $Prompt.Trim()) {
         $Prompt = Read-Host "Enter one short coding request"
     }
-    if (-not $Prompt.Trim()) {
+    if ($singlePrompt -and -not $Prompt.Trim()) {
         throw "No coding request entered."
     }
 
+    $entryPoint = if ($singlePrompt) { "plex_training.cli" } else { "plex_training.interactive" }
     $arguments = @(
         "run", "--project", "training", "--no-sync", "python", "-m",
-        "plex_training.cli", "complete",
+        $entryPoint
+    )
+    if ($singlePrompt) {
+        $arguments += "complete"
+    }
+    $arguments += @(
         "--checkpoint", $checkpointItem.FullName,
         "--bundle-dir", $bundleItem.FullName,
-        "--prompt", $Prompt,
         "--device", $Device,
         "--max-new-tokens", "$MaxNewTokens",
         "--temperature", $Temperature.ToString([System.Globalization.CultureInfo]::InvariantCulture)
     )
+    if ($singlePrompt) {
+        $arguments += @("--prompt", $Prompt)
+    }
 
     Write-Host ""
-    Write-Host "Plex Nano - local generation only (no training)" -ForegroundColor Cyan
+    if ($singlePrompt) {
+        Write-Host "Plex Nano - one completion (no training)" -ForegroundColor Cyan
+    }
+    else {
+        Write-Host "Plex Nano - interactive mode (no training)" -ForegroundColor Cyan
+    }
     Write-Host "Checkpoint: $($checkpointItem.FullName)"
     Write-Host "Tokenizer:  $($bundleItem.FullName)"
     Write-Host ""

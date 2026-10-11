@@ -26,6 +26,10 @@ this is an identity reference, not a download link or auto-selection rule.
 
 Double-click **plex.cmd** in the repository folder.
 
+**U1.2 update:** the launcher now starts an interactive session by default.
+See [U1.2 terminal guide](USABILITY-U1-INTERACTIVE.md). For one request,
+use `.\plex.ps1 -Once` or supply the `-Prompt` argument.
+
 The launcher asks you for:
 1. The path to your **trained** `.pt` checkpoint.
 2. The matching tokenizer **folder** (unless a folder named `tokenizer`
@@ -57,7 +61,7 @@ chooses CUDA when accessible or otherwise CPU.
 - **CUDA error**: retry with `-Device cpu`.
 - **Prompt context error**: shorten the request.
 
-**Limitations:** this is one request per launch, not an interactive chat.
-It leaves generation quality and training behavior unchanged. The launcher
-was implemented without access to your Windows system and still needs a
-real-machine smoke test. Steps U1.2-U1.5 remain separate future work.
+**U1.2 update:** interactive terminal support is now implemented. This
+single-request mode remains available with -Prompt or -Once. Model quality,
+training and checkpoint weights are unchanged. A real Windows smoke test
+is still required for U1.2.
