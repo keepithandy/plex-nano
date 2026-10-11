@@ -1,67 +1,92 @@
-# U1.1 - Launch Plex on Windows
+# Plex Nano — Windows launcher (U1.1 + U1.2)
 
-This is **step 1 only**: a simpler way to run an existing Plex Nano
-checkpoint. It wraps the existing `plex_training.cli complete` command.
-It does not implement a chat session, add capabilities, modify a model, or
-launch training.
+The original U1.1 launcher offered one saved-model completion. U1.2 now
+opens a terminal where you can send multiple independent coding requests
+without reloading the weights. This is **inference only**; no training or
+file modification occurs.
 
 ## First-time setup
 
-Open PowerShell in your local Plex Nano repository and install the locked
-training environment (if you have not already):
+In PowerShell at the repository root, install the environment once:
 
 ~~~powershell
 uv sync --project training
 ~~~
 
-Plex's training checkpoints and matching tokenizer bundles live in
-gitignored local artifact folders. The repo **does not** ship trained weights.
-If you do not have a checkpoint, this launcher cannot generate output yet.
-Use the trained checkpoint associated with your experiments, not a step-zero
-initialization or staging checkpoint. The P2-48 final checkpoint recorded
-SHA-256 `fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7`;
-this is an identity reference, not a download link or auto-selection rule.
+The trained checkpoints and tokenizer bundles are stored under the
+gitignored `training/artifacts` directory on your own computer. GitHub does
+not include or download the trained weights.
 
-## Easy launch
+## Start Plex without copying any paths
 
-Double-click **plex.cmd** in the repository folder.
-
-**U1.2 update:** the launcher now starts an interactive session by default.
-See [U1.2 terminal guide](USABILITY-U1-INTERACTIVE.md). For one request,
-use `.\plex.ps1 -Once` or supply the `-Prompt` argument.
-
-The launcher asks you for:
-1. The path to your **trained** `.pt` checkpoint.
-2. The matching tokenizer **folder** (unless a folder named `tokenizer`
-   exists directly beside the checkpoint).
-3. One short HTML, CSS, or JavaScript coding request.
-
-It uses the existing trained model to produce **one real completion** and
-prints the existing command's JSON result, including the `completion` field.
-It does not save or edit any source files.
-
-To skip the prompts, launch from PowerShell (replace placeholders with real
-local paths):
+Double-click **plex.cmd**, or run this from the repository terminal:
 
 ~~~powershell
-.\plex.ps1 -Checkpoint "PATH\TO\TRAINED_CHECKPOINT.pt" -BundleDir "PATH\TO\MATCHING_TOKENIZER_BUNDLE" -Prompt "Write a JavaScript function that adds two numbers."
+.\plex.cmd
 ~~~
 
-Add `-Device cpu` if CUDA is unavailable. The default `-Device auto`
-chooses CUDA when accessible or otherwise CPU.
+The launcher automatically selects **the previously verified P2-48 step-100
+checkpoint** and its matching tokenizer, relative to the repository:
+
+- `training/artifacts/request-grounded/p2-48-first-run/checkpoints/step-0100.pt`
+- `training/artifacts/request-grounded/p2-48-training-bundle`
+
+The default checkpoint's SHA-256 must match the recorded
+`fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7`.
+This prevents silently loading an unexpected model at that path.
+A missing or different checkpoint produces a clear error; the launcher
+does not search for, create, or download a substitute model.
+
+When the files are present and verified, the terminal will reach
+`You >` without asking for either path.
+
+## Optional: run a different model or one request
+
+The PowerShell entry point supports explicit overrides:
+
+~~~powershell
+.\plex.cmd
+~~~
+
+For another checkpoint and its matching tokenizer, use the PowerShell
+script with the paths (if PowerShell's execution policy permits it):
+
+~~~powershell
+.\plex.ps1 -Checkpoint "PATH\TO\OTHER_TRAINED.pt" -BundleDir "PATH\TO\MATCHING_TOKENIZER"
+~~~
+
+If PowerShell blocks .ps1 files, use a process-scoped invocation:
+
+~~~powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\plex.ps1" -Checkpoint "PATH\TO\OTHER_TRAINED.pt" -BundleDir "PATH\TO\MATCHING_TOKENIZER"
+~~~
+
+To keep the older one-shot JSON completion behavior:
+
+~~~powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\plex.ps1" -Once
+~~~
+
+You can also supply `-Prompt "your request"` for a single completion,
+or `-Device cpu` if CUDA is not available.
+
+See [U1.2 interactive guide](USABILITY-U1-INTERACTIVE.md) for commands
+such as `/help`, `/file`, `/clear`, `/new` and `/exit`.
 
 ## Troubleshooting
 
-- **uv missing**: install uv and run `uv sync --project training`.
-- **Environment missing**: run `uv sync --project training`.
-- **Checkpoint not found**: verify its exact local path; the launcher never
-  invents or downloads a model.
-- **Tokenizer mismatch**: select the exact bundle that matches the checkpoint.
-- **Step zero / not trained**: supply trained weights, not initialization.
-- **CUDA error**: retry with `-Device cpu`.
-- **Prompt context error**: shorten the request.
+- uv unavailable: install uv, then run `uv sync --project training`.
+- Environment missing: run `uv sync --project training`.
+- Default checkpoint missing: verify the file exists in
+  `training/artifacts/request-grounded/p2-48-first-run/checkpoints`.
+- Default checkpoint SHA mismatch: stop and inspect it; do not pretend
+  the weights are the recorded P2-48 trained model.
+- Tokenizer bundle missing or incompatible: supply the exact matching
+  P2-48 bundle.
+- CUDA unavailable: use `-Device cpu`.
+- Poor code output: this is a limitation of the trained model, not the
+  launcher. The UI does not correct or modify generated text.
 
-**U1.2 update:** interactive terminal support is now implemented. This
-single-request mode remains available with -Prompt or -Once. Model quality,
-training and checkpoint weights are unchanged. A real Windows smoke test
-is still required for U1.2.
+The previous U1.1 single-prompt inference path has already worked on the
+owner's Windows system. This no-path U1.2 launch change still requires
+a local Windows smoke test.

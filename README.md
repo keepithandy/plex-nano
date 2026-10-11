@@ -213,16 +213,18 @@ session; the model and tokenizer are loaded only once. Outputs are real,
 unfiltered model continuations, **not evidence of reliable coding ability**.
 
 Run uv sync --project training once if your Python environment is not
-installed. Then **double-click [plex.cmd](plex.cmd)** and provide the paths
-to your locally saved trained .pt checkpoint and matching tokenizer folder.
+installed. Then **double-click [plex.cmd](plex.cmd)**. By default it loads the already
+verified P2-48 step-100 checkpoint (`training/artifacts/request-grounded/p2-48-first-run/checkpoints/step-0100.pt`)
+and the matching `p2-48-training-bundle` from the project folder automatically.
+No paths need to be entered. You can override these defaults explicitly for another checkpoint.
 Or open PowerShell at the repository root:
 
 ~~~powershell
 .\plex.ps1 -Checkpoint ".\training\artifacts\request-grounded\p2-48-first-run\checkpoints\step-0100.pt" -BundleDir ".\training\artifacts\request-grounded\p2-48-training-bundle"
 ~~~
 
-These are example paths for the existing P2-48 run; replace them if
-your artifact directory differs. After loading, type a coding request at
+These project-relative paths are for the verified P2-48 run. If your
+artifact directory differs, specify both paths manually. After loading, type a coding request at
 the "You >" prompt. Commands include /help, /file PATH (read-only file context),
 /clear, /new and /exit.
 

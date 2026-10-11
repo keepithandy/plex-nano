@@ -7,6 +7,7 @@
 _🗓️ Updated October 11, 2026_
 
 ### U1 — local usability (Windows launcher and interactive terminal)
+- Removed repeated checkpoint/tokenizer prompts in the Windows launcher: automatically load the owner-verified P2-48 step-100 checkpoint and matching tokenizer from project-relative paths; verify the known checkpoint SHA-256 before inference, fail clearly if missing, and retain explicit model-path overrides. No training or weight changes.
 - Added U1.2 interactive inference for multiple independent prompts with one loaded checkpoint/tokenizer; explicitly supplied read-only HTML/CSS/JS file context; /help, /clear, /new and /exit. Double-click launcher now opens interactive mode; -Prompt / -Once preserve U1.1 single request. Added focused tests and CI coverage. No model or training changes.
 - Added `plex.cmd` and `plex.ps1` to launch one inference request against an explicitly selected trained checkpoint and matching tokenizer, reusing the existing `complete` command. Includes Windows setup/troubleshooting instructions. No training, model, tokenizer, schema or evaluation changes; interactive terminal and feedback functionality remain out of scope.
 

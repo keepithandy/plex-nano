@@ -1,5 +1,5 @@
 @echo off
-rem Double-click launcher for Plex Nano's existing single-prompt inference command.
+rem Double-click to open interactive Plex Nano with the verified local P2-48 checkpoint.
 rem The execution policy override applies only to this new PowerShell process.
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0plex.ps1"
 set "plex_exit=%ERRORLEVEL%"

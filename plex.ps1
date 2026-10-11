@@ -1,5 +1,5 @@
 # Plex Nano - U1.2: interactive terminal by default; -Prompt / -Once for single request.
-# No training, checkpoint changes, or automatic model selection.
+# The user-confirmed P2-48 step-100 checkpoint is the default. No training or checkpoint changes.
 [CmdletBinding()]
 param(
     [string] $Checkpoint = "",
@@ -25,35 +25,52 @@ try {
         throw "Plex's Python environment is missing. Run once: uv sync --project training"
     }
 
-    if (-not $Checkpoint.Trim()) {
-        $Checkpoint = Read-Host "Path to a trained Plex .pt checkpoint"
+    # The owner already selected and verified this exact P2-48 endpoint on this PC.
+    # Resolve relative to the launcher, never to a Windows username or search order.
+    $knownCheckpoint = Join-Path $PSScriptRoot "training\artifacts\request-grounded\p2-48-first-run\checkpoints\step-0100.pt"
+    $knownBundle = Join-Path $PSScriptRoot "training\artifacts\request-grounded\p2-48-training-bundle"
+    $expectedCheckpointSha256 = "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7"
+
+    $usingKnownCheckpoint = [string]::IsNullOrWhiteSpace($Checkpoint)
+    if ($usingKnownCheckpoint) {
+        $Checkpoint = $knownCheckpoint
+        if (-not (Test-Path -LiteralPath $Checkpoint -PathType Leaf)) {
+            throw "Default P2-48 checkpoint is missing: $Checkpoint. Supply -Checkpoint and -BundleDir to choose another trained model."
+        }
     }
     $Checkpoint = $Checkpoint.Trim().Trim('"')
-    if (-not $Checkpoint) {
-        throw "No checkpoint selected. This launcher never chooses weights automatically."
-    }
     $checkpointItem = Get-Item -LiteralPath $Checkpoint -ErrorAction Stop
     if ($checkpointItem.PSIsContainer) {
         throw "The checkpoint path must be a trained .pt file, not a folder."
     }
 
-    if (-not $BundleDir.Trim()) {
-        $defaultBundle = Join-Path $checkpointItem.DirectoryName "tokenizer"
-        if (Test-Path -LiteralPath $defaultBundle -PathType Container) {
-            $BundleDir = $defaultBundle
+    # Never silently use a different endpoint at the known default path.
+    if ($usingKnownCheckpoint) {
+        $actualSha256 = (Get-FileHash -LiteralPath $checkpointItem.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($actualSha256 -ne $expectedCheckpointSha256) {
+            throw "Default P2-48 checkpoint hash does not match the previously verified step-100 model. Specify -Checkpoint and -BundleDir explicitly if you intend another model."
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($BundleDir)) {
+        if ($usingKnownCheckpoint) {
+            $BundleDir = $knownBundle
         }
         else {
-            $BundleDir = Read-Host "Path to the matching tokenizer bundle folder"
+            $siblingBundle = Join-Path $checkpointItem.DirectoryName "tokenizer"
+            if (Test-Path -LiteralPath $siblingBundle -PathType Container) {
+                $BundleDir = $siblingBundle
+            }
+            else {
+                throw "No tokenizer folder beside this checkpoint. Supply -BundleDir to select its matching tokenizer."
+            }
         }
     }
     $BundleDir = $BundleDir.Trim().Trim('"')
-    if (-not $BundleDir) {
-        throw "A matching tokenizer bundle is required."
+    if (-not (Test-Path -LiteralPath $BundleDir -PathType Container)) {
+        throw "Matching tokenizer bundle not found: $BundleDir. Supply -BundleDir to select its folder."
     }
     $bundleItem = Get-Item -LiteralPath $BundleDir -ErrorAction Stop
-    if (-not $bundleItem.PSIsContainer) {
-        throw "The tokenizer bundle must be a folder."
-    }
 
     # Default: interactive terminal. Preserve U1.1 single-shot with -Prompt or -Once.
     $singlePrompt = $Once.IsPresent -or -not [string]::IsNullOrWhiteSpace($Prompt)

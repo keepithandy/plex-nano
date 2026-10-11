@@ -18,10 +18,15 @@ This branch builds on the working U1.1 launcher.
 
 ## 2. Launch
 
-Your uv sync has already succeeded. You can double-click **plex.cmd**, which
-will ask for the existing trained checkpoint path and matching tokenizer.
+Your `uv sync --project training` has already succeeded. You can double-click
+**plex.cmd** or run `.\plex.cmd` from the project terminal. The launcher
+now selects the previously verified P2-48 step-100 checkpoint and matching
+P2-48 tokenizer folder **automatically**. You should go straight to `You >`
+without entering either path. The default checkpoint SHA-256 is verified
+before inference; missing or changed artifacts produce a clear error rather
+than falling back to random weights.
 
-Or run the known local P2-48 paths directly from the repository root:
+If you want to specify the same local paths yourself, the command is:
 
 ~~~powershell
 .\plex.ps1 -Checkpoint ".\training\artifacts\request-grounded\p2-48-first-run\checkpoints\step-0100.pt" -BundleDir ".\training\artifacts\request-grounded\p2-48-training-bundle"
@@ -37,7 +42,7 @@ Type /help for commands or /exit to quit.
 You >
 ~~~
 
-This is an illustrative prompt, not a verified U1.2 Windows test result.
+This is an illustrative prompt; Step 2 still requires a Windows smoke test.
 
 ## 3. Send multiple prompts
 
@@ -93,7 +98,9 @@ The original single-prompt JSON interface is still available:
 ~~~
 
 Or use the -Prompt "your request" parameter. Add -Device cpu if CUDA
-is unavailable.
+is unavailable. Explicit -Checkpoint and -BundleDir overrides are supported
+when you want a different trained model. Missing local P2-48 weights must
+be supplied by you: the launcher never downloads or retrains anything.
 
 ## Limits and privacy
 
