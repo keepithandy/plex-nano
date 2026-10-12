@@ -7,7 +7,7 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
-> **Maintenance / follow-ups:** 🟢 **2 complete** · 🔴 **1 open**
+> **Maintenance / follow-ups:** 🟢 **3 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -56,7 +56,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 |---|---|---|---|---|
 | **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
 | **M02** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer now requires exact frozen fixture identity before asserting `known-valid-target`. |
-| **M03** | **P3** | 🔴 **OPEN** | `training/src/plex_training/completion.py`, P3 context docs | Completion must explicitly report sliding-window prompt eviction for file-conditioned work. |
+| **M03** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/completion.py`, P3 context docs | Completion now explicitly reports sliding-window prompt eviction for file-conditioned work. |
 
 ---
 
@@ -1084,9 +1084,9 @@ No P3 fixture, milestone, scorer metric shape, training authorization, checkpoin
 
 B08 guarantees that an oversized **initial prompt** is rejected rather than silently truncated. After a valid prompt is accepted, the existing decoder intentionally uses the most recent model-context window during generation. M03 documents and reports that distinct sliding-window behavior.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
 The completion policy is now named `initial-prompt-intact-sliding-window-v1` and specifies:
 
@@ -1113,8 +1113,16 @@ For file-conditioned evaluation, an evaluator that requires the whole supplied r
 
 The frozen P3-01 prompt + expected target + EOS records are at most 77 tokens, so their reviewed targets fit wholly within the 512-token context. This does not imply arbitrary future files will fit.
 
-Regression coverage checks both no-eviction at the exact initial boundary and actual prompt eviction under a small sliding window, including the returned completion report.
+Regression coverage verifies:
+
+- a prompt at the exact initial context boundary is used intact
+- later generation can evict the oldest prompt tokens under the sliding-window policy
+- an EOS-producing model evaluation can increase eviction even though EOS is not emitted text
+- `complete_pilot` reports the actual policy and eviction measurements
+
+PR-side verification:
+
+- Linux required run **#137**: **297 passed**, **9 skipped**, **1 warning**
+- Windows portability run **#10**: **16 passed**, **1 warning**
 
 No context length, model architecture, P3 fixture, training authorization, checkpoint, corpus, or final-holdout state is changed.
-
-M03 remains open until the required Linux suite passes on the pull request and the merged `master` push passes the same suite. The Windows portability workflow will also cross-check the changed training workspace.
