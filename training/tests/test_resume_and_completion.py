@@ -570,6 +570,41 @@ class ResumeAndCompletionTests(unittest.TestCase):
         self.assertEqual(context_report["minimumPromptTokensVisible"], 2)
         self.assertFalse(context_report["fullPromptVisibleForEveryGenerationStep"])
 
+    def test_eos_evaluation_reports_prompt_eviction_even_without_emitting_eos(self) -> None:
+        from plex_training.completion import _generate_token_ids
+
+        class EosAfterOneTokenModel:
+            config = SimpleNamespace(context_length=4, vocab_size=8)
+
+            def __init__(self) -> None:
+                self.calls = 0
+
+            def eval(self) -> "EosAfterOneTokenModel":
+                return self
+
+            def __call__(self, visible: torch.Tensor) -> tuple[torch.Tensor, None]:
+                scores = torch.full((1, visible.shape[1], 8), -20.0)
+                scores[0, -1, 4 if self.calls == 0 else 3] = 20.0
+                self.calls += 1
+                return scores, None
+
+        generated, stopped, context_report = _generate_token_ids(
+            EosAfterOneTokenModel(),
+            [4, 5, 6, 7],
+            actual_vocab=8,
+            max_new_tokens=3,
+            temperature=0.0,
+            seed=7,
+            device=torch.device("cpu"),
+        )
+
+        self.assertEqual(generated, [4])
+        self.assertTrue(stopped)
+        self.assertEqual(context_report["modelEvaluationCount"], 2)
+        self.assertEqual(context_report["maximumPromptTokensEvicted"], 1)
+        self.assertEqual(context_report["minimumPromptTokensVisible"], 3)
+        self.assertFalse(context_report["fullPromptVisibleForEveryGenerationStep"])
+
     def test_complete_pilot_rejects_prompt_one_token_over_model_context(self) -> None:
         from plex_training.completion import complete_pilot
 
