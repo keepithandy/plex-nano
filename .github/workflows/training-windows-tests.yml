@@ -38,10 +38,10 @@ jobs:
           training/tests/test_pilot.py::PilotSafetyTests::test_checkpoint_serialization_is_bounded_before_overallocation
           training/tests/test_pilot.py::PilotSafetyTests::test_checkpoint_overwrite_budget_counts_old_checkpoint_during_temp_write
           training/tests/test_pilot.py::PilotSafetyTests::test_failed_final_allocation_check_preserves_checkpoint
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_windows_destination_spelling_rejects_aliases_and_devices
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_windows_aliases_rejected_before_device_or_checkpoint_work
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_resolved_windows_destination_is_validated_too
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_checkpoint_staging_path_cannot_be_metrics_destination
+          training/tests/test_resume_and_completion.py::ArtifactDestinationRegressionTests::test_windows_destination_spelling_rejects_aliases_and_devices
+          training/tests/test_resume_and_completion.py::ArtifactDestinationRegressionTests::test_windows_aliases_rejected_before_device_or_checkpoint_work
+          training/tests/test_resume_and_completion.py::ArtifactDestinationRegressionTests::test_resolved_windows_destination_is_validated_too
+          training/tests/test_resume_and_completion.py::ArtifactDestinationRegressionTests::test_checkpoint_staging_path_cannot_be_metrics_destination
           training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_identity_is_deterministic
           training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_second_publish_failure_rolls_back_existing_pair
           training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_interruptions_restore_both_outputs
