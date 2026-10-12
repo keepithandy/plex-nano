@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **4 complete** · 🔴 **1 open**
+> **Verification gaps:** 🟢 **5 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -43,7 +43,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
-| **G05** | **P2** | 🔴 **OPEN** | `.github/workflows/training-windows-tests.yml` | A narrow `windows-latest` subset must exercise artifact, P3 identity/path, CLI, and mmap behavior without research training. |
+| **G05** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-windows-tests.yml` | A narrow Windows portability workflow now exercises artifact, P3 identity/path, CLI, and mmap behavior without research training. |
 
 ---
 
@@ -905,13 +905,15 @@ No model training, corpus promotion, checkpoint modification, final-holdout acce
 
 The portable training workflow previously ran only on Ubuntu even though the primary local development environment is Windows and the training/package code contains Windows-specific path validation plus filesystem behavior around memory maps, temporary files, atomic replacement, and P3 paired publication.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
-A dedicated `training-windows-tests` workflow has been added using `windows-latest`. It uses the same locked Python 3.12/uv environment but intentionally runs only a small filesystem/identity subset. Keeping the Windows subset in a separate workflow preserves G03’s invariant that each top-level test module appears only once in the required/experiment suite classification.
+A dedicated `training-windows-tests` workflow now runs a deliberately small portability subset on `windows-latest` using Python 3.12 and the same frozen uv environment as the Linux training workflow.
 
-Selected coverage:
+Keeping this as a separate workflow preserves G03’s required/experiment suite invariant: the 42 required modules remain listed exactly once in `training-tests.yml`, while Windows reuses selected test cases only as platform verification.
+
+Selected Windows coverage:
 
 - read-only memory-mapped token corpus creation/read/close behavior
 - bounded checkpoint serialization before temporary allocation exceeds the limit
@@ -929,8 +931,22 @@ Selected coverage:
 - P3 CLI default paths rooted at the repository
 - CLI artifact-root default/path normalization
 
-The runner-path tests that call `run_training` are designed to fail during destination validation before device selection, checkpoint loading, optimizer construction, or model training. No research training is authorized by this job.
+The runner-path cases that call `run_training` reject during destination preflight and assert that device/checkpoint work is never entered, so the Windows workflow does not perform research training.
 
-Changes to either the Linux required workflow or the Windows workflow trigger both relevant verification paths: the Linux required suite includes the Windows workflow file in its path filter, and the Windows workflow includes the Linux workflow file in its own filter.
+Two setup iterations were useful verification evidence rather than runtime defects:
 
-G05 remains open until both the Ubuntu required suite and the Windows subset pass on the pull request, and the merged `master` push automatically passes the same Windows workflow.
+1. placing the subset as a second job inside `training-tests.yml` caused G03's inventory guard to detect duplicate required-module references; the subset was moved to its own workflow instead of weakening G03;
+2. the first separate Windows run used the wrong unittest class name for four destination tests and failed during pytest collection; the node IDs were corrected before any portability claim was made.
+
+Final verification:
+
+- PR #152 Linux required run **#130**: **292 passed**, **9 skipped**, **1 warning**
+- PR #152 Windows run **#3**: **16 passed**, **1 warning**
+- merge commit: `12a9703ef38a533217c5f35f235aec212433edda`
+- automatic `master` Linux push run **#131**: **292 passed**, **9 skipped**, **1 warning**
+- automatic `master` Windows push run **#4**: **16 passed**, **1 warning**
+- both workflows recorded event `push` after merge
+
+Changes to either Linux or Windows workflow files trigger the corresponding cross-check path, so platform-maintenance edits remain visible to the required Linux suite as well.
+
+No research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G05.
