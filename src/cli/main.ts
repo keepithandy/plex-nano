@@ -14,8 +14,12 @@ Options:
   -v, --version   Show the version
   --repo <path>   Use this directory as the project boundary
 
-Development status: P1-10 proposed buffers and unified diffs.
-Implementation requests are not available yet.
+Legacy TypeScript scaffolding status: P1-10 proposed buffers and unified diffs.
+This executable is retained for compatibility and is not the current Plex Nano model interface.
+Current Plex Nano model/research commands live in the Python training workspace; from the repository root:
+  uv run --project training python -m plex_training.cli --help
+  uv run --project training python -m plex_training.cli environment
+Implementation requests are not available in this legacy CLI.
 `;
 
 async function main(): Promise<number> {

@@ -18,7 +18,11 @@ test('help, short help, and no arguments show usage successfully', () => {
     const result = run(args);
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Usage:/);
-    assert.match(result.stdout, /Implementation requests are not available yet/);
+    assert.match(result.stdout, /Legacy TypeScript scaffolding status: P1-10 proposed buffers and unified diffs/);
+    assert.match(result.stdout, /not the current Plex Nano model interface/);
+    assert.match(result.stdout, /python -m plex_training\.cli --help/);
+    assert.match(result.stdout, /python -m plex_training\.cli environment/);
+    assert.match(result.stdout, /Implementation requests are not available in this legacy CLI/);
     assert.equal(result.stderr, '');
   }
 });
