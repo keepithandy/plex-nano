@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **4 complete** · 🔴 **0 open**
+> **Verification gaps:** 🟢 **4 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -43,6 +43,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
+| **G05** | **P2** | 🔴 **OPEN** | `.github/workflows/training-tests.yml` | A narrow `windows-latest` subset must exercise artifact, P3 identity/path, CLI, and mmap behavior without research training. |
 
 ---
 
@@ -895,3 +896,39 @@ Verification:
 The npm install step reported one moderate audit finding and Node emitted deprecation warnings during CI. Those observations are separate from G04 and were not used to broaden this maintenance-only change.
 
 No model training, corpus promotion, checkpoint modification, final-holdout access, or product-direction expansion was performed for G04.
+
+
+## 🧪 G05 — Windows portability subset
+
+**Priority:** P2  
+**Type:** Verification gap — not a runtime defect
+
+The portable training workflow previously ran only on Ubuntu even though the primary local development environment is Windows and the training/package code contains Windows-specific path validation plus filesystem behavior around memory maps, temporary files, atomic replacement, and P3 paired publication.
+
+### In progress
+
+🔴 **OPEN**
+
+A second `windows-portability` job has been added to the existing `training-tests` workflow using `windows-latest`. It uses the same locked Python 3.12/uv environment but intentionally runs only a small filesystem/identity subset.
+
+Selected coverage:
+
+- read-only memory-mapped token corpus creation/read/close behavior
+- bounded checkpoint serialization before temporary allocation exceeds the limit
+- checkpoint overwrite budgeting while the old checkpoint remains present
+- failed final allocation verification preserving the existing checkpoint
+- Windows destination spelling/device/ADS rejection
+- resolved Windows destination validation before model/device work
+- checkpoint staging-path collision checks
+- P3 deterministic candidate identity
+- P3 staged publication and rollback across `os.replace`
+- P3 interruption recovery
+- P3 fresh Windows alias rejection
+- P3 review-report Windows spelling rejection
+- P3 resolved-output Windows spelling validation
+- P3 CLI default paths rooted at the repository
+- CLI artifact-root default/path normalization
+
+The runner-path tests that call `run_training` are designed to fail during destination validation before device selection, checkpoint loading, optimizer construction, or model training. No research training is authorized by this job.
+
+G05 remains open until both the Ubuntu required suite and the Windows subset pass on the pull request, and the merged `master` push automatically passes the same Windows job.
