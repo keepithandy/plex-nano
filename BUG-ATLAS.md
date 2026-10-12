@@ -7,7 +7,7 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
-> **Maintenance / follow-ups:** 🟢 **0 complete** · 🔴 **1 open**
+> **Maintenance / follow-ups:** 🟢 **1 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -54,7 +54,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 
 | ID | Priority | Status | Area | Summary |
 |---|---|---|---|---|
-| **M01** | **P3** | 🔴 **OPEN** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help must explicitly identify the TypeScript scaffolding and point to current model commands. |
+| **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
 
 ---
 
@@ -1004,11 +1004,13 @@ No runtime code, research training, corpus promotion, checkpoint modification, o
 
 The root package still exposes a `plex` executable backed by retained TypeScript scaffolding. Its help text historically displayed `P1-10 proposed buffers and unified diffs` without explaining that this is a legacy milestone for the auxiliary TypeScript path rather than the current Phase 3 coding-model status.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
-The help text now:
+The legacy TypeScript CLI help now provides explicit context without changing the historical milestone or expanding the legacy feature set.
+
+The help text:
 
 - preserves the historical `P1-10 proposed buffers and unified diffs` label
 - explicitly qualifies it as **Legacy TypeScript scaffolding status**
@@ -1018,8 +1020,12 @@ The help text now:
   - `uv run --project training python -m plex_training.cli environment`
 - clarifies that implementation requests are unavailable **in this legacy CLI**
 
-Regression coverage checks the legacy qualifier and both current-command pointers in the existing CLI integration test.
+The existing CLI integration test now requires the legacy qualifier and both current-command pointers.
+
+PR-side verification:
+
+- TypeScript build: passed
+- Node tests: **102 / 102 passed**
+- failures: **0**
 
 No historical milestone was renamed, and no repository-agent, project-discovery, source-scanning, Git, or autonomous workflow capability was added.
-
-M01 remains open until the TypeScript maintenance workflow passes on the pull request and the merged `master` push passes the same workflow.
