@@ -6,6 +6,7 @@ on:
       - "training/**"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
+      - ".github/workflows/training-windows-tests.yml"
   push:
     branches:
       - master
@@ -13,6 +14,7 @@ on:
       - "training/**"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
+      - ".github/workflows/training-windows-tests.yml"
   workflow_dispatch:
 
 permissions:
