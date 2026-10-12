@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **5 complete** · 🔴 **0 open**
+> **Verification gaps:** 🟢 **5 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -44,6 +44,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
 | **G05** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-windows-tests.yml` | A narrow Windows portability workflow now exercises artifact, P3 identity/path, CLI, and mmap behavior without research training. |
+| **G06** | **P3** | 🔴 **OPEN** | `.gitattributes`, training CI workflows | Root line-ending policy changes must trigger Linux and Windows training verification. |
 
 ---
 
@@ -950,3 +951,26 @@ Final verification:
 Changes to either Linux or Windows workflow files trigger the corresponding cross-check path, so platform-maintenance edits remain visible to the required Linux suite as well.
 
 No research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G05.
+
+
+## 🧪 G06 — Root line-ending policy CI trigger
+
+**Priority:** P3  
+**Type:** Verification gap — not a runtime defect
+
+The repository's root `.gitattributes` file pins LF checkout bytes for fixtures and hash-sensitive training/P3 artifacts. A `.gitattributes`-only change could therefore alter checked-out bytes without matching the existing `training/**` workflow path filters.
+
+### In progress
+
+🔴 **OPEN**
+
+Both automatic training workflows now include `.gitattributes` in their `pull_request.paths` and `push.paths` filters:
+
+- `.github/workflows/training-tests.yml`
+- `.github/workflows/training-windows-tests.yml`
+
+A regression in `test_ci_test_inventory.py` requires each workflow's trigger block to contain `.gitattributes` exactly twice: once for pull requests and once for pushes to `master`.
+
+The change is intentionally limited to the root checkout-byte policy file. Other unrelated root files are not added to the training trigger set.
+
+G06 remains open until the Linux required suite and Windows portability suite pass on the pull request and the merged `master` push passes both workflows.
