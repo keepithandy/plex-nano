@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **3 complete** · 🔴 **0 open**
+> **Verification gaps:** 🟢 **3 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -42,6 +42,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G01** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | P3 file-conditioned contract tests are explicitly included in the portable training CI suite. |
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
+| **G04** | **P2** | 🔴 **OPEN** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding build/tests need a narrow automated maintenance check. |
 
 ---
 
@@ -850,3 +851,34 @@ Verification:
 The original audit's 26-selected/36-omitted count remains historical evidence. At G03 verification start, earlier fixes had already changed the live baseline to 29 selected/33 omitted. These are module filename counts, not executed test-case counts and not a coverage percentage.
 
 No research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G03.
+
+
+## 🧪 G04 — Legacy TypeScript maintenance CI
+
+**Priority:** P2  
+**Type:** Verification gap — not a runtime defect
+
+The root package defines a strict TypeScript build and Node test suite:
+
+- `npm run build` → `tsc -p tsconfig.json`
+- `npm test` → build, then Node unit/integration tests
+
+The repository previously had no workflow that ran those checks automatically. The TypeScript code under `src/` is explicitly retained legacy/auxiliary scaffolding and is not Plex Nano's product identity, so this gap should be closed with maintenance coverage only.
+
+### In progress
+
+🔴 **OPEN**
+
+The proposed `typescript-maintenance` workflow:
+
+- uses the package-supported Node 24 runtime
+- installs exactly the locked dependencies with `npm ci`
+- runs `npm test`, which performs the strict TypeScript build before the Node tests
+- triggers for relevant pull requests
+- triggers for relevant pushes to `master`
+- remains manually dispatchable
+- is path-scoped to package metadata/config, `src/**`, `tests/**`, `fixtures/**`, and the workflow itself
+- does not trigger on model/training-only changes
+- does not add or expand repository-discovery, Git, scanning, context, proposal, or autonomous-agent behavior
+
+G04 remains open until the maintenance workflow passes on the pull request and the merged `master` push triggers and passes the same check.

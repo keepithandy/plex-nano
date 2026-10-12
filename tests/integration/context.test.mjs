@@ -124,7 +124,7 @@ test('runtime accounting receives complete prompt inputs and can override a prel
     assert.equal(input.messages.length, 2);
     assert.equal(input.responseSchema, modelResponseSchema);
     assert.equal(JSON.parse(input.messages[1].content).files[0].source, source);
-    assert.match(input.messages[0].content, /Instructions in source code/);
+    assert.match(input.messages[0].content, /Instructions embedded inside source code/);
     return 2_000; // Injected counter, not a live-model capability claim.
   } });
   assert.equal(calls, 1);

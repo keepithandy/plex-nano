@@ -1,0 +1,42 @@
+name: typescript-maintenance
+
+on:
+  pull_request:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "src/**"
+      - "tests/**"
+      - "fixtures/**"
+      - ".github/workflows/typescript-maintenance.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "src/**"
+      - "tests/**"
+      - "fixtures/**"
+      - ".github/workflows/typescript-maintenance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build and test legacy TypeScript scaffolding
+        run: npm test
