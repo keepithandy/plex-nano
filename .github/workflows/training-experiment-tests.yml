@@ -1,0 +1,46 @@
+name: training-experiment-tests
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        run: python -m pip install --disable-pip-version-check uv
+      - name: Sync locked training environment
+        run: uv sync --project training --frozen --group dev
+      - name: Run historical experiment-contract tests
+        run: >
+          uv run --project training --no-sync python -m pytest
+          training/tests/test_binding_candidate.py
+          training/tests/test_binding_experiment.py
+          training/tests/test_code_pair_approval.py
+          training/tests/test_code_pair_candidate.py
+          training/tests/test_compositional_binding_probe.py
+          training/tests/test_curated_request_approval.py
+          training/tests/test_curated_request_candidate.py
+          training/tests/test_failure_gap_approval.py
+          training/tests/test_failure_gap_candidate.py
+          training/tests/test_p2_04_compositional_run.py
+          training/tests/test_p2_05_counterbalanced_composition.py
+          training/tests/test_p2_06_binding_representation_probe.py
+          training/tests/test_p2_06_binding_representation_run.py
+          training/tests/test_p2_07_instruction_invariance_probe.py
+          training/tests/test_p2_07_instruction_invariance_run.py
+          training/tests/test_p2_08_selector_format_experiment.py
+          training/tests/test_p2_08_selector_format_probe.py
+          training/tests/test_p2_10_explicit_answer_start_candidate.py
+          training/tests/test_request_following_candidate.py
+          training/tests/test_structured_plan_request_binding_curriculum.py
+          training/tests/test_transfer_diagnostic.py
+          -q
