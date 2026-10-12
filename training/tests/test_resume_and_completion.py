@@ -507,7 +507,7 @@ class ResumeAndCompletionTests(unittest.TestCase):
 
         model = RecordingModel()
         prompt_ids = [4, 5, 6, 7]
-        generated, stopped = _generate_token_ids(
+        generated, stopped, context_report = _generate_token_ids(
             model,
             prompt_ids,
             actual_vocab=8,
@@ -519,6 +519,91 @@ class ResumeAndCompletionTests(unittest.TestCase):
         self.assertEqual(model.inputs, [prompt_ids])
         self.assertEqual(generated, [])
         self.assertTrue(stopped)
+        self.assertEqual(context_report["contextLength"], 4)
+        self.assertEqual(context_report["promptTokenCount"], 4)
+        self.assertEqual(context_report["maximumPromptTokensEvicted"], 0)
+        self.assertTrue(context_report["fullPromptVisibleForEveryGenerationStep"])
+
+    def test_generation_reports_sliding_window_prompt_eviction(self) -> None:
+        from plex_training.completion import CONTEXT_POLICY, _generate_token_ids
+
+        class RecordingModel:
+            config = SimpleNamespace(context_length=4, vocab_size=8)
+
+            def __init__(self) -> None:
+                self.inputs: list[list[int]] = []
+
+            def eval(self) -> "RecordingModel":
+                return self
+
+            def __call__(self, visible: torch.Tensor) -> tuple[torch.Tensor, None]:
+                self.inputs.append(visible[0].tolist())
+                scores = torch.full((1, visible.shape[1], 8), -20.0)
+                scores[0, -1, 4] = 20.0
+                return scores, None
+
+        model = RecordingModel()
+        generated, stopped, context_report = _generate_token_ids(
+            model,
+            [4, 5, 6],
+            actual_vocab=8,
+            max_new_tokens=3,
+            temperature=0.0,
+            seed=7,
+            device=torch.device("cpu"),
+        )
+
+        self.assertEqual(generated, [4, 4, 4])
+        self.assertFalse(stopped)
+        self.assertEqual(
+            model.inputs,
+            [[4, 5, 6], [4, 5, 6, 4], [5, 6, 4, 4]],
+        )
+        self.assertEqual(context_report["contextPolicy"], CONTEXT_POLICY)
+        self.assertEqual(context_report["contextLength"], 4)
+        self.assertEqual(context_report["promptTokenCount"], 3)
+        self.assertEqual(context_report["maxNewTokensRequested"], 3)
+        self.assertFalse(context_report["promptPlusRequestedOutputMustFitContext"])
+        self.assertTrue(context_report["promptEvictionAllowedAfterGenerationStarts"])
+        self.assertEqual(context_report["modelEvaluationCount"], 3)
+        self.assertEqual(context_report["maximumPromptTokensEvicted"], 1)
+        self.assertEqual(context_report["minimumPromptTokensVisible"], 2)
+        self.assertFalse(context_report["fullPromptVisibleForEveryGenerationStep"])
+
+    def test_eos_evaluation_reports_prompt_eviction_even_without_emitting_eos(self) -> None:
+        from plex_training.completion import _generate_token_ids
+
+        class EosAfterOneTokenModel:
+            config = SimpleNamespace(context_length=4, vocab_size=8)
+
+            def __init__(self) -> None:
+                self.calls = 0
+
+            def eval(self) -> "EosAfterOneTokenModel":
+                return self
+
+            def __call__(self, visible: torch.Tensor) -> tuple[torch.Tensor, None]:
+                scores = torch.full((1, visible.shape[1], 8), -20.0)
+                scores[0, -1, 4 if self.calls == 0 else 3] = 20.0
+                self.calls += 1
+                return scores, None
+
+        generated, stopped, context_report = _generate_token_ids(
+            EosAfterOneTokenModel(),
+            [4, 5, 6, 7],
+            actual_vocab=8,
+            max_new_tokens=3,
+            temperature=0.0,
+            seed=7,
+            device=torch.device("cpu"),
+        )
+
+        self.assertEqual(generated, [4])
+        self.assertTrue(stopped)
+        self.assertEqual(context_report["modelEvaluationCount"], 2)
+        self.assertEqual(context_report["maximumPromptTokensEvicted"], 1)
+        self.assertEqual(context_report["minimumPromptTokensVisible"], 3)
+        self.assertFalse(context_report["fullPromptVisibleForEveryGenerationStep"])
 
     def test_complete_pilot_rejects_prompt_one_token_over_model_context(self) -> None:
         from plex_training.completion import complete_pilot
@@ -569,6 +654,68 @@ class ResumeAndCompletionTests(unittest.TestCase):
             tokenizer.encode.assert_called_once_with("small byte prompt")
             model.eval.assert_not_called()
 
+    def test_complete_pilot_reports_context_policy_and_actual_eviction(self) -> None:
+        from plex_training.completion import CONTEXT_POLICY, complete_pilot
+
+        class RecordingModel:
+            config = SimpleNamespace(context_length=4, vocab_size=8)
+
+            def eval(self) -> "RecordingModel":
+                return self
+
+            def __call__(self, visible: torch.Tensor) -> tuple[torch.Tensor, None]:
+                scores = torch.full((1, visible.shape[1], 8), -20.0)
+                scores[0, -1, 4] = 20.0
+                return scores, None
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            checkpoint = root / "model.pt"
+            checkpoint.write_bytes(b"checkpoint-placeholder")
+            prompt = "abc"
+            prompt_ids = [4, 5, 6]
+            tokenizer = SimpleNamespace(
+                vocabulary_size=8,
+                encode=Mock(return_value=prompt_ids),
+                decode=Mock(side_effect=lambda ids: prompt + ("x" * (len(ids) - len(prompt_ids)))),
+            )
+            tokenizer_record = {"tokenizerSha256": "fixture-tokenizer"}
+            payload = {
+                "codec": CODEC,
+                "tokenizerRecord": tokenizer_record,
+                "step": 1,
+                "datasetRecord": {"fixture": True},
+                "initializationRecord": {"pretrainedCheckpointLoaded": False},
+            }
+            with patch(
+                "plex_training.completion._completion_tokenizer",
+                return_value=(tokenizer, tokenizer_record),
+            ), patch(
+                "plex_training.completion.select_device",
+                return_value=torch.device("cpu"),
+            ), patch(
+                "plex_training.completion.read_checkpoint",
+                return_value=(RecordingModel(), payload),
+            ):
+                report = complete_pilot(
+                    checkpoint_path=checkpoint,
+                    prompt=prompt,
+                    bundle_dir=root / "bundle",
+                    device_name="cpu",
+                    max_new_tokens=3,
+                )
+
+        self.assertEqual(report["contextPolicy"], CONTEXT_POLICY)
+        self.assertEqual(report["contextLength"], 4)
+        self.assertEqual(report["promptTokenCount"], 3)
+        self.assertEqual(report["maxNewTokensRequested"], 3)
+        self.assertEqual(report["generatedTokenCount"], 3)
+        self.assertEqual(report["maximumPromptTokensEvicted"], 1)
+        self.assertEqual(report["minimumPromptTokensVisible"], 2)
+        self.assertFalse(report["fullPromptVisibleForEveryGenerationStep"])
+        self.assertFalse(report["promptPlusRequestedOutputMustFitContext"])
+        self.assertTrue(report["promptEvictionAllowedAfterGenerationStarts"])
+
     def test_generation_masks_controls_and_unused_vocab_then_stops_on_eos(self) -> None:
         from plex_training.completion import _generate_token_ids
 
@@ -591,19 +738,21 @@ class ResumeAndCompletionTests(unittest.TestCase):
                 self.calls += 1
                 return scores, None
 
-        def complete() -> tuple[list[int], bool, int]:
+        def complete() -> tuple[list[int], bool, dict, int]:
             model = FakeModel()
-            generated, stopped = _generate_token_ids(
+            generated, stopped, context_report = _generate_token_ids(
                 model, [4], actual_vocab=8, max_new_tokens=5,
                 temperature=0.0, seed=7, device=torch.device("cpu"),
             )
-            return generated, stopped, model.calls
+            return generated, stopped, context_report, model.calls
 
         first = complete()
         second = complete()
         self.assertEqual(first, second)
-        generated, stopped, calls = first
+        generated, stopped, context_report, calls = first
         self.assertTrue(stopped)
+        self.assertEqual(context_report["modelEvaluationCount"], 2)
+        self.assertEqual(context_report["maximumPromptTokensEvicted"], 0)
         self.assertEqual(calls, 2)
         self.assertIn(5, generated)
         self.assertFalse({0, 1, 2, 9} & set(generated))

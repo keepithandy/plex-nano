@@ -15,6 +15,9 @@ from .tokenizer import CODEC, PlexTokenizer, sha256_file
 from .telemetry import select_device
 
 
+CONTEXT_POLICY = "initial-prompt-intact-sliding-window-v1"
+
+
 def _completion_tokenizer(bundle_dir: Path) -> tuple[PlexTokenizer, dict[str, Any]]:
     if bundle_dir.is_symlink() or not bundle_dir.is_dir():
         raise ValueError("Completion tokenizer bundle must be a regular local directory")
@@ -39,7 +42,7 @@ def _completion_tokenizer(bundle_dir: Path) -> tuple[PlexTokenizer, dict[str, An
 def _generate_token_ids(
     model: Any, prompt_ids: list[int], *, actual_vocab: int,
     max_new_tokens: int, temperature: float, seed: int, device: torch.device,
-) -> tuple[list[int], bool]:
+) -> tuple[list[int], bool, dict[str, Any]]:
     if not prompt_ids or any(token < 3 or token >= actual_vocab for token in prompt_ids):
         raise ValueError("Prompt must contain ordinary in-vocabulary tokens")
     if not 4 <= actual_vocab <= model.config.vocab_size:
@@ -62,8 +65,20 @@ def _generate_token_ids(
     context_ids = prompt_ids.copy()
     generated: list[int] = []
     stopped_at_eos = False
+    model_evaluation_count = 0
+    maximum_prompt_tokens_evicted = 0
     with torch.no_grad():
         for _ in range(max_new_tokens):
+            total_history_tokens = len(context_ids)
+            prompt_tokens_evicted = min(
+                prompt_token_count,
+                max(0, total_history_tokens - model.config.context_length),
+            )
+            maximum_prompt_tokens_evicted = max(
+                maximum_prompt_tokens_evicted,
+                prompt_tokens_evicted,
+            )
+            model_evaluation_count += 1
             context = torch.tensor(
                 context_ids[-model.config.context_length:], dtype=torch.long, device=device
             ).unsqueeze(0)
@@ -82,7 +97,19 @@ def _generate_token_ids(
                 break
             generated.append(next_id)
             context_ids.append(next_id)
-    return generated, stopped_at_eos
+    context_report = {
+        "contextPolicy": CONTEXT_POLICY,
+        "contextLength": model.config.context_length,
+        "promptTokenCount": prompt_token_count,
+        "maxNewTokensRequested": max_new_tokens,
+        "promptPlusRequestedOutputMustFitContext": False,
+        "promptEvictionAllowedAfterGenerationStarts": True,
+        "modelEvaluationCount": model_evaluation_count,
+        "maximumPromptTokensEvicted": maximum_prompt_tokens_evicted,
+        "minimumPromptTokensVisible": prompt_token_count - maximum_prompt_tokens_evicted,
+        "fullPromptVisibleForEveryGenerationStep": maximum_prompt_tokens_evicted == 0,
+    }
+    return generated, stopped_at_eos, context_report
 
 
 def complete_pilot(
@@ -105,7 +132,7 @@ def complete_pilot(
             or payload["initializationRecord"].get("pretrainedCheckpointLoaded") is not False):
         raise ValueError("Checkpoint is not a trained Plex pilot with the matching tokenizer")
     prompt_ids = tokenizer.encode(prompt)
-    generated, stopped_at_eos = _generate_token_ids(
+    generated, stopped_at_eos, context_report = _generate_token_ids(
         model, prompt_ids, actual_vocab=tokenizer.vocabulary_size,
         max_new_tokens=max_new_tokens, temperature=temperature, seed=seed,
         device=device,
@@ -127,5 +154,6 @@ def complete_pilot(
         "text": text,
         "generatedTokenCount": len(generated),
         "stoppedAtEos": stopped_at_eos,
+        **context_report,
         "pretrainedCheckpointLoaded": False,
     }

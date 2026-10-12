@@ -91,6 +91,21 @@ The frozen tokenizer SHA is `2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476a
 
 The read-only tokenizer preflight passed using the P2-48 frozen tokenizer (`2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697`). The P2-48 derived bundle manifest SHA is `71fec0882692f5eb1b47b72f4a9f539e53e77882d003649beacd5f341b5a4ea7`, from source tokenizer bundle manifest `46d6e4501d56c45196e604fb78dafaaada49e6c386badaae07ffbd4d6794f5d6`. Records are encoded as `encode(prompt) + encode(target) + [EOS=3]`, with no automatic BOS or padding; the prompt ends exactly at `Edited file:` and the completion begins immediately. All 18 prompts and targets roundtripped exactly. Record tokens including EOS ranged from **46 to 77** (mean **61.667**, median **59.5**); all fit the 512-token context.
 
+### File-conditioned generation window
+
+The generic Plex completion runtime uses `initial-prompt-intact-sliding-window-v1`.
+
+For file-conditioned work, the contract is now explicit:
+
+- the supplied request + file prompt must fit the context **before generation starts**
+- prompt + requested maximum output is **not required** to fit the context
+- once decoding exceeds the context length, the runtime may evict the oldest prompt tokens and continue with a sliding window
+- the completion report records whether that eviction actually occurred
+
+A file-edit evaluator that requires the entire supplied request/file to remain visible for every output token must require `fullPromptVisibleForEveryGenerationStep: true` (equivalently `maximumPromptTokensEvicted: 0`). If that field is false, the output may still be scored as text, but it must not be represented as having been generated with the full supplied context available throughout decoding.
+
+For the frozen P3-01 fixtures, prompt + expected target + EOS is at most 77 tokens, so the reviewed targets fit wholly inside the 512-token context and require no prompt eviction. This statement is about the frozen fixtures only; arbitrary future files can be longer.
+
 ## Authorization and evidence boundary
 
 P3-01 preparation and contract review are authorized. Checkpoint staging, optimizer creation, model training, and automatic continuation are false; training performed is false; research optimizer updates are zero; final holdout remains closed. No checkpoint was staged or changed. This contract does not prove Plex can edit files. It defines a task representation and candidate evaluation shape; editing ability remains unproven.

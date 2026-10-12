@@ -273,7 +273,7 @@ uv run --project training --no-sync python -m plex_training.cli complete `
   --max-new-tokens 32 --temperature 0 --device cpu
 ```
 
-The saved checkpoint generated text, but its example was incomplete and did not correctly implement the function. This verifies local CPU loading and tokenization, not useful coding ability or a CPU speed/memory target. The current CLI keeps `pilot` at 120 minutes, `pilot-resume` at ten minutes, and general `train` at 120 minutes; no uncapped training command is enabled. The [P1-20 experiment report](../docs/PLEX-EXPERIMENT-REPORT-P1-20.md) records the run and its failures. Broader reviewed data and functional evaluation should be planned before considering a longer run.
+The saved checkpoint generated text, but its example was incomplete and did not correctly implement the function. This verifies local CPU loading and tokenization, not useful coding ability or a CPU speed/memory target. The `complete` command requires the initial prompt to fit intact, then uses a sliding context window if later generation exceeds the model context; its JSON result reports the context policy and any prompt-token eviction. Prompt + requested maximum output is not required to fit. For file-conditioned evaluation, require `fullPromptVisibleForEveryGenerationStep: true` when the entire supplied file/request must remain visible throughout decoding. The current CLI keeps `pilot` at 120 minutes, `pilot-resume` at ten minutes, and general `train` at 120 minutes; no uncapped training command is enabled. The [P1-20 experiment report](../docs/PLEX-EXPERIMENT-REPORT-P1-20.md) records the run and its failures. Broader reviewed data and functional evaluation should be planned before considering a longer run.
 
 ## P2-03 record-start comparison
 

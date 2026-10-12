@@ -318,7 +318,8 @@ def build_parser() -> argparse.ArgumentParser:
     complete.add_argument("--bundle-dir", type=Path, default=None,
                           help="Tokenizer bundle; defaults to the checkpoint's tokenizer sidecar")
     complete.add_argument("--prompt", required=True)
-    complete.add_argument("--max-new-tokens", type=int, default=64)
+    complete.add_argument("--max-new-tokens", type=int, default=64,
+                          help="1..256; after the model context fills, generation may evict the oldest prompt tokens and reports that eviction")
     complete.add_argument("--temperature", type=float, default=0.0,
                           help="0 is greedy; positive values use seeded sampling")
     complete.add_argument("--seed", type=int, default=1337)
