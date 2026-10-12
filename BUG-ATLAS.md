@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **5 complete** · 🔴 **1 open**
+> **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -44,7 +44,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
 | **G05** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-windows-tests.yml` | A narrow Windows portability workflow now exercises artifact, P3 identity/path, CLI, and mmap behavior without research training. |
-| **G06** | **P3** | 🔴 **OPEN** | `.gitattributes`, training CI workflows | Root line-ending policy changes must trigger Linux and Windows training verification. |
+| **G06** | **P3** | 🟢 **COMPLETE** | `.gitattributes`, training CI workflows | Root line-ending policy changes now trigger Linux and Windows training verification. |
 
 ---
 
@@ -960,17 +960,28 @@ No research training, corpus promotion, checkpoint modification, or final-holdou
 
 The repository's root `.gitattributes` file pins LF checkout bytes for fixtures and hash-sensitive training/P3 artifacts. A `.gitattributes`-only change could therefore alter checked-out bytes without matching the existing `training/**` workflow path filters.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
-Both automatic training workflows now include `.gitattributes` in their `pull_request.paths` and `push.paths` filters:
+Both automatic training workflows now include root `.gitattributes` in both their `pull_request.paths` and `push.paths` filters:
 
 - `.github/workflows/training-tests.yml`
 - `.github/workflows/training-windows-tests.yml`
 
-A regression in `test_ci_test_inventory.py` requires each workflow's trigger block to contain `.gitattributes` exactly twice: once for pull requests and once for pushes to `master`.
+This closes the checkout-byte policy gap for the repository rules that force canonical LF bytes on fixtures and hash-sensitive training/P3 artifacts.
 
-The change is intentionally limited to the root checkout-byte policy file. Other unrelated root files are not added to the training trigger set.
+A regression in `test_ci_test_inventory.py` now requires each workflow trigger block to contain `.gitattributes` exactly twice: once for pull requests and once for pushes to `master`. Future edits that remove either automatic trigger fail the Linux required suite.
 
-G06 remains open until the Linux required suite and Windows portability suite pass on the pull request and the merged `master` push passes both workflows.
+Verification:
+
+- PR #154 Linux run **#132**: **293 passed**, **9 skipped**, **1 warning**
+- PR #154 Windows run **#5**: **16 passed**, **1 warning**
+- merge commit: `c48364f79967095dc7b1d3d69d45cf7a2d8794f8`
+- automatic `master` Linux push run **#133**: **293 passed**, **9 skipped**, **1 warning**
+- automatic `master` Windows push run **#6**: **16 passed**, **1 warning**
+- both post-merge workflow runs recorded event `push`
+
+The trigger expansion is deliberately limited to `.gitattributes`; unrelated root configuration files were not added without evidence that they affect training checkout bytes or verification behavior.
+
+No runtime code, research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G06.
