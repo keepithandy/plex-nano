@@ -7,7 +7,7 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
-> **Maintenance / follow-ups:** 🟢 **2 complete** · 🔴 **0 open**
+> **Maintenance / follow-ups:** 🟢 **2 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -56,6 +56,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 |---|---|---|---|---|
 | **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
 | **M02** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer now requires exact frozen fixture identity before asserting `known-valid-target`. |
+| **M03** | **P3** | 🔴 **OPEN** | `training/src/plex_training/completion.py`, P3 context docs | Completion must explicitly report sliding-window prompt eviction for file-conditioned work. |
 
 ---
 
@@ -1074,3 +1075,46 @@ Verification:
 - automatic `master` Windows push run **#9**: **16 passed**, **1 warning**
 
 No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
+
+
+## 🛠️ M03 — Specify generation context eviction
+
+**Priority:** P3  
+**Type:** Maintenance / follow-up — explicit completion contract, separate from B08
+
+B08 guarantees that an oversized **initial prompt** is rejected rather than silently truncated. After a valid prompt is accepted, the existing decoder intentionally uses the most recent model-context window during generation. M03 documents and reports that distinct sliding-window behavior.
+
+### In progress
+
+🔴 **OPEN**
+
+The completion policy is now named `initial-prompt-intact-sliding-window-v1` and specifies:
+
+- the initial prompt must fit completely inside the model context before the first model evaluation
+- prompt + requested maximum output does **not** have to fit inside the context
+- after generation starts, the oldest tokens may be evicted when history exceeds the context length
+- eviction is measured from the actual model inputs used during generation, including a final evaluation that emits EOS
+
+Successful completion reports now include:
+
+- `contextPolicy`
+- `contextLength`
+- `promptTokenCount`
+- `maxNewTokensRequested`
+- `generatedTokenCount`
+- `modelEvaluationCount`
+- `promptPlusRequestedOutputMustFitContext`
+- `promptEvictionAllowedAfterGenerationStarts`
+- `maximumPromptTokensEvicted`
+- `minimumPromptTokensVisible`
+- `fullPromptVisibleForEveryGenerationStep`
+
+For file-conditioned evaluation, an evaluator that requires the whole supplied request/file to remain visible throughout decoding must require `fullPromptVisibleForEveryGenerationStep: true`. A false value means the result may still be scored as output text, but it must not be represented as having retained the complete supplied context for every decoding step.
+
+The frozen P3-01 prompt + expected target + EOS records are at most 77 tokens, so their reviewed targets fit wholly within the 512-token context. This does not imply arbitrary future files will fit.
+
+Regression coverage checks both no-eviction at the exact initial boundary and actual prompt eviction under a small sliding window, including the returned completion report.
+
+No context length, model architecture, P3 fixture, training authorization, checkpoint, corpus, or final-holdout state is changed.
+
+M03 remains open until the required Linux suite passes on the pull request and the merged `master` push passes the same suite. The Windows portability workflow will also cross-check the changed training workspace.
