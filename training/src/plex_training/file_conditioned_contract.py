@@ -278,11 +278,17 @@ def _publish_p3_pair(
 
 
 def score_file_edit(row, actual):
-    """Conservative replacement-region scoring for the frozen fixtures only."""
+    """Conservative replacement-region scoring for exact frozen P3-01 fixtures."""
+    if not isinstance(row, dict):
+        raise ValueError("Scoring requires an exact frozen P3-01 fixture")
+    approved = {fixture["id"]: fixture for fixture in _fixture_rows()}
+    row_id = row.get("id")
+    if not isinstance(row_id, str) or row != approved.get(row_id):
+        raise ValueError("Scoring requires an exact frozen P3-01 fixture")
     if not isinstance(actual, str):
         raise ValueError("Actual output must be text")
     actual = actual.replace("\r\n", "\n").replace("\r", "\n")
-    old, new = REPLACEMENTS[row["id"]]
+    old, new = REPLACEMENTS[row_id]
     source = row["inputFile"]
     if source.count(old) != 1 or source.replace(old, new, 1) != row["expectedFile"]:
         raise ValueError("Invalid expected replacement")
