@@ -7,7 +7,7 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
-> **Maintenance / follow-ups:** 🟢 **1 complete** · 🔴 **1 open**
+> **Maintenance / follow-ups:** 🟢 **2 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -55,7 +55,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 | ID | Priority | Status | Area | Summary |
 |---|---|---|---|---|
 | **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
-| **M02** | **P3** | 🔴 **OPEN** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer must require exact frozen fixture identity before asserting `known-valid-target`. |
+| **M02** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer now requires exact frozen fixture identity before asserting `known-valid-target`. |
 
 ---
 
@@ -1043,9 +1043,9 @@ No historical milestone was renamed, and no repository-agent, project-discovery,
 
 Current repository review/evaluation paths validate the frozen candidate before scoring, so this entry does not claim a known incorrect production evaluation.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
 The scorer now binds its validity claim to the reviewed frozen fixture itself:
 
@@ -1065,6 +1065,9 @@ Regression coverage rejects:
 
 An unchanged frozen fixture remains accepted and retains the existing scoring result.
 
-No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
+PR-side verification:
 
-M02 remains open until the required Linux suite passes on the pull request and the merged `master` push passes the same required suite. The Windows portability workflow is expected to run because the training workspace changed, but M02's scorer regression is enforced by the full required suite.
+- Linux required run **#134**: **294 passed**, **9 skipped**, **1 warning**
+- Windows portability run **#7**: **16 passed**, **1 warning**
+
+No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
