@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "training/**"
+      - ".gitattributes"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
       - ".github/workflows/training-windows-tests.yml"
@@ -12,6 +13,7 @@ on:
       - master
     paths:
       - "training/**"
+      - ".gitattributes"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
       - ".github/workflows/training-windows-tests.yml"
