@@ -28,6 +28,31 @@ The small reduction in held-out loss is a one-update continuity observation, not
 
 `complete` loads the saved model and matching tokenizer bundle in a new process. It encodes a nonempty prompt with Plex's BPE tokenizer, limits each generation context to 512 tokens, masks PAD/UNK/BOS and all IDs outside the learned 9,976-token vocabulary, stops at EOS, and decodes the result. Generation is bounded to at most 256 new tokens. Temperature `0` uses greedy decoding; positive temperatures use a seeded local generator. A supplied `--bundle-dir` must match the checkpoint's tokenizer identity; otherwise the command defaults to the `tokenizer/` sidecar next to the checkpoint.
 
+### Completion context policy
+
+Completion uses `initial-prompt-intact-sliding-window-v1`.
+
+- The **initial prompt must fit completely** inside the model context. An oversized prompt is rejected before model evaluation; this is the B08 guarantee.
+- The prompt plus the requested maximum output **does not have to fit** inside the context.
+- After generation starts, the decoder uses the most recent `contextLength` tokens. If prompt + generated history grows beyond that window, the oldest tokens are evicted.
+- Eviction is therefore allowed only **after** an initially valid prompt has been accepted. This is deliberate sliding-window decoding, not silent initial truncation.
+
+Every successful completion report records:
+
+- `contextPolicy`
+- `contextLength`
+- `promptTokenCount`
+- `maxNewTokensRequested`
+- `generatedTokenCount`
+- `modelEvaluationCount`
+- `promptPlusRequestedOutputMustFitContext` (currently `false`)
+- `promptEvictionAllowedAfterGenerationStarts` (currently `true`)
+- `maximumPromptTokensEvicted`
+- `minimumPromptTokensVisible`
+- `fullPromptVisibleForEveryGenerationStep`
+
+`maximumPromptTokensEvicted` is measured from the actual model inputs used during the run, including a final model evaluation that emits EOS. A report with `fullPromptVisibleForEveryGenerationStep: false` means at least one later decoding step no longer had access to the full supplied prompt.
+
 The separate CPU command generated 32 tokens from `function add(a, b) {`. Its completion began:
 
 ```text
