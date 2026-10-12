@@ -8,6 +8,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TEST_ROOT = REPO_ROOT / "training" / "tests"
 REQUIRED_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "training-tests.yml"
 EXPERIMENT_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "training-experiment-tests.yml"
+WINDOWS_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "training-windows-tests.yml"
 TEST_MODULE_PATTERN = re.compile(r"training/tests/(test_[A-Za-z0-9_]+\.py)")
 
 
@@ -40,6 +41,16 @@ class CiTestInventoryTests(unittest.TestCase):
         self.assertIn("push:", trigger_block)
         self.assertIn("- master", trigger_block)
         self.assertIn("workflow_dispatch:", trigger_block)
+
+    def test_root_line_ending_policy_triggers_linux_and_windows_training_ci(self) -> None:
+        for workflow in (REQUIRED_WORKFLOW, WINDOWS_WORKFLOW):
+            with self.subTest(workflow=workflow.name):
+                trigger_block = workflow.read_text(encoding="utf-8").split("permissions:", 1)[0]
+                self.assertEqual(
+                    trigger_block.count('- ".gitattributes"'),
+                    2,
+                    ".gitattributes must trigger both pull_request and master push verification",
+                )
 
     def test_experiment_suite_remains_manual_only(self) -> None:
         trigger_block = EXPERIMENT_WORKFLOW.read_text(encoding="utf-8").split("permissions:", 1)[0]
