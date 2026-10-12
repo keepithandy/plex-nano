@@ -489,6 +489,44 @@ class FileConditionedContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 _validate_rows(rows)
 
+    def test_scoring_requires_exact_frozen_fixture_identity(self):
+        frozen = build_candidate_rows()[0]
+        cases = []
+
+        changed_request = dict(frozen)
+        changed_request["request"] = "Use a different request for the same edit."
+        cases.append(("request", changed_request, changed_request["expectedFile"]))
+
+        changed_source = dict(frozen)
+        changed_source["inputFile"] = '<button class="custom">Apply</button>'
+        changed_source["expectedFile"] = '<button class="custom">Save Changes</button>'
+        cases.append(("source-and-target", changed_source, changed_source["expectedFile"]))
+
+        changed_language = dict(frozen)
+        changed_language["language"] = "css"
+        cases.append(("language", changed_language, changed_language["expectedFile"]))
+
+        extra_field = dict(frozen)
+        extra_field["note"] = "not part of the frozen fixture"
+        cases.append(("extra-field", extra_field, extra_field["expectedFile"]))
+
+        unknown_id = dict(frozen)
+        unknown_id["id"] = "p301-html-99"
+        cases.append(("unknown-id", unknown_id, unknown_id["expectedFile"]))
+
+        for name, row, actual in cases:
+            with self.subTest(name=name):
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "exact frozen P3-01 fixture",
+                ):
+                    score_file_edit(row, actual)
+
+        self.assertEqual(
+            score_file_edit(frozen, frozen["expectedFile"])["syntaxCheckability"],
+            "known-valid-target",
+        )
+
     def test_scoring_distinguishes_correctness_and_preservation(self):
         row = build_candidate_rows()[0]
         wrong = score_file_edit(row, "<button>Wrong</button>")
