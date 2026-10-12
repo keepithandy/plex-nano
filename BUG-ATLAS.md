@@ -1120,9 +1120,12 @@ Regression coverage verifies:
 - an EOS-producing model evaluation can increase eviction even though EOS is not emitted text
 - `complete_pilot` reports the actual policy and eviction measurements
 
-PR-side verification:
+Verification:
 
-- Linux required run **#137**: **297 passed**, **9 skipped**, **1 warning**
-- Windows portability run **#10**: **16 passed**, **1 warning**
+- PR Linux required run **#137**: **297 passed**, **9 skipped**, **1 warning**
+- PR Windows portability run **#10**: **16 passed**, **1 warning**
+- merge commit: `6b9aa7d672c05f70c79ed2ce1a23ba5be00520d6`
+- automatic `master` Linux push run **#139**: **297 passed**, **9 skipped**, **1 warning**
+- automatic `master` Windows push run **#12**: **16 passed**, **1 warning**
 
 No context length, model architecture, P3 fixture, training authorization, checkpoint, corpus, or final-holdout state is changed.
