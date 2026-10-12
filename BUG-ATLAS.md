@@ -43,7 +43,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
 | **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
-| **G05** | **P2** | 🔴 **OPEN** | `.github/workflows/training-tests.yml` | A narrow `windows-latest` subset must exercise artifact, P3 identity/path, CLI, and mmap behavior without research training. |
+| **G05** | **P2** | 🔴 **OPEN** | `.github/workflows/training-windows-tests.yml` | A narrow `windows-latest` subset must exercise artifact, P3 identity/path, CLI, and mmap behavior without research training. |
 
 ---
 
@@ -909,7 +909,7 @@ The portable training workflow previously ran only on Ubuntu even though the pri
 
 🔴 **OPEN**
 
-A second `windows-portability` job has been added to the existing `training-tests` workflow using `windows-latest`. It uses the same locked Python 3.12/uv environment but intentionally runs only a small filesystem/identity subset.
+A dedicated `training-windows-tests` workflow has been added using `windows-latest`. It uses the same locked Python 3.12/uv environment but intentionally runs only a small filesystem/identity subset. Keeping the Windows subset in a separate workflow preserves G03’s invariant that each top-level test module appears only once in the required/experiment suite classification.
 
 Selected coverage:
 
@@ -931,4 +931,6 @@ Selected coverage:
 
 The runner-path tests that call `run_training` are designed to fail during destination validation before device selection, checkpoint loading, optimizer construction, or model training. No research training is authorized by this job.
 
-G05 remains open until both the Ubuntu required suite and the Windows subset pass on the pull request, and the merged `master` push automatically passes the same Windows job.
+Changes to either the Linux required workflow or the Windows workflow trigger both relevant verification paths: the Linux required suite includes the Windows workflow file in its path filter, and the Windows workflow includes the Linux workflow file in its own filter.
+
+G05 remains open until both the Ubuntu required suite and the Windows subset pass on the pull request, and the merged `master` push automatically passes the same Windows workflow.
