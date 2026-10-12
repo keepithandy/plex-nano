@@ -6,6 +6,7 @@ on:
       - "training/**"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
+      - ".github/workflows/training-windows-tests.yml"
   push:
     branches:
       - master
@@ -13,6 +14,7 @@ on:
       - "training/**"
       - ".github/workflows/training-tests.yml"
       - ".github/workflows/training-experiment-tests.yml"
+      - ".github/workflows/training-windows-tests.yml"
   workflow_dispatch:
 
 permissions:
@@ -76,37 +78,4 @@ jobs:
           training/tests/test_web_materialize.py
           training/tests/test_web_sources.py
           training/tests/test_ci_test_inventory.py
-          -q
-
-  windows-portability:
-    runs-on: windows-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        run: python -m pip install --disable-pip-version-check uv
-      - name: Sync locked training environment
-        run: uv sync --project training --frozen --group dev
-      - name: Run Windows portability subset
-        run: >
-          uv run --project training --no-sync python -m pytest
-          training/tests/test_data_and_runner.py::DataAndRunnerTests::test_packed_corpus_yields_next_token_pairs
-          training/tests/test_pilot.py::PilotSafetyTests::test_checkpoint_serialization_is_bounded_before_overallocation
-          training/tests/test_pilot.py::PilotSafetyTests::test_checkpoint_overwrite_budget_counts_old_checkpoint_during_temp_write
-          training/tests/test_pilot.py::PilotSafetyTests::test_failed_final_allocation_check_preserves_checkpoint
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_windows_destination_spelling_rejects_aliases_and_devices
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_windows_aliases_rejected_before_device_or_checkpoint_work
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_resolved_windows_destination_is_validated_too
-          training/tests/test_resume_and_completion.py::ResumeAndCompletionTests::test_checkpoint_staging_path_cannot_be_metrics_destination
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_identity_is_deterministic
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_second_publish_failure_rolls_back_existing_pair
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_interruptions_restore_both_outputs
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_rejects_fresh_windows_output_aliases_before_input_read
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_review_rejects_windows_report_spellings_before_input_read
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_checks_resolved_windows_output_spelling
-          training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_cli_defaults_are_absolute_and_rooted_at_repository
-          training/tests/test_cli.py::CliTests::test_artifact_root_helper_does_not_double_existing_prefix
           -q
