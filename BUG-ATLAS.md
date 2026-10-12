@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **2 complete** · 🔴 **0 open**
+> **Verification gaps:** 🟢 **2 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -41,6 +41,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 |---|---|---|---|---|
 | **G01** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | P3 file-conditioned contract tests are explicitly included in the portable training CI suite. |
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
+| **G03** | **P2** | 🔴 **OPEN** | `.github/workflows/training-tests.yml`, `training/tests/` | Every top-level Python test module must be explicitly assigned to the portable required or manual experiment-contract suite. |
 
 ---
 
@@ -799,3 +800,38 @@ Verification:
 The connected GitHub integration still cannot read branch-protection settings, so this entry does not claim that `training-tests` is configured as a repository-level required status check.
 
 No runtime code, model configuration, training data, checkpoint, corpus, or final-holdout state was changed for G02.
+
+
+## 🧪 G03 — Explicit portable and experiment test suites
+
+**Priority:** P2  
+**Type:** Verification gap — not a runtime defect
+
+The audit snapshot reported 62 top-level `training/tests/test_*.py` files with 26 explicitly selected by `training-tests.yml` and 36 omitted. By the time G03 was verified on current `master`, prior CI fixes had already increased the automatic list to 29 modules, leaving 33 of the same 62 modules unselected.
+
+The omitted files were reviewed for portability, side effects, historical coupling, and experiment authorization rather than being added indiscriminately.
+
+### In progress
+
+🔴 **OPEN**
+
+Proposed partition:
+
+- **Portable required suite:** retain the existing 29 modules and add 12 reviewed library/current-product modules.
+- **Manual experiment-contract suite:** keep 21 historical Phase-2 candidate, approval, probe, run, curriculum, and transfer-diagnostic modules behind explicit `workflow_dispatch`.
+- **Inventory enforcement:** add one new portable test that requires every top-level `test_*.py` module to appear in exactly one suite.
+
+Because the inventory test is itself a new module, the proposed post-change filename inventory is:
+
+- **63 total modules**
+- **42 portable required modules**
+- **21 manual experiment-contract modules**
+- **0 unclassified modules**
+
+The counts are selected filenames, not executed test cases and not a coverage percentage.
+
+The portable additions were reviewed as deterministic/local. Network behavior in `test_source_fetch.py` is mocked; Node-dependent checks skip when Node is unavailable; the complete-record and record-sampling modules use bounded tiny CPU fixtures and temporary artifacts rather than the controlled research model; tokenizer review fits small tokenizer candidates but does not train the model.
+
+The manual experiment-contract workflow is authorization to execute those tests only. It is not model-training authorization, corpus-promotion authorization, checkpoint-modification authorization, or permission to open the final holdout.
+
+G03 remains open until the expanded portable suite passes on the pull request, the inventory test proves all modules are classified exactly once, and the merged `master` push also passes the required suite.
