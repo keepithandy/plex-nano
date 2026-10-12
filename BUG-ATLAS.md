@@ -1065,9 +1065,12 @@ Regression coverage rejects:
 
 An unchanged frozen fixture remains accepted and retains the existing scoring result.
 
-PR-side verification:
+Verification:
 
-- Linux required run **#134**: **294 passed**, **9 skipped**, **1 warning**
-- Windows portability run **#7**: **16 passed**, **1 warning**
+- PR Linux required run **#134**: **294 passed**, **9 skipped**, **1 warning**
+- PR Windows portability run **#7**: **16 passed**, **1 warning**
+- merge commit: `6136172f8a4cb7c60f9c5fe6ca7b700a853663bb`
+- automatic `master` Linux push run **#136**: **294 passed**, **9 skipped**, **1 warning**
+- automatic `master` Windows push run **#9**: **16 passed**, **1 warning**
 
 No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
