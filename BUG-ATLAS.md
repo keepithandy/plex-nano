@@ -5,7 +5,7 @@
 > [!TIP]
 > **Atlas status:** 🟢 **15 complete** · 🔴 **0 open**
 >
-> **Verification gaps:** 🟢 **2 complete** · 🔴 **1 open**
+> **Verification gaps:** 🟢 **3 complete** · 🔴 **0 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -41,7 +41,7 @@ These entries track CI/evidence coverage separately from runtime defects.
 |---|---|---|---|---|
 | **G01** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | P3 file-conditioned contract tests are explicitly included in the portable training CI suite. |
 | **G02** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml` | Relevant direct pushes to `master` now automatically trigger the portable training suite. |
-| **G03** | **P2** | 🔴 **OPEN** | `.github/workflows/training-tests.yml`, `training/tests/` | Every top-level Python test module must be explicitly assigned to the portable required or manual experiment-contract suite. |
+| **G03** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-tests.yml`, `training/tests/` | All top-level Python test modules are explicitly partitioned into the portable required or manual experiment-contract suite. |
 
 ---
 
@@ -811,27 +811,42 @@ The audit snapshot reported 62 top-level `training/tests/test_*.py` files with 2
 
 The omitted files were reviewed for portability, side effects, historical coupling, and experiment authorization rather than being added indiscriminately.
 
-### In progress
+### Resolution
 
-🔴 **OPEN**
+🟢 **COMPLETE**
 
-Proposed partition:
+The Python test inventory is now explicitly partitioned instead of relying on an incomplete hand-maintained subset.
 
-- **Portable required suite:** retain the existing 29 modules and add 12 reviewed library/current-product modules.
-- **Manual experiment-contract suite:** keep 21 historical Phase-2 candidate, approval, probe, run, curriculum, and transfer-diagnostic modules behind explicit `workflow_dispatch`.
-- **Inventory enforcement:** add one new portable test that requires every top-level `test_*.py` module to appear in exactly one suite.
+Final filename inventory:
 
-Because the inventory test is itself a new module, the proposed post-change filename inventory is:
-
-- **63 total modules**
+- **63 total top-level `test_*.py` modules**
 - **42 portable required modules**
 - **21 manual experiment-contract modules**
 - **0 unclassified modules**
+- **0 modules present in both suites**
 
-The counts are selected filenames, not executed test cases and not a coverage percentage.
+The portable required workflow retained the existing 29 modules and added 12 reviewed library/current-product modules plus `test_ci_test_inventory.py`. The promoted modules cover answer-focused records, benchmark/static parsing, complete-record sampling/resume integrity, configuration, dataset construction, model behavior, record sampling, pinned-source fetching, tokenizer review, and web dataset/source/materialization behavior.
 
-The portable additions were reviewed as deterministic/local. Network behavior in `test_source_fetch.py` is mocked; Node-dependent checks skip when Node is unavailable; the complete-record and record-sampling modules use bounded tiny CPU fixtures and temporary artifacts rather than the controlled research model; tokenizer review fits small tokenizer candidates but does not train the model.
+Portability review confirmed:
 
-The manual experiment-contract workflow is authorization to execute those tests only. It is not model-training authorization, corpus-promotion authorization, checkpoint-modification authorization, or permission to open the final holdout.
+- `test_source_fetch.py` mocks network access
+- Node-dependent checks are skipped when Node is unavailable
+- complete-record and record-sampling tests use bounded tiny CPU fixtures and temporary artifacts rather than the controlled research model
+- tokenizer review fits small tokenizer candidates but performs no model training
+- web dataset/source/materialization tests use local temporary fixtures
 
-G03 remains open until the expanded portable suite passes on the pull request, the inventory test proves all modules are classified exactly once, and the merged `master` push also passes the required suite.
+The 21 historical Phase-2 candidate, approval, probe, run, curriculum, and transfer-diagnostic modules are now listed in `.github/workflows/training-experiment-tests.yml`, which has only a `workflow_dispatch` trigger. That manual workflow was intentionally **not** dispatched during G03. Its existence preserves deliberate historical regression capability without making frozen experiment artifacts a merge gate for current Phase-3 work, and it does not authorize model training.
+
+`test_ci_test_inventory.py` now enforces the partition by requiring every top-level test module to appear in exactly one workflow, rejecting duplicates/overlap, requiring the portable suite to remain automatic, and requiring the historical experiment suite to remain manual-only.
+
+Verification:
+
+- PR #148 portable required run **#124**: **292 passed**, **9 skipped**, **1 warning**
+- merge commit: `28448f94d360de08d1fa9184eb99648e7d56f843`
+- automatic `master` push run **#125**: **292 passed**, **9 skipped**, **1 warning**
+- both executed commands included all **42 required modules**
+- inventory check verified **63 = 42 required + 21 manual**, with no overlap or unclassified modules
+
+The original audit's 26-selected/36-omitted count remains historical evidence. At G03 verification start, earlier fixes had already changed the live baseline to 29 selected/33 omitted. These are module filename counts, not executed test-case counts and not a coverage percentage.
+
+No research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G03.
