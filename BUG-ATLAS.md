@@ -7,6 +7,8 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
+> **Maintenance / follow-ups:** 🟢 **0 complete** · 🔴 **1 open**
+>
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
 > Each entry keeps the original failure mode, required regression coverage, resolution, and verification record together.
@@ -45,6 +47,14 @@ These entries track CI/evidence coverage separately from runtime defects.
 | **G04** | **P2** | 🟢 **COMPLETE** | `.github/workflows/typescript-maintenance.yml`, `package.json` | Legacy TypeScript scaffolding now has a narrow automated build/test maintenance check. |
 | **G05** | **P2** | 🟢 **COMPLETE** | `.github/workflows/training-windows-tests.yml` | A narrow Windows portability workflow now exercises artifact, P3 identity/path, CLI, and mmap behavior without research training. |
 | **G06** | **P3** | 🟢 **COMPLETE** | `.gitattributes`, training CI workflows | Root line-ending policy changes now trigger Linux and Windows training verification. |
+
+### Maintenance / follow-up overview
+
+These entries track wording, compatibility, and repository-maintenance follow-ups separately from runtime defects and verification gaps.
+
+| ID | Priority | Status | Area | Summary |
+|---|---|---|---|---|
+| **M01** | **P3** | 🔴 **OPEN** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help must explicitly identify the TypeScript scaffolding and point to current model commands. |
 
 ---
 
@@ -985,3 +995,31 @@ Verification:
 The trigger expansion is deliberately limited to `.gitattributes`; unrelated root configuration files were not added without evidence that they affect training checkout bytes or verification behavior.
 
 No runtime code, research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G06.
+
+
+## 🛠️ M01 — Legacy CLI help context
+
+**Priority:** P3  
+**Type:** Maintenance / follow-up — not a runtime defect
+
+The root package still exposes a `plex` executable backed by retained TypeScript scaffolding. Its help text historically displayed `P1-10 proposed buffers and unified diffs` without explaining that this is a legacy milestone for the auxiliary TypeScript path rather than the current Phase 3 coding-model status.
+
+### In progress
+
+🔴 **OPEN**
+
+The help text now:
+
+- preserves the historical `P1-10 proposed buffers and unified diffs` label
+- explicitly qualifies it as **Legacy TypeScript scaffolding status**
+- states that the executable is retained for compatibility and is not the current Plex Nano model interface
+- points users to the current Python model/research CLI:
+  - `uv run --project training python -m plex_training.cli --help`
+  - `uv run --project training python -m plex_training.cli environment`
+- clarifies that implementation requests are unavailable **in this legacy CLI**
+
+Regression coverage checks the legacy qualifier and both current-command pointers in the existing CLI integration test.
+
+No historical milestone was renamed, and no repository-agent, project-discovery, source-scanning, Git, or autonomous workflow capability was added.
+
+M01 remains open until the TypeScript maintenance workflow passes on the pull request and the merged `master` push passes the same workflow.
