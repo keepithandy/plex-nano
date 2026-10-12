@@ -7,7 +7,7 @@
 >
 > **Verification gaps:** 🟢 **6 complete** · 🔴 **0 open**
 >
-> **Maintenance / follow-ups:** 🟢 **1 complete** · 🔴 **0 open**
+> **Maintenance / follow-ups:** 🟢 **1 complete** · 🔴 **1 open**
 >
 > **Priority mix:** 🔴 4 P1 · 🟠 7 P2 · 🔵 4 P3
 >
@@ -55,6 +55,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 | ID | Priority | Status | Area | Summary |
 |---|---|---|---|---|
 | **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
+| **M02** | **P3** | 🔴 **OPEN** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer must require exact frozen fixture identity before asserting `known-valid-target`. |
 
 ---
 
@@ -1031,3 +1032,39 @@ Verification:
 - failures across the verified final paths: **0**
 
 No historical milestone was renamed, and no repository-agent, project-discovery, source-scanning, Git, or autonomous workflow capability was added.
+
+
+## 🛠️ M02 — Enforce frozen P3 scorer identity
+
+**Priority:** P3  
+**Type:** Maintenance / follow-up — API hardening, not a proven current evaluation failure
+
+`score_file_edit` documents that it scores the frozen P3-01 fixture set. Before this hardening, it verified only the replacement relation for the supplied row. A custom row could therefore retain a known fixture ID and a valid old→new replacement relation while changing other fixture fields, then receive `syntaxCheckability: "known-valid-target"` for an exact custom target.
+
+Current repository review/evaluation paths validate the frozen candidate before scoring, so this entry does not claim a known incorrect production evaluation.
+
+### In progress
+
+🔴 **OPEN**
+
+The scorer now binds its validity claim to the reviewed frozen fixture itself:
+
+- the supplied row must be a dictionary
+- the row ID must identify one of the 18 reviewed P3-01 fixtures
+- the complete supplied row must equal that reviewed fixture exactly
+- only after identity succeeds does replacement-region scoring run
+- `known-valid-target` remains available only when the actual output exactly equals the reviewed frozen target
+
+Regression coverage rejects:
+
+- changed request with the same known ID/target
+- changed source and corresponding changed target that still satisfy the known replacement relation
+- changed language
+- extra row fields
+- unknown fixture IDs
+
+An unchanged frozen fixture remains accepted and retains the existing scoring result.
+
+No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
+
+M02 remains open until the required Linux suite passes on the pull request and the merged `master` push passes the same required suite. The Windows portability workflow is expected to run because the training workspace changed, but M02's scorer regression is enforced by the full required suite.
