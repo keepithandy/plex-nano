@@ -1022,10 +1022,12 @@ The help text:
 
 The existing CLI integration test now requires the legacy qualifier and both current-command pointers.
 
-PR-side verification:
+Verification:
 
-- TypeScript build: passed
-- Node tests: **102 / 102 passed**
-- failures: **0**
+- PR code-head TypeScript maintenance run **#4**: build passed; **102 / 102 tests passed**
+- final PR-head TypeScript maintenance run **#5**: build passed; **102 / 102 tests passed**
+- merge commit: `7c8b9d3f22f2a46f9a0c53480d5de1b151fdc098`
+- automatic `master` TypeScript maintenance run **#6**: event `push`; build passed; **102 / 102 tests passed**
+- failures across the verified final paths: **0**
 
 No historical milestone was renamed, and no repository-agent, project-discovery, source-scanning, Git, or autonomous workflow capability was added.
