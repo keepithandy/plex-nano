@@ -127,6 +127,25 @@ uv run --project training python -m plex_training.cli file-edit-replacements-bas
 
 The original P2-48 source checkpoint must remain readable at its verified default location. Do not repeat staging into an existing output directory; verification and baseline operations are read-only. No local stage or baseline results are claimed until the owner actually runs the commands.
 
+## October 13 measured stage-zero baseline and first-run authorization packet
+
+The owner reported a successful full **36-record, 1,320 answer/EOS target** CPU validation baseline on the unchanged zero-stage model. The checkpoint SHA-256 is `50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246`. The frozen training bundle manifest remains `0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354`. The teacher-forced, supervised-target-weighted **mean validation cross-entropy is 10.566839536031088**, with CSS 10.045777009682096 (521 targets), HTML 10.963397183261074 (455), and JavaScript 10.831490253293238 (344). These are **losses, not exact-edit success rates**. We did not run or independently reproduce the owner's local baseline through GitHub Actions. The result is pinned in `training/pretraining/p3-02-step-zero-baseline-result.json`.
+
+The **unapproved** proposed first-run packet is `training/pretraining/p3-02-first-run-contract.json` and starts with `status: owner-approval-required`, `modelTrainingAuthorized: false`, null approver/date, and no continuation. A bounded trainer implementation and read-only training preflight are now available for source review and portable safety tests. Neither the user-pasted baseline nor successful CI implies model-training authorization. The real trainer requires **both** a separately owner-approved exact packet and explicit CLI `--authorize-first-run`; a draft and any altered bounds fail before CUDA/model access.
+
+The proposed immutable training settings are seed 1337, AdamW learning rate 0.0001, betas (0.9, 0.95), weight decay 0.1, epsilon 1e-8, gradient clipping 1, micro-batch 1, accumulation 16, **uniform complete-record sampling with replacement**, and answer/EOS-only per-record normalized loss. The exact train order must reproduce 1,600 selections over 100 steps and **60,445 supervised answer/EOS targets**. The runner requires CUDA and the frozen stage checksum; all 36 validation examples remain excluded from gradients. It validates at 0/25/50/75/100, saves checkpoints at 25/50/75/100, and enforces no more than 100 optimizer steps or 600 seconds from run start. It refuses an existing output, alternate checkpoint selection, automatic resume, and development/final-holdout access. Interrupted or time-capped partial runs cannot masquerade as the fixed 100-step endpoint; continuation would need another authorization.
+
+From the repository root, after installing this change through a checked-out feature branch or a merge, with the existing external bundle and stage under `$HOME\PlexArtifacts`:
+
+```powershell
+$artifactRoot = Join-Path $HOME "PlexArtifacts"
+$bundleDir = Join-Path $artifactRoot "p3-02-training-bundle"
+$stageCheckpoint = Join-Path $artifactRoot "p3-02-stage0/stage-checkpoint.pt"
+uv run --project training python -m plex_training.cli file-edit-replacements-training-preflight --bundle-dir "$bundleDir" --stage-checkpoint "$stageCheckpoint"
+```
+
+The training preflight is **read-only**. It revalidates the exact source/stage/bundle, recomputes the frozen CPU baseline within 0.02 cross-entropy of the recorded result, and replays the deterministic sampler. It reports the draft's authorization status and **runs zero updates**. Do **not** run `file-edit-replacements-run` until after explicit owner approval and review of the authorization packet; it is intentionally blocked. The true 100-step endpoint and exact-edited-file development results are not yet known.
+
 ## Predeclared development gate
 
 Assess all 36 development requests at the fixed endpoint. Require all of:
