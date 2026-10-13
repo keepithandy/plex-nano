@@ -1,5 +1,27 @@
 # P3-02 — Exact Small Replacements
 
+## October 13 owner approval — one bounded P3-02 first run
+
+The owner explicitly authorized the first P3-02 training run on **2026-10-13**, limited to **100 optimizer updates or 600 seconds**, whichever comes first. The committed `training/pretraining/p3-02-first-run-contract.json` now records `status: owner-approved-first-run`, `modelTrainingAuthorized: true`, approver `keepithandy`, and approval date `2026-10-13`. The exact baseline, stage checkpoint, bundle, tokenizer, sampler, loss objective, hyperparameters, and evaluation boundaries remain unchanged. The validator checks the exact one-run authorization scope and rejects tampering with any training bound or provenance field.
+
+This **authorizes** the run, but does not imply that it was **executed**. No P3-02 optimizer updates have yet been observed or reported; the separately required `--authorize-first-run` CLI flag must be supplied by the owner. The read-only training preflight should be rerun after pulling the approval commit.
+
+Run from the repository root on the approved owner's NVIDIA/CUDA machine using the already verified external artifact root (not the original OneDrive artifacts root):
+
+```powershell
+git switch master
+git pull --ff-only origin master
+$artifactRoot = Join-Path $HOME "PlexArtifacts"
+$bundleDir = Join-Path $artifactRoot "p3-02-training-bundle"
+$stageCheckpoint = Join-Path $artifactRoot "p3-02-stage0/stage-checkpoint.pt"
+$outputDir = Join-Path $artifactRoot "file-edits/p3-02-first-run"
+
+uv run --project training python -m plex_training.cli file-edit-replacements-training-preflight --bundle-dir "$bundleDir" --stage-checkpoint "$stageCheckpoint"
+uv run --project training python -m plex_training.cli file-edit-replacements-run --authorize-first-run --bundle-dir "$bundleDir" --stage-checkpoint "$stageCheckpoint" --artifact-root "$artifactRoot" --output-dir "$outputDir"
+```
+
+Do **not** delete or reuse an existing output directory. The run is one-shot: no overwrite, resume, automatic continuation, checkpoint reselection, or final-holdout access. The result, if completed, is recorded under `$outputDir/result.json` and metrics under `$outputDir/metrics.jsonl`; do not claim successful model learning until comparing the measured losses and subsequent exact-edit evaluations. Earlier preparation-only notes below describe historical states, not the current training authorization.
+
 **Status: candidate preparation and frozen-tokenizer review passed. Model training and the learning milestone are not complete.**
 
 This experiment will measure whether Plex Nano can follow a request to change one small region of a supplied HTML, CSS, or JavaScript file and return the whole edited file while preserving unrelated text. The owner authorized continuing preparation on October 12, 2026. No research checkpoint was loaded, optimizer created, checkpoint staged, or model updated during this preparation.
