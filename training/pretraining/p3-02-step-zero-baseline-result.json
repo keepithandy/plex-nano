@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "kind": "p3-02-owner-reported-step-zero-baseline-v1",
+  "recordedDate": "2026-10-13",
+  "source": "Owner-supplied PowerShell output, not reproduced by GitHub Actions",
+  "status": "owner-reported-local-baseline-passed",
+  "bundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+  "stageCheckpointSha256": "50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246",
+  "sourceCheckpointSha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+  "metric": "validation-answer-and-eos-cross-entropy-per-supervised-target",
+  "meanValidationAnswerAndEosLoss": 10.566839536031088,
+  "validationRecordsEvaluated": 36,
+  "supervisedTargetsEvaluated": 1320,
+  "perLanguage": {
+    "css": {
+      "meanLoss": 10.045777009682096,
+      "supervisedTargets": 521
+    },
+    "html": {
+      "meanLoss": 10.963397183261074,
+      "supervisedTargets": 455
+    },
+    "javascript": {
+      "meanLoss": 10.831490253293238,
+      "supervisedTargets": 344
+    }
+  },
+  "modelWeightsPreservedExactly": true,
+  "stageCheckpointCreated": true,
+  "modelTrainingAuthorized": false,
+  "trainingPerformed": false,
+  "researchOptimizerUpdates": 0,
+  "finalHoldoutOpened": false,
+  "automaticContinuation": false,
+  "baselineWrittenToDisk": false,
+  "interpretation": "This is teacher-forced validation next-token loss, not exact-edit success; no model updates or training permission implied."
+}
