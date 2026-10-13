@@ -10,6 +10,7 @@
 | **The model (Transformer weights, forward pass)** | [training/src/plex_training/model.py](training/src/plex_training/model.py) and [config.py](training/src/plex_training/config.py) |
 | **How training and evaluation are invoked** | [training/src/plex_training/cli.py](training/src/plex_training/cli.py) and [training/README.md](training/README.md) |
 | **Current HTML/CSS/JS editing experiment** | [file_edit_replacements.py](training/src/plex_training/file_edit_replacements.py), [file_edit_replacements_run.py](training/src/plex_training/file_edit_replacements_run.py), and [file_edit_replacements_development.py](training/src/plex_training/file_edit_replacements_development.py) |
+| **Read-only diagnosis of P3-02's failed edits** | [P3-02-D1 diagnostic and PowerShell command](docs/PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 | **The result and its limitations** | [P3-02 development gate summary](training/pretraining/p3-02-development-gate-result-summary.json) and [frozen training result](training/pretraining/p3-02-first-run-result.json) |
 
 ## Explorer map
