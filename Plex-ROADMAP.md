@@ -422,7 +422,7 @@ natural-language coding request
 
 P3-01 froze the one-file request/edit contract and passed deterministic fixture, preservation, tokenizer roundtrip, and context checks. The 18-fixture contract-validation set is not a representative training corpus and no editing capability is claimed from its preparation.
 
-P3-02 is active. Its candidate and tokenizer/context review passed; the next task is reviewed bundle packing and read-only baseline/stage-source preflight, followed by a concrete bounded training packet. Model updates require explicit training authorization.
+P3-02 is active. Its candidate and tokenizer/context review passed. A read-only answer/EOS supervision mask and deterministic sampler-preview command are implemented as the next preparation increment; it does not create bundles or load a checkpoint. Execute and verify that preflight with the frozen local tokenizer, then proceed to reviewed bundle packing and read-only baseline/stage-source preflight, followed by a concrete bounded training packet. Model updates require explicit training authorization.
 
 Start with **one supplied file**, one bounded requested change, and a deterministic target representation that can be scored for:
 
