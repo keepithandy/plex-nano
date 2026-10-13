@@ -69,6 +69,20 @@ The preparation contract records this proposal for later implementation and expl
 
 The fresh P3 stage, optimizer behavior, deterministic sampling totals, checkpoint/run ownership, read-only baseline evaluation, and signed training packet still need implementation and verification before this proposal can run. No automatic optimizer or run command is added by this preparation.
 
+## Read-only answer-only supervision preflight
+
+The next preparation increment adds `file-edit-replacements-supervision-preflight`. This command revalidates the frozen 216-record candidate, its draft metadata, and the committed frozen-tokenizer review, then previews **train/validation only** as `encode(prompt) + encode(expectedFile) + [EOS=3]`. It does not create a packed bundle, read a model checkpoint, initialize an optimizer, or run training.
+
+For every complete record, the next-token loss mask sets all prompt targets to zero and weights the **first edited-file token through EOS** as one; padding remains zero. The preflight also computes reproducible little-endian packed-token SHA-256 previews, per-split/per-language supervised target counts, and a seed-1337, 1,600-example uniform-with-replacement sampler replay, without sampling the 36 development examples.
+
+Run from the repository root after restoring the locally held P2-48 tokenizer bundle:
+
+```powershell
+uv run --project training python -m plex_training.cli file-edit-replacements-supervision-preflight
+```
+
+The command fails closed if the locally recomputed token lengths differ from the committed 87–138-token review or the exact frozen tokenizer identity. Passing this preflight will provide *read-only accounting evidence*, not a training authorization or empirical model-editing result. Reviewed bundle writing and pinned P2-48 checkpoint source inspection remain separate follow-on tasks.
+
 ## Predeclared development gate
 
 Assess all 36 development requests at the fixed endpoint. Require all of:
