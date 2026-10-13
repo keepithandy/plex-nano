@@ -240,6 +240,10 @@ Support one supplied HTML, CSS, or JavaScript file first.
 
 ### P3-02 — Exact Small Replacements
 
+**Status: ACTIVE — candidate preparation and frozen-tokenizer review passed; model training and capability evaluation have not started.**
+
+The reviewed candidate contains 216 authored examples (144 train / 36 validation / 36 development) in 72 intact contrast groups. Records fit within 87–138 tokens including EOS. See [P3-02 preparation](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) for the frozen identities, narrow transfer boundary, proposed run, and predeclared development gate.
+
 Examples:
 
 - change button text
@@ -405,7 +409,7 @@ Project-wide guardrails are defined in [AGENTS.md](AGENTS.md).
 
 Phase 2 is complete.
 
-The next task is to define the smallest stable model contract for:
+The active task is to prepare and verify a bounded exact-replacement experiment using the frozen model contract:
 
 ```text
 natural-language coding request
@@ -418,7 +422,7 @@ natural-language coding request
 
 P3-01 froze the one-file request/edit contract and passed deterministic fixture, preservation, tokenizer roundtrip, and context checks. The 18-fixture contract-validation set is not a representative training corpus and no editing capability is claimed from its preparation.
 
-P3-02 is the next milestone. It may define a bounded exact-replacement learning experiment, but requires its own explicit training authorization before any model updates.
+P3-02 is active. Its candidate and tokenizer/context review passed; the next task is reviewed bundle packing and read-only baseline/stage-source preflight, followed by a concrete bounded training packet. Model updates require explicit training authorization.
 
 Start with **one supplied file**, one bounded requested change, and a deterministic target representation that can be scored for:
 
