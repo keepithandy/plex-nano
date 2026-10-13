@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import random
+import struct
 from collections import Counter, defaultdict
 from itertools import combinations
 from pathlib import Path
@@ -278,3 +280,150 @@ def score_replacement(row: dict[str, Any], actual: str) -> dict[str, Any]:
     return {"exactMatch": exact, "requestedEditCorrect": exact,
             "unrelatedCodePreserved": preserved, "unnecessaryEdits": not preserved,
             "syntaxCheckability": "known-valid-target" if exact else "not-checked"}
+
+
+DEFAULT_FROZEN_REVIEW = ROOT / "training/pretraining/p3-02-exact-replacements-review-result.json"
+
+
+def answer_only_target_mask(prompt_tokens: int, target_tokens: int) -> tuple[int, ...]:
+    """Next-token weights: no prompt loss; supervise first answer token through EOS."""
+    if (type(prompt_tokens) is not int or type(target_tokens) is not int
+            or prompt_tokens < 1 or target_tokens < 1):
+        raise ValueError("P3-02 supervision requires nonempty prompt and answer")
+    # The final prompt token predicts the first answer token. The final answer
+    # token predicts EOS. Neither prompt tokens nor right-padding get loss.
+    return (0,) * (prompt_tokens - 1) + (1,) * (target_tokens + 1)
+
+
+def plan_replacement_supervision(
+    rows: list[dict[str, Any]], tokenizer: Any, *, seed: int = 1337,
+    examples: int = 1600,
+) -> dict[str, Any]:
+    """Dry-run exact train/validation tokens and answer-only sampler; no writes."""
+    validate_replacement_rows(rows)
+    if (type(seed) is not int or not 0 <= seed <= 2**63 - 1
+            or type(examples) is not int or not 1 <= examples <= 100_000):
+        raise ValueError("P3-02 sampling proposal is invalid")
+    if tokenizer.vocabulary_size != 16384:
+        raise ValueError("P3-02 requires the frozen 16K tokenizer")
+
+    split_counts = Counter()
+    split_tokens = Counter()
+    split_targets = Counter()
+    language_targets = Counter()
+    hashes = {"train": hashlib.sha256(), "validation": hashlib.sha256()}
+    selected_lengths: list[int] = []
+    minimum_record, maximum_record, maximum_prompt, maximum_target = 512, 0, 0, 0
+    for row in rows:
+        split = row["candidateSplit"]
+        if split == "development":
+            # The authored development gate is never included in a trainable bundle.
+            continue
+        prompt, target = render_prompt(row), row["expectedFile"]
+        prompt_ids, target_ids = tokenizer.encode(prompt), tokenizer.encode(target)
+        if (tokenizer.decode(prompt_ids) != prompt or tokenizer.decode(target_ids) != target
+                or not prompt_ids or not target_ids
+                or any(type(token) is not int or not 4 <= token < 16384
+                       for token in prompt_ids + target_ids)):
+            raise ValueError("P3-02 packed text does not roundtrip to ordinary tokens")
+        tokens = prompt_ids + target_ids + [3]
+        mask = answer_only_target_mask(len(prompt_ids), len(target_ids))
+        if (len(tokens) > 512 or len(prompt_ids) + PROPOSED_RUN["maxNewTokens"] > 512
+                or len(tokens) - 1 != len(mask) or sum(mask) != len(target_ids) + 1):
+            raise ValueError("P3-02 answer-only supervision exceeds context or mask")
+        # Serialize exactly as the future uint16 little-endian token bundle would.
+        hashes[split].update(struct.pack("<" + "H" * len(tokens), *tokens))
+        split_counts[split] += 1
+        split_tokens[split] += len(tokens)
+        split_targets[split] += sum(mask)
+        language_targets[(split, row["language"])] += sum(mask)
+        if split == "train":
+            selected_lengths.append(sum(mask))
+        minimum_record = min(minimum_record, len(tokens))
+        maximum_record = max(maximum_record, len(tokens))
+        maximum_prompt = max(maximum_prompt, len(prompt_ids))
+        maximum_target = max(maximum_target, len(target_ids) + 1)
+
+    if split_counts != {"train": 144, "validation": 36}:
+        raise ValueError("P3-02 sampler must exclude development records")
+    rng = random.Random(seed)
+    draws = [rng.randrange(len(selected_lengths)) for _ in range(examples)]
+    selections = Counter(draws)
+    if len(selections) != len(selected_lengths):
+        raise ValueError("P3-02 proposed sampler did not cover every training record")
+    return {
+        "supervision": "answer-and-eos-only-next-token-v1",
+        "promptLossWeights": 0,
+        "eosTargetWeight": 1,
+        "paddingTargetWeight": 0,
+        "records": dict(sorted(split_counts.items())),
+        "recordTokens": dict(sorted(split_tokens.items())),
+        "answerAndEosTargetPositions": dict(sorted(split_targets.items())),
+        "answerAndEosTargetsPerLanguage": {
+            split: {language: language_targets[(split, language)]
+                    for language in ("html", "css", "javascript")}
+            for split in ("train", "validation")
+        },
+        "packedTokenSha256": {split: hashes[split].hexdigest()
+                             for split in ("train", "validation")},
+        "minimumRecordTokensIncludingEos": minimum_record,
+        "maximumRecordTokensIncludingEos": maximum_record,
+        "maximumPromptTokens": maximum_prompt,
+        "maximumTargetTokensIncludingEos": maximum_target,
+        "sampler": {
+            "kind": "uniform-complete-record-with-replacement-proposal-v1",
+            "seed": seed, "examples": examples,
+            "recordsSelected": len(selections),
+            "minimumRecordSelections": min(selections.values()),
+            "maximumRecordSelections": max(selections.values()),
+            "expectedAnswerAndEosTargetPositions": sum(selected_lengths[i] for i in draws),
+            "optimizerUpdatesPerformed": 0,
+        },
+    }
+
+
+def preflight_replacement_supervision(
+    *, candidate_path: Path = DEFAULT_CANDIDATE,
+    review_path: Path = DEFAULT_REVIEW,
+    contract_path: Path = DEFAULT_CONTRACT,
+    bundle_dir: Path = DEFAULT_BUNDLE,
+    frozen_review_path: Path = DEFAULT_FROZEN_REVIEW,
+) -> dict[str, Any]:
+    """Verify the proposed loss mask and sampler, without creating an artifact."""
+    contract = _contract(contract_path)
+    live = review_replacement_candidate(
+        candidate_path=candidate_path, review_path=review_path,
+        contract_path=contract_path, bundle_dir=bundle_dir,
+    )
+    frozen = _read_json(frozen_review_path)
+    if live != frozen:
+        raise ValueError("P3-02 live review differs from frozen tokenizer evidence")
+    tokenizer, identity = _completion_tokenizer(bundle_dir)
+    if (identity["tokenizerSha256"] != EXPECTED_TOKENIZER_SHA256
+            or identity["bundleManifestSha256"] != TOKENIZER_BUNDLE_SHA256):
+        raise ValueError("P3-02 supervision requires the frozen tokenizer")
+    rows = [json.loads(line) for line in candidate_path.read_text(encoding="utf-8").splitlines()]
+    run = contract["proposedRun"]
+    plan = plan_replacement_supervision(
+        rows, tokenizer, seed=run["seed"],
+        examples=run["maximumOptimizerUpdates"] * run["microBatch"] * run["gradientAccumulation"],
+    )
+    expected = live["tokenizerPreflight"]
+    if (plan["recordTokens"] != {split: expected["splitTokenCounts"][split]
+                                 for split in ("train", "validation")}
+            or plan["minimumRecordTokensIncludingEos"] != expected["minimumRecordTokensIncludingEos"]
+            or plan["maximumRecordTokensIncludingEos"] != expected["maximumRecordTokensIncludingEos"]
+            or plan["maximumPromptTokens"] != expected["maximumPromptTokens"]
+            or plan["maximumTargetTokensIncludingEos"] != expected["maximumTargetTokensIncludingEos"]):
+        raise ValueError("P3-02 packed supervision differs from frozen tokenizer review")
+    return {
+        "schemaVersion": 1,
+        "milestone": MILESTONE,
+        "status": "read-only-supervision-preflight-passed",
+        "candidateSha256": EXPECTED_SHA256,
+        "tokenizerSha256": EXPECTED_TOKENIZER_SHA256,
+        "proposalOnly": True,
+        "bundleWritten": False,
+        **plan,
+        **SAFE_FLAGS,
+    }
