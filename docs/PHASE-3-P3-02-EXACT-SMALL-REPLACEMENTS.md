@@ -1,5 +1,38 @@
 # P3-02 — Exact Small Replacements
 
+## October 13 first-run completion — frozen fixed-endpoint development gate
+
+The owner returned a successful local P3-02 training result: **100/100 updates**, 60,445 answer/EOS supervised positions, **19.9099785 seconds** of run-loop time, with no interruption, resume, continuation, development evaluation, or final holdout access. All four checkpoints were reported. Train/validation bundle manifest SHA-256 remained `0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354`; stage SHA-256 remained `50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246`.
+
+Teacher-forced answer/EOS validation loss progressed **10.566839536031088 → 2.528637358455947 → 1.7545379514043982 → 1.6265562090006742 → 1.5892543557015333** at updates 0/25/50/75/100. This is an **84.96% reduction in loss**, not a measured complete-file editing success rate. The owner-supplied report is recorded verbatim in numerical values and artifact identities in `training/pretraining/p3-02-first-run-result.json`. As the checkpoint and GPU results are local-only, **the repository records owner-reported evidence, not independently reproduced checkpoint files**.
+
+**P3-02's frozen and unreselected evaluation endpoint is the step-100 checkpoint**:
+
+`file-edits/p3-02-first-run/checkpoints/step-0100.pt`
+
+SHA-256: `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`
+
+The `file-edit-replacements-development-evaluate` CLI is **generation/evaluation only**. It verifies the private on-disk training result against the frozen committed record, checks the full checkpoint's SHA-256, step-100 metadata, exact tokenizer and bundle identities, and regenerated frozen 216-record candidate SHA. It generates **only the 36 existing development examples** (12 each HTML/CSS/JavaScript; 12 three-request contrast groups). It uses **greedy decoding, temperature 0, seed 1337, maximum 192 new tokens**, requires the complete supplied prompt to fit for every generation step, and records exact-file-match, unrelated-code preservation, EOS termination, decoding success, per-language/per-edit-family results, and complete response evidence. Development tasks are **not fed to any optimizer**. The final project holdout remains closed.
+
+The original, unaltered, predeclared decision gate is **at least 30/36 exact edits**, **at least 8/12 exact per language**, **at least 34/36 preservation**, **at least 10/12 fully correct three-request groups**, and **full prompt visibility at every decoding step**. The gate outcome is unknown until the real local evaluation command is executed. It writes a single new result file, refuses an existing output, and offers **no trainer, optimizer, checkpoint reselection, or continuation**.
+
+From the repository root on Windows, after pulling the merged evaluator:
+
+```powershell
+git switch master
+git pull --ff-only origin master
+
+$artifactRoot = Join-Path $HOME "PlexArtifacts"
+$bundleDir = Join-Path $artifactRoot "p3-02-training-bundle"
+$runResult = Join-Path $artifactRoot "file-edits/p3-02-first-run/result.json"
+$checkpoint = Join-Path $artifactRoot "file-edits/p3-02-first-run/checkpoints/step-0100.pt"
+$devOutput = Join-Path $artifactRoot "file-edits/p3-02-development-evaluation"
+
+uv run --project training python -m plex_training.cli file-edit-replacements-development-evaluate --bundle-dir "$bundleDir" --run-result "$runResult" --checkpoint "$checkpoint" --artifact-root "$artifactRoot" --output-dir "$devOutput" --device cuda
+```
+
+A concise score summary prints to PowerShell. The complete audit with all 36 generated files is stored in `$devOutput/development-result.json` and is **not uploaded automatically**. Do not rerun the command into the same output directory or interpret any validation-loss improvement as passing the development gate. No additional optimizer updates are authorized.
+
 ## October 13 owner approval — one bounded P3-02 first run
 
 The owner explicitly authorized the first P3-02 training run on **2026-10-13**, limited to **100 optimizer updates or 600 seconds**, whichever comes first. The committed `training/pretraining/p3-02-first-run-contract.json` now records `status: owner-approved-first-run`, `modelTrainingAuthorized: true`, approver `keepithandy`, and approval date `2026-10-13`. The exact baseline, stage checkpoint, bundle, tokenizer, sampler, loss objective, hyperparameters, and evaluation boundaries remain unchanged. The validator checks the exact one-run authorization scope and rejects tampering with any training bound or provenance field.
