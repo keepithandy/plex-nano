@@ -144,6 +144,8 @@ The current model remains **27,566,080 parameters** so Phase 3 can measure the d
 
 **P3-01 — File + Request Contract** has a corrected, frozen 18-fixture review for supplied HTML/CSS/JavaScript files. This validates the contract and tokenizer fit; model editing ability remains unproven. **P3-02 — Exact Small Replacements** is next, with training requiring separate authorization.
 
+**Package audit:** 🟢 **24 / 24 tracked items complete** — B01–B15, G01–G06, and M01–M03. See the [Bug Atlas](BUG-ATLAS.md) for resolutions and verification, the [audit snapshot and closeout](docs/PACKAGE-BUG-AUDIT.md) for preserved findings, and the [changelog](CHANGELOG.md) for the release summary. This reliability closeout does not establish model-editing capability or authorize research training.
+
 ## Roadmap
 
 The project now follows a model-first roadmap.
