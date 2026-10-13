@@ -55,4 +55,7 @@ jobs:
           training/tests/test_file_edit_replacements_bundle.py::test_bundle_packs_only_train_validation_with_exact_next_token_masks
           training/tests/test_file_edit_replacements_bundle.py::test_bundle_low_storage_budget_rolls_back_before_publication
           training/tests/test_file_edit_replacements_bundle.py::test_p302_cli_commands_use_rooted_paths_and_no_training_switch
+          training/tests/test_file_edit_replacements_stage.py::test_stage_rejects_missing_explicit_authorization_without_source_access
+          training/tests/test_file_edit_replacements_stage.py::test_validation_baseline_is_masked_and_complete_without_training
+          training/tests/test_file_edit_replacements_stage.py::test_cli_exposes_separate_stage_and_baseline_without_training
           -q
