@@ -13,6 +13,7 @@ from plex_training.file_edit_replacements import (
     DEFAULT_CONTRACT, EXPECTED_BYTES, EXPECTED_SHA256, DEFAULT_BUNDLE,
     build_replacement_rows, validate_replacement_rows, render_prompt,
     generate_replacement_candidate, review_replacement_candidate, score_replacement,
+    answer_only_target_mask, plan_replacement_supervision, preflight_replacement_supervision,
     EXPECTED_TOKENIZER_SHA256, TOKENIZER_BUNDLE_SHA256,
 )
 
@@ -213,3 +214,65 @@ def test_cli_commands_keep_repository_rooted_defaults():
         assert args.candidate.is_absolute() and args.review.is_absolute() and args.contract.is_absolute()
         if command.endswith("review"):
             assert args.bundle_dir == DEFAULT_BUNDLE
+
+
+def test_answer_only_mask_supervises_first_answer_token_and_eos():
+    assert answer_only_target_mask(3, 2) == (0, 0, 1, 1, 1)
+    assert answer_only_target_mask(1, 1) == (1, 1)
+    for prompt, target in ((0, 1), (1, 0), (True, 1), (2, 1.0)):
+        with pytest.raises(ValueError, match="nonempty"):
+            answer_only_target_mask(prompt, target)
+
+
+def test_p302_supervision_plan_excludes_development_and_replays_exact_targets():
+    import random
+    rows = build_replacement_rows()
+    tokenizer = ByteFixtureTokenizer()
+    first = plan_replacement_supervision(rows, tokenizer)
+    assert plan_replacement_supervision(rows, tokenizer) == first
+    assert first["records"] == {"train": 144, "validation": 36}
+    assert first["sampler"]["examples"] == 1600
+    assert first["sampler"]["recordsSelected"] == 144
+    assert first["sampler"]["optimizerUpdatesPerformed"] == 0
+    assert first["promptLossWeights"] == 0
+    assert first["eosTargetWeight"] == 1
+    assert first["paddingTargetWeight"] == 0
+    assert set(first["answerAndEosTargetsPerLanguage"]) == {"train", "validation"}
+    assert sum(first["answerAndEosTargetsPerLanguage"]["train"].values()) == first["answerAndEosTargetPositions"]["train"]
+    assert sum(first["answerAndEosTargetsPerLanguage"]["validation"].values()) == first["answerAndEosTargetPositions"]["validation"]
+    assert len(first["packedTokenSha256"]["train"]) == 64
+    assert len(first["packedTokenSha256"]["validation"]) == 64
+    train = [row for row in rows if row["candidateSplit"] == "train"]
+    targets = [len(tokenizer.encode(row["expectedFile"])) + 1 for row in train]
+    rng = random.Random(1337)
+    assert first["sampler"]["expectedAnswerAndEosTargetPositions"] == sum(
+        targets[rng.randrange(len(train))] for _ in range(1600)
+    )
+    changed_dev = [dict(row) for row in rows]
+    dev_index = next(i for i, row in enumerate(changed_dev) if row["candidateSplit"] == "development")
+    changed_dev[dev_index]["expectedFile"] = "tampered"
+    with pytest.raises(ValueError, match="differs"):
+        plan_replacement_supervision(changed_dev, tokenizer)
+
+
+def test_supervision_preflight_cannot_claim_frozen_review_from_fake_token_counts():
+    with TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        candidate, review = candidate_fixture(root)
+        with patch("plex_training.file_edit_replacements._completion_tokenizer",
+                   return_value=tokenizer_fixture()), patch(
+                   "plex_training.completion.read_checkpoint",
+                   side_effect=AssertionError("checkpoint load forbidden")) as load:
+            with pytest.raises(ValueError, match="frozen tokenizer evidence"):
+                preflight_replacement_supervision(candidate_path=candidate, review_path=review)
+            load.assert_not_called()
+        assert sorted(path.name for path in root.iterdir()) == ["candidate.jsonl", "review.json"]
+
+
+def test_supervision_preflight_cli_remains_read_only_and_rooted():
+    args = build_parser().parse_args(["file-edit-replacements-supervision-preflight"])
+    assert args.candidate.is_absolute()
+    assert args.review.is_absolute()
+    assert args.contract.is_absolute()
+    assert args.bundle_dir == DEFAULT_BUNDLE
+    assert not hasattr(args, "report")
