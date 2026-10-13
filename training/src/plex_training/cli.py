@@ -916,6 +916,24 @@ def build_parser() -> argparse.ArgumentParser:
     p302_train_run.add_argument("--output-dir", type=Path, default=P302_FIRST_RUN_OUTPUT)
     _add_artifact_root(p302_train_run)
 
+    from .file_edit_replacements_development import (
+        DEFAULT_CHECKPOINT as P302_FINAL_CHECKPOINT,
+        DEFAULT_RUN_RESULT as P302_FINAL_RUN_RESULT,
+        DEFAULT_FROZEN_REPORT as P302_FINAL_FROZEN_REPORT,
+        DEFAULT_OUTPUT as P302_DEVELOPMENT_OUTPUT,
+    )
+    p302_development = subparsers.add_parser(
+        "file-edit-replacements-development-evaluate",
+        help="Read-only greedy 36-example P3-02 development gate at the frozen step-100 checkpoint",
+    )
+    p302_development.add_argument("--checkpoint", type=Path, default=P302_FINAL_CHECKPOINT)
+    p302_development.add_argument("--run-result", type=Path, default=P302_FINAL_RUN_RESULT)
+    p302_development.add_argument("--frozen-report", type=Path, default=P302_FINAL_FROZEN_REPORT)
+    p302_development.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_development.add_argument("--output-dir", type=Path, default=P302_DEVELOPMENT_OUTPUT)
+    p302_development.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    _add_artifact_root(p302_development)
+
     request_grounded_bundle_prepare = subparsers.add_parser(
         "request-grounded-bundle-prepare",
         help="Pack the frozen P2-47 candidate for P2-48 without staging or training",
@@ -2915,6 +2933,14 @@ def main(argv: list[str] | None = None) -> int:
                 source_checkpoint=args.source_checkpoint, result_path=args.result,
                 baseline_path=args.baseline, authorization_path=args.authorization_contract,
                 output_dir=args.output_dir, artifact_root=args.artifact_root,
+            ))
+        elif args.command == "file-edit-replacements-development-evaluate":
+            from .file_edit_replacements_development import evaluate_replacement_development
+            _json_print(evaluate_replacement_development(
+                checkpoint=args.checkpoint, run_result=args.run_result,
+                frozen_report=args.frozen_report, bundle_dir=args.bundle_dir,
+                output_dir=args.output_dir, artifact_root=args.artifact_root,
+                device=args.device,
             ))
         elif args.command == "request-grounded-bundle-prepare":
             _json_print(_request_grounded_bundle_prepare(args))
