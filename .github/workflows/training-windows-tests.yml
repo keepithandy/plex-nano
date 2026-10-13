@@ -58,4 +58,7 @@ jobs:
           training/tests/test_file_edit_replacements_stage.py::test_stage_rejects_missing_explicit_authorization_without_source_access
           training/tests/test_file_edit_replacements_stage.py::test_validation_baseline_is_masked_and_complete_without_training
           training/tests/test_file_edit_replacements_stage.py::test_cli_exposes_separate_stage_and_baseline_without_training
+          training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_training_needs_both_flag_and_approved_packet_before_file_reads
+          training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_cli_preflight_has_no_approval_flag_and_run_is_blocked_by_default
+          training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_training_step_supervises_only_masked_targets
           -q

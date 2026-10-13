@@ -886,6 +886,36 @@ def build_parser() -> argparse.ArgumentParser:
     p302_baseline.add_argument("--result", type=Path, default=P302_RESULT)
     p302_baseline.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
 
+    from .file_edit_replacements_run import (
+        DEFAULT_AUTHORIZATION as P302_AUTH,
+        DEFAULT_BASELINE as P302_BASELINE,
+        DEFAULT_OUTPUT as P302_FIRST_RUN_OUTPUT,
+    )
+    p302_train_preflight = subparsers.add_parser(
+        "file-edit-replacements-training-preflight",
+        help="Read-only P3-02 source/stage/baseline and sampler replay; never trains",
+    )
+    p302_train_preflight.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_train_preflight.add_argument("--stage-checkpoint", type=Path, default=P302_STAGE / "stage-checkpoint.pt")
+    p302_train_preflight.add_argument("--source-checkpoint", type=Path, default=P302_CHECKPOINT)
+    p302_train_preflight.add_argument("--result", type=Path, default=P302_RESULT)
+    p302_train_preflight.add_argument("--baseline", type=Path, default=P302_BASELINE)
+    p302_train_preflight.add_argument("--authorization-contract", type=Path, default=P302_AUTH)
+
+    p302_train_run = subparsers.add_parser(
+        "file-edit-replacements-run",
+        help="BLOCKED until separately owner-approved P3-02 contract AND explicit --authorize-first-run",
+    )
+    p302_train_run.add_argument("--authorize-first-run", action="store_true")
+    p302_train_run.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_train_run.add_argument("--stage-checkpoint", type=Path, default=P302_STAGE / "stage-checkpoint.pt")
+    p302_train_run.add_argument("--source-checkpoint", type=Path, default=P302_CHECKPOINT)
+    p302_train_run.add_argument("--result", type=Path, default=P302_RESULT)
+    p302_train_run.add_argument("--baseline", type=Path, default=P302_BASELINE)
+    p302_train_run.add_argument("--authorization-contract", type=Path, default=P302_AUTH)
+    p302_train_run.add_argument("--output-dir", type=Path, default=P302_FIRST_RUN_OUTPUT)
+    _add_artifact_root(p302_train_run)
+
     request_grounded_bundle_prepare = subparsers.add_parser(
         "request-grounded-bundle-prepare",
         help="Pack the frozen P2-47 candidate for P2-48 without staging or training",
@@ -2869,6 +2899,22 @@ def main(argv: list[str] | None = None) -> int:
                 stage_checkpoint=args.stage_checkpoint,
                 bundle_dir=args.bundle_dir, source_checkpoint=args.source_checkpoint,
                 result_path=args.result, device=args.device,
+            ))
+        elif args.command == "file-edit-replacements-training-preflight":
+            from .file_edit_replacements_run import preflight_replacement_first_run
+            _json_print(preflight_replacement_first_run(
+                bundle_dir=args.bundle_dir, stage_checkpoint=args.stage_checkpoint,
+                source_checkpoint=args.source_checkpoint, result_path=args.result,
+                baseline_path=args.baseline, authorization_path=args.authorization_contract,
+            ))
+        elif args.command == "file-edit-replacements-run":
+            from .file_edit_replacements_run import run_replacement_first_training
+            _json_print(run_replacement_first_training(
+                authorize_first_run=args.authorize_first_run,
+                bundle_dir=args.bundle_dir, stage_checkpoint=args.stage_checkpoint,
+                source_checkpoint=args.source_checkpoint, result_path=args.result,
+                baseline_path=args.baseline, authorization_path=args.authorization_contract,
+                output_dir=args.output_dir, artifact_root=args.artifact_root,
             ))
         elif args.command == "request-grounded-bundle-prepare":
             _json_print(_request_grounded_bundle_prepare(args))

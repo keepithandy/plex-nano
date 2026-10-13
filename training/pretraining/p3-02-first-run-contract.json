@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "kind": "plex-p3-02-first-exact-replacement-run-contract-v1",
+  "status": "owner-approval-required",
+  "approvalPacketComplete": true,
+  "modelTrainingAuthorized": false,
+  "approvedBy": null,
+  "approvedDate": null,
+  "authorizationScope": "Draft only; no training until separate explicit owner approval changes the frozen packet and CLI --authorize-first-run flag is present.",
+  "source": {
+    "sourceCheckpointSha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+    "stageCheckpointSha256": "50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246",
+    "bundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+    "trainRecords": 144,
+    "validationRecords": 36,
+    "trainAnswerAndEosTargets": 5424,
+    "validationAnswerAndEosTargets": 1320,
+    "modelParameters": 27566080,
+    "contextLength": 512,
+    "vocabularySize": 16384
+  },
+  "baseline": {
+    "kind": "teacher-forced-validation-answer-eos-only-v1",
+    "meanLoss": 10.566839536031088,
+    "validationRecords": 36,
+    "supervisedTargets": 1320,
+    "recordPath": "training/pretraining/p3-02-step-zero-baseline-result.json",
+    "absTolerance": 0.02
+  },
+  "training": {
+    "device": "cuda",
+    "seed": 1337,
+    "objective": "answer-eos-only-complete-record-v1",
+    "optimizer": "AdamW",
+    "learningRate": 0.0001,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "epsilon": 1e-8,
+    "weightDecay": 0.1,
+    "gradientClippingNorm": 1,
+    "microBatch": 1,
+    "gradientAccumulation": 16,
+    "lossReduction": "mean-weighted-answer-eos-per-example-then-mean-across-accumulation-v1",
+    "selection": "uniform-complete-train-record-with-replacement",
+    "expectedExamplesAt100Steps": 1600,
+    "expectedAnswerAndEosPositionsAt100Steps": 60445,
+    "maximumOptimizerUpdates": 100,
+    "maximumWallTimeSeconds": 600,
+    "validationSteps": [
+      0,
+      25,
+      50,
+      75,
+      100
+    ],
+    "checkpointSteps": [
+      25,
+      50,
+      75,
+      100
+    ],
+    "maxNewTokens": 192,
+    "checkpointReselectionAllowed": false,
+    "automaticContinuation": false,
+    "resumeAllowed": false
+  },
+  "outputDirectory": "file-edits/p3-02-first-run",
+  "protectedEvaluation": {
+    "validationExcludedFromGradients": true,
+    "developmentExcludedFromGradients": true,
+    "finalProjectHoldoutMustRemainClosed": true
+  },
+  "executionState": {
+    "trainingExecuted": false,
+    "researchOptimizerUpdates": 0,
+    "finalHoldoutOpened": false
+  },
+  "continuationRule": "Stop at the first 100 updates or 600 seconds, whichever happens first. No automatic restart, checkpoint reselection, or continuation."
+}
