@@ -150,7 +150,7 @@ The current model remains **27,566,080 parameters** so Phase 3 can measure the d
 |---|---|---|
 | **P3-01 — File + Request Contract** | Corrected, frozen 18-fixture request/edit contract; preparation and preflight complete | [P3-01 contract](training/pretraining/p3-01-file-request-contract.json) |
 | **P3-02 — Exact Small Replacements** | **Training completed, development gate failed**; 216 reviewed examples (144 train, 36 validation, 36 development) | [P3-02 experiment notes](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
-| **Next — read-only diagnosis** | Investigate repetition and request/source binding in the 36 saved completions; **no more training authorized** | [Development failure record](training/pretraining/p3-02-development-gate-result-summary.json) |
+| **P3-02-D1 — Failure diagnosis (read-only)** | Analyzer added for the existing 36 completions, contrast-group response diversity, exact template reuse and source/value indicators; **local full-report results pending** | [P3-02-D1 diagnostic](docs/PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 
 The owner reported a completed, explicitly authorized **100-update P3-02 run**: 60,445 supervised positions in 19.91 seconds, with answer/EOS-only validation loss **10.5668 → 1.5893**. The unreselected step-100 checkpoint SHA-256 is `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`; see the [frozen training result](training/pretraining/p3-02-first-run-result.json).
 
