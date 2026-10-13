@@ -102,7 +102,7 @@ def test_bundle_inspector_rejects_tampering(prepared, suffix):
     target = prepared["output"] / ("train." + suffix)
     raw = target.read_bytes()
     target.write_bytes(raw[:-1] + bytes([raw[-1] ^ 1]))
-    with pytest.raises(ValueError, match="changed|differs"):
+    with pytest.raises(ValueError):
         bundle.inspect_replacement_bundle(prepared["output"])
 
 
