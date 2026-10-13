@@ -422,7 +422,7 @@ natural-language coding request
 
 P3-01 froze the one-file request/edit contract and passed deterministic fixture, preservation, tokenizer roundtrip, and context checks. The 18-fixture contract-validation set is not a representative training corpus and no editing capability is claimed from its preparation.
 
-P3-02 is active. Its candidate and tokenizer/context review passed. A read-only answer/EOS supervision mask and deterministic sampler-preview command are implemented as the next preparation increment; it does not create bundles or load a checkpoint. Execute and verify the preflight with the frozen local tokenizer. Train/validation bundle packing and read-only P2-48 step-100 checkpoint-source verification are now implemented and require real local execution; baseline loss measurement, stage creation, and explicit authorization remain pending. Model updates require explicit training authorization.
+P3-02 is active. The owner reported successful local frozen-tokenizer, train/validation bundle (SHA `0cd6df3a...b9aca354`), and P2-48 source-checkpoint (SHA `fd86d113...89b7`) verification, now recorded in the P3-02 evidence file. Guarded zero-step checkpoint staging, strict tensor-preservation verification, and 36-record answer/EOS-only validation baseline preflight are implemented but await the owner's local execution and baseline review. Stage creation requires explicit opt-in; model updates remain disabled and need separate bounded-run authorization.
 
 Start with **one supplied file**, one bounded requested change, and a deterministic target representation that can be scored for:
 
