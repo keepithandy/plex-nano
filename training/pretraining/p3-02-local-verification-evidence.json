@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "recordedDate": "2026-10-13",
+  "source": "Owner-provided Windows PowerShell outputs, not independently reproduced in GitHub Actions",
+  "status": "owner-reported-local-preflights-passed",
+  "candidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+  "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+  "trainingBundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+  "sourceCheckpointSha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+  "sourceCheckpointStep": 100,
+  "sourceModelParameters": 27566080,
+  "sourceTokensProcessed": 429375,
+  "trainRecords": 144,
+  "validationRecords": 36,
+  "trainRecordTokens": 16644,
+  "validationRecordTokens": 4074,
+  "trainAnswerAndEosTargets": 5424,
+  "validationAnswerAndEosTargets": 1320,
+  "sampler": {
+    "seed": 1337,
+    "examples": 1600,
+    "recordsSelected": 144,
+    "expectedAnswerAndEosTargetPositions": 60445
+  },
+  "checks": {
+    "answerOnlySupervisionPreflight": true,
+    "packedBundleVerified": true,
+    "sourceCheckpointCompatibilityVerified": true
+  },
+  "executionState": {
+    "checkpointStaged": false,
+    "baselineMeasured": false,
+    "optimizerCreated": false,
+    "modelTrainingAuthorized": false,
+    "trainingPerformed": false,
+    "researchOptimizerUpdates": 0,
+    "finalHoldoutOpened": false,
+    "automaticContinuation": false
+  },
+  "notes": "Original inaccessible OneDrive experiment path was bypassed using an external artifact root. Owner's verified bundle manifest is a fixed local artifact hash, not the source tokenizer manifest."
+}
