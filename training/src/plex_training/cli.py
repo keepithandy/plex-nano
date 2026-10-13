@@ -825,6 +825,36 @@ def build_parser() -> argparse.ArgumentParser:
         if command.endswith("-review"):
             replacement_parser.add_argument("--report", type=Path, default=None)
 
+    from .file_edit_replacements_bundle import (
+        DEFAULT_OUTPUT as P302_OUTPUT, DEFAULT_CHECKPOINT as P302_CHECKPOINT,
+        DEFAULT_P248_RESULT as P302_RESULT,
+    )
+    replacement_pack = subparsers.add_parser(
+        "file-edit-replacements-bundle-prepare",
+        help="Pack frozen P3-02 train/validation and answer-only loss masks; no training",
+    )
+    replacement_pack.add_argument("--candidate", type=Path, default=DEFAULT_CANDIDATE)
+    replacement_pack.add_argument("--review", type=Path, default=DEFAULT_REVIEW)
+    replacement_pack.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
+    replacement_pack.add_argument("--source-bundle-dir", type=Path, default=DEFAULT_BUNDLE)
+    replacement_pack.add_argument("--output-dir", type=Path, default=P302_OUTPUT)
+    _add_artifact_root(replacement_pack)
+
+    replacement_verify = subparsers.add_parser(
+        "file-edit-replacements-bundle-verify",
+        help="Read-only verify frozen P3-02 packed JSONL, tokens, index and loss masks",
+    )
+    replacement_verify.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+
+    replacement_source = subparsers.add_parser(
+        "file-edit-replacements-source-preflight",
+        help="Read-only verify exact P2-48 step-100 checkpoint vs packed P3-02",
+    )
+    replacement_source.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    replacement_source.add_argument("--checkpoint", type=Path, default=P302_CHECKPOINT)
+    replacement_source.add_argument("--result", type=Path, default=P302_RESULT)
+    replacement_source.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
+
     request_grounded_bundle_prepare = subparsers.add_parser(
         "request-grounded-bundle-prepare",
         help="Pack the frozen P2-47 candidate for P2-48 without staging or training",
@@ -2773,6 +2803,20 @@ def main(argv: list[str] | None = None) -> int:
             from .file_edit_replacements import preflight_replacement_supervision
             _json_print(preflight_replacement_supervision(candidate_path=args.candidate, review_path=args.review,
                 contract_path=args.contract, bundle_dir=args.bundle_dir))
+        elif args.command == "file-edit-replacements-bundle-prepare":
+            from .file_edit_replacements_bundle import prepare_replacement_bundle
+            _json_print(prepare_replacement_bundle(
+                candidate_path=args.candidate, review_path=args.review,
+                contract_path=args.contract, source_bundle_dir=args.source_bundle_dir,
+                output_dir=args.output_dir, artifact_root=args.artifact_root))
+        elif args.command == "file-edit-replacements-bundle-verify":
+            from .file_edit_replacements_bundle import inspect_replacement_bundle
+            _json_print(inspect_replacement_bundle(args.bundle_dir))
+        elif args.command == "file-edit-replacements-source-preflight":
+            from .file_edit_replacements_bundle import preflight_replacement_checkpoint_source
+            _json_print(preflight_replacement_checkpoint_source(
+                bundle_dir=args.bundle_dir, checkpoint_path=args.checkpoint,
+                result_path=args.result, contract_path=args.contract))
         elif args.command == "request-grounded-bundle-prepare":
             _json_print(_request_grounded_bundle_prepare(args))
         elif args.command == "request-grounded-bundle-preflight":

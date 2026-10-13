@@ -83,6 +83,23 @@ uv run --project training python -m plex_training.cli file-edit-replacements-sup
 
 The command fails closed if the locally recomputed token lengths differ from the committed 87–138-token review or the exact frozen tokenizer identity. Passing this preflight will provide *read-only accounting evidence*, not a training authorization or empirical model-editing result. Reviewed bundle writing and pinned P2-48 checkpoint source inspection remain separate follow-on tasks.
 
+## P3-02 train/validation bundle and checkpoint-source preflight
+
+Implemented bundle commands prepare **only** the 144 train and 36 validation records, with no 36-record development split in the output. The bundle carries a JSONL text stream, packed uint16 little-endian tokens, a separate one-byte-per-next-token mask, and an index whose prompt/answer boundaries are reconstructed from the authored rows. Each target mask is zero for the supplied request/file prompt, and one for the edited-file answer and EOS. The parser verifies every byte against regenerated frozen records and manifests, rejecting mutation of tokens, JSONL, indices, loss weights, and split metadata. Bundle writing uses a fresh temporary artifact directory, the 200 GiB allocation, rollback on failure, and atomic publication without overwriting existing outputs.
+
+The source preflight requires the **unchanged P2-48 step-100 checkpoint** SHA-256 `fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7` and its original P2-48 result record, then safely loads it on CPU in read-only mode to verify 27,566,080 parameters, step 100, 429,375 recorded target positions, scratch provenance, P2-48 stage/training identities, and frozen tokenizer compatibility. It **does not** create an optimizer or checkpoint.
+
+From the repository root, using the owner's **local frozen tokenizer and checkpoint artifacts**:
+
+```powershell
+uv run --project training python -m plex_training.cli file-edit-replacements-supervision-preflight
+uv run --project training python -m plex_training.cli file-edit-replacements-bundle-prepare
+uv run --project training python -m plex_training.cli file-edit-replacements-bundle-verify
+uv run --project training python -m plex_training.cli file-edit-replacements-source-preflight
+```
+
+These commands require local P2-48 artifacts excluded from GitHub. CI verifies portable synthetic data and failure paths but **cannot attest** that the real frozen tokenizer, bundle, or checkpoint-source preflight has passed on the owner's machine. Until those exact local preflights pass, stage creation, baseline loss measurement, and training authorization remain pending. No trainer or owner-approved P3 training contract is provided here.
+
 ## Predeclared development gate
 
 Assess all 36 development requests at the fixed endpoint. Require all of:
