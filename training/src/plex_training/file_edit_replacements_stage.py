@@ -141,7 +141,10 @@ def _check_stage_payload(payload: dict[str, Any]) -> None:
             or not isinstance(dataset, dict)
             or dataset.get("bundleManifestSha256") != BUNDLE_SHA256
             or dataset.get("trainRecords") != 144
-            or dataset.get("validationRecords") != 36):
+            or dataset.get("validationRecords") != 36
+            or dataset.get("trainAnswerAndEosTargets") != 5424
+            or dataset.get("validationAnswerAndEosTargets") != 1320
+            or dataset.get("developmentInTrainingBundle") is not False):
         raise ValueError("P3-02 stage checkpoint is not an untouched zero-step stage")
 
 
