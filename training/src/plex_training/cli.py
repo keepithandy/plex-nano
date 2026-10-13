@@ -814,13 +814,15 @@ def build_parser() -> argparse.ArgumentParser:
     for command, help_text in (
         ("file-edit-replacements-generate", "Prepare the P3-02 exact-replacement candidate without training"),
         ("file-edit-replacements-review", "Review P3-02 split integrity and frozen-tokenizer context fit"),
+        ("file-edit-replacements-supervision-preflight", "Read-only P3-02 answer-only mask and sampler preview"),
     ):
         replacement_parser = subparsers.add_parser(command, help=help_text)
         replacement_parser.add_argument("--candidate", type=Path, default=DEFAULT_CANDIDATE)
         replacement_parser.add_argument("--review", type=Path, default=DEFAULT_REVIEW)
         replacement_parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
-        if command.endswith("-review"):
+        if command.endswith("-review") or command.endswith("-preflight"):
             replacement_parser.add_argument("--bundle-dir", type=Path, default=DEFAULT_BUNDLE)
+        if command.endswith("-review"):
             replacement_parser.add_argument("--report", type=Path, default=None)
 
     request_grounded_bundle_prepare = subparsers.add_parser(
@@ -2767,6 +2769,10 @@ def main(argv: list[str] | None = None) -> int:
             from .file_edit_replacements import review_replacement_candidate
             _json_print(review_replacement_candidate(candidate_path=args.candidate, review_path=args.review,
                 contract_path=args.contract, bundle_dir=args.bundle_dir, report_path=args.report))
+        elif args.command == "file-edit-replacements-supervision-preflight":
+            from .file_edit_replacements import preflight_replacement_supervision
+            _json_print(preflight_replacement_supervision(candidate_path=args.candidate, review_path=args.review,
+                contract_path=args.contract, bundle_dir=args.bundle_dir))
         elif args.command == "request-grounded-bundle-prepare":
             _json_print(_request_grounded_bundle_prepare(args))
         elif args.command == "request-grounded-bundle-preflight":
