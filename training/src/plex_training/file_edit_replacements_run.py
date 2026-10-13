@@ -177,6 +177,7 @@ def validate_authorization(packet: dict[str, Any], *, allow_draft: bool) -> bool
             raise ValueError("P3-02 approvedDate is not a valid ISO date")
     except ValueError as exc:
         raise ValueError("P3-02 approvedDate is not a valid ISO date") from exc
+    _require(date, "2026-10-13", "approvedDate")
     return True
 
 
