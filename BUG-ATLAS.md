@@ -870,6 +870,8 @@ Verification:
 
 The original audit's 26-selected/36-omitted count remains historical evidence. At G03 verification start, earlier fixes had already changed the live baseline to 29 selected/33 omitted. These are module filename counts, not executed test-case counts and not a coverage percentage.
 
+P3-02 preparation subsequently added one reviewed portable test module. The current inventory is **64 = 43 automatic + 21 manual**, with no overlap or unclassified modules; original G03 verification counts above remain historical evidence.
+
 No research training, corpus promotion, checkpoint modification, or final-holdout access was performed for G03.
 
 
@@ -936,7 +938,7 @@ The portable training workflow previously ran only on Ubuntu even though the pri
 
 A dedicated `training-windows-tests` workflow now runs a deliberately small portability subset on `windows-latest` using Python 3.12 and the same frozen uv environment as the Linux training workflow.
 
-Keeping this as a separate workflow preserves G03’s required/experiment suite invariant: the 42 required modules remain listed exactly once in `training-tests.yml`, while Windows reuses selected test cases only as platform verification.
+Keeping this as a separate workflow preserves G03’s required/experiment suite invariant: required modules remain listed exactly once in `training-tests.yml`, while Windows reuses selected test cases only as platform verification. There were 42 required modules at G05 verification; subsequent P3-02 preparation increased the current count to 43.
 
 Selected Windows coverage:
 

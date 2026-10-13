@@ -112,7 +112,7 @@ P3-01 preparation and contract review are authorized. Checkpoint staging, optimi
 
 ## Next milestone
 
-The next milestone is **P3-02 — Exact Small Replacements**. This documentation update does not start its work or authorize training.
+**P3-02 — Exact Small Replacements** is now active: [its candidate preparation and tokenizer review passed](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md). Model training requires separate authorization; P3-01's 18 fixtures remain unchanged contract checks rather than training data.
 
 ## Review correction and reproducibility
 

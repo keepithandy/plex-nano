@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "kind": "plex-p3-02-exact-replacements-preparation-v1",
+  "status": "preparation-authorized-training-not-authorized",
+  "authorizedBy": "keepithandy",
+  "recordedDate": "2026-10-12",
+  "authorizationScope": "Continue P3-02 preparation and review; no research model updates, optimizer creation, checkpoint staging, or final holdout access.",
+  "dataPreparationAuthorized": true,
+  "contractReviewAuthorized": true,
+  "tokenizerContextReviewAuthorized": true,
+  "checkpointStagingAuthorized": false,
+  "optimizerCreationAuthorized": false,
+  "modelTrainingAuthorized": false,
+  "trainingPerformed": false,
+  "researchOptimizerUpdates": 0,
+  "finalHoldoutOpened": false,
+  "automaticContinuation": false,
+  "candidateIdentity": {
+    "sha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+    "bytes": 128214
+  },
+  "proposedRun": {
+    "sourceCheckpointSha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+    "modelParameters": 27566080,
+    "contextLength": 512,
+    "vocabularySize": 16384,
+    "seed": 1337,
+    "maximumOptimizerUpdates": 100,
+    "maximumWallTimeSeconds": 600,
+    "microBatch": 1,
+    "gradientAccumulation": 16,
+    "learningRate": 0.0001,
+    "objective": "answer-eos-only-complete-record-v1",
+    "validationSteps": [
+      0,
+      25,
+      50,
+      75,
+      100
+    ],
+    "endpointStep": 100,
+    "checkpointReselectionAllowed": false,
+    "maxNewTokens": 192,
+    "developmentGate": {
+      "minimumExact": 30,
+      "tasks": 36,
+      "minimumExactPerLanguage": 8,
+      "tasksPerLanguage": 12,
+      "minimumPreserved": 34,
+      "minimumAllCorrectContrastGroups": 10,
+      "contrastGroups": 12,
+      "requireFullPromptVisible": true
+    }
+  },
+  "nextAuthorizationBoundary": "After candidate review, implement and verify packing, baseline evaluation, stage/optimizer behavior, and a signed bounded training packet before any model updates."
+}

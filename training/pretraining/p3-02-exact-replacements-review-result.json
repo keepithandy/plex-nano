@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "generatorVersion": "p3-02-exact-replacements-generator-v1",
+  "status": "candidate-review-passed",
+  "candidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+  "byteCount": 128214,
+  "records": 216,
+  "contrastGroups": 72,
+  "splitCounts": {
+    "development": 36,
+    "train": 144,
+    "validation": 36
+  },
+  "perLanguage": {
+    "html": 72,
+    "css": 72,
+    "javascript": 72
+  },
+  "splitOverlap": {
+    "train:validation": {
+      "contrastGroupId": 0,
+      "request": 0,
+      "inputFile": 0,
+      "expectedFile": 0,
+      "prompt": 0
+    },
+    "train:development": {
+      "contrastGroupId": 0,
+      "request": 0,
+      "inputFile": 0,
+      "expectedFile": 0,
+      "prompt": 0
+    },
+    "validation:development": {
+      "contrastGroupId": 0,
+      "request": 0,
+      "inputFile": 0,
+      "expectedFile": 0,
+      "prompt": 0
+    }
+  },
+  "p301ExactOverlap": {
+    "request": 0,
+    "inputFile": 0,
+    "expectedFile": 0
+  },
+  "checkpointStagingAuthorized": false,
+  "optimizerCreationAuthorized": false,
+  "modelTrainingAuthorized": false,
+  "trainingPerformed": false,
+  "researchOptimizerUpdates": 0,
+  "finalHoldoutOpened": false,
+  "automaticContinuation": false,
+  "tokenizerPreflight": {
+    "checked": true,
+    "codec": "plex-byte-bpe-v1",
+    "actualVocabularySize": 16384,
+    "modelVocabularyCapacity": 16384,
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+    "bundleManifestSha256": "71fec0882692f5eb1b47b72f4a9f539e53e77882d003649beacd5f341b5a4ea7",
+    "modelConfigSha256": "0179591365be51ddac2feebb8767c19916084629e9a3a51b553d1bb0d62d00b0",
+    "encoding": "encode(prompt) + encode(target) + [EOS=3]",
+    "minimumRecordTokensIncludingEos": 87,
+    "maximumRecordTokensIncludingEos": 138,
+    "maximumPromptTokens": 90,
+    "maximumTargetTokensIncludingEos": 48,
+    "splitTokenCounts": {
+      "development": 4074,
+      "train": 16644,
+      "validation": 4074
+    },
+    "allFit512Tokens": true,
+    "maxNewTokensRequested": 192,
+    "fullPromptRetainedForMaximumGenerationBudget": true
+  }
+}
