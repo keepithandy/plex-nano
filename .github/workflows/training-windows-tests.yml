@@ -65,4 +65,6 @@ jobs:
           training/tests/test_file_edit_replacements_development.py::test_perfect_development_responses_pass_exactly_predeclared_gate
           training/tests/test_file_edit_replacements_development.py::test_evaluator_rejects_existing_output_before_checkpoint_or_model_read
           training/tests/test_file_edit_replacements_development.py::test_synthetic_end_to_end_read_only_36_responses
+          training/tests/test_file_edit_replacements_diagnostic.py::test_read_only_diagnostic_distinguishes_language_and_contrast_diversity
+          training/tests/test_file_edit_replacements_diagnostic.py::test_from_file_uses_saved_evidence_and_does_not_write_over_it
           -q
