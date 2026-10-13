@@ -100,6 +100,33 @@ uv run --project training python -m plex_training.cli file-edit-replacements-sou
 
 These commands require local P2-48 artifacts excluded from GitHub. CI verifies portable synthetic data and failure paths but **cannot attest** that the real frozen tokenizer, bundle, or checkpoint-source preflight has passed on the owner's machine. Until those exact local preflights pass, stage creation, baseline loss measurement, and training authorization remain pending. No trainer or owner-approved P3 training contract is provided here.
 
+## October 13 verified-local evidence and guarded stage-zero baseline
+
+The owner reported successful **Windows local** execution of the frozen supervision review, packed-bundle integrity check, and exact P2-48 source-checkpoint preflight. This evidence is recorded (not reproduced in cloud CI) in `training/pretraining/p3-02-local-verification-evidence.json`:
+
+- Verified train/validation bundle manifest SHA-256: `0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354`.
+- Source P2-48 step-100 checkpoint SHA-256: `fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7`.
+- Frozen tokenizer SHA-256: `2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697`.
+- Train: 144 records, 16,644 record tokens, 5,424 answer/EOS targets. Validation: 36 records, 4,074 record tokens, 1,320 answer/EOS targets. Proposed seed-1337 sampler: 1,600 records, 60,445 supervised positions. No model updates were performed.
+
+The implementation adds a **separately opted-in zero-stage-only serializer**, a read-only stage verifier, and a **full 36-record validation-only answer/EOS baseline evaluator**. Staging verifies the frozen source first, then preserves every model tensor exactly, records step zero and zero processed tokens, and serializes a fresh **empty** optimizer state only for checkpoint compatibility. Staging cannot run without the explicit `--authorize-zero-stage` CLI flag. It refuses existing output and removes partial stage outputs on failure. The stage verifier reopens the stage, confirms strict tensor equality against the original checkpoint and an empty optimizer state, and writes nothing.
+
+The baseline evaluator reads the full frozen validation split only, weights answer tokens and EOS at one and prompt tokens at zero, restricts output loss to the frozen 16,384-token vocabulary, and reports the target-weighted mean loss and per-language/per-record results. It neither writes metrics nor trains, accesses development examples, or selects alternate checkpoints. Baseline outputs must be reviewed before separately authorizing a bounded run; **no P3-02 model-training command or approval contract is provided**.
+
+Since the old OneDrive artifacts tree has an inaccessible unrelated historical dataset, the owner placed the verified P3-02 bundle under a separate artifact root. On the feature branch (or after merge), from the repository root:
+
+```powershell
+$artifactRoot = Join-Path $HOME "PlexArtifacts"
+$bundleDir = Join-Path $artifactRoot "p3-02-training-bundle"
+$stageDir = Join-Path $artifactRoot "p3-02-stage0"
+
+uv run --project training python -m plex_training.cli file-edit-replacements-stage --authorize-zero-stage --bundle-dir "$bundleDir" --artifact-root "$artifactRoot" --output-dir "$stageDir"
+uv run --project training python -m plex_training.cli file-edit-replacements-stage-preflight --bundle-dir "$bundleDir" --stage-checkpoint (Join-Path $stageDir "stage-checkpoint.pt")
+uv run --project training python -m plex_training.cli file-edit-replacements-baseline-preflight --bundle-dir "$bundleDir" --stage-checkpoint (Join-Path $stageDir "stage-checkpoint.pt") --device cpu
+```
+
+The original P2-48 source checkpoint must remain readable at its verified default location. Do not repeat staging into an existing output directory; verification and baseline operations are read-only. No local stage or baseline results are claimed until the owner actually runs the commands.
+
 ## Predeclared development gate
 
 Assess all 36 development requests at the fixed endpoint. Require all of:
