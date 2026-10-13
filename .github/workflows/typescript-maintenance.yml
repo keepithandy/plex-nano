@@ -9,6 +9,7 @@ on:
       - "src/**"
       - "tests/**"
       - "fixtures/**"
+      - "prompts/**"
       - ".github/workflows/typescript-maintenance.yml"
   push:
     branches:
@@ -20,6 +21,7 @@ on:
       - "src/**"
       - "tests/**"
       - "fixtures/**"
+      - "prompts/**"
       - ".github/workflows/typescript-maintenance.yml"
   workflow_dispatch:
 

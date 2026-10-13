@@ -893,7 +893,7 @@ The workflow:
 - runs automatically for relevant pull requests
 - runs automatically for relevant pushes to `master`
 - remains manually dispatchable
-- is path-scoped to `package.json`, `package-lock.json`, `tsconfig.json`, `src/**`, `tests/**`, `fixtures/**`, and the workflow itself
+- is path-scoped to `package.json`, `package-lock.json`, `tsconfig.json`, `src/**`, `tests/**`, `fixtures/**`, `prompts/**`, and the workflow itself
 - does not run for model/training-only changes
 - does not add or expand project discovery, Git integration, source scanning, context orchestration, proposal behavior, or autonomous-agent features
 
@@ -910,6 +910,12 @@ The npm install step reported one moderate audit finding and Node emitted deprec
 
 No model training, corpus promotion, checkpoint modification, final-holdout access, or product-direction expansion was performed for G04.
 
+
+### Follow-up completion review - 2026-10-12
+
+Review found that a change only to the packaged `prompts/implementation.txt` bypassed maintenance CI, although the compiled context builder loads that file and integration tests depend on it. Both pull-request and master-push path filters now include `prompts/**`.
+
+A Node regression checks each event block separately and requires prompt coverage in both, plus the master branch restriction for pushes. The regression failed against the previous workflow and passed after the fix. The TypeScript build and full local maintenance suite passed: **102 passed, 1 skipped, 0 failures**. Original verification counts above remain historical evidence.
 
 ## 🧪 G05 — Windows portability subset
 
