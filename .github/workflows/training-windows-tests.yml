@@ -61,4 +61,8 @@ jobs:
           training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_training_needs_both_flag_and_owner_approved_packet_before_model_reads
           training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_cli_preflight_has_no_approval_flag_and_run_is_blocked_by_default
           training/tests/test_file_edit_replacements_run.py::FileEditReplacementRunTests::test_training_step_supervises_only_masked_targets
+          training/tests/test_file_edit_replacements_development.py::test_frozen_endpoint_identity_and_exact_declared_gate
+          training/tests/test_file_edit_replacements_development.py::test_perfect_development_responses_pass_exactly_predeclared_gate
+          training/tests/test_file_edit_replacements_development.py::test_evaluator_rejects_existing_output_before_checkpoint_or_model_read
+          training/tests/test_file_edit_replacements_development.py::test_synthetic_end_to_end_read_only_36_responses
           -q
