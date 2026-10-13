@@ -26,6 +26,8 @@ Request + provided code context → correct code change.
 
 ---
 
+**New to the repository?** Open [PROJECT-MAP.md](PROJECT-MAP.md) first. It shows exactly where the Python model, training/evaluation commands, frozen research files, legacy TypeScript code, and local checkpoints live. VS Code navigation and safe developer tasks are included under `.vscode/`.
+
 ## What is Plex Nano?
 
 Plex Nano is a compact coding model built from randomly initialized weights.
@@ -229,11 +231,16 @@ For detailed experiment commands and retained results, see [training/README.md](
 
 | Path | Purpose |
 |---|---|
+| `PROJECT-MAP.md` | **Start here in VS Code:** directory map, current code, historical archives, and safe tasks |
+| `training/src/plex_training/` | **Active Python model**: Transformer, tokenizer, checkpoint, training CLI and P3 editing experiments |
+| `training/tests/` | Python unit, regression and safety tests |
+| `training/pretraining/` | Frozen contracts, provenance manifests and measured experiment summaries |
+| `training/phase2/` | Historical Phase 2 research and retained data (do not delete or relocate) |
 | `training/` | Model training, evaluation, checkpoints, datasets, and experiment tooling |
-| `docs/` | Research reports, milestone results, and technical notes |
+| `docs/` | Research reports, milestone results, and technical notes; [docs index](docs/INDEX.md) |
 | `prompts/` | Model-facing request/edit contracts |
 | `fixtures/` | Small code fixtures used by tests |
-| `src/` | Auxiliary TypeScript utilities retained by the project |
+| `src/` | **Legacy TypeScript** repository utilities; not the current Python model |
 | `tests/` | TypeScript/package tests |
 | `AGENTS.md` | Project direction and editing guardrails |
 
