@@ -68,6 +68,7 @@ jobs:
           training/tests/test_resume_and_completion.py
           training/tests/test_file_conditioned_contract.py
           training/tests/test_file_edit_replacements.py
+          training/tests/test_file_edit_replacements_bundle.py
           training/tests/test_answer_focused_records.py
           training/tests/test_benchmark.py
           training/tests/test_complete_records.py
