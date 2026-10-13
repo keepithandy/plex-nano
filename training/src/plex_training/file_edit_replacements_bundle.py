@@ -76,7 +76,8 @@ def _split_files(tokenizer: Any) -> tuple[dict[str, dict[str, bytes]], dict[str,
             answer_ids = tokenizer.encode(target)
             packed = prompt_ids + answer_ids + [3]
             mask = bytes(answer_only_target_mask(len(prompt_ids), len(answer_ids)))
-            assert len(mask) == len(packed) - 1
+            if len(mask) != len(packed) - 1:
+                raise ValueError("P3-02 next-token mask length disagrees with packed record")
             jsonl += _canonical({
                 "recordId": row["id"], "text": prompt + target,
                 "promptTokens": len(prompt_ids),
