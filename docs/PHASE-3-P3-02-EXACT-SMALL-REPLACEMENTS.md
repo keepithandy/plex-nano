@@ -1,5 +1,13 @@
 # P3-02 — Exact Small Replacements
 
+## October 13 — P3-02 development gate: FAILED
+
+The owner ran the frozen step-100 greedy development evaluator and returned its exact summary. **Outcome: failed**. Out of **36 development tasks**, **0 exact edited files** and **0 unrelated-code preservation passes**. HTML, CSS and JavaScript each recorded **0/12 exact** and **0/12 preservation**. None of the **12 three-request contrast groups** had all three requests correct. All **36/36** completions decoded, terminated at EOS and retained the complete prompt at every generation step. The checkpoint SHA-256 remained `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`, with greedy temperature 0, seed 1337, and maximum 192 new tokens.
+
+The initial answer/EOS validation loss **10.5668395** improved to **1.5892544** during the 100-step run, but **loss is not the exact-file editing metric**, and the predeclared development pass criteria were not met. This result demonstrates a major **task transfer gap**, not a verified cause. The aggregate status is preserved in `training/pretraining/p3-02-development-gate-result-summary.json`. The original 36 raw generated outputs were **not supplied to the repository**, so the error types (incorrect requested value, copying the input, shortened code, repeated templates, premature EOS, etc.) are **not yet diagnosed**. Do not claim which failure mode dominates without reading the local `development-result.json`.
+
+**Next permitted work:** Inspect the 36 saved completions and identify recurrent failure patterns, using read-only analysis. Do not run more training, resume from step 100, select a different checkpoint, alter the frozen scorer, or open the final project holdout unless a subsequent experiment is separately proposed and approved. The evaluation itself performed **zero optimizer updates**, and the final project holdout remains sealed. The historical preparation steps below are retained for provenance but are superseded by this gate result.
+
 ## October 13 first-run completion — frozen fixed-endpoint development gate
 
 The owner returned a successful local P3-02 training result: **100/100 updates**, 60,445 answer/EOS supervised positions, **19.9099785 seconds** of run-loop time, with no interruption, resume, continuation, development evaluation, or final holdout access. All four checkpoints were reported. Train/validation bundle manifest SHA-256 remained `0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354`; stage SHA-256 remained `50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246`.
