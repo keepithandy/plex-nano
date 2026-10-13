@@ -283,7 +283,8 @@ def score_file_edit(row, actual):
         raise ValueError("Scoring requires an exact frozen P3-01 fixture")
     approved = {fixture["id"]: fixture for fixture in _fixture_rows()}
     row_id = row.get("id")
-    if not isinstance(row_id, str) or row != approved.get(row_id):
+    if (not isinstance(row_id, str) or type(row.get("schemaVersion")) is not int
+            or row != approved.get(row_id)):
         raise ValueError("Scoring requires an exact frozen P3-01 fixture")
     if not isinstance(actual, str):
         raise ValueError("Actual output must be text")

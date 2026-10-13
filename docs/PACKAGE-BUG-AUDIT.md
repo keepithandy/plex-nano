@@ -3,6 +3,7 @@
 > **A source-review map of reliability, evidence integrity, and maintenance work.**  
 > Small coding model · Supplied code context · Evidence-based findings
 
+![Closed: 24 / 24](https://img.shields.io/badge/closed-24%2F24-2E9E54?style=for-the-badge)
 ![Findings: 24](https://img.shields.io/badge/tracked_items-24-7257A5?style=for-the-badge)
 ![Code defects: 15](https://img.shields.io/badge/code_defects-15-D64B5A?style=for-the-badge)
 ![Verification gaps: 6](https://img.shields.io/badge/verification_gaps-6-D99A20?style=for-the-badge)
@@ -13,9 +14,21 @@
 | **4 P1 items** | **12 P2 items** | **8 P3 items** |
 | Artifact loss or misleading integrity gates | Incorrect behavior and important verification gaps | Limited validation and maintenance issues |
 
-**Navigate:** [Scope](#scope) · [Triage index](#triage) · [Code defects](#defects) · [Verification gaps](#gaps) · [Follow-ups](#follow-ups) · [Repair order](#repair-order) · [Review limits](#limits)
+**Navigate:** [Current closeout](#closeout) · [Scope](#scope) · [Triage index](#triage) · [Code defects](#defects) · [Verification gaps](#gaps) · [Follow-ups](#follow-ups) · [Repair order](#repair-order) · [Review limits](#limits)
 
 ---
+
+<a id="closeout"></a>
+
+## 🟢 Current closeout - October 12, 2026
+
+**All 24 tracked items are complete:** 15 code defects (B01–B15), 6 verification gaps (G01–G06), and 3 maintenance follow-ups (M01–M03). [The live Bug Atlas](../BUG-ATLAS.md) contains each resolution, post-fix review, and verification record; [the changelog](../CHANGELOG.md) summarizes the closeout.
+
+The G04 follow-up covers packaged prompt changes in both automatic CI filters. The final M02 follow-up requires an exact integer schema version as well as frozen fixture equality. Statuses below describe the completed fixes; the original October 8 findings, reviewed revision, priorities, counts, suggested checks, and review limits remain historical evidence.
+
+Green status applies to the listed items, not to unmeasured model capabilities or every possible execution path. Branch protection is unverified, abrupt P3 publication termination requires inspecting recovery artifacts, and historical experiment tests remain manual. The controlled small model, supplied-context direction, training authorization boundaries, frozen results, and closed final holdout are preserved.
+
+### Original audit snapshot
 
 Audit date: 2026-10-08 (local date).
 Reviewed revision: `936a01c2585e97d3656f068d7b210a37e56b8046` (`master`).
@@ -24,11 +37,11 @@ Reviewed revision: `936a01c2585e97d3656f068d7b210a37e56b8046` (`master`).
 
 ## 🧭 Scope and evidence
 
-This is a broad source review of the package, not a new experiment or a claim that every execution path has been exercised. It covers the current file-conditioned contract, shared model/training/checkpoint code, corpus and contamination tooling, completion, CI, package metadata, documentation, and legacy TypeScript parsing/context/proposal utilities. Historical experiment implementations were sampled; their recorded numeric results were not rerun or changed.
+The original October 8 audit was a broad source review of the package, not a new experiment or a claim that every execution path has been exercised. It covers the current file-conditioned contract, shared model/training/checkpoint code, corpus and contamination tooling, completion, CI, package metadata, documentation, and legacy TypeScript parsing/context/proposal utilities. Historical experiment implementations were sampled; their recorded numeric results were not rerun or changed.
 
 The intended product remains a small coding model that changes **caller-supplied** HTML, CSS, and JavaScript. This report does not propose repository discovery or autonomous Git features, a model-size change, or new training authorization.
 
-**24 tracked items: 15 code defects, 6 verification gaps, and 3 maintenance/follow-up items.** Code defects below are supported by source paths and concrete triggering conditions. They are static findings, not newly executed reproductions. Proposed regression checks are future work. No tests, training, optimizer steps, checkpoint staging, or final-holdout inspection were performed for this report. Only this document was added.
+**24 tracked items: 15 code defects, 6 verification gaps, and 3 maintenance/follow-up items.** Code defects below are supported by source paths and concrete triggering conditions. They are static findings, not newly executed reproductions. Proposed regression checks below record the original work proposals; their completion evidence is now in the Bug Atlas. At the original audit snapshot, no tests, training, optimizer steps, checkpoint staging, or final-holdout inspection were performed; only this document was added.
 
 Prior P3 corrections are not counted again: frozen candidate identity, the corrected first edit, tokenizer provenance checks, strict authorization fields, and the root-relative CLI defaults are present in the reviewed revision.
 
@@ -38,32 +51,32 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ## 🗂️ Triage index
 
-| ID | Priority | Area | Finding |
-|---|---|---|---|
-| [B01](#b01) | 🔴 **P1** | Dataset weights | One extra dataset row can be silently skipped |
-| [B02](#b02) | 🔴 **P1** | Contamination | Missing usable protection can still produce a pass |
-| [B03](#b03) | 🟠 **P2** | Contamination | Shared interior substrings are not detected |
-| [B04](#b04) | 🟠 **P2** | Evidence | Contamination report does not fingerprint scanned corpus/protected contents |
-| [B05](#b05) | 🔴 **P1** | Resume | Existing unrelated checkpoint can be overwritten |
-| [B06](#b06) | 🔴 **P1** | Runner outputs | Metrics and checkpoint may name the same file |
-| [B07](#b07) | 🟠 **P2** | Training | Nonfinite loss/gradients do not stop the shared update path |
-| [B08](#b08) | 🟠 **P2** | Completion | Oversized token prompts silently lose their beginning |
-| [B09](#b09) | 🟠 **P2** | Storage | Checkpoint quota is checked after serialization has consumed space |
-| [B10](#b10) | 🟠 **P2** | P3 outputs | Output paths can overwrite inputs or each other through aliases |
-| [B11](#b11) | 🟠 **P2** | P3 generation | Candidate and review publication can leave a mismatched pair |
-| [B12](#b12) | 🔵 **P3** | Model configuration | Noninteger dimensions pass configuration validation |
-| [B13](#b13) | 🔵 **P3** | Model loss | Explicit zero loss vocabulary silently selects the full vocabulary |
-| [B14](#b14) | 🔵 **P3** | Contamination input | Valid JSON scalars/lists cause an unhandled attribute error |
-| [B15](#b15) | 🔵 **P3** | Checkpoint schema | Boolean version/step values pass integer checks |
-| [G01](#g01) | 🟠 **P2** | CI | Current P3 test module is omitted |
-| [G02](#g02) | 🟠 **P2** | CI | Direct pushes to master do not trigger the workflow |
-| [G03](#g03) | 🟠 **P2** | CI | Broad existing Python coverage is omitted |
-| [G04](#g04) | 🟠 **P2** | CI | Legacy TypeScript checks have no repository workflow |
-| [G05](#g05) | 🟠 **P2** | Portability | Workflow exercises Linux only despite Windows use |
-| [G06](#g06) | 🔵 **P3** | CI triggers | Root line-ending policy changes do not trigger training checks |
-| [M01](#m01) | 🔵 **P3** | CLI wording | Legacy help exposes an unexplained historical milestone |
-| [M02](#m02) | 🔵 **P3** | P3 scorer | Frozen-row precondition should be enforced or explicitly internal |
-| [M03](#m03) | 🔵 **P3** | Completion | Prompt eviction during generation needs an explicit policy |
+| ID | Priority | Current status | Area | Original finding |
+|---|---|---|---|---|
+| [B01](#b01) | 🔴 **P1** | 🟢 **COMPLETE** | Dataset weights | One extra dataset row can be silently skipped |
+| [B02](#b02) | 🔴 **P1** | 🟢 **COMPLETE** | Contamination | Missing usable protection can still produce a pass |
+| [B03](#b03) | 🟠 **P2** | 🟢 **COMPLETE** | Contamination | Shared interior substrings are not detected |
+| [B04](#b04) | 🟠 **P2** | 🟢 **COMPLETE** | Evidence | Contamination report does not fingerprint scanned corpus/protected contents |
+| [B05](#b05) | 🔴 **P1** | 🟢 **COMPLETE** | Resume | Existing unrelated checkpoint can be overwritten |
+| [B06](#b06) | 🔴 **P1** | 🟢 **COMPLETE** | Runner outputs | Metrics and checkpoint may name the same file |
+| [B07](#b07) | 🟠 **P2** | 🟢 **COMPLETE** | Training | Nonfinite loss/gradients do not stop the shared update path |
+| [B08](#b08) | 🟠 **P2** | 🟢 **COMPLETE** | Completion | Oversized token prompts silently lose their beginning |
+| [B09](#b09) | 🟠 **P2** | 🟢 **COMPLETE** | Storage | Checkpoint quota is checked after serialization has consumed space |
+| [B10](#b10) | 🟠 **P2** | 🟢 **COMPLETE** | P3 outputs | Output paths can overwrite inputs or each other through aliases |
+| [B11](#b11) | 🟠 **P2** | 🟢 **COMPLETE** | P3 generation | Candidate and review publication can leave a mismatched pair |
+| [B12](#b12) | 🔵 **P3** | 🟢 **COMPLETE** | Model configuration | Noninteger dimensions pass configuration validation |
+| [B13](#b13) | 🔵 **P3** | 🟢 **COMPLETE** | Model loss | Explicit zero loss vocabulary silently selects the full vocabulary |
+| [B14](#b14) | 🔵 **P3** | 🟢 **COMPLETE** | Contamination input | Valid JSON scalars/lists cause an unhandled attribute error |
+| [B15](#b15) | 🔵 **P3** | 🟢 **COMPLETE** | Checkpoint schema | Boolean version/step values pass integer checks |
+| [G01](#g01) | 🟠 **P2** | 🟢 **COMPLETE** | CI | Current P3 test module is omitted |
+| [G02](#g02) | 🟠 **P2** | 🟢 **COMPLETE** | CI | Direct pushes to master do not trigger the workflow |
+| [G03](#g03) | 🟠 **P2** | 🟢 **COMPLETE** | CI | Broad existing Python coverage is omitted |
+| [G04](#g04) | 🟠 **P2** | 🟢 **COMPLETE** | CI | Legacy TypeScript checks have no repository workflow |
+| [G05](#g05) | 🟠 **P2** | 🟢 **COMPLETE** | Portability | Workflow exercises Linux only despite Windows use |
+| [G06](#g06) | 🔵 **P3** | 🟢 **COMPLETE** | CI triggers | Root line-ending policy changes do not trigger training checks |
+| [M01](#m01) | 🔵 **P3** | 🟢 **COMPLETE** | CLI wording | Legacy help exposes an unexplained historical milestone |
+| [M02](#m02) | 🔵 **P3** | 🟢 **COMPLETE** | P3 scorer | Frozen-row precondition should be enforced or explicitly internal |
+| [M03](#m03) | 🔵 **P3** | 🟢 **COMPLETE** | Completion | Prompt eviction during generation needs an explicit policy |
 
 <a id="defects"></a>
 
@@ -74,6 +87,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b01"></a>
 
 ### 🔴 B01 · One extra dataset row can escape the answer-weighting verifier
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P1** · Code defect · Static evidence
 
@@ -91,6 +106,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🔴 B02 · Contamination checking fails open when protection is unusable
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P1** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/web_contamination.py:54`, `:82`, `:203`.
@@ -106,6 +123,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b03"></a>
 
 ### 🟠 B03 · The substring detector misses an overlap inside both strings
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P2** · Code defect · Static evidence
 
@@ -123,6 +142,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🟠 B04 · A contamination result cannot identify all bytes it assessed
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/web_contamination.py:107`, `:209`.
@@ -138,6 +159,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b05"></a>
 
 ### 🔴 B05 · Resume allows replacing a different existing checkpoint
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P1** · Code defect · Static evidence
 
@@ -155,6 +178,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🔴 B06 · Metrics and checkpoint destinations can be identical
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P1** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/runner.py:288`, `:389`, `:461`, `:498`.
@@ -170,6 +195,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b07"></a>
 
 ### 🟠 B07 · Shared training updates do not stop on nonfinite values
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P2** · Code defect · Static evidence
 
@@ -187,6 +214,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🟠 B08 · Completion silently truncates an oversized supplied prompt
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/completion.py:62`, `:87`, `:101`.
@@ -202,6 +231,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b09"></a>
 
 ### 🟠 B09 · The storage guard permits temporary over-allocation
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P2** · Code defect · Static evidence
 
@@ -219,6 +250,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🟠 B10 · P3 outputs can collide with protected inputs or path aliases
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/file_conditioned_contract.py:190`, `:278`.
@@ -234,6 +267,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b11"></a>
 
 ### 🟠 B11 · P3 generation can leave candidate and review metadata out of sync
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P2** · Code defect · Static evidence
 
@@ -251,6 +286,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🔵 B12 · Model configuration accepts dimensions that are not integers
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P3** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/config.py:19`.
@@ -266,6 +303,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b13"></a>
 
 ### 🔵 B13 · Zero loss vocabulary bypasses the intended range validation
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P3** · Code defect · Static evidence
 
@@ -283,6 +322,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🔵 B14 · Contamination JSONL rows are used before checking object type
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P3** · Code defect · Static evidence
 
 **📍 Location:** `training/src/plex_training/web_contamination.py:117`.
@@ -298,6 +339,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 <a id="b15"></a>
 
 ### 🔵 B15 · Checkpoint schema accepts booleans as version and step
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P3** · Code defect · Static evidence
 
@@ -319,6 +362,8 @@ Priority: P1 = possible loss of research artifacts or misleading integrity gate;
 
 ### 🟠 G01 · P3 contract tests are absent from CI
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Verification gap
 
 **📍 Location:** `.github/workflows/training-tests.yml:28`.
@@ -331,6 +376,8 @@ The explicit pytest list omits `training/tests/test_file_conditioned_contract.py
 
 ### 🟠 G02 · Direct master pushes have no automated check trigger
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Verification gap
 
 **📍 Location:** `.github/workflows/training-tests.yml:3`.
@@ -342,6 +389,8 @@ The workflow declares `pull_request` and `workflow_dispatch`, with no `push` eve
 <a id="g03"></a>
 
 ### 🟠 G03 · CI leaves 36 of 62 Python test modules unselected
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P2** · Verification gap
 
@@ -357,6 +406,8 @@ Review the omitted tests for portability, training side effects, and intentional
 
 ### 🟠 G04 · TypeScript checks have no repository CI workflow
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Verification gap
 
 **📍 Location:** `package.json:22`; `.github/workflows/`.
@@ -369,6 +420,8 @@ The package defines TypeScript build and tests, but the only repository workflow
 
 ### 🟠 G05 · Windows behavior is not exercised by the workflow
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P2** · Verification gap
 
 **📍 Location:** `.github/workflows/training-tests.yml:16`.
@@ -380,6 +433,8 @@ The workflow uses Ubuntu only. The working environment is Windows, and the packa
 <a id="g06"></a>
 
 ### 🔵 G06 · Root line-ending policy changes do not trigger training CI
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P3** · Verification gap
 
@@ -397,6 +452,8 @@ The pull-request path filter only includes `training/**` and the workflow itself
 
 ### 🔵 M01 · Legacy CLI help needs clearer context
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P3** · Maintenance / follow-up
 
 **📍 Location:** `src/cli/main.ts:17`; `package.json:10`.
@@ -409,6 +466,8 @@ The `plex` executable routes to legacy TypeScript scaffolding whose help says `D
 
 ### 🔵 M02 · The P3 scorer relies on an unenforced frozen-row precondition
 
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
+
 **Priority P3** · Maintenance / follow-up
 
 **📍 Location:** `training/src/plex_training/file_conditioned_contract.py:110`.
@@ -420,6 +479,8 @@ The helper documents that it is for frozen fixtures only. It validates a replace
 <a id="m03"></a>
 
 ### 🔵 M03 · Specify what happens when generation evicts supplied context
+
+**Current status:** 🟢 **COMPLETE** — see the [Bug Atlas](../BUG-ATLAS.md) for resolution and verification. Original finding below is preserved from the audit snapshot.
 
 **Priority P3** · Maintenance / follow-up
 
@@ -438,7 +499,7 @@ Even an initially valid 512-token prompt starts losing prefix tokens once genera
 5. 🧪 **Add deliberately scoped CI coverage:** G01–G06.
 6. 🛠️ **Resolve API/documentation follow-ups:** M01–M03.
 
-Each fix should receive a small synthetic regression check when testing is authorized. Data checks should use synthetic fixtures, not the closed final holdout. Training authorization remains separate from code changes, preparation, diagnostics, and evaluation.
+The original repair order above is now completed; each entry's synthetic regression and CI evidence is recorded in the Bug Atlas. Data checks should use synthetic fixtures, not the closed final holdout. Training authorization remains separate from code changes, preparation, diagnostics, and evaluation.
 
 <a id="limits"></a>
 

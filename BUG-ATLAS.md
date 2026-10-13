@@ -13,6 +13,12 @@
 >
 > Each entry keeps the original failure mode, required regression coverage, resolution, and verification record together.
 
+## 🟢 Audit closeout - October 12, 2026
+
+**24 / 24 tracked items complete:** B01–B15, G01–G06, and M01–M03. This closeout incorporates the post-fix reviews, the B11 interruption-recovery follow-up, G04 packaged-prompt trigger coverage merged in PR #162, and the final M02 strict-schema follow-up below. Original failures, historical verification counts, experiment results, and frozen identities remain preserved in their entries.
+
+This status covers the listed package defects and verification/maintenance gaps. It does not claim that every execution path or model capability is solved. Branch protection remains unverified; abrupt termination during P3 publication requires inspecting the explicit recovery marker/backups; the historical experiment-contract suite remains manual. Research training and final-holdout access require separate authorization.
+
 ## 🗂️ Issue overview
 
 **Status key:** 🔴 **OPEN** — confirmed and not fully verified as fixed · 🟢 **COMPLETE** — fix merged after regression coverage and CI
@@ -55,7 +61,7 @@ These entries track wording, compatibility, and repository-maintenance follow-up
 | ID | Priority | Status | Area | Summary |
 |---|---|---|---|---|
 | **M01** | **P3** | 🟢 **COMPLETE** | `src/cli/main.ts`, `package.json` | Legacy `plex` CLI help now identifies the TypeScript scaffolding and points to current model commands. |
-| **M02** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer now requires exact frozen fixture identity before asserting `known-valid-target`. |
+| **M02** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/file_conditioned_contract.py` | P3 scorer now requires exact frozen fixture identity and exact integer schema type before asserting `known-valid-target`. |
 | **M03** | **P3** | 🟢 **COMPLETE** | `training/src/plex_training/completion.py`, P3 context docs | Completion now explicitly reports sliding-window prompt eviction for file-conditioned work. |
 
 ---
@@ -1082,6 +1088,12 @@ Verification:
 
 No P3 fixture, milestone, scorer metric shape, training authorization, checkpoint, corpus, or final-holdout state is changed.
 
+
+### Follow-up completion review - 2026-10-12
+
+Python dictionary equality alone accepted `schemaVersion=True` and `1.0` as equal to frozen integer `1`. The scorer now requires `type(schemaVersion) is int` before frozen-row equality, matching candidate validation. It rejects booleans, floats, strings, and missing/null schema values; unchanged frozen fixtures retain their existing scores.
+
+The new regression failed before the fix. Post-fix local verification: **27 passed, 2 deselected** in the P3 contract suite; the deselections are the two local frozen-tokenizer tests. No fixture bytes, hashes, metric shape, training authorization, or historical numeric results were changed.
 
 ## 🛠️ M03 — Specify generation context eviction
 

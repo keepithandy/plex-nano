@@ -4,7 +4,15 @@
 
 ## 🚧 Unreleased
 
-_🗓️ Updated October 8, 2026_
+_🗓️ Updated October 12, 2026_
+
+### 🟢 Package audit closeout
+
+- Closed all **24 tracked audit items**: **B01–B15** code defects, **G01–G06** CI/verification gaps, and **M01–M03** maintenance follow-ups. Current status and per-item evidence are in [BUG-ATLAS.md](BUG-ATLAS.md); the [original audit](docs/PACKAGE-BUG-AUDIT.md) now shows the closure status alongside preserved historical findings.
+- Hardened dataset/index cardinality, contamination coverage and input fingerprints, artifact ownership and Windows path separation, nonfinite update rejection, initial prompt limits, bounded checkpoint storage, and recoverable paired P3 publication. Model dimensions, loss vocabulary, dataset row objects, and checkpoint integer metadata now fail closed on invalid inputs.
+- Added automatic master-push checks, complete Python test-suite classification, TypeScript maintenance CI including packaged prompt changes, a Windows portability subset, and line-ending policy triggers. Historical experiment tests remain manual; CI does not authorize research training.
+- Clarified legacy CLI help, enforced frozen scorer identity including exact integer schema types, and documented/reported sliding-window prompt eviction. The M02 follow-up regression failed before the fix; **27 portable P3 tests passed** afterward, with two frozen-tokenizer tests excluded from the local run.
+- Preserved the **27,566,080-parameter / 512-token** baseline, frozen fixture hashes and historical research results. This closes the tracked package audit; it does not establish model-editing capability or authorize training or final-holdout access.
 
 ### 🧬 Phase 3 — file-conditioned coding
 - Corrected the P3-01 Save Changes target, pinned its 4,264-byte candidate identity in code and contract, protected LF checkout bytes, and preserved the superseded review. Added explicit replacement scoring, authorization/provenance checks, repository-rooted CLI paths, and 14 passing focused regressions. The corrected frozen-tokenizer review remains 46–77 tokens including EOS; no training occurred.

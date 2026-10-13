@@ -82,7 +82,7 @@ Text is UTF-8 without BOM, serialized with LF, and preserves meaningful whitespa
 
 - **Exact correctness:** compare output with expected file after CRLF/CR-to-LF normalization; preserve all other whitespace.
 - **Preservation:** compare text outside the expected replacement span; record any difference.
-- **Unnecessary edits:** a boolean reports failure to preserve the frozen prefix or suffix. Extra or incorrect content inside the replacement region fails exact correctness; this is not a general diff count. `score_file_edit` implements these rules.
+- **Unnecessary edits:** a boolean reports failure to preserve the frozen prefix or suffix. Extra or incorrect content inside the replacement region fails exact correctness; this is not a general diff count. `score_file_edit` implements these rules only for an exact reviewed frozen fixture, including exact integer `schemaVersion=1`; boolean and floating-point schema lookalikes are rejected before scoring.
 - **Syntax/checkability:** retain a per-language syntax status when a later evaluator has a cheap checker. Exact output reports `known-valid-target`; every nonexact output reports `not-checked`. The expected targets are authored as valid examples; P3-01 adds no parser dependency.
 
 ## Tokenizer and context

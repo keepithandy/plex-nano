@@ -527,6 +527,14 @@ class FileConditionedContractTests(unittest.TestCase):
             "known-valid-target",
         )
 
+    def test_scoring_rejects_noninteger_frozen_schema_versions(self):
+        for value in (True, False, 1.0, "1", None):
+            with self.subTest(schemaVersion=value):
+                row = build_candidate_rows()[0]
+                row["schemaVersion"] = value
+                with self.assertRaisesRegex(ValueError, "exact frozen P3-01 fixture"):
+                    score_file_edit(row, row["expectedFile"])
+
     def test_scoring_distinguishes_correctness_and_preservation(self):
         row = build_candidate_rows()[0]
         wrong = score_file_edit(row, "<button>Wrong</button>")
