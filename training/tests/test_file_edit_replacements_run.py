@@ -23,10 +23,15 @@ class FileEditReplacementRunTests(unittest.TestCase):
     def _contract(self) -> dict:
         return json.loads(CONTRACT.read_text(encoding="utf-8"))
 
-    def test_committed_packet_is_draft_and_exact_prior_evidence(self) -> None:
+    def test_committed_packet_is_owner_approved_with_exact_prior_evidence(self) -> None:
         packet = self._contract()
-        self.assertFalse(p302.validate_authorization(packet, allow_draft=True))
-        self.assertFalse(packet["modelTrainingAuthorized"])
+        self.assertTrue(p302.validate_authorization(packet, allow_draft=True))
+        self.assertTrue(p302.validate_authorization(packet, allow_draft=False))
+        self.assertTrue(packet["modelTrainingAuthorized"])
+        self.assertEqual(packet["status"], p302.APPROVED_STATUS)
+        self.assertEqual(packet["approvedBy"], "keepithandy")
+        self.assertEqual(packet["approvedDate"], "2026-10-13")
+        self.assertEqual(packet["authorizationScope"], p302.APPROVED_AUTHORIZATION_SCOPE)
         self.assertEqual(packet["source"]["stageCheckpointSha256"], p302.EXPECTED_STAGE_SHA256)
         self.assertEqual(packet["source"]["bundleManifestSha256"], p302.BUNDLE_SHA256)
         self.assertEqual(packet["baseline"]["meanLoss"], p302.EXPECTED_BASELINE_LOSS)
@@ -36,14 +41,10 @@ class FileEditReplacementRunTests(unittest.TestCase):
         self.assertTrue(packet["protectedEvaluation"]["developmentExcludedFromGradients"])
         self.assertFalse(packet["training"]["automaticContinuation"])
         self.assertFalse(packet["training"]["resumeAllowed"])
-        with self.assertRaisesRegex(ValueError, "NOT authorized"):
-            p302.validate_authorization(packet, allow_draft=False)
         p302.validate_frozen_baseline(p302._bounded_json(p302.DEFAULT_BASELINE))
 
     def test_approval_requires_owner_and_valid_date(self) -> None:
         packet = self._contract()
-        packet.update(status=p302.APPROVED_STATUS, modelTrainingAuthorized=True,
-                      approvedBy="keepithandy", approvedDate="2026-10-13")
         self.assertTrue(p302.validate_authorization(packet, allow_draft=False))
         for bad in ("", "2026-13-13", "2026-02-30", True, 20261013):
             broken = copy.deepcopy(packet)
@@ -53,6 +54,10 @@ class FileEditReplacementRunTests(unittest.TestCase):
         broken = copy.deepcopy(packet)
         broken["approvedBy"] = "unknown"
         with self.assertRaisesRegex(ValueError, "approvedBy"):
+            p302.validate_authorization(broken, allow_draft=False)
+        broken = copy.deepcopy(packet)
+        broken["authorizationScope"] = p302.DRAFT_AUTHORIZATION_SCOPE
+        with self.assertRaisesRegex(ValueError, "approved authorizationScope"):
             p302.validate_authorization(broken, allow_draft=False)
 
     def test_tampered_training_packet_fails_closed(self) -> None:
@@ -80,21 +85,47 @@ class FileEditReplacementRunTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "frozen authorization mismatch"):
                     p302.validate_authorization(bad, allow_draft=True)
 
+    def test_owner_approval_does_not_allow_broadening_execution_scope(self) -> None:
+        packet = self._contract()
+        for update in (
+            {"modelTrainingAuthorized": False},
+            {"status": "owner-approval-required"},
+            {"approvedDate": "2026-10-12"},
+        ):
+            candidate = copy.deepcopy(packet)
+            candidate.update(update)
+            with self.subTest(update=update), self.assertRaises(ValueError):
+                p302.validate_authorization(candidate, allow_draft=False)
+
     def test_extra_contract_key_rejected(self) -> None:
         value = self._contract()
         value["unsafeOverride"] = True
         with self.assertRaisesRegex(ValueError, "fields"):
             p302.validate_authorization(value, allow_draft=True)
 
-    def test_training_needs_both_flag_and_approved_packet_before_file_reads(self) -> None:
+    def test_training_needs_both_flag_and_owner_approved_packet_before_model_reads(self) -> None:
         with patch.object(p302, "read_checkpoint", side_effect=AssertionError("checkpoint read")):
             with patch.object(p302.torch.cuda, "is_available", side_effect=AssertionError("CUDA queried")):
                 with self.assertRaisesRegex(ValueError, "authorize-first-run"):
                     p302.run_replacement_first_training(
                         output_dir=Path("nonexistent"), authorize_first_run=False)
-                with self.assertRaisesRegex(ValueError, "NOT authorized"):
+                with tempfile.TemporaryDirectory() as tmp:
+                    draft = copy.deepcopy(self._contract())
+                    draft.update(status="owner-approval-required",
+                                 modelTrainingAuthorized=False,
+                                 approvedBy=None, approvedDate=None,
+                                 authorizationScope=p302.DRAFT_AUTHORIZATION_SCOPE)
+                    contract_path = Path(tmp) / "draft.json"
+                    contract_path.write_text(json.dumps(draft), encoding="utf-8")
+                    self.assertFalse(p302.validate_authorization(draft, allow_draft=True))
+                    with self.assertRaisesRegex(ValueError, "NOT authorized"):
+                        p302.run_replacement_first_training(
+                            authorize_first_run=True, authorization_path=contract_path,
+                            output_dir=Path("nonexistent"))
+                with self.assertRaisesRegex(ValueError, "exact unused authorized directory"):
                     p302.run_replacement_first_training(
-                        output_dir=Path("nonexistent"), authorize_first_run=True)
+                        output_dir=p302.DEFAULT_OUTPUT.with_name("different-run"),
+                        authorize_first_run=True)
 
     def test_preflight_does_not_mutate_training_authorization(self) -> None:
         baseline = {"stageCheckpointSha256": p302.EXPECTED_STAGE_SHA256,
@@ -110,8 +141,8 @@ class FileEditReplacementRunTests(unittest.TestCase):
                     "expectedAnswerAndEosTargetPositions": 60445,
                 }):
                     report = p302.preflight_replacement_first_run()
-        self.assertEqual(report["authorizationStatus"], "owner-approval-required")
-        self.assertFalse(report["modelTrainingAuthorized"])
+        self.assertEqual(report["authorizationStatus"], "owner-approved-first-run")
+        self.assertTrue(report["modelTrainingAuthorized"])
         self.assertFalse(report["trainingPerformed"])
         self.assertFalse(report["automaticContinuation"])
 
