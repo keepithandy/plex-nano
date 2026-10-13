@@ -23,6 +23,36 @@ def _responses_from_frozen_targets():
     ]
 
 
+
+def test_owner_reported_development_gate_failure_is_preserved_without_new_training():
+    path = evaluation.ROOT / "training/pretraining/p3-02-development-gate-result-summary.json"
+    result = json.loads(path.read_text(encoding="utf-8"))
+    assert result["status"] == "development-gate-failed"
+    assert result["checkpointSha256"] == evaluation.EXPECTED_ENDPOINT_SHA256
+    assert result["bundleManifestSha256"] == evaluation.BUNDLE_SHA256
+    assert result["authorizationContractSha256"] == evaluation.EXPECTED_AUTHORIZATION_SHA256
+    assert result["exactEdits"] == 0
+    assert result["unrelatedCodePreserved"] == 0
+    assert result["allThreeCorrectContrastGroups"] == 0
+    assert result["eosTerminatedRecords"] == 36
+    assert result["decodeSucceededRecords"] == 36
+    assert result["fullPromptVisibleRecords"] == 36
+    assert result["perLanguage"] == {
+        lang: {"records": 12, "exactEdits": 0, "unrelatedCodePreserved": 0}
+        for lang in ("html", "css", "javascript")
+    }
+    assert result["gateChecks"] == {
+        "overallExact": False, "perLanguageExact": False,
+        "unrelatedPreserved": False, "allThreeCorrectContrastGroups": False,
+        "fullPromptVisibleEveryStep": True,
+    }
+    assert result["developmentGatePassed"] is False
+    assert result["researchOptimizerUpdatesPerformed"] == 0
+    assert result["trainingPerformedDuringEvaluation"] is False
+    assert result["finalProjectHoldoutOpened"] is False
+    assert result["automaticContinuation"] is False
+    assert "underlying 36 raw generated outputs" in result["evidence"]
+
 def test_frozen_endpoint_identity_and_exact_declared_gate():
     frozen = evaluation._json(evaluation.DEFAULT_FROZEN_REPORT)
     assert frozen["fixedEndpoint"]["sha256"] == evaluation.EXPECTED_ENDPOINT_SHA256
