@@ -26,6 +26,8 @@ Request + provided code context → correct code change.
 
 ---
 
+**New to the repository?** Open [PROJECT-MAP.md](PROJECT-MAP.md) first. It shows exactly where the Python model, training/evaluation commands, frozen research files, legacy TypeScript code, and local checkpoints live. VS Code navigation and safe developer tasks are included under `.vscode/`.
+
 ## What is Plex Nano?
 
 Plex Nano is a compact coding model built from randomly initialized weights.
@@ -142,7 +144,19 @@ natural-language request
 
 The current model remains **27,566,080 parameters** so Phase 3 can measure the direct file-editing task without changing model size at the same time.
 
-**P3-01 — File + Request Contract** has a corrected, frozen 18-fixture review for supplied HTML/CSS/JavaScript files. **P3-02 — Exact Small Replacements** is active: its 216-record candidate passed split-integrity and frozen-tokenizer review (87–138 tokens including EOS). [Preparation and the proposed experiment](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) are recorded. A read-only answer/EOS supervision and deterministic sampler-preview command is implemented; it does not create a bundle or train a model. The owner reported successful local P3-02 bundle and P2-48 source-checkpoint preflight (pinned hashes in `training/pretraining/p3-02-local-verification-evidence.json`). Explicitly opted-in zero-step staging and read-only full-validation answer/EOS baseline commands are implemented and require local execution and baseline review. The owner's verified zero-stage (SHA `50f18e46...622246`) produced an answer/EOS-only **36-record validation loss of 10.5668395360** (1,320 supervised targets). This is not an exact-edit success rate. The first P3-02 run is **owner-authorized on 2026-10-13** for at most 100 optimizer updates or 600 seconds on CUDA; the verified baseline, stage, dataset, training objective and schedule remain unchanged. The run still requires the separate CLI `--authorize-first-run` flag on the owner's GPU; **the owner reports the full 100-update P3-02 run completed:** 60,445 supervised positions in 19.91 seconds; answer/EOS-only validation loss fell from **10.5668 to 1.5893**. The fixed, unreselected step-100 checkpoint SHA is `020d821c...829afecd0d`. The owner then ran the frozen 36-example development evaluator: **0/36 exact edits**, **0/36 unrelated-code preservation**, **0/12 fully correct contrast groups**; HTML/CSS/JavaScript each **0/12**. All 36 decoded, terminated at EOS, and retained full prompt visibility. **P3-02's predeclared development gate failed.** The step-100 model/checkpoint remains frozen. The generated-file error pattern is still undiagnosed; the local 36-response audit has not been uploaded. No further optimizer updates are authorized. Model editing ability remains unproven.
+### Current Phase 3 milestones
+
+| Milestone | Outcome | Where to look |
+|---|---|---|
+| **P3-01 — File + Request Contract** | Corrected, frozen 18-fixture request/edit contract; preparation and preflight complete | [P3-01 contract](training/pretraining/p3-01-file-request-contract.json) |
+| **P3-02 — Exact Small Replacements** | **Training completed, development gate failed**; 216 reviewed examples (144 train, 36 validation, 36 development) | [P3-02 experiment notes](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
+| **Next — read-only diagnosis** | Investigate repetition and request/source binding in the 36 saved completions; **no more training authorized** | [Development failure record](training/pretraining/p3-02-development-gate-result-summary.json) |
+
+The owner reported a completed, explicitly authorized **100-update P3-02 run**: 60,445 supervised positions in 19.91 seconds, with answer/EOS-only validation loss **10.5668 → 1.5893**. The unreselected step-100 checkpoint SHA-256 is `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`; see the [frozen training result](training/pretraining/p3-02-first-run-result.json).
+
+**The actual development test failed:** **0/36 exact edits**, **0/36 unrelated-code preservation**, **0/12 fully correct contrast groups**, and **0/12 exact edits in each HTML/CSS/JavaScript category**. All 36 responses decoded and terminated at EOS with full prompt visibility. This does **not** establish useful unseen-file editing capability. The checkpoint is frozen, the complete per-record response audit remains local, and further optimizer updates and final-holdout access are not authorized.
+
+**To find the working code quickly in VS Code, start with [PROJECT-MAP.md](PROJECT-MAP.md).** The PyTorch model lives in `training/src/plex_training/`, not the older TypeScript `src/` folder.
 
 **Package audit:** 🟢 **24 / 24 tracked items complete** — B01–B15, G01–G06, and M01–M03. See the [Bug Atlas](BUG-ATLAS.md) for resolutions and verification, the [audit snapshot and closeout](docs/PACKAGE-BUG-AUDIT.md) for preserved findings, and the [changelog](CHANGELOG.md) for the release summary. This reliability closeout does not establish model-editing capability or authorize research training.
 
@@ -229,11 +243,16 @@ For detailed experiment commands and retained results, see [training/README.md](
 
 | Path | Purpose |
 |---|---|
+| `PROJECT-MAP.md` | **Start here in VS Code:** directory map, current code, historical archives, and safe tasks |
+| `training/src/plex_training/` | **Active Python model**: Transformer, tokenizer, checkpoint, training CLI and P3 editing experiments |
+| `training/tests/` | Python unit, regression and safety tests |
+| `training/pretraining/` | Frozen contracts, provenance manifests and measured experiment summaries |
+| `training/phase2/` | Historical Phase 2 research and retained data (do not delete or relocate) |
 | `training/` | Model training, evaluation, checkpoints, datasets, and experiment tooling |
-| `docs/` | Research reports, milestone results, and technical notes |
+| `docs/` | Research reports, milestone results, and technical notes; [docs index](docs/INDEX.md) |
 | `prompts/` | Model-facing request/edit contracts |
 | `fixtures/` | Small code fixtures used by tests |
-| `src/` | Auxiliary TypeScript utilities retained by the project |
+| `src/` | **Legacy TypeScript** repository utilities; not the current Python model |
 | `tests/` | TypeScript/package tests |
 | `AGENTS.md` | Project direction and editing guardrails |
 

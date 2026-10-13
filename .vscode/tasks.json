@@ -1,0 +1,69 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Plex: Python environment (read-only)",
+      "type": "process",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "training",
+        "python",
+        "-m",
+        "plex_training.cli",
+        "environment"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Plex: Python CLI help (read-only)",
+      "type": "process",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "training",
+        "python",
+        "-m",
+        "plex_training.cli",
+        "--help"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Plex: Python regression tests",
+      "type": "process",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "training",
+        "pytest",
+        "training/tests"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Plex: Legacy TypeScript tests",
+      "type": "process",
+      "command": "npm",
+      "args": [
+        "test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

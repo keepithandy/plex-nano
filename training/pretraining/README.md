@@ -2,11 +2,19 @@
 
 This directory is the control surface for Plex's HTML/CSS/JavaScript domain-pretraining program.
 
-## Current milestone
+## Current project status — Phase 3
 
-**P2-30 — Task-Format Fine-Tuning Preparation (active).**
+**This directory preserves frozen research contracts, source manifests, verified data identities, and experiment summaries. It is not a folder of empty placeholder files.** For the actual PyTorch model and evaluation implementation, open [../src/plex_training/](../src/plex_training/) or the [project map](../../PROJECT-MAP.md).
 
-P2-24 through P2-29 are complete. The reviewed Web corpus, frozen 16K tokenizer, fresh 27.6M scratch initialization, and matched 100-step/500-step domain-pretraining results are recorded. P2-30 now prepares a stage-safe transition from the verified P2-29 Web checkpoint into task-format fine-tuning. No P2-30 model training is authorized yet.
+As of October 13, 2026, the current controlled model is the 27M Plex Nano Phase 3 research baseline. The completed P3-02 100-update experiment is recorded in [p3-02-first-run-result.json](p3-02-first-run-result.json) and its step-100 checkpoint identity is frozen. The subsequently evaluated 36 unseen HTML/CSS/JavaScript edits failed **0/36 exact**; see [p3-02-development-gate-result-summary.json](p3-02-development-gate-result-summary.json) and [P3-02 notes](../../docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md). Further training is **not** authorized; the final project holdout remains closed. Actual checkpoint weights and raw response files live locally, not inside this GitHub directory.
+
+## Historical P2-30 snapshot (retained for provenance)
+
+The following P2-30 narrative describes an earlier stage of the project; it is **not** the current milestone.
+
+**P2-30 — Task-Format Fine-Tuning Preparation (historical).**
+
+P2-24 through P2-29 completed the reviewed Web corpus, frozen 16K tokenizer, scratch initialization and matched bounded pretraining work. At the time, P2-30 prepared a stage-safe transition from the verified P2-29 Web checkpoint into task-format fine-tuning. Its historical authorization rules applied to that earlier experiment; consult the frozen milestone records for its actual execution history.
 
 ## Pipeline
 

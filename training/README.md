@@ -2,6 +2,18 @@
 
 This workspace adds a separate Python runner alongside the existing Node.js CLI. It trains only Plex-owned weights initialized from random values. The `byte-v1` codec remains a bootstrap format for runner checks. P1-14 built reviewed train/validation text splits, and P1-15 fitted Plex's own byte-level BPE tokenizer on the training split only. The BPE path now supports a bounded real-data pilot, checked checkpoint resumption, held-out evaluation, and independent completion from saved weights and a matching tokenizer bundle.
 
+## Start here: current workspace
+
+**This is the active Python model code, not a placeholder package.** To locate a file immediately after opening VS Code, see the [repository project map](../PROJECT-MAP.md) and [documentation index](../docs/INDEX.md). The core Transformer is in [model.py](src/plex_training/model.py); tokenizer in [tokenizer.py](src/plex_training/tokenizer.py); saved weights in [checkpoint.py](src/plex_training/checkpoint.py); commands in [cli.py](src/plex_training/cli.py); regressions in [tests/](tests/).
+
+**Current Phase 3 status (October 13, 2026):** the owner reported P3-02 training completed 100 updates and improved held-out answer/EOS loss to 1.5893, but the fixed step-100 model failed the existing 36-task development edit gate: **0/36 exact edits, 0/36 unrelated-code preservation**. See [frozen training result](pretraining/p3-02-first-run-result.json), [failed development summary](pretraining/p3-02-development-gate-result-summary.json) and [experiment notes](../docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md). No additional training or final holdout access is approved.
+
+**What each area means:** `src/plex_training/` is active implementation; `tests/` contains executable safeguards; `pretraining/` retains immutable experiment records; `phase3/drafts/` contains reviewed task records; `phase2/` retains earlier research and data; `artifacts/` is local generated output ignored by Git. The root `../src/` folder belongs to an earlier TypeScript utility and **does not contain Plex's AI model**.
+
+From the repository root, safe first commands are `uv run --project training python -m plex_training.cli environment`, `uv run --project training python -m plex_training.cli --help`, and `uv run --project training python -m pytest training/tests`. They do not authorize optimizer updates. Optional corresponding VS Code tasks are available under **Terminal → Run Task**; there is no training task.
+
+The sections below retain historical step-by-step experiment instructions for reproducibility. They are **not** a recommendation to rerun any prior training or consume held-out evaluation material.
+
 ## Set up and inspect the runtime
 
 Install [uv](https://docs.astral.sh/uv/) if it is not already available, then run these commands from the repository root in PowerShell:
