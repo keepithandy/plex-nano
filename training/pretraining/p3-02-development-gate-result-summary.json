@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P3-02",
+  "kind": "p3-02-owner-reported-frozen-step100-development-result-summary-v1",
+  "reportedDate": "2026-10-13",
+  "status": "development-gate-failed",
+  "evidence": "Owner-supplied local CLI JSON summary. Repository does not contain underlying 36 raw generated outputs, which remain in the owner's local development-result.json.",
+  "localResultRelativePath": "file-edits/p3-02-development-evaluation/development-result.json",
+  "checkpointStep": 100,
+  "checkpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+  "bundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+  "candidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+  "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+  "authorizationContractSha256": "b08e9e48f268d658e1a37f7b25720dcfe3d0cf68abb483f27e3f60476e101e03",
+  "generation": {
+    "maximumNewTokens": 192,
+    "policy": "greedy-unreselected-fixed-endpoint-v1",
+    "seed": 1337,
+    "temperature": 0
+  },
+  "totalRecords": 36,
+  "exactEdits": 0,
+  "unrelatedCodePreserved": 0,
+  "allThreeCorrectContrastGroups": 0,
+  "eosTerminatedRecords": 36,
+  "decodeSucceededRecords": 36,
+  "fullPromptVisibleRecords": 36,
+  "perLanguage": {
+    "css": {
+      "records": 12,
+      "exactEdits": 0,
+      "unrelatedCodePreserved": 0
+    },
+    "html": {
+      "records": 12,
+      "exactEdits": 0,
+      "unrelatedCodePreserved": 0
+    },
+    "javascript": {
+      "records": 12,
+      "exactEdits": 0,
+      "unrelatedCodePreserved": 0
+    }
+  },
+  "gateChecks": {
+    "overallExact": false,
+    "perLanguageExact": false,
+    "unrelatedPreserved": false,
+    "allThreeCorrectContrastGroups": false,
+    "fullPromptVisibleEveryStep": true
+  },
+  "developmentGatePassed": false,
+  "thresholds": {
+    "minimumExact": 30,
+    "total": 36,
+    "minimumExactPerLanguage": 8,
+    "recordsPerLanguage": 12,
+    "minimumPreserved": 34,
+    "minimumAllThreeCorrectContrastGroups": 10,
+    "contrastGroups": 12,
+    "requireFullPromptVisible": true
+  },
+  "trainingPerformedDuringEvaluation": false,
+  "researchOptimizerUpdatesPerformed": 0,
+  "finalProjectHoldoutOpened": false,
+  "automaticContinuation": false,
+  "conclusion": "Step-100 development gate failed: zero exact edited-file matches and zero unrelated-code preservation. The loss improvement (10.566839536031088 to 1.5892543557015333) does not establish successful request-grounded editing. Cause of failure is not yet diagnosed from aggregate results alone.",
+  "nextStep": "Inspect existing perRecord generated outputs read-only for systematic failure modes. Do not modify checkpoint, retrain, select alternate checkpoint, or open final project holdout without a separately authorized experiment."
+}
