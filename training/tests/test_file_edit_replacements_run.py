@@ -124,7 +124,8 @@ class FileEditReplacementRunTests(unittest.TestCase):
                             output_dir=Path("nonexistent"))
                 with self.assertRaisesRegex(ValueError, "exact unused authorized directory"):
                     p302.run_replacement_first_training(
-                        output_dir=Path("nonexistent"), authorize_first_run=True)
+                        output_dir=p302.DEFAULT_OUTPUT.with_name("different-run"),
+                        authorize_first_run=True)
 
     def test_preflight_does_not_mutate_training_authorization(self) -> None:
         baseline = {"stageCheckpointSha256": p302.EXPECTED_STAGE_SHA256,
