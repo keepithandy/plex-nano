@@ -855,6 +855,37 @@ def build_parser() -> argparse.ArgumentParser:
     replacement_source.add_argument("--result", type=Path, default=P302_RESULT)
     replacement_source.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
 
+    from .file_edit_replacements_stage import DEFAULT_STAGE_DIR as P302_STAGE
+    p302_stage = subparsers.add_parser(
+        "file-edit-replacements-stage",
+        help="Explicitly authorize P3-02 zero-step checkpoint serialization only; never train",
+    )
+    p302_stage.add_argument("--authorize-zero-stage", action="store_true")
+    p302_stage.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_stage.add_argument("--source-checkpoint", type=Path, default=P302_CHECKPOINT)
+    p302_stage.add_argument("--output-dir", type=Path, default=P302_STAGE)
+    p302_stage.add_argument("--result", type=Path, default=P302_RESULT)
+    _add_artifact_root(p302_stage)
+
+    p302_stage_verify = subparsers.add_parser(
+        "file-edit-replacements-stage-preflight",
+        help="Verify P3-02 stage weights equal frozen source; no writing",
+    )
+    p302_stage_verify.add_argument("--stage-checkpoint", type=Path, default=P302_STAGE / "stage-checkpoint.pt")
+    p302_stage_verify.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_stage_verify.add_argument("--source-checkpoint", type=Path, default=P302_CHECKPOINT)
+    p302_stage_verify.add_argument("--result", type=Path, default=P302_RESULT)
+
+    p302_baseline = subparsers.add_parser(
+        "file-edit-replacements-baseline-preflight",
+        help="Read-only full validation answer/EOS-only loss; no training or output writes",
+    )
+    p302_baseline.add_argument("--stage-checkpoint", type=Path, default=P302_STAGE / "stage-checkpoint.pt")
+    p302_baseline.add_argument("--bundle-dir", type=Path, default=P302_OUTPUT)
+    p302_baseline.add_argument("--source-checkpoint", type=Path, default=P302_CHECKPOINT)
+    p302_baseline.add_argument("--result", type=Path, default=P302_RESULT)
+    p302_baseline.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+
     request_grounded_bundle_prepare = subparsers.add_parser(
         "request-grounded-bundle-prepare",
         help="Pack the frozen P2-47 candidate for P2-48 without staging or training",
@@ -2817,6 +2848,28 @@ def main(argv: list[str] | None = None) -> int:
             _json_print(preflight_replacement_checkpoint_source(
                 bundle_dir=args.bundle_dir, checkpoint_path=args.checkpoint,
                 result_path=args.result, contract_path=args.contract))
+        elif args.command == "file-edit-replacements-stage":
+            from .file_edit_replacements_stage import create_replacement_stage
+            _json_print(create_replacement_stage(
+                authorize_zero_stage=args.authorize_zero_stage,
+                bundle_dir=args.bundle_dir, source_checkpoint=args.source_checkpoint,
+                output_dir=args.output_dir, artifact_root=args.artifact_root,
+                result_path=args.result,
+            ))
+        elif args.command == "file-edit-replacements-stage-preflight":
+            from .file_edit_replacements_stage import preflight_replacement_stage
+            _json_print(preflight_replacement_stage(
+                stage_checkpoint=args.stage_checkpoint,
+                bundle_dir=args.bundle_dir, source_checkpoint=args.source_checkpoint,
+                result_path=args.result,
+            ))
+        elif args.command == "file-edit-replacements-baseline-preflight":
+            from .file_edit_replacements_stage import baseline_replacement_preflight
+            _json_print(baseline_replacement_preflight(
+                stage_checkpoint=args.stage_checkpoint,
+                bundle_dir=args.bundle_dir, source_checkpoint=args.source_checkpoint,
+                result_path=args.result, device=args.device,
+            ))
         elif args.command == "request-grounded-bundle-prepare":
             _json_print(_request_grounded_bundle_prepare(args))
         elif args.command == "request-grounded-bundle-preflight":
