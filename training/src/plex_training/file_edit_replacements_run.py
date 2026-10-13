@@ -39,6 +39,17 @@ DEFAULT_STAGE = DEFAULT_STAGE_DIR / STAGE_FILENAME
 DEFAULT_OUTPUT = ROOT / "training/artifacts/file-edits/p3-02-first-run"
 AUTHORIZATION_KIND = "plex-p3-02-first-exact-replacement-run-contract-v1"
 APPROVED_STATUS = "owner-approved-first-run"
+DRAFT_AUTHORIZATION_SCOPE = (
+    "Draft only; no training until separate explicit owner approval changes "
+    "the frozen packet and CLI --authorize-first-run flag is present."
+)
+APPROVED_AUTHORIZATION_SCOPE = (
+    "Owner approved on 2026-10-13 for one bounded P3-02 first run only: "
+    "at most 100 optimizer updates or 600 seconds, whichever comes first. "
+    "CUDA, fixed source/stage/bundle, no resume, automatic continuation, "
+    "checkpoint reselection, or development/final holdout access. "
+    "Execution separately requires --authorize-first-run."
+)
 EXPECTED_BASELINE_LOSS = 10.566839536031088
 EXPECTED_STAGE_SHA256 = "50f18e463d6a51bac5a21c0101b13d4b33c7e0d3eb41904600f6fce8bc622246"
 EXPECTED_TOKENIZER_SHA256 = "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
@@ -144,13 +155,10 @@ def validate_authorization(packet: dict[str, Any], *, allow_draft: bool) -> bool
             "Stop at the first 100 updates or 600 seconds, whichever happens first. "
             "No automatic restart, checkpoint reselection, or continuation."
         ),
-        "authorizationScope": (
-            "Draft only; no training until separate explicit owner approval changes "
-            "the frozen packet and CLI --authorize-first-run flag is present."
-        ),
     }.items():
         _require(packet.get(k), v, k)
     if packet.get("status") == "owner-approval-required":
+        _require(packet.get("authorizationScope"), DRAFT_AUTHORIZATION_SCOPE, "draft authorizationScope")
         _require(packet.get("modelTrainingAuthorized"), False, "draft training flag")
         _require(packet.get("approvedBy"), None, "draft approvedBy")
         _require(packet.get("approvedDate"), None, "draft approvedDate")
@@ -158,6 +166,7 @@ def validate_authorization(packet: dict[str, Any], *, allow_draft: bool) -> bool
             raise ValueError("P3-02 model training is NOT authorized by the committed draft")
         return False
     _require(packet.get("status"), APPROVED_STATUS, "status")
+    _require(packet.get("authorizationScope"), APPROVED_AUTHORIZATION_SCOPE, "approved authorizationScope")
     _require(packet.get("modelTrainingAuthorized"), True, "approval training flag")
     _require(packet.get("approvedBy"), "keepithandy", "approvedBy")
     date = packet.get("approvedDate")
