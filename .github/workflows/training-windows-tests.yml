@@ -52,4 +52,7 @@ jobs:
           training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_generation_checks_resolved_windows_output_spelling
           training/tests/test_file_conditioned_contract.py::FileConditionedContractTests::test_cli_defaults_are_absolute_and_rooted_at_repository
           training/tests/test_cli.py::CliTests::test_artifact_root_helper_does_not_double_existing_prefix
+          training/tests/test_file_edit_replacements_bundle.py::test_bundle_packs_only_train_validation_with_exact_next_token_masks
+          training/tests/test_file_edit_replacements_bundle.py::test_bundle_low_storage_budget_rolls_back_before_publication
+          training/tests/test_file_edit_replacements_bundle.py::test_p302_cli_commands_use_rooted_paths_and_no_training_switch
           -q
