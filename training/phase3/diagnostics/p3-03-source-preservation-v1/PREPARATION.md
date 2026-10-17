@@ -2,7 +2,9 @@
 
 **Naming clarification after repository synchronization:** this packet retains the attached proposal's P3-03 label and frozen artifact identifiers for provenance. The formal roadmap's P3-03 milestone remains **Insert and Delete**. The incoming **P3-02-D1** tool analyzes the 36 existing P3-02 completions; this separate 72-task proposal remains preparation only and has not been run.
 
-**Status: preparation complete; evaluation is not authorized.** This bounded diagnostic measures how the 27,566,080-parameter Plex Nano coding model handles a request to edit one supplied HTML, CSS, or JavaScript file. It separates source-name preservation, requested-value selection, unrelated-content preservation, exact-file correctness, and contrast sensitivity. These are observable output categories; they do not establish an internal cause.
+**Preparation status at freeze: complete; evaluation was not yet authorized.** This bounded diagnostic measures how the 27,566,080-parameter Plex Nano coding model handles a request to edit one supplied HTML, CSS, or JavaScript file. It separates source-name preservation, requested-value selection, unrelated-content preservation, exact-file correctness, and contrast sensitivity. These are observable output categories; they do not establish an internal cause.
+
+**October 17 execution addendum:** The owner later instructed continuation at the 72-task authorization decision. The [fixed runner](run_frozen_evaluation.py) generated all responses once from the verified step-100 checkpoint. The immutable [response envelope](P3-03-FROZEN-RESPONSES.json), [formal report](P3-03-SOURCE-PRESERVATION-DIAGNOSTIC.md), and [JSON audit](P3-03-SOURCE-PRESERVATION-DIAGNOSTIC-AUDIT.json) record the run. The [decision note](../../../../docs/PHASE-3-REPLACEMENT-FAILURE-DECISION.md) explains the **both fail** result and the next proposed copy-versus-edit control. The frozen preparation manifest still describes its original pre-execution state and was not rewritten.
 
 ## Frozen artifacts
 

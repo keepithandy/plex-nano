@@ -1,0 +1,3692 @@
+{
+  "analysisCodeSha256": "d36a6b00e7a38c3abbb194bd9cc3ab3843da308fb98d310867b7f6f96715c6a9",
+  "execution": {
+    "checkpointHashVerified": true,
+    "checkpointReselectionAllowed": false,
+    "checkpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+    "checkpointStep": 100,
+    "codeRevision": "c33ab6a9be90884f417bf75ddd5d608f3c91963b",
+    "device": "cuda",
+    "evaluationAuthorizationEvidenceReference": "Owner message on 2026-10-17: \"continue the work from here now\" following the stated decision whether to authorize the bounded 72-task evaluation",
+    "finalProjectHoldoutOpened": false,
+    "maximumNewTokens": 192,
+    "officialP302ScorerModified": false,
+    "optimizerUpdatesDuringDiagnostic": 0,
+    "p302BundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+    "policy": "greedy-unreselected-fixed-endpoint-v1",
+    "promptTemplateSha256": "9502408c141698d53583f9c6d9d682b5faf94da69bd05ba1552c001f347c39d1",
+    "runnerSha256": "8bc422d0f8792ebba6a0e091f7e4e5f3beaa265ded428d43ac32e05d5ef62ce9",
+    "seed": 1337,
+    "temperature": 0,
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+    "trainingPerformedDuringDiagnostic": false
+  },
+  "manifestSha256": "119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578",
+  "milestone": "P3-03",
+  "p302TrainingCandidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+  "predictionEnvelopeSha256": "07c89354fafec181d337cd3b35bc8b471d865ef25bbc29c329e83db2583323a5",
+  "schemaVersion": 1,
+  "summary": {
+    "contrastGroups": [
+      {
+        "contrastGroupId": "p303-css-color-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-color-orbit",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-gap-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-gap-orbit",
+        "distinctCompleteOutputs": 2,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-padding-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-padding-orbit",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-radius-harbor",
+        "distinctCompleteOutputs": 2,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-css-radius-orbit",
+        "distinctCompleteOutputs": 2,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-aria-label-harbor",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 2,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 1
+      },
+      {
+        "contrastGroupId": "p303-html-aria-label-orbit",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 2,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 1
+      },
+      {
+        "contrastGroupId": "p303-html-button-text-harbor",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-button-text-orbit",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-link-destination-harbor",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-link-destination-orbit",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-placeholder-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-html-placeholder-orbit",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-default-size-harbor",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-default-size-orbit",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-message-harbor",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-message-orbit",
+        "distinctCompleteOutputs": 3,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-retry-limit-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-retry-limit-orbit",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-selector-harbor",
+        "distinctCompleteOutputs": 1,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      },
+      {
+        "contrastGroupId": "p303-javascript-selector-orbit",
+        "distinctCompleteOutputs": 2,
+        "distinctExtractedTargetValues": 0,
+        "fullyCorrect": false,
+        "individuallyCorrectRequestedValues": 0,
+        "unextractableTaskCount": 3
+      }
+    ],
+    "counts": {
+      "exactFileCorrect": 0,
+      "requestedValueSelectionPasses": 0,
+      "sourceNamePreservationPasses": 0,
+      "tasks": 72,
+      "trainingTargetOutputMatches": 0,
+      "unrelatedContentPreservationPasses": 0
+    },
+    "crossCategoryFailureMatrix": {
+      "namesFail_valueFail": 72,
+      "namesFail_valuePass": 0,
+      "namesPass_valueFail": 0,
+      "namesPass_valuePass": 0
+    },
+    "decision": {
+      "fullDiagnosticPass": false,
+      "internalCauseInferred": false,
+      "mixedNameAndValueFailuresObserved": true,
+      "nextProposal": "Propose a simpler controlled task that isolates copying supplied code from applying the requested change.",
+      "officialP302GateModified": false,
+      "outcome": "both-fail",
+      "preservationFailureObserved": true,
+      "unscorablePreservationTasks": 68,
+      "valueSelectionFailureObserved": true
+    }
+  },
+  "tasks": [
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.settings.\nfunction settings.settingsMessage = \" note for settingsButton = \" note for settings.\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"harborAction\">Launch</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Launch. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Launch",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-button-text-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settingsButton = \"\n  return size;\n}\nfunction settingsEnabled = document.settings-input id=\"Enabled = true;",
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"harborAction\">Inspect</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Inspect. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Inspect",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-button-text-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settingsButton = \"\n  return\nfunction settingsButton(size = true;\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"harborAction\">Reset</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Reset. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Reset",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-button-text-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.settings.\nfunction settings.settingsMessage = \" note for settingsButton = \" note for settings.\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"orbitAction\">Launch</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Launch. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Launch",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-button-text-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settingsButton = \"\n  return size;\n}\nfunction settingsEnabled = document.settings-input id=\"Enabled = true;",
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"orbitAction\">Inspect</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Inspect. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Inspect",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-button-text-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settingsButton = \"\n  return\nfunction settingsButton(size =) {\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<button id=\"orbitAction\">Reset</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the button text to Reset. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Reset",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitAction",
+          "observed": null,
+          "pass": false,
+          "role": "button id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-button-text-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\n.\nfunction settings.cartButton = document. */\nfunction settingsButton = 20px;\n  <input id=\"cart-input\" placeholder=\"Your name\">\n}\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/alpha\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/alpha",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-link-destination-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\n.\nfunction settings.cart.cart-color(\".Button = document. */\nfunction settingsButton = true;\n  return size;\n  display: block;\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/beta\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /beta. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/beta",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-link-destination-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nfunction settings.\nfunction settings.\nfunction settingsButton = note for settings.\nfunction settingsButton = true;\n  return size;\n}\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/gamma\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/gamma",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-link-destination-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\n.\nfunction settings.cartButton = document. */\nfunction settingsButton = 20px;\n  <input id=\"cart-input\" placeholder=\"Your name\">\n}\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/alpha\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/alpha",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-link-destination-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for profile.\nfunction profile. */\nfunction profile.querySelector(\".) {\n  return size;\n  return size;\n}\nfunction profileEnabled = true;",
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/beta\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /beta. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/beta",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-link-destination-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settings.\nfunction settingsButton = document.cartButton =) {\n  return size;\n}\nfunction settingsEnabled = true;",
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/gamma\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "/gamma",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-link",
+          "observed": null,
+          "pass": false,
+          "role": "anchor class name"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-link-destination-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find files\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find files",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-placeholder-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find pages\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find pages",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-placeholder-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find people\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find people",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harborQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-placeholder-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find files\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find files",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-placeholder-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find pages\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find pages",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-placeholder-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find people\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Find people",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-or-ambiguous-element",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbitQuery",
+          "observed": null,
+          "pass": false,
+          "role": "input id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-placeholder-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Main menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Quick links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Quick links",
+      "requestedValueSelection": {
+        "endCharacter": 110,
+        "pass": false,
+        "reason": null,
+        "startCharacter": 101,
+        "structurallyValid": true,
+        "valid": true,
+        "value": "Main menu"
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-nav",
+          "observed": "search-nav",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-aria-label-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": true,
+      "unrelatedModifications": [
+        {
+          "category": "before-target-insert",
+          "expectedByteRange": [
+            0,
+            0
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            0,
+            68
+          ],
+          "observedUtf8": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  ",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            9,
+            10
+          ],
+          "expectedUtf8": "h",
+          "observedByteRange": [
+            77,
+            79
+          ],
+          "observedUtf8": "se",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            12,
+            15
+          ],
+          "expectedUtf8": "bor",
+          "observedByteRange": [
+            81,
+            83
+          ],
+          "observedUtf8": "ch",
+          "region": "before-target"
+        },
+        {
+          "category": "after-target-delete",
+          "expectedByteRange": [
+            2,
+            7
+          ],
+          "expectedUtf8": "Links",
+          "observedByteRange": [
+            2,
+            2
+          ],
+          "observedUtf8": "",
+          "region": "after-target"
+        },
+        {
+          "category": "after-target-insert",
+          "expectedByteRange": [
+            13,
+            13
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            8,
+            19
+          ],
+          "observedUtf8": "\n</section>",
+          "region": "after-target"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note for cart.\n</section class=\"cart\">\n  <p>Keep this note.</p>\n  <nav id=\"cart-label=\"cart-label=\"Account menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Site links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Site links",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-duplicate-or-nonliteral-attribute",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-nav",
+          "observed": "cart-label=",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-aria-label-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Account menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Help links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Help links",
+      "requestedValueSelection": {
+        "endCharacter": 107,
+        "pass": false,
+        "reason": null,
+        "startCharacter": 95,
+        "structurallyValid": true,
+        "valid": true,
+        "value": "Account menu"
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "harbor-nav",
+          "observed": "search-nav",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-html-aria-label-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": true,
+      "unrelatedModifications": [
+        {
+          "category": "before-target-insert",
+          "expectedByteRange": [
+            0,
+            0
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            0,
+            62
+          ],
+          "observedUtf8": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  ",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            9,
+            10
+          ],
+          "expectedUtf8": "h",
+          "observedByteRange": [
+            71,
+            73
+          ],
+          "observedUtf8": "se",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            12,
+            15
+          ],
+          "expectedUtf8": "bor",
+          "observedByteRange": [
+            75,
+            77
+          ],
+          "observedUtf8": "ch",
+          "region": "before-target"
+        },
+        {
+          "category": "after-target-delete",
+          "expectedByteRange": [
+            2,
+            7
+          ],
+          "expectedUtf8": "Links",
+          "observedByteRange": [
+            2,
+            2
+          ],
+          "observedUtf8": "",
+          "region": "after-target"
+        },
+        {
+          "category": "after-target-insert",
+          "expectedByteRange": [
+            13,
+            13
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            8,
+            19
+          ],
+          "observedUtf8": "\n</section>",
+          "region": "after-target"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Main menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Quick links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Quick links",
+      "requestedValueSelection": {
+        "endCharacter": 110,
+        "pass": false,
+        "reason": null,
+        "startCharacter": 101,
+        "structurallyValid": true,
+        "valid": true,
+        "value": "Main menu"
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-nav",
+          "observed": "search-nav",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-aria-label-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": true,
+      "unrelatedModifications": [
+        {
+          "category": "before-target-insert",
+          "expectedByteRange": [
+            0,
+            0
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            0,
+            68
+          ],
+          "observedUtf8": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  ",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            9,
+            10
+          ],
+          "expectedUtf8": "o",
+          "observedByteRange": [
+            77,
+            80
+          ],
+          "observedUtf8": "sea",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            11,
+            14
+          ],
+          "expectedUtf8": "bit",
+          "observedByteRange": [
+            81,
+            83
+          ],
+          "observedUtf8": "ch",
+          "region": "before-target"
+        },
+        {
+          "category": "after-target-delete",
+          "expectedByteRange": [
+            2,
+            7
+          ],
+          "expectedUtf8": "Links",
+          "observedByteRange": [
+            2,
+            2
+          ],
+          "observedUtf8": "",
+          "region": "after-target"
+        },
+        {
+          "category": "after-target-insert",
+          "expectedByteRange": [
+            13,
+            13
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            8,
+            19
+          ],
+          "observedUtf8": "\n</section>",
+          "region": "after-target"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note for cart.\n</section class=\"cart\">\n  <p>Keep this note.</p>\n  <nav id=\"cart-label=\"cart-label=\"Account menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Site links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Site links",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "missing-duplicate-or-nonliteral-attribute",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-nav",
+          "observed": "cart-label=",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-aria-label-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Account menu\"></nav>\n</section>",
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Help links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "Help links",
+      "requestedValueSelection": {
+        "endCharacter": 107,
+        "pass": false,
+        "reason": null,
+        "startCharacter": 95,
+        "structurallyValid": true,
+        "valid": true,
+        "value": "Account menu"
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "orbit-nav",
+          "observed": "search-nav",
+          "pass": false,
+          "role": "navigation id attribute"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-html-aria-label-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": true,
+      "unrelatedModifications": [
+        {
+          "category": "before-target-insert",
+          "expectedByteRange": [
+            0,
+            0
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            0,
+            62
+          ],
+          "observedUtf8": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  ",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            9,
+            10
+          ],
+          "expectedUtf8": "o",
+          "observedByteRange": [
+            71,
+            74
+          ],
+          "observedUtf8": "sea",
+          "region": "before-target"
+        },
+        {
+          "category": "before-target-replace",
+          "expectedByteRange": [
+            11,
+            14
+          ],
+          "expectedUtf8": "bit",
+          "observedByteRange": [
+            75,
+            77
+          ],
+          "observedUtf8": "ch",
+          "region": "before-target"
+        },
+        {
+          "category": "after-target-delete",
+          "expectedByteRange": [
+            2,
+            7
+          ],
+          "expectedUtf8": "Links",
+          "observedByteRange": [
+            2,
+            2
+          ],
+          "observedUtf8": "",
+          "region": "after-target"
+        },
+        {
+          "category": "after-target-insert",
+          "expectedByteRange": [
+            13,
+            13
+          ],
+          "expectedUtf8": "",
+          "observedByteRange": [
+            8,
+            19
+          ],
+          "observedUtf8": "\n</section>",
+          "region": "after-target"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 4px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 4px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "4px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-gap-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 12px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 12px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "12px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-gap-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 20px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 20px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "20px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-gap-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 4px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 4px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "4px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-gap-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-gap {\n  gap: block;\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 12px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 12px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "12px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-gap-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-gap {\n  gap: block;\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-gap-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 20px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the gap to 20px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "20px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-gap-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 6px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 6px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "6px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-padding-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 14px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 14px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "14px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-padding-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 22px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 22px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "22px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-panel",
+          "observed": ".settings-padding",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-padding-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 6px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 6px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "6px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-padding-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 14px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 14px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "14px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-padding-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-padding-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 22px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the padding to 22px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "22px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-panel",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-padding-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #224466;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #224466. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#224466",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-label",
+          "observed": ".settings-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-color-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #663322;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #663322. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#663322",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-label",
+          "observed": ".settings-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-color-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #226633;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #226633. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#226633",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-label",
+          "observed": ".settings-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-color-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #224466;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #224466. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#224466",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-label",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-color-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #663322;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #663322. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#663322",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-label",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-color-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-color-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #226633;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the text color to #226633. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "#226633",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "unclosed comment",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-label",
+          "observed": null,
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-color-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-radius {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 2px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "2px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-card",
+          "observed": ".cart-radius",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-radius-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 10px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 10px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "10px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-card",
+          "observed": ".cart-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-radius-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 18px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 18px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "18px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".harbor-card",
+          "observed": ".cart-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-css-radius-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-radius {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 2px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "2px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-card",
+          "observed": ".cart-radius",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-radius-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 10px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 10px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "10px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-card",
+          "observed": ".cart-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-radius-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }",
+      "contrastGroupId": "p303-css-radius-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 18px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the border radius to 18px. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "18px",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-property-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": ".orbit-card",
+          "observed": ".cart-color",
+          "pass": false,
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "observed": [],
+          "pass": false,
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-css-radius-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 3;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 3. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "3",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-retry-limit-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 6;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 6. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "6",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-retry-limit-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 9;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 9. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "9",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-retry-limit-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 3;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 3. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "3",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-retry-limit-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 6;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 6. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "6",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-retry-limit-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 9;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the retry limit to 9. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "9",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-retry-limit-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsButton = \"Save = true;",
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Queued\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Queued\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-message-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst cartEnabled = true;",
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Paused\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Paused\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-message-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Done\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Done\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Done\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-message-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsButton = document.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Queued\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Queued\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-message-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsButton = document.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Paused\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Paused\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-message-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Done\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the message to \"Done\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"Done\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-message-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#one\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#one\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-selector-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#two\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#two\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-selector-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#three\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#three\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-selector-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#one\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#one\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-selector-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#two\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#two\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-selector-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#three\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "\"#three\"",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for settings.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-selector-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst cartEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 12;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 12. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "12",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-default-size-harbor-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 16;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 16. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "16",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-default-size-harbor-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 24;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 24. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "24",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "taskId": "p303-javascript-default-size-harbor-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 12;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 12. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "12",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-default-size-orbit-0",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 16;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 16. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "16",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-default-size-orbit-1",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    },
+    {
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;",
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "exactFileCorrectness": false,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 24;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "matchesP302TrainingTarget": false,
+      "request": "Change the default size to 24. Return the complete file. Preserve everything else exactly.",
+      "requestedLiteral": "24",
+      "requestedValueSelection": {
+        "pass": false,
+        "reason": "target-declaration-missing",
+        "structurallyValid": false,
+        "valid": false,
+        "value": null
+      },
+      "sourceNamePreservation": false,
+      "sourceNameRoleObservations": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "observed": "// Keep this note for cart.",
+          "pass": false,
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "observed": [],
+          "pass": false,
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "observed": [],
+          "pass": false,
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "taskId": "p303-javascript-default-size-orbit-2",
+      "unrelatedContentPreservation": false,
+      "unrelatedContentScorable": false,
+      "unrelatedModifications": [
+        {
+          "category": "authorized-target-span-unavailable",
+          "region": "target-boundary"
+        }
+      ]
+    }
+  ]
+}
