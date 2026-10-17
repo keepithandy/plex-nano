@@ -69,5 +69,6 @@ jobs:
           training/tests/test_p303_diagnostic_decision.py
           training/tests/test_p3_copy_edit_controls.py
           training/tests/test_p3_copy_fidelity_curriculum.py
+          training/tests/test_p3_copy_fidelity_bundle_stage.py
           training/tests/test_file_edit_replacements_diagnostic.py::test_from_file_uses_saved_evidence_and_does_not_write_over_it
           -q

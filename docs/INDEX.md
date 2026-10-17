@@ -13,7 +13,7 @@ This folder contains the **historical research record**, not a list of current p
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
 | What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |
 | What did the 42-task copy/edit probe show? | [Completed diagnostic issue #177](https://github.com/keepithandy/plex-nano/issues/177): owner-reported **0/42 exact, 0/6 copies**, source-name loss; owner retains raw responses locally |
-| What copy-fidelity curriculum comes next? | [Frozen 288-train / 96-validation curriculum and bounded proposal](../training/phase3/copy-fidelity-v1/README.md): **no model training or inference performed** |
+| What copy-fidelity curriculum comes next? | [Frozen 288-train / 96-validation curriculum, bundle and zero-stage preparation](../training/phase3/copy-fidelity-v1/README.md): local artifact preflights and staging still pending; **no new model training or inference performed** |
 | What did the 72-task source/value diagnostic show? | [Replacement-failure decision](PHASE-3-REPLACEMENT-FAILURE-DECISION.md): both axes failed; next controlled proposal |
 | Did P3-02 pass unseen file-edit tasks? | [Frozen development-gate summary](../training/pretraining/p3-02-development-gate-result-summary.json): **No — 0/36 exact edits** |
 | What was the fixed trained model checkpoint? | [Frozen first-run result](../training/pretraining/p3-02-first-run-result.json): step 100, fixed SHA-256 |
