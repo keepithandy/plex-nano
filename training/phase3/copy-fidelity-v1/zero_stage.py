@@ -205,9 +205,9 @@ def create_stage(*, authorize_zero_stage: bool = False,
     except Exception:
         shutil.rmtree(output)
         raise
-    return {"status": "copy-fidelity-zero-stage-created-and-verified",
+    return {**result, "status": "copy-fidelity-zero-stage-created-and-verified",
             "stageDirectory": str(output), "zeroStageExplicitlyAuthorized": True,
-            **result, "trainingPerformed": False, "optimizerUpdates": 0}
+            "trainingPerformed": False, "optimizerUpdates": 0}
 
 
 def main() -> None:
