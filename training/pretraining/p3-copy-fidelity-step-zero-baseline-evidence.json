@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "p3-copy-fidelity-owner-reported-step-zero-cuda-baseline-v1",
+  "recordedDate": "2026-10-17",
+  "source": "Owner-supplied PowerShell/CLI JSON output from Windows CUDA; GitHub CI cannot independently reproduce private checkpoint evaluation.",
+  "metric": "validation-answer-and-eos-cross-entropy-per-supervised-target",
+  "baselineMeasured": true,
+  "bundleManifestSha256": "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d",
+  "candidateSha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a",
+  "device": "cuda",
+  "finalHoldoutOpened": false,
+  "meanValidationAnswerAndEosLoss": 7.116717401614859,
+  "optimizerUpdates": 0,
+  "perLanguage": {
+    "css": {
+      "meanLoss": 7.546227005124092,
+      "supervisedTargets": 800
+    },
+    "html": {
+      "meanLoss": 6.3204158690510965,
+      "supervisedTargets": 980
+    },
+    "javascript": {
+      "meanLoss": 7.799167118966579,
+      "supervisedTargets": 640
+    }
+  },
+  "sampler": {
+    "distinctRecords": 288,
+    "drawIndexSha256": "6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4",
+    "draws": 1600,
+    "expectedAnswerAndEosTargetPositions": 40477,
+    "kind": "seeded-epoch-shuffle-full-coverage-proposal-v1",
+    "optimizerUpdatesPerformed": 0,
+    "samplingExecutionAuthorized": false,
+    "seed": 1337
+  },
+  "sourceCheckpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+  "stageCheckpointSha256": "3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9",
+  "status": "copy-fidelity-step-zero-validation-baseline-measured-read-only",
+  "supervisedTargetsEvaluated": 2420,
+  "trainRecords": 288,
+  "trainingAuthorized": false,
+  "trainingPerformed": false,
+  "validationAnswerAndEosTargets": 2420,
+  "validationRecords": 96,
+  "validationRecordsEvaluated": 96,
+  "interpretation": "Teacher-forced step-zero validation loss on frozen NEW copy-fidelity 96-record split. Different data than previous P3-02 validation; not comparable directly. Not exact-file generation accuracy, model improvement, training authorization, or holdout access."
+}
