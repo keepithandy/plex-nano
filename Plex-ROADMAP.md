@@ -279,7 +279,7 @@ The [prepared 72-task packet](training/phase3/diagnostics/p3-03-source-preservat
 
 Each branch selects a proposal for review, not an automatic training run. Evaluation, optimizer updates, and final-holdout access require their own authorization; the failed P3-02 gate remains the recorded outcome.
 
-The October 17 fixed-endpoint run selected **both fail**: 0/72 source-name passes, 0/72 requested-value passes, 0/72 exact files, and 0/24 fully correct contrast groups. Target extraction failed on 68/72 outputs, so those records cannot isolate value choice inside a valid target; all 72 still visibly lost supplied names. See the [full result and selected copy-versus-edit proposal](docs/PHASE-3-REPLACEMENT-FAILURE-DECISION.md). The next task is to review that smaller proposal, not to run training or advance to Insert and Delete.
+The October 17 fixed-endpoint run selected **both fail**: 0/72 source-name passes, 0/72 requested-value passes, 0/72 exact files, and 0/24 fully correct contrast groups. Target extraction failed on 68/72 outputs, so those records cannot isolate value choice inside a valid target; all 72 still visibly lost supplied names. See the [full result and selected copy-versus-edit proposal](docs/PHASE-3-REPLACEMENT-FAILURE-DECISION.md). The selected smaller copy-versus-edit control now has [executable, read-only preparation](training/phase3/diagnostics/p3-copy-edit-controls-v1/PREPARATION.md): 6 copy controls, 18 minimal edits, and 18 context edits, with frozen-source overlap checks and synthetic regression tests. Its manifest is **not yet frozen or evaluated**; no additional training, checkpoint reselection, or final-holdout access is authorized. This does not advance P3-03 Insert and Delete.
 
 ### P3-03 — Insert and Delete
 
