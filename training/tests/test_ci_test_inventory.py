@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -33,6 +34,22 @@ class CiTestInventoryTests(unittest.TestCase):
             discovered,
             set(required) | set(experiment),
             "every top-level test module must be assigned to exactly one CI suite",
+        )
+
+    def test_repository_has_no_unconfigured_gitlinks(self) -> None:
+        # Mode 160000 without a matching .gitmodules mapping breaks checkout cleanup.
+        tracked = subprocess.check_output(
+            ["git", "ls-files", "--stage"], cwd=REPO_ROOT, text=True,
+        )
+        gitlinks = [
+            line.split("\t", 1)[1]
+            for line in tracked.splitlines()
+            if line.startswith("160000 ")
+        ]
+        self.assertEqual(
+            gitlinks, [],
+            "Orphaned gitlinks break GitHub Actions checkout cleanup; "
+            "add an intentional submodule contract before restoring any.",
         )
 
     def test_required_suite_remains_automatic(self) -> None:
