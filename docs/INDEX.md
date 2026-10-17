@@ -12,7 +12,8 @@ This folder contains the **historical research record**, not a list of current p
 | How do I diagnose P3-02 failures without training? | [P3-02-D1 read-only diagnostic](PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
 | What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |
-| What copy-versus-edit preparation comes next? | [42-task controls preparation](../training/phase3/diagnostics/p3-copy-edit-controls-v1/PREPARATION.md): frozen 42-task manifest, model-free tests, guarded local inference/scoring; **no saved 42-task model results yet** |
+| What did the 42-task copy/edit probe show? | [Completed diagnostic issue #177](https://github.com/keepithandy/plex-nano/issues/177): owner-reported **0/42 exact, 0/6 copies**, source-name loss; owner retains raw responses locally |
+| What copy-fidelity curriculum comes next? | [Frozen 288-train / 96-validation curriculum and bounded proposal](../training/phase3/copy-fidelity-v1/README.md): **no model training or inference performed** |
 | What did the 72-task source/value diagnostic show? | [Replacement-failure decision](PHASE-3-REPLACEMENT-FAILURE-DECISION.md): both axes failed; next controlled proposal |
 | Did P3-02 pass unseen file-edit tasks? | [Frozen development-gate summary](../training/pretraining/p3-02-development-gate-result-summary.json): **No — 0/36 exact edits** |
 | What was the fixed trained model checkpoint? | [Frozen first-run result](../training/pretraining/p3-02-first-run-result.json): step 100, fixed SHA-256 |
