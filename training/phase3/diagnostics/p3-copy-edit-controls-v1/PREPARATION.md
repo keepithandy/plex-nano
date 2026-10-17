@@ -39,3 +39,46 @@ Score exact file bytes on every task. On edits, if the response has unchanged by
 The strict candidate success thresholds are 6/6 exact copies, 18/18 minimal edits, and 18/18 context edits. If copying fails, review a source-copying representation; if copying passes but minimal edits fail, review target formation and request-value binding; if both pass but context edits fail, review preservation of unrelated code. All-pass performance would justify only fresh independent confirmation, **not** replacement of the failed P3-02 development gate.
 
 **Blocked / not authorized:** The builder does **not** freeze a manifest automatically into Git, validate tokenized prompt lengths, load the fixed step-100 checkpoint, run an evaluation, modify training weights, or open the final project holdout. Before any evaluation, separately verify the 512-token budget with the frozen tokenizer, checkpoint identity, inference configuration, and an approved one-run execution/provenance contract. No evaluation permission is implied by green CI.
+
+## October 17 freeze and execution gate
+
+The 42-task manifest is now **frozen** at [`copy-edit-controls-v1.json`](copy-edit-controls-v1.json), with SHA-256:
+
+```text
+17834efb801ac963a4672ae616ca47e9eea40b2568f01951c3891c7e4997f01a
+```
+
+The builder's exact serialized output is checked against the committed manifest in CI. Its 42 tasks, 12 three-request edit contrast groups, 144 prior P3-02 training rows, and 72 prior source-preservation diagnostic rows are verified without mutating those sources. All four cross-set complete-file overlap counts are zero. The maximum serialized ASCII prompt is **307 bytes**. Even with one token per source byte, a 192-token output allowance and one additional token for a final EOS-producing model evaluation, this fits within the fixed **512-token context** (307 + 192 + 1 = 500). The owner's *actual frozen tokenizer* must still be loaded and checked for its SHA-256 and prompt round-trip before any model evaluation.
+
+The earlier text above documents the **pre-freeze** state; do not regenerate or overwrite the manifest. Use verification instead:
+
+```powershell
+python training/phase3/diagnostics/p3-copy-edit-controls-v1/prepare_controls.py --verify
+uv run --project training python -m pytest training/tests/test_p3_copy_edit_controls.py -q
+```
+
+The local **preflight** checks the private P3-02 step-100 checkpoint file, local trainer result, P3-02 bundle, frozen tokenizer identity, exact prompt encoding, and fixed token budget, without generating model outputs:
+
+```powershell
+uv run --project training python training/phase3/diagnostics/p3-copy-edit-controls-v1/run_frozen_evaluation.py
+```
+
+The checkpoint is expected under `$HOME\PlexArtifacts\file-edits\p3-02-first-run\checkpoints\step-0100.pt`, and the matching bundle under `$HOME\PlexArtifacts\p3-02-training-bundle`. Their files are intentionally **not in GitHub**, and repository CI cannot attest to or execute inference with those private weights. The preflight must return `local-preflight-passed-no-generation` before proceeding.
+
+A **single, separately authorized** local CUDA inference run is an explicit CLI action; it never trains or reselects weights. The owner authorized proceeding with the controlled experiment in the October 17, 2026 conversation. Record that authorization accurately when executing; do not use CI success as authorization:
+
+```powershell
+uv run --project training python training/phase3/diagnostics/p3-copy-edit-controls-v1/run_frozen_evaluation.py --run --authorization-reference "Owner approval, 2026-10-17: run the controlled 42-task copy-versus-edit evaluation"
+```
+
+The runner refuses a dirty source checkout, changed hash, unavailable CUDA, prompt eviction, invalid checkpoint payload, and any pre-existing result directory. A successful single run publishes `$HOME\PlexArtifacts\file-edits\p3-copy-edit-controls-v1-evaluation\responses.json`, including 42 frozen task IDs, decoded responses, EOS status, full-prompt-visibility records, authorization evidence, the exact code revision and runner SHA-256. No historical P3-02 or P3-03 output is overwritten.
+
+Finally, run the **model-free scorer** on the preserved response envelope, writing a separate results directory:
+
+```powershell
+uv run --project training python training/phase3/diagnostics/p3-copy-edit-controls-v1/score_frozen_responses.py --responses "$HOME\PlexArtifacts\file-edits\p3-copy-edit-controls-v1-evaluation\responses.json" --output-dir "$HOME\PlexArtifacts\file-edits\p3-copy-edit-controls-v1-score"
+```
+
+The scorer refuses changed provenance, missing/duplicate/invalid task responses, unapproved training, prompt eviction, and any existing output directory. Its Markdown report and JSON audit display exact-file correctness by language/condition, requested values only where target boundaries survive, EOS status, complete contrast groups, and the predeclared decision branch. Synthetic regression tests establish scorer behavior only; **no empirical 42-task model result exists until the local run is verified**.
+
+No optimizer updates, model-size changes, checkpoint reselection, P3-03 Insert and Delete research, or final-holdout access were approved by this preparation.
