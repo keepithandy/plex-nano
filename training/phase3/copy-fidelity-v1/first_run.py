@@ -174,6 +174,7 @@ def _record_loss(model: Any, row: tuple[str, tuple[int, ...], tuple[int, ...]],
 
 def _validation_loss(model: Any, records: list, device: torch.device,
                      *, detailed: bool = False) -> dict[str, Any]:
+    was_training = bool(getattr(model, "training", False))
     model.eval()
     sums: dict[str, float] = {"all": 0.0}
     counts: Counter[str] = Counter()
@@ -191,6 +192,8 @@ def _validation_loss(model: Any, records: list, device: torch.device,
     if (counts["all"] != 2420 or any(counts[l] <= 0 for l in
                                      ("html", "css", "javascript"))):
         raise ValueError("Validation did not cover all 2,420 supervised targets")
+    if was_training:
+        model.train()
     result = {
         "meanValidationAnswerAndEosLoss": sums["all"] / counts["all"],
         "validationRecordsEvaluated": len(records), "supervisedTargetsEvaluated": counts["all"],
