@@ -10,7 +10,7 @@
   "bundleManifestSha256": "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d",
   "candidateSha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a",
   "samplerSha256": "6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4",
-  "baselineEvidenceSha256": null,
+  "baselineEvidenceSha256": "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01",
   "maximumOptimizerUpdates": 100,
   "maximumWallTimeSeconds": 600,
   "seed": 1337,
@@ -23,7 +23,8 @@
     "trainingPerformed": false,
     "optimizerUpdates": 0,
     "stageVerifiedByOwner": true,
-    "baselinePending": true
+    "baselinePending": false,
+    "baselineRecordedByOwner": true
   },
-  "reviewBoundary": "Draft only. Explicit separate owner authorization after measuring and freezing the actual step-zero validation loss. Enabling a CLI flag or editing this JSON does not satisfy the SHA pins compiled into first_run.py."
+  "reviewBoundary": "Owner-supplied CUDA step-zero baseline recorded in the immutable referenced evidence SHA. Draft only: no owner authorization for training. The trusted compiled APPROVED_CONTRACT_SHA256 and APPROVED_BASELINE_SHA256 values in first_run.py remain unset; editing the JSON or using the CLI flag alone cannot unlock the optimizer."
 }
