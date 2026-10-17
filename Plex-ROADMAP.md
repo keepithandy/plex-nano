@@ -261,6 +261,24 @@ After the P3-02 development gate failed, initial owner-inspected output samples 
 
 The follow-up [P3-02-D1 read-only diagnostic](docs/PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) verifies and analyzes all 36 *existing* saved development completions without loading the model or creating training updates. Keep the fixed step-100 SHA, original scorer, and final project holdout untouched. P3-03 remains reserved for the original Insert and Delete research scope.
 
+### Replacement-failure decision before harder edits
+
+**Status: decision rules prepared; the separate 72-task evaluation has not been authorized or run.** The [saved-response review](docs/PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md) already covers all 36 P3-02 failures. Running P3-02-D1 would standardize that analysis, but it is not a prerequisite for choosing a research direction. Do not begin P3-03 Insert and Delete until replacement behavior has been addressed and independently checked.
+
+The [prepared 72-task packet](training/phase3/diagnostics/p3-03-source-preservation-v1/PREPARATION.md) uses the proposal's historical P3-03 label; it does not rename the roadmap's P3-03 Insert and Delete milestone. Its scorer must pass controlled checks before any responses are generated. In particular, changing an unrelated source name while retaining the requested value must count as **name failure / value pass**, and changing only the requested value must count as **name pass / value failure**. If a missing or malformed target prevents an unrelated-byte check and no other preservation failure is proved, classify preservation as unscorable and review the scorer before choosing a branch.
+
+**Predeclared thresholds for this diagnostic:** preservation passes only with **72/72** source-name-role passes **and 72/72** unrelated-byte passes. Value selection passes only with **72/72** correct target values and **24/24** contrast groups containing three distinct, correctly selected values. These are strict diagnostic thresholds, not a general coding-capability claim. Report each axis, exact-file correctness, and unscorable cases by language (**24 tasks each**) and task family (**6 tasks each**) as well as in aggregate. The manifest's separate full-pass rule remains 72/72 exact files and 24/24 fully correct groups.
+
+| Diagnostic outcome | Next research proposal |
+|---|---|
+| Preservation fails; value selection passes | Propose one bounded experiment focused on retaining supplied names and every unrelated byte, while keeping request-value accuracy as a regression measure. |
+| Preservation passes; value selection fails | Propose one bounded experiment with contrast requests against the same supplied file, measuring whether the requested replacement value changes correctly. |
+| Both fail | Propose a simpler controlled task that separately measures copying the supplied code and applying a requested change before combining them. |
+| Both pass | Investigate the disagreement with the failed 36-task gate, then confirm on independent replacement tasks before advancing to harder edits. |
+| Scoring ambiguous or unreliable | Repair and validate the scorer before interpreting model results. |
+
+Each branch selects a proposal for review, not an automatic training run. Evaluation, optimizer updates, and final-holdout access require their own authorization; the failed P3-02 gate remains the recorded outcome.
+
 ### P3-03 — Insert and Delete
 
 Teach:
@@ -413,11 +431,11 @@ Project-wide guardrails are defined in [AGENTS.md](AGENTS.md).
 
 # Current task
 
-## P3-02 — Exact Small Replacements
+## P3-02 — Replacement Failure Decision
 
 Phase 2 is complete.
 
-The active task is read-only diagnosis of the failed bounded exact-replacement experiment and preparation of a separate diagnostic proposal using the frozen model contract:
+The active task is to decide which failed replacement behavior to address next using the saved-response evidence and the predeclared decision rules above. The frozen model contract remains:
 
 ```text
 natural-language coding request

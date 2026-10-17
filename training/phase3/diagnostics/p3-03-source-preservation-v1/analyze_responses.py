@@ -459,6 +459,10 @@ def _score(manifest: dict[str, Any], envelope: dict[str, Any], train_targets: se
         names = _preservation_observations(task, actual)
         names_pass = all(item["pass"] for item in names)
         unrelated_pass, modifications = _unrelated_preservation(task, actual, extracted)
+        unrelated_scorable = not any(
+            change["category"] in ("authorized-target-span-unavailable", "invalid-authorized-target-span")
+            for change in modifications
+        )
         exact = actual.encode("utf-8") == task["expectedFile"].encode("utf-8")
         audit = {
             "taskId": task["taskId"], "language": task["language"], "family": task["family"],
@@ -468,6 +472,7 @@ def _score(manifest: dict[str, Any], envelope: dict[str, Any], train_targets: se
             "actual": actual, "sourceNamePreservation": names_pass,
             "sourceNameRoleObservations": names, "requestedValueSelection": extracted,
             "unrelatedContentPreservation": unrelated_pass,
+            "unrelatedContentScorable": unrelated_scorable,
             "unrelatedModifications": modifications,
             "exactFileCorrectness": exact,
             "matchesP302TrainingTarget": actual in train_targets,
@@ -483,6 +488,12 @@ def _score(manifest: dict[str, Any], envelope: dict[str, Any], train_targets: se
         "exactFileCorrect": sum(a["exactFileCorrectness"] for a in audits),
         "trainingTargetOutputMatches": sum(a["matchesP302TrainingTarget"] for a in audits),
     }
+    unscorable_preservation = sum(not a["unrelatedContentScorable"] for a in audits)
+    proven_preservation_failure = any(
+        not a["sourceNamePreservation"] or (
+            a["unrelatedContentScorable"] and not a["unrelatedContentPreservation"]
+        ) for a in audits
+    )
     matrix = {
         "namesPass_valuePass": sum(a["sourceNamePreservation"] and a["requestedValueSelection"]["pass"] for a in audits),
         "namesFail_valuePass": sum((not a["sourceNamePreservation"]) and a["requestedValueSelection"]["pass"] for a in audits),
@@ -504,6 +515,28 @@ def _score(manifest: dict[str, Any], envelope: dict[str, Any], train_targets: se
         })
     if len(group_results) != 24 or any(len(members) != 3 for members in groups.values()):
         raise ValueError("Frozen contrast groups are incomplete")
+    names_pass = counts["sourceNamePreservationPasses"] == 72
+    unrelated_pass = counts["unrelatedContentPreservationPasses"] == 72
+    values_pass = counts["requestedValueSelectionPasses"] == 72 and all(
+        group["individuallyCorrectRequestedValues"] == 3 and
+        group["distinctExtractedTargetValues"] == 3 for group in group_results
+    )
+    preservation_pass = names_pass and unrelated_pass
+    if unscorable_preservation and not proven_preservation_failure:
+        outcome = "scoring-ambiguous"
+        next_proposal = "Review target-span extraction and validate preservation scoring before interpreting the model output."
+    elif not preservation_pass and values_pass:
+        outcome = "preservation-fails-value-passes"
+        next_proposal = "Propose a bounded experiment on retaining supplied names and unrelated code."
+    elif preservation_pass and not values_pass:
+        outcome = "preservation-passes-value-fails"
+        next_proposal = "Propose a bounded request-contrast experiment selecting different replacement values for the same supplied file."
+    elif not preservation_pass and not values_pass:
+        outcome = "both-fail"
+        next_proposal = "Propose a simpler controlled task that isolates copying supplied code from applying the requested change."
+    else:
+        outcome = "both-pass"
+        next_proposal = "Investigate the difference from the failed 36-task gate and confirm on independent replacement tasks before advancing."
     decision = {
         "fullDiagnosticPass": (
             counts["sourceNamePreservationPasses"] == 72
@@ -512,8 +545,11 @@ def _score(manifest: dict[str, Any], envelope: dict[str, Any], train_targets: se
             and counts["exactFileCorrect"] == 72
             and sum(group["fullyCorrect"] for group in group_results) == 24
         ),
-        "preservationFailureObserved": counts["sourceNamePreservationPasses"] < 72,
-        "valueSelectionFailureObserved": counts["requestedValueSelectionPasses"] < 72,
+        "preservationFailureObserved": proven_preservation_failure,
+        "valueSelectionFailureObserved": not values_pass,
+        "unscorablePreservationTasks": unscorable_preservation,
+        "outcome": outcome,
+        "nextProposal": next_proposal,
         "mixedNameAndValueFailuresObserved": matrix["namesFail_valueFail"] > 0,
         "officialP302GateModified": False,
         "internalCauseInferred": False,
@@ -535,7 +571,13 @@ def _markdown_report(manifest: dict[str, Any], manifest_sha: str, execution: dic
             "tasks": len(selected),
             "names": sum(record["sourceNamePreservation"] for record in selected),
             "values": sum(record["requestedValueSelection"]["pass"] for record in selected),
+            "unrelated": sum(record["unrelatedContentPreservation"] for record in selected),
+            "exact": sum(record["exactFileCorrectness"] for record in selected),
+            "unscorable": sum(not record["unrelatedContentScorable"] for record in selected),
         }
+    per_family: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for record in audit_records:
+        per_family[(record["language"], record["family"])].append(record)
     modification_tasks: dict[str, set[str]] = defaultdict(set)
     for record in audit_records:
         for change in record["unrelatedModifications"]:
@@ -621,6 +663,26 @@ def _markdown_report(manifest: dict[str, Any], manifest_sha: str, execution: dic
         "",
         f"Fully correct groups: {sum(group['fullyCorrect'] for group in summary['contrastGroups'])}/24. Per-group output diversity, extracted-value diversity, correct values, and exact correctness are in the audit record.",
         "",
+        "| Language | Name roles | Requested values | Unrelated bytes | Exact files | Unscorable boundaries | Tasks |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+        *[
+            f"| {language} | {per_language[language]['names']} | {per_language[language]['values']} | "
+            f"{per_language[language]['unrelated']} | {per_language[language]['exact']} | "
+            f"{per_language[language]['unscorable']} | {per_language[language]['tasks']} |"
+            for language in ("html", "css", "javascript")
+        ],
+        "",
+        "| Language / family | Name roles | Requested values | Unrelated bytes | Exact files | Unscorable boundaries | Tasks |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+        *[
+            f"| {language} / {family} | {sum(item['sourceNamePreservation'] for item in selected)} | "
+            f"{sum(item['requestedValueSelection']['pass'] for item in selected)} | "
+            f"{sum(item['unrelatedContentPreservation'] for item in selected)} | "
+            f"{sum(item['exactFileCorrectness'] for item in selected)} | "
+            f"{sum(not item['unrelatedContentScorable'] for item in selected)} | {len(selected)} |"
+            for (language, family), selected in sorted(per_family.items())
+        ],
+        "",
         "## 9. Training-target overlap observations",
         "",
         f"{counts['trainingTargetOutputMatches']}/72 outputs exactly matched an expected file in the frozen P3-02 authored training split. This is output overlap evidence only; it does not prove memorization or an internal cause.",
@@ -634,6 +696,9 @@ def _markdown_report(manifest: dict[str, Any], manifest_sha: str, execution: dic
         f"- Full diagnostic pass: **{'yes' if summary['decision']['fullDiagnosticPass'] else 'no'}**.",
         f"- Preservation failure observed: **{'yes' if summary['decision']['preservationFailureObserved'] else 'no'}**.",
         f"- Requested-value selection failure observed: **{'yes' if summary['decision']['valueSelectionFailureObserved'] else 'no'}**.",
+        f"- Tasks with an unscorable unrelated-content boundary: **{summary['decision']['unscorablePreservationTasks']}**.",
+        f"- Decision outcome: **{summary['decision']['outcome']}**.",
+        f"- Next proposal: {summary['decision']['nextProposal']}",
         "- Internal cause inferred: **no**.",
         "",
     ]

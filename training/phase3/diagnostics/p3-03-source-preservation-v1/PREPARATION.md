@@ -12,7 +12,7 @@
 
 Manifest SHA-256: `119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578`.
 
-Preparation code SHA-256 values: builder `6c47c22c2d9e0b2331ad99e113b0bd1861c4bb704df9af5fd71278cd7cbf3127`; analyzer `f4d02a5a35d6e5247121119843f3951628c17864a8d4ee521ea69461c1ca6a8d`.
+Preparation code SHA-256 values: builder `6c47c22c2d9e0b2331ad99e113b0bd1861c4bb704df9af5fd71278cd7cbf3127`; current analyzer `d36a6b00e7a38c3abbb194bd9cc3ab3843da308fb98d310867b7f6f96715c6a9` (revised decision reporting and controlled scoring checks; the frozen manifest is unchanged).
 
 The prospective overlap check found **zero** matches in all four comparisons: P3-03 inputs against P3-02 training inputs and targets, and P3-03 expected files against P3-02 training inputs and targets. No examples were replaced. The frozen P3-02 candidate hash was verified as `98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403`.
 
@@ -21,6 +21,8 @@ The prospective overlap check found **zero** matches in all four comparisons: P3
 The historical baseline remains the failed P3-02 step-100 development result: 0/36 exact files, 0/36 preservation passes, 0/12 fully correct contrast groups, 36/36 outputs losing `account`, 25/36 outputs matching a training target, and 8/12 groups with identical outputs for all three requests. The fixed checkpoint is SHA-256 `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`; the frozen tokenizer is `2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697`.
 
 The proposal's P3-02 inference settings are recorded in the manifest: greedy fixed-endpoint generation, seed 1337, temperature 0, and at most 192 new tokens. The prompt serialization is the exact P3-02 convention. **The checkpoint file was not opened or re-hashed during this preparation.** Any future evaluation must independently verify it and record the actual inference code revision, tokenizer/bundle identities, and configuration before the analyzer will accept predictions.
+
+The [roadmap decision](../../../../Plex-ROADMAP.md#replacement-failure-decision-before-harder-edits) predeclares the five possible next proposals and the strict pass thresholds. Preservation requires 72/72 source-name roles and 72/72 unrelated-byte checks; requested-value selection requires 72/72 correct values and all 24 three-request groups to contain three distinct correct values. The report retains per-language and per-family counts so aggregate scores cannot hide a repeated weakness. If the target boundary is unavailable and there is no separately proved preservation failure, the decision is **scoring ambiguous**. The [controlled scorer checks](../../../tests/test_p303_diagnostic_decision.py) pass for all 12 task families across the four name/value outcome combinations, an unscorable target case, and report breakdown retention (50 tests). These synthetic checks establish the intended category separation for the frozen task shapes; they are not model results.
 
 ## Run boundary
 
