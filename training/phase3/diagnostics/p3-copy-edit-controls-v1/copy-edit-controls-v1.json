@@ -1,0 +1,844 @@
+{
+  "authorization": {
+    "evaluationAuthorized": false,
+    "finalHoldoutOpened": false,
+    "modelLoaded": false,
+    "optimizerUpdates": 0,
+    "trainingAuthorized": false
+  },
+  "conditionCounts": {
+    "context-edit": 18,
+    "copy": 6,
+    "minimal-edit": 18
+  },
+  "inferenceProposedNotAuthorized": {
+    "checkpointReselectionAllowed": false,
+    "greedy": true,
+    "maximumNewTokens": 192,
+    "seed": 1337,
+    "temperature": 0
+  },
+  "kind": "plex-p3-replacement-copy-versus-edit-controls-v1",
+  "model": {
+    "checkpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+    "checkpointStep": 100,
+    "contextLength": 512,
+    "parameters": 27566080,
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
+  },
+  "overlapWithFrozenP302TrainAndP303Diagnostic": {
+    "inputsAgainstOldInputs": 0,
+    "inputsAgainstOldTargets": 0,
+    "targetsAgainstOldInputs": 0,
+    "targetsAgainstOldTargets": 0
+  },
+  "passRule": "All 42 complete files must match expectedFile exactly; report each language and condition separately.",
+  "researchScope": "Replacement recovery; NOT roadmap P3-03 Insert and Delete",
+  "responseContract": "complete-file text; copy controls must return exact supplied bytes",
+  "schemaVersion": 1,
+  "sourceIdentities": {
+    "p302CandidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+    "p303DiagnosticManifestSha256": "119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578"
+  },
+  "status": "prepared-no-model-execution-no-evaluation-authorization",
+  "tasks": [
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-html-cobalt-copy",
+      "contrastIndex": 0,
+      "expectedFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": null,
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-cobalt-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": "<button id=\"cobaltButton\">Deploy</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"cobaltButton\">Open</button>",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Deploy. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"cobaltButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Deploy. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Deploy",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-cobalt-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": "<button id=\"cobaltButton\">Dismiss</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"cobaltButton\">Open</button>",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"cobaltButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Dismiss",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-cobalt-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": "<button id=\"cobaltButton\">Restore</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"cobaltButton\">Open</button>",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Restore. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"cobaltButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Restore. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Restore",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-cobalt-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Deploy</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Deploy. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Deploy. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Deploy",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-cobalt-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Dismiss</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Dismiss",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-cobalt-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-cobalt-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Restore</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Restore. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"cobalt\">\n  <button id=\"cobaltButton\">Open</button>\n  <p class=\"cobalt-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Restore. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Restore",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-cobalt-context-edit-2"
+    },
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-html-spruce-copy",
+      "contrastIndex": 0,
+      "expectedFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": null,
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-spruce-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-spruce-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": "<button id=\"spruceButton\">Deploy</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"spruceButton\">Open</button>",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Deploy. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"spruceButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Deploy. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Deploy",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-spruce-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-spruce-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": "<button id=\"spruceButton\">Dismiss</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"spruceButton\">Open</button>",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"spruceButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Dismiss",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-spruce-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-html-spruce-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": "<button id=\"spruceButton\">Restore</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"spruceButton\">Open</button>",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Restore. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"spruceButton\">Open</button>\nEdited file:",
+      "request": "Change the button text to Restore. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 30,
+        "requestedLiteral": "Restore",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p3-copy-html-spruce-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-spruce-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Deploy</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Deploy. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Deploy. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Deploy",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-spruce-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-spruce-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Dismiss</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Dismiss. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Dismiss",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-spruce-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-html-spruce-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Restore</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "family": "button-text",
+      "inputFile": "<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n",
+      "language": "html",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Restore. Return the complete file. Preserve everything else exactly.\nFile:\n<section data-owner=\"spruce\">\n  <button id=\"spruceButton\">Open</button>\n  <p class=\"spruce-note\">Untouched</p>\n</section>\n\nEdited file:",
+      "request": "Change the button text to Restore. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 62,
+        "requestedLiteral": "Restore",
+        "sourceLiteral": "Open",
+        "startCharacter": 58
+      },
+      "taskId": "p3-copy-html-spruce-context-edit-2"
+    },
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-css-cobalt-copy",
+      "contrastIndex": 0,
+      "expectedFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": null,
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-cobalt-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": ".cobaltGrid { gap: 3px; }\n",
+      "family": "gap",
+      "inputFile": ".cobaltGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 3px. Return the complete file. Preserve everything else exactly.\nFile:\n.cobaltGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 3px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "3px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-cobalt-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": ".cobaltGrid { gap: 11px; }\n",
+      "family": "gap",
+      "inputFile": ".cobaltGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 11px. Return the complete file. Preserve everything else exactly.\nFile:\n.cobaltGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 11px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "11px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-cobalt-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": ".cobaltGrid { gap: 19px; }\n",
+      "family": "gap",
+      "inputFile": ".cobaltGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 19px. Return the complete file. Preserve everything else exactly.\nFile:\n.cobaltGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 19px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "19px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-cobalt-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 3px;\n}\n.cobaltNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 3px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 3px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "3px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-cobalt-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 11px;\n}\n.cobaltNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 11px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 11px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "11px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-cobalt-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-cobalt-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 19px;\n}\n.cobaltNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 19px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve cobalt rules. */\n.cobaltGrid {\n  display: grid;\n  gap: 8px;\n}\n.cobaltNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 19px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "19px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-cobalt-context-edit-2"
+    },
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-css-spruce-copy",
+      "contrastIndex": 0,
+      "expectedFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": null,
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-spruce-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-spruce-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": ".spruceGrid { gap: 3px; }\n",
+      "family": "gap",
+      "inputFile": ".spruceGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 3px. Return the complete file. Preserve everything else exactly.\nFile:\n.spruceGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 3px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "3px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-spruce-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-spruce-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": ".spruceGrid { gap: 11px; }\n",
+      "family": "gap",
+      "inputFile": ".spruceGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 11px. Return the complete file. Preserve everything else exactly.\nFile:\n.spruceGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 11px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "11px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-spruce-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-css-spruce-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": ".spruceGrid { gap: 19px; }\n",
+      "family": "gap",
+      "inputFile": ".spruceGrid { gap: 8px; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 19px. Return the complete file. Preserve everything else exactly.\nFile:\n.spruceGrid { gap: 8px; }\n\nEdited file:",
+      "request": "Change the gap to 19px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 22,
+        "requestedLiteral": "19px",
+        "sourceLiteral": "8px",
+        "startCharacter": 19
+      },
+      "taskId": "p3-copy-css-spruce-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-spruce-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 3px;\n}\n.spruceNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 3px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 3px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "3px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-spruce-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-spruce-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 11px;\n}\n.spruceNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 11px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 11px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "11px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-spruce-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-css-spruce-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 19px;\n}\n.spruceNote { color: #555; }\n",
+      "family": "gap",
+      "inputFile": "/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n",
+      "language": "css",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 19px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Preserve spruce rules. */\n.spruceGrid {\n  display: grid;\n  gap: 8px;\n}\n.spruceNote { color: #555; }\n\nEdited file:",
+      "request": "Change the gap to 19px. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 70,
+        "requestedLiteral": "19px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p3-copy-css-spruce-context-edit-2"
+    },
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-javascript-cobalt-copy",
+      "contrastIndex": 0,
+      "expectedFile": "// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": null,
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-cobalt-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": "const cobaltRetries = 4;\n",
+      "family": "retry-limit",
+      "inputFile": "const cobaltRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 4. Return the complete file. Preserve everything else exactly.\nFile:\nconst cobaltRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 4. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "4",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-cobalt-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": "const cobaltRetries = 7;\n",
+      "family": "retry-limit",
+      "inputFile": "const cobaltRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 7. Return the complete file. Preserve everything else exactly.\nFile:\nconst cobaltRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 7. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "7",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-cobalt-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": "const cobaltRetries = 13;\n",
+      "family": "retry-limit",
+      "inputFile": "const cobaltRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 13. Return the complete file. Preserve everything else exactly.\nFile:\nconst cobaltRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 13. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "13",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-cobalt-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "// Preserve cobalt settings.\nconst cobaltRetries = 4;\nconst cobaltEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 4. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 4. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "4",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-cobalt-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "// Preserve cobalt settings.\nconst cobaltRetries = 7;\nconst cobaltEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 7. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 7. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "7",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-cobalt-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-cobalt-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "// Preserve cobalt settings.\nconst cobaltRetries = 13;\nconst cobaltEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "cobalt",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 13. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve cobalt settings.\nconst cobaltRetries = 2;\nconst cobaltEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 13. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "13",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-cobalt-context-edit-2"
+    },
+    {
+      "condition": "copy",
+      "contrastGroupId": "p3-copy-javascript-spruce-copy",
+      "contrastIndex": 0,
+      "expectedFile": "// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Return the supplied file exactly unchanged. Make no edits.\nFile:\n// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n\nEdited file:",
+      "request": "Return the supplied file exactly unchanged. Make no edits.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": null,
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-spruce-copy-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-minimal-edit",
+      "contrastIndex": 0,
+      "expectedFile": "const spruceRetries = 4;\n",
+      "family": "retry-limit",
+      "inputFile": "const spruceRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 4. Return the complete file. Preserve everything else exactly.\nFile:\nconst spruceRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 4. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "4",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-spruce-minimal-edit-0"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-minimal-edit",
+      "contrastIndex": 1,
+      "expectedFile": "const spruceRetries = 7;\n",
+      "family": "retry-limit",
+      "inputFile": "const spruceRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 7. Return the complete file. Preserve everything else exactly.\nFile:\nconst spruceRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 7. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "7",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-spruce-minimal-edit-1"
+    },
+    {
+      "condition": "minimal-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-minimal-edit",
+      "contrastIndex": 2,
+      "expectedFile": "const spruceRetries = 13;\n",
+      "family": "retry-limit",
+      "inputFile": "const spruceRetries = 2;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 13. Return the complete file. Preserve everything else exactly.\nFile:\nconst spruceRetries = 2;\n\nEdited file:",
+      "request": "Change the retry limit to 13. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 23,
+        "requestedLiteral": "13",
+        "sourceLiteral": "2",
+        "startCharacter": 22
+      },
+      "taskId": "p3-copy-javascript-spruce-minimal-edit-2"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-context-edit",
+      "contrastIndex": 0,
+      "expectedFile": "// Preserve spruce settings.\nconst spruceRetries = 4;\nconst spruceEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 4. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 4. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "4",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-spruce-context-edit-0"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-context-edit",
+      "contrastIndex": 1,
+      "expectedFile": "// Preserve spruce settings.\nconst spruceRetries = 7;\nconst spruceEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 7. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 7. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "7",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-spruce-context-edit-1"
+    },
+    {
+      "condition": "context-edit",
+      "contrastGroupId": "p3-copy-javascript-spruce-context-edit",
+      "contrastIndex": 2,
+      "expectedFile": "// Preserve spruce settings.\nconst spruceRetries = 13;\nconst spruceEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n",
+      "language": "javascript",
+      "namespace": "spruce",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 13. Return the complete file. Preserve everything else exactly.\nFile:\n// Preserve spruce settings.\nconst spruceRetries = 2;\nconst spruceEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 13. Return the complete file. Preserve everything else exactly.",
+      "target": {
+        "endCharacter": 52,
+        "requestedLiteral": "13",
+        "sourceLiteral": "2",
+        "startCharacter": 51
+      },
+      "taskId": "p3-copy-javascript-spruce-context-edit-2"
+    }
+  ]
+}
