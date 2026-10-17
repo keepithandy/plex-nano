@@ -81,3 +81,6 @@ training/pretraining/p3-02-*.json text eol=lf
 # Frozen diagnostic manifests and recorded code hashes use canonical LF bytes.
 training/phase3/diagnostics/p3-03-source-preservation-v1/*.json text eol=lf
 training/phase3/diagnostics/p3-03-source-preservation-v1/*.py text eol=lf
+# Fixed 42-task Phase 3 replacement-recovery manifest must retain canonical hash bytes.
+training/phase3/diagnostics/p3-copy-edit-controls-v1/*.json text eol=lf
+training/phase3/diagnostics/p3-copy-edit-controls-v1/*.py text eol=lf
