@@ -87,7 +87,10 @@ def test_context_preservation_scoring_does_not_invent_requested_values(frozen):
     val, controls = frozen
     rows = responses_from_rows(val, controls)
     i = next(i for i, row in enumerate(val) if row["condition"] == "edit")
-    rows[i]["actual"] = "garbled source"
+    # Corrupt 13 edit outputs: aggregate edit gate falls below 60/72.
+    edit_ids = [j for j, r in enumerate(val) if r["condition"] == "edit"]
+    for j in edit_ids[:13]:
+        rows[j]["actual"] = "garbled source"
     summary = E.score_responses(val, controls, rows)
     bad = summary["perRecord"][i]
     assert bad["exactCompleteFile"] is False
