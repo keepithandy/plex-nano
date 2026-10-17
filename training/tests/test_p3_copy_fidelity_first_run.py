@@ -24,7 +24,7 @@ def test_owner_approval_is_not_silently_inherited() -> None:
     packet = json.loads(RUN.APPROVAL.read_text(encoding="utf-8"))
     assert packet["status"] == "owner-approval-required"
     assert packet["modelTrainingAuthorized"] is False
-    assert packet["baselineEvidenceSha256"] is None
+    assert packet["baselineEvidenceSha256"] == "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
     assert packet["stageCheckpointSha256"] == RUN.STAGE_SHA256
     assert packet["samplerSha256"] == RUN.SAMPLER_SHA256
     assert packet["maximumOptimizerUpdates"] == 100
@@ -187,3 +187,48 @@ def test_training_step_discards_partial_gradients_on_timeout():
                                 deadline=-1)
     assert result is None
     assert optimizer.clears == 2
+
+
+
+def test_owner_reported_cuda_baseline_snapshot_is_frozen_and_not_training_approval() -> None:
+    """GitHub checks owner-reported numbers; it cannot rerun the owner's checkpoint."""
+    raw = RUN.BASELINE_PATH.read_bytes()
+    digest = "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
+    assert hashlib.sha256(raw).hexdigest() == digest
+    assert b"\r" not in raw
+    record = json.loads(raw)
+    assert record["kind"] == "p3-copy-fidelity-owner-reported-step-zero-cuda-baseline-v1"
+    assert "Owner-supplied" in record["source"]
+    assert record["device"] == "cuda"
+    assert record["status"] == "copy-fidelity-step-zero-validation-baseline-measured-read-only"
+    assert record["bundleManifestSha256"] == RUN.BUNDLE_SHA256
+    assert record["stageCheckpointSha256"] == RUN.STAGE_SHA256
+    assert record["candidateSha256"] == RUN.CANDIDATE_SHA256
+    assert record["sourceCheckpointSha256"] == RUN.STAGE.SOURCE_SHA256
+    assert record["sampler"]["drawIndexSha256"] == RUN.SAMPLER_SHA256
+    assert record["sampler"]["expectedAnswerAndEosTargetPositions"] == 40477
+    assert record["validationRecordsEvaluated"] == 96
+    assert record["supervisedTargetsEvaluated"] == 2420
+    assert record["trainingAuthorized"] is False
+    assert record["trainingPerformed"] is False
+    assert record["optimizerUpdates"] == 0
+    assert record["finalHoldoutOpened"] is False
+    per = record["perLanguage"]
+    assert {name: per[name]["supervisedTargets"] for name in per} == {
+        "css": 800, "html": 980, "javascript": 640,
+    }
+    assert per["css"]["meanLoss"] == 7.546227005124092
+    assert per["html"]["meanLoss"] == 6.3204158690510965
+    assert per["javascript"]["meanLoss"] == 7.799167118966579
+    weighted = sum(row["meanLoss"] * row["supervisedTargets"]
+                   for row in per.values()) / 2420
+    assert weighted == pytest.approx(7.116717401614859, abs=1e-12)
+    assert record["meanValidationAnswerAndEosLoss"] == pytest.approx(weighted, abs=1e-12)
+    packet = json.loads(RUN.APPROVAL.read_text(encoding="utf-8"))
+    assert packet["baselineEvidenceSha256"] == digest
+    assert packet["executionState"]["baselinePending"] is False
+    assert packet["executionState"]["baselineRecordedByOwner"] is True
+    assert packet["status"] == "owner-approval-required"
+    assert packet["modelTrainingAuthorized"] is False
+    assert RUN.APPROVED_CONTRACT_SHA256 is None
+    assert RUN.APPROVED_BASELINE_SHA256 is None
