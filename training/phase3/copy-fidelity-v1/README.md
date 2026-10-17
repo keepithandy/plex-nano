@@ -1,5 +1,9 @@
 # Phase 3 — Copy-fidelity recovery curriculum v1
 
+**Current research closeout (2026-10-17):** one authorized 100-step run completed and independently checksum-verified; loss fell **7.1167 → 2.7984**, but frozen generated exact-file evaluation **FAILED all gates (0/24 validation copies, 0/72 edits, 0/6 developer copies, 0/36 developer edits; 138/138 reached EOS/full prompt visibility)**. The historical preparation/authorization sections below describe earlier phases and must not be interpreted as new permission. Preserve the original artifacts, no further training and no final holdout. [Completed research issue #181](https://github.com/keepithandy/plex-nano/issues/181) → [P3-SB source-binding recovery roadmap](../../../docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) / [issue #189](https://github.com/keepithandy/plex-nano/issues/189).
+
+**New read-only diagnostic:** `diagnose_saved_outputs.py` checks the owner's existing `evaluation-result.json` against the frozen candidate/control manifests without importing PyTorch, running inference, writing files, or changing the checkpoint. It emits the source report SHA and explicitly labels namespace/literal occurrence as heuristics, not exact copied-file success.
+
 **Status: deterministic candidate frozen; neither training nor inference is authorized by this preparation.** This is replacement recovery, separate from formal roadmap P3-03 Insert and Delete.
 
 ## Evidence and diagnosis
