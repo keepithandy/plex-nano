@@ -88,3 +88,4 @@ training/phase3/diagnostics/p3-copy-edit-controls-v1/*.py text eol=lf
 # Frozen P3 copy-fidelity candidate stays byte-identical on Windows.
 training/phase3/copy-fidelity-v1/*.json text eol=lf
 training/phase3/copy-fidelity-v1/*.py text eol=lf
+training/pretraining/p3-copy-fidelity-step-zero-baseline-evidence.json text eol=lf
