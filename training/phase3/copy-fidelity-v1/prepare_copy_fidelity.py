@@ -47,7 +47,7 @@ def _template(language: str, name: str, shape: str, context: str) -> tuple[str, 
             line = f'<button class="{name}Action">Ready</button>'
             old, values = "Ready", ("Publish", "Archive", "Review")
         source = (f'<article data-owner="{name}">\n  {line}\n'
-                  f'  <p class="{name}-hint">Retain this.</p>\n</article>\n') if context == "context" else line + "\n"
+                  f'  <p class="{name}-hint">Keep.</p>\n</article>\n') if context == "context" else line + "\n"
         return source, old, values, "button text"
     if language == "css":
         if shape == "a":
