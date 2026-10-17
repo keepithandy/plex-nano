@@ -263,7 +263,7 @@ The follow-up [P3-02-D1 read-only diagnostic](docs/PHASE-3-P3-02-D1-READ-ONLY-FA
 
 ### Replacement-failure decision before harder edits
 
-**Status: decision rules prepared; the separate 72-task evaluation has not been authorized or run.** The [saved-response review](docs/PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md) already covers all 36 P3-02 failures. Running P3-02-D1 would standardize that analysis, but it is not a prerequisite for choosing a research direction. Do not begin P3-03 Insert and Delete until replacement behavior has been addressed and independently checked.
+**Status: decision rules applied to the authorized 72-task fixed-endpoint evaluation; both preservation and target-value scoring failed.** The [saved-response review](docs/PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md) already covers all 36 P3-02 failures. Running P3-02-D1 would standardize that analysis, but it is not a prerequisite for choosing a research direction. Do not begin P3-03 Insert and Delete until replacement behavior has been addressed and independently checked.
 
 The [prepared 72-task packet](training/phase3/diagnostics/p3-03-source-preservation-v1/PREPARATION.md) uses the proposal's historical P3-03 label; it does not rename the roadmap's P3-03 Insert and Delete milestone. Its scorer must pass controlled checks before any responses are generated. In particular, changing an unrelated source name while retaining the requested value must count as **name failure / value pass**, and changing only the requested value must count as **name pass / value failure**. If a missing or malformed target prevents an unrelated-byte check and no other preservation failure is proved, classify preservation as unscorable and review the scorer before choosing a branch.
 
@@ -278,6 +278,8 @@ The [prepared 72-task packet](training/phase3/diagnostics/p3-03-source-preservat
 | Scoring ambiguous or unreliable | Repair and validate the scorer before interpreting model results. |
 
 Each branch selects a proposal for review, not an automatic training run. Evaluation, optimizer updates, and final-holdout access require their own authorization; the failed P3-02 gate remains the recorded outcome.
+
+The October 17 fixed-endpoint run selected **both fail**: 0/72 source-name passes, 0/72 requested-value passes, 0/72 exact files, and 0/24 fully correct contrast groups. Target extraction failed on 68/72 outputs, so those records cannot isolate value choice inside a valid target; all 72 still visibly lost supplied names. See the [full result and selected copy-versus-edit proposal](docs/PHASE-3-REPLACEMENT-FAILURE-DECISION.md). The next task is to review that smaller proposal, not to run training or advance to Insert and Delete.
 
 ### P3-03 — Insert and Delete
 
@@ -435,7 +437,7 @@ Project-wide guardrails are defined in [AGENTS.md](AGENTS.md).
 
 Phase 2 is complete.
 
-The active task is to decide which failed replacement behavior to address next using the saved-response evidence and the predeclared decision rules above. The frozen model contract remains:
+The active task is to review the simpler copy-versus-edit proposal selected by the fixed-endpoint diagnostic. The frozen model contract remains:
 
 ```text
 natural-language coding request

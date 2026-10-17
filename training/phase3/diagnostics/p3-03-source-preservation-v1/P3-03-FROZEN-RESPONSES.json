@@ -1,0 +1,752 @@
+{
+  "schemaVersion": 1,
+  "manifestSha256": "119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578",
+  "evaluationAuthorization": {
+    "status": "separately-authorized",
+    "evidenceReference": "Owner message on 2026-10-17: \"continue the work from here now\" following the stated decision whether to authorize the bounded 72-task evaluation"
+  },
+  "execution": {
+    "checkpointStep": 100,
+    "checkpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+    "checkpointHashVerified": true,
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+    "p302BundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+    "policy": "greedy-unreselected-fixed-endpoint-v1",
+    "seed": 1337,
+    "temperature": 0,
+    "maximumNewTokens": 192,
+    "checkpointReselectionAllowed": false,
+    "trainingPerformedDuringDiagnostic": false,
+    "optimizerUpdatesDuringDiagnostic": 0,
+    "officialP302ScorerModified": false,
+    "finalProjectHoldoutOpened": false,
+    "promptTemplateSha256": "9502408c141698d53583f9c6d9d682b5faf94da69bd05ba1552c001f347c39d1",
+    "codeRevision": "c33ab6a9be90884f417bf75ddd5d608f3c91963b",
+    "runnerSha256": "8bc422d0f8792ebba6a0e091f7e4e5f3beaa265ded428d43ac32e05d5ef62ce9",
+    "device": "cuda"
+  },
+  "responses": [
+    {
+      "taskId": "p303-html-button-text-harbor-0",
+      "actual": "// Keep this note for settings.\nfunction settings.settings.\nfunction settings.settingsMessage = \" note for settingsButton = \" note for settings.\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-button-text-harbor-1",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settingsButton = \"\n  return size;\n}\nfunction settingsEnabled = document.settings-input id=\"Enabled = true;"
+    },
+    {
+      "taskId": "p303-html-button-text-harbor-2",
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settingsButton = \"\n  return\nfunction settingsButton(size = true;\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-0",
+      "actual": "// Keep this note for settings.\nfunction settings.settings.\nfunction settings.settingsMessage = \" note for settingsButton = \" note for settings.\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-1",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settingsButton = \"\n  return size;\n}\nfunction settingsEnabled = document.settings-input id=\"Enabled = true;"
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-2",
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settingsButton = \"\n  return\nfunction settingsButton(size =) {\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-0",
+      "actual": "// Keep this note for cart.\n.\nfunction settings.cartButton = document. */\nfunction settingsButton = 20px;\n  <input id=\"cart-input\" placeholder=\"Your name\">\n}\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-1",
+      "actual": "// Keep this note for settings.\n.\nfunction settings.cart.cart-color(\".Button = document. */\nfunction settingsButton = true;\n  return size;\n  display: block;\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-2",
+      "actual": "// Keep this note for cart.\nfunction settings.\nfunction settings.\nfunction settingsButton = note for settings.\nfunction settingsButton = true;\n  return size;\n}\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-0",
+      "actual": "// Keep this note for cart.\n.\nfunction settings.cartButton = document. */\nfunction settingsButton = 20px;\n  <input id=\"cart-input\" placeholder=\"Your name\">\n}\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-1",
+      "actual": "// Keep this note for profile.\nfunction profile. */\nfunction profile.querySelector(\".) {\n  return size;\n  return size;\n}\nfunction profileEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-2",
+      "actual": "// Keep this note for cart.\nfunction cart.\nfunction settings.\nfunction settingsButton = document.cartButton =) {\n  return size;\n}\nfunction settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-0",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-1",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-2",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-0",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-1",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-2",
+      "actual": "// Keep this note for settings.\nfunction settings.\nfunction settings.\nfunction settingsMessage = \" note for settingsButton = true;\n  return size;\n}\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-0",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Main menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-1",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note for cart.\n</section class=\"cart\">\n  <p>Keep this note.</p>\n  <nav id=\"cart-label=\"cart-label=\"Account menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-2",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Account menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-0",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Main menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-1",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note for cart.\n</section class=\"cart\">\n  <p>Keep this note.</p>\n  <nav id=\"cart-label=\"cart-label=\"Account menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-2",
+      "actual": "<section class=\"cart\">\n  <p>Keep this note.</p>\n  <p>\n  <p>\n  <nav id=\"search-nav\" aria-label=\"Account menu\"></nav>\n</section>"
+    },
+    {
+      "taskId": "p303-css-gap-harbor-0",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-gap-harbor-1",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-gap-harbor-2",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-gap-orbit-0",
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-gap-orbit-1",
+      "actual": "/* Keep this note for settings.\n.\n.settings-gap {\n  gap: block;\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-gap-orbit-2",
+      "actual": "/* Keep this note for settings.\n.\n.settings-gap {\n  gap: block;\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-harbor-0",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-harbor-1",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-harbor-2",
+      "actual": "/* Keep this note for settings.\n. */\n.settings-padding {\n  display: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-orbit-0",
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-orbit-1",
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-padding-orbit-2",
+      "actual": "/* Keep this note for settings.\n.\n.settings-padding {\n  padding: block;\n}\n.settings-aside {\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-harbor-0",
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-harbor-1",
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-harbor-2",
+      "actual": "/* Keep this note for settings. */\n.settings-color {\n  padding: 10px;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-orbit-0",
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-orbit-1",
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-color-orbit-2",
+      "actual": "/* Keep this note for settings.\n.settings-color {\n  color: navy;\n  display: block;\n}\n.settings-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-harbor-0",
+      "actual": "/* Keep this note for settings. */\n.cart-radius {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-harbor-1",
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-harbor-2",
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-orbit-0",
+      "actual": "/* Keep this note for settings. */\n.cart-radius {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-orbit-1",
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-css-radius-orbit-2",
+      "actual": "/* Keep this note for settings. */\n.cart-color {\n  padding:// Keep this note for settings.\n}\n.cart-aside { opacity: 0.8; }"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-0",
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-1",
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-2",
+      "actual": "// Keep this note for settings.\nfunction settingsButton = document.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-0",
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-1",
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-2",
+      "actual": "// Keep this note for settings.\nfunction settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-0",
+      "actual": "// Keep this note for settings.\nconst settingsButton = \"Save = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-1",
+      "actual": "// Keep this note for cart.\nconst cartEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-2",
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-0",
+      "actual": "// Keep this note for settings.\nconst settingsButton = document.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-1",
+      "actual": "// Keep this note for cart.\nconst settingsButton = document.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-2",
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-0",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-1",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-2",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-0",
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-1",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-2",
+      "actual": "// Keep this note for settings.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-0",
+      "actual": "// Keep this note for cart.\nconst cartEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-1",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-2",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-0",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-1",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;"
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-2",
+      "actual": "// Keep this note for cart.\nconst settingsEnabled = true;\nconst settingsEnabled = true;"
+    }
+  ],
+  "generationAudit": [
+    {
+      "taskId": "p303-html-button-text-harbor-0",
+      "generatedTokenCount": 40,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-button-text-harbor-1",
+      "generatedTokenCount": 41,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-button-text-harbor-2",
+      "generatedTokenCount": 39,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-0",
+      "generatedTokenCount": 40,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-1",
+      "generatedTokenCount": 41,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-button-text-orbit-2",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-0",
+      "generatedTokenCount": 55,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-1",
+      "generatedTokenCount": 60,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-harbor-2",
+      "generatedTokenCount": 47,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-0",
+      "generatedTokenCount": 55,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-1",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-link-destination-orbit-2",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-0",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-1",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-harbor-2",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-0",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-1",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-placeholder-orbit-2",
+      "generatedTokenCount": 43,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-0",
+      "generatedTokenCount": 52,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-1",
+      "generatedTokenCount": 62,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-harbor-2",
+      "generatedTokenCount": 48,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-0",
+      "generatedTokenCount": 52,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-1",
+      "generatedTokenCount": 62,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-html-aria-label-orbit-2",
+      "generatedTokenCount": 48,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-harbor-0",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-harbor-1",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-harbor-2",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-orbit-0",
+      "generatedTokenCount": 50,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-orbit-1",
+      "generatedTokenCount": 48,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-gap-orbit-2",
+      "generatedTokenCount": 48,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-harbor-0",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-harbor-1",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-harbor-2",
+      "generatedTokenCount": 51,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-orbit-0",
+      "generatedTokenCount": 50,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-orbit-1",
+      "generatedTokenCount": 50,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-padding-orbit-2",
+      "generatedTokenCount": 50,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-harbor-0",
+      "generatedTokenCount": 42,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-harbor-1",
+      "generatedTokenCount": 42,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-harbor-2",
+      "generatedTokenCount": 42,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-orbit-0",
+      "generatedTokenCount": 41,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-orbit-1",
+      "generatedTokenCount": 41,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-color-orbit-2",
+      "generatedTokenCount": 41,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-harbor-0",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-harbor-1",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-harbor-2",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-orbit-0",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-orbit-1",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-css-radius-orbit-2",
+      "generatedTokenCount": 45,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-0",
+      "generatedTokenCount": 23,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-1",
+      "generatedTokenCount": 23,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-harbor-2",
+      "generatedTokenCount": 23,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-0",
+      "generatedTokenCount": 20,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-1",
+      "generatedTokenCount": 20,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-retry-limit-orbit-2",
+      "generatedTokenCount": 20,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-0",
+      "generatedTokenCount": 19,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-1",
+      "generatedTokenCount": 18,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-harbor-2",
+      "generatedTokenCount": 16,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-0",
+      "generatedTokenCount": 23,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-1",
+      "generatedTokenCount": 24,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-message-orbit-2",
+      "generatedTokenCount": 16,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-0",
+      "generatedTokenCount": 17,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-1",
+      "generatedTokenCount": 17,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-harbor-2",
+      "generatedTokenCount": 17,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-0",
+      "generatedTokenCount": 16,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-1",
+      "generatedTokenCount": 17,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-selector-orbit-2",
+      "generatedTokenCount": 16,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-0",
+      "generatedTokenCount": 18,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-1",
+      "generatedTokenCount": 24,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-harbor-2",
+      "generatedTokenCount": 17,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-0",
+      "generatedTokenCount": 24,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-1",
+      "generatedTokenCount": 24,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    },
+    {
+      "taskId": "p303-javascript-default-size-orbit-2",
+      "generatedTokenCount": 24,
+      "stoppedAtEos": true,
+      "fullPromptVisibleForEveryGenerationStep": true
+    }
+  ]
+}
