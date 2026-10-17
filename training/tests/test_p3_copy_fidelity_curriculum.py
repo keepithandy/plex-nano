@@ -152,3 +152,56 @@ def test_frozen_prior_hash_mismatch_blocks_validation(tmp_path: Path, monkeypatc
     })
     with pytest.raises(ValueError, match="Historical frozen source hash changed"):
         PREP.check_rows(PREP.rows())
+
+
+REVIEW_SPEC = importlib.util.spec_from_file_location(
+    "copy_fidelity_local_review", HERE / "review_local_tokenizer.py",
+)
+assert REVIEW_SPEC and REVIEW_SPEC.loader
+REVIEW = importlib.util.module_from_spec(REVIEW_SPEC)
+REVIEW_SPEC.loader.exec_module(REVIEW)
+
+
+class _ByteTokenizer:
+    vocabulary_size = 16384
+
+    def encode(self, value: str) -> list[int]:
+        return [b + 4 for b in value.encode("ascii")]
+
+    def decode(self, ids: list[int]) -> str:
+        return bytes(t - 4 for t in ids).decode("ascii")
+
+
+def test_model_free_tokenizer_review_with_worst_case_byte_encoding() -> None:
+    results = REVIEW.review(_ByteTokenizer())
+    assert results["status"] == "copy-fidelity-local-tokenizer-review-passed-no-model-run"
+    assert results["trainRecords"] == 288
+    assert results["validationRecords"] == 96
+    assert results["maximumPromptTokens"] == 313
+    assert results["maximumAnswerTokensPlusEos"] == 128
+    assert results["maximumPackedRecordTokensIncludingEos"] <= 512
+    assert results["trainingPerformed"] is False
+    assert results["optimizerUpdates"] == 0
+    assert results["checkpointLoaded"] is False
+
+
+def test_local_review_rejects_bad_roundtrip_and_vocab() -> None:
+    broken = _ByteTokenizer()
+    broken.vocabulary_size = 8192
+    with pytest.raises(ValueError, match="vocabulary"):
+        REVIEW.review(broken)
+
+    class _CorruptTokenizer(_ByteTokenizer):
+        def decode(self, ids: list[int]) -> str:
+            return "incorrect"
+
+    with pytest.raises(ValueError, match="roundtrip"):
+        REVIEW.review(_CorruptTokenizer())
+
+
+def test_local_review_does_not_read_modified_candidate(tmp_path: Path, monkeypatch) -> None:
+    bad = tmp_path / "candidate.json"
+    bad.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(REVIEW, "CANDIDATE", bad)
+    with pytest.raises(ValueError, match="Frozen"):
+        REVIEW.review(_ByteTokenizer())
