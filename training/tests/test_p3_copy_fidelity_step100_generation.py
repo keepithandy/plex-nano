@@ -172,11 +172,18 @@ def test_training_endpoint_report_requires_pinned_sha_and_history(tmp_path, monk
 
 
 class FakeTokenizer:
+    """Synthetic reversible whole-string tokenizer: not an inference tokenizer."""
     vocabulary_size = 16384
+    _reverse = {}
+    _forward = {}
     def encode(self, text):
-        return [ord(ch) + 4 for ch in text]
+        if text not in self._forward:
+            token_id = 4 + len(self._forward)
+            self._forward[text] = token_id
+            self._reverse[token_id] = text
+        return [self._forward[text]]
     def decode(self, ids):
-        return "".join(chr(x - 4) for x in ids)
+        return "".join(self._reverse[x] for x in ids)
 
 
 def test_preflight_and_evaluation_use_no_optimizers_or_existing_output(frozen, tmp_path, monkeypatch):
