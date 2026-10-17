@@ -287,3 +287,101 @@ def test_training_compares_baseline_on_the_original_cuda_device() -> None:
     assert 'output.mkdir(exist_ok=False)' in code
     assert '"resumeAllowed": False' in code
     assert '"checkpointReselectionAllowed": False' in code
+
+
+
+def test_authorized_runner_orchestration_uses_fixed_endpoint_without_real_gpu(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Synthetic only: cover checkpoint/report writing without training weights."""
+    root = tmp_path / "artifacts"
+    root.mkdir()
+    output = root / "authorized-run"
+    monkeypatch.setattr(RUN, "OUTPUT_DIR", output)
+    monkeypatch.setattr(RUN.torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(RUN.torch.cuda, "manual_seed_all", lambda *_: None)
+    monkeypatch.setattr(RUN, "preflight", lambda **_: {
+        "status": "copy-fidelity-first-run-read-only-preflight-passed"
+    })
+    training = [(f"t-{i}", (4, 5, 3), (0, 1)) for i in range(288)]
+    validation = [("v", (4, 5, 3), (0, 1))] * 96
+    monkeypatch.setattr(
+        RUN, "_rows", lambda split, _: training if split == "train" else validation
+    )
+    monkeypatch.setattr(RUN, "_draws", lambda _: (
+        list(range(288)) * 5 + list(range(160)),
+        {"drawIndexSha256": RUN.SAMPLER_SHA256,
+         "expectedAnswerAndEosTargetPositions": 40477}
+    ))
+    monkeypatch.setattr(RUN, "baseline", lambda **_: {
+        "meanValidationAnswerAndEosLoss": 7.116717401614859
+    })
+    monkeypatch.setattr(RUN, "_validation_loss", lambda *args, **kwargs: {
+        "meanValidationAnswerAndEosLoss": 1.5,
+        "validationRecordsEvaluated": 96,
+        "supervisedTargetsEvaluated": 2420,
+    })
+    monkeypatch.setattr(RUN, "enforce_storage_limit", lambda *a, **kw: None)
+    monkeypatch.setattr(RUN, "sha256_file",
+                        lambda path: (RUN.STAGE_SHA256
+                                      if Path(path) == RUN.STAGE_CHECKPOINT
+                                      else hashlib.sha256(Path(path).read_bytes()).hexdigest()))
+
+    class FakeModel:
+        def __init__(self) -> None:
+            self.parameter = torch.nn.Parameter(torch.zeros(1))
+        def to(self, device):
+            return self
+        def parameters(self):
+            return [self.parameter]
+        def train(self):
+            return self
+
+    monkeypatch.setattr(RUN, "read_checkpoint", lambda *a: (
+        FakeModel(), {
+            "initializationRecord": {},
+            "stageTransitionRecord": {},
+            "tokenizerRecord": {},
+            "datasetRecord": {},
+        }
+    ))
+    updates = []
+    def mock_update(model, optimizer, records, selected, device, deadline):
+        assert device.type == "cuda"
+        assert len(selected) == 16
+        updates.append(tuple(selected))
+        assert len(updates) <= 100
+        return 0.5, (877 if len(updates) == 100 else 400)
+    monkeypatch.setattr(RUN, "_training_step", mock_update)
+
+    saved = []
+    def fake_save(model, optimizer, **kwargs):
+        checkpoint = kwargs["destination"]
+        checkpoint.write_bytes(f"mock-checked-step-{kwargs['step']}".encode())
+        saved.append(kwargs["step"])
+        assert kwargs["training_settings"]["checkpointReselectionAllowed"] is False
+        assert kwargs["tokens_processed_total"] <= 40477
+        return {"path": checkpoint.name, "step": kwargs["step"],
+                "bytes": checkpoint.stat().st_size}
+    monkeypatch.setattr(RUN, "save_checkpoint", fake_save)
+
+    result = RUN.run_training(authorize_first_run=True, output_dir=output,
+                              artifact_root=root)
+    assert result["status"] == "bounded-research-run-completed"
+    assert result["optimizerUpdates"] == 100
+    assert result["answerAndEosTargetsProcessed"] == 40477
+    assert result["completedMaximumSteps"] is True
+    assert [e["step"] for e in result["validation"]] == [0, 25, 50, 75, 100]
+    assert saved == [25, 50, 75, 100]
+    assert result["fixedEndpointSha256"] == hashlib.sha256(
+        (output / "checkpoints/step-0100.pt").read_bytes()
+    ).hexdigest()
+    assert result["finalHoldoutOpened"] is False
+    assert len(updates) == 100
+    assert all(len(group) == 16 for group in updates)
+    assert (output / "result.json").is_file()
+    assert (output / "metrics.jsonl").is_file()
+
+    with pytest.raises(ValueError, match="unused reviewed directory"):
+        RUN.run_training(authorize_first_run=True, output_dir=output,
+                         artifact_root=root)
