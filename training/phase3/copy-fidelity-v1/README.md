@@ -77,6 +77,45 @@ Record exact files, EOS, full-source preservation, per-language and per-conditio
 
 **Blocking prerequisites:** execute the new read-only frozen tokenizer and whole-record review locally; validate next-token target mask and train sampler/weighting; verify actual original checkpoint identity and storage budget; review independent validation and inference contract; implement safe stage and training commands; obtain fresh explicit owner approval for a bounded optimizer run. This PR deliberately adds **no trainer or optimizer entry point** and does not reuse P3-02 training authorization.
 
+
+## Packed bundle and zero-update stage gates (preparation only)
+
+The training data can now be packed and re-inspected without **any model training**. The bundle module uses the owner-verified frozen tokenizer under `$HOME\PlexArtifacts\p3-02-training-bundle` and writes only a new directory under `$HOME\PlexArtifacts\file-edits\p3-copy-fidelity-v1-bundle`. Files are partitioned strictly into `train` and `validation`, each with JSONL complete examples, little-endian uint16 token IDs, uint8 next-token masks, and a byte-indexed JSON record index. There is no development/final-holdout data in the bundle. It verifies exact source-dataset SHA, tokenizer identity, full encoding roundtrip, **7,300/2,420** owner-observed supervised targets, actual record order, all persisted file bytes and SHA-256, and deterministic **full-coverage 1,600-draw sampler proposal**. The sampler is **not executed by a trainer**; training code must independently implement and verify the exact selected schedule before authorization.
+
+All commands below run at the repository root on the owner's Windows machine. The default pack command is read-only:
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/pack_bundle.py
+```
+
+Only after the read-only preflight passes, create the packed artifact **once** and verify it:
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/pack_bundle.py --prepare
+uv run --project training python training/phase3/copy-fidelity-v1/pack_bundle.py --verify
+```
+
+`--prepare` refuses an existing destination and aliases of its protected inputs, checks the 200 GiB storage cap, stages to a fresh temporary directory, verifies reconstruction before publication and cleans temporary files on failure. Do not remove, rewrite, or regenerate existing files to retry a failed run; inspect the failure first.
+
+The zero-stage tool verifies the original **330,899,611-byte** P3-02 step-100 checkpoint at `$HOME\PlexArtifacts\file-edits\p3-02-first-run\checkpoints\step-0100.pt` against SHA-256 `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`, frozen trainer provenance and P3-02 tokenizer/dataset identities. It also inspects the newly prepared bundle. The default stage command is **read-only**:
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/zero_stage.py
+```
+
+Only after source and bundle inspection have passed, an explicit **zero-update stage** (not training) can be created once:
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/zero_stage.py --authorize-zero-stage
+uv run --project training python training/phase3/copy-fidelity-v1/zero_stage.py --verify-stage
+```
+
+The stage creates a new `$HOME\PlexArtifacts\file-edits\p3-copy-fidelity-v1-stage0\stage-checkpoint.pt`. It initializes a **fresh, empty** AdamW optimizer for serialization only: **never calls optimizer.step, backward, training or evaluation**. The new checkpoint is at step zero with zero tokens processed, no optimizer moments, no scheduler state, and explicit non-authorization for training. The verifier reloads both files on CPU and compares **every tensor weight** to the original checkpoint, refusing any mismatch. A stage failure removes only the newly created stage directory. The original step-100 weights, older diagnostic artifacts and final holdout remain untouched.
+
+These commands are for the owner's private PC because GitHub CI does not have the original 331 MB checkpoint/tokenizer. CI runs **mocked storage and tokenizer fixtures** to verify the control logic and refusal cases; it does not assert that real local staging already occurred.
+
+Even after a successful bundle and zero-stage, **no additional training is authorized**. The original proposal for at most 100 optimizer updates / 600 seconds requires a separately approved training implementation, objective/sampler audit, fresh authorization contract and provenance. This work does not authorize another generation run or a final-project holdout.
+
 ## Research limitations
 
 The 384 examples are a small hypothesis-driven synthetic intervention, not evidence that 27M parameters suffice for exact copying. They intentionally isolate unseen identifiers and literal/source preservation but do not evaluate paraphrase robustness. Historical numeric results and manifests are immutable. No final holdout access, checkpoint reselection, model-size change or autonomous repository-agent pivot.
