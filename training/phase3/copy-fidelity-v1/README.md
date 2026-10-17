@@ -37,6 +37,12 @@ Verify immutable data from the repository root using these PowerShell commands:
 
 The builder refuses to overwrite an existing file.
 
+**Optional local tokenizer review (no generation, no training):** the owner can run the following in the same Windows working environment that passed the earlier frozen preflight. It verifies true encode/decode roundtrips, exact answer-and-EOS next-token masks, complete-record fit and prompt/output ceilings against the copied original 16K tokenizer; it never loads a checkpoint or creates an optimizer.
+
+    uv run --project training python training/phase3/copy-fidelity-v1/review_local_tokenizer.py
+
+Its output should say **copy-fidelity-local-tokenizer-review-passed-no-model-run**. The local output has not been observed by this PR; passing CI's deliberately worst-case one-byte-token mock is not the same as verifying the owner's actual frozen tokenizer.
+
 ## Proposed measurements and decision gates
 
 **Primary validation copy requirement:** 24/24 complete byte-exact files (8/8 each language), identifiers unchanged, EOS present.
@@ -69,7 +75,7 @@ Record exact files, EOS, full-source preservation, per-language and per-conditio
 | Evaluation authorized / performed for this candidate | **NO / NO** |
 | Project final holdout opened | **NO** |
 
-**Blocking prerequisites:** verify the frozen tokenizer and whole-record fit locally; validate next-token target mask and train sampler/weighting; verify actual original checkpoint identity and storage budget; review independent validation and inference contract; implement safe stage and training commands; obtain fresh explicit owner approval for a bounded optimizer run. This PR deliberately adds **no trainer or optimizer entry point** and does not reuse P3-02 training authorization.
+**Blocking prerequisites:** execute the new read-only frozen tokenizer and whole-record review locally; validate next-token target mask and train sampler/weighting; verify actual original checkpoint identity and storage budget; review independent validation and inference contract; implement safe stage and training commands; obtain fresh explicit owner approval for a bounded optimizer run. This PR deliberately adds **no trainer or optimizer entry point** and does not reuse P3-02 training authorization.
 
 ## Research limitations
 
