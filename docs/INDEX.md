@@ -10,6 +10,7 @@ This folder contains the **historical research record**, not a list of current p
 |---|---|
 | What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](../Plex-ROADMAP.md) |
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
+| What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |
 | Did P3-02 pass unseen file-edit tasks? | [Frozen development-gate summary](../training/pretraining/p3-02-development-gate-result-summary.json): **No — 0/36 exact edits** |
 | What was the fixed trained model checkpoint? | [Frozen first-run result](../training/pretraining/p3-02-first-run-result.json): step 100, fixed SHA-256 |
 | What was the Phase 2 conclusion? | [P2-50 closeout](PHASE-2-P2-50-CLOSEOUT.md) |
@@ -24,7 +25,7 @@ This folder contains the **historical research record**, not a list of current p
 | **Phase 2 — model and data preparation** | [Plex Web data collection](PHASE-2-P2-24-WEB-PRETRAINING-SPEC.md), [dataset pipeline](DATASET-PIPELINE.md) | Data sourcing, tokenizer, provenance, scratch pilot |
 | **Phase 2 — later transfer** | [P2-44 evidence-first work](PHASE-2-P2-44-EVIDENCE-FIRST-SEMANTIC-COMPOSITION.md), [P2-48 final run](PHASE-2-P2-48-FINAL-TRANSFER-RUN.md), [P2-49 bridge reevaluation](PHASE-2-P2-49-UNCHANGED-BRIDGE-REEVALUATION.md) | Frozen bounded runs and their limitations |
 | **Phase 2 — completed** | [P2-50 closeout](PHASE-2-P2-50-CLOSEOUT.md) | Final Phase 2 capability boundary |
-| **Phase 3 — current** | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md), [P3-02 failed development summary](../training/pretraining/p3-02-development-gate-result-summary.json) | The training/evaluation record and open diagnosis |
+| **Phase 3 — current** | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md), [saved-response diagnosis](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md) | Failed development gate, observed failure patterns, and diagnostic proposal direction |
 
 The complete original files remain in this folder. Use VS Code **Ctrl+P** and type the milestone number, such as `P2-48` or `P3-02`, to locate additional reports quickly.
 

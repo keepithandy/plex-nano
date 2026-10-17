@@ -1,0 +1,2680 @@
+{
+  "authorizationAndExecution": {
+    "checkpointLoaded": false,
+    "checkpointReselected": false,
+    "finalProjectHoldoutOpened": false,
+    "modelResponsesAuthorized": false,
+    "modelResponsesGenerated": false,
+    "officialP302ScorerModified": false,
+    "optimizerUpdates": 0,
+    "trainingPerformed": false
+  },
+  "contrastGroupCount": 24,
+  "frozenDecisionRules": {
+    "diagnosticDoesNotReplaceP302Gate": true,
+    "doNotModifyTasksAfterAnyNewModelOutput": true,
+    "fullPass": {
+      "exactFiles": 72,
+      "fullyCorrectContrastGroups": 24,
+      "requestedValueSelection": 72,
+      "sourceNamePreservation": 72,
+      "unrelatedContentPreservation": 72
+    },
+    "inferNoInternalCauseFromOutputCategories": true,
+    "malformedMissingDuplicatedOrAmbiguousTarget": "requested-value-selection-failure"
+  },
+  "inferenceConfigurationFromP302": {
+    "checkpointReselectionAllowed": false,
+    "configurationSource": "training/pretraining/p3-02-development-gate-result-summary.json",
+    "maximumNewTokens": 192,
+    "policy": "greedy-unreselected-fixed-endpoint-v1",
+    "seed": 1337,
+    "temperature": 0
+  },
+  "kind": "plex-p3-03-source-preservation-request-value-diagnostic-v1",
+  "measurementDefinitions": {
+    "contrastSensitivity": "Per group report distinct complete outputs, distinct successfully extracted target literals, correct requested literals, and all-three exact status.",
+    "exactFileCorrectness": "Decoded response must equal expectedFile byte-for-byte when encoded as UTF-8.",
+    "requestedValueSelection": "Extract only the designated target role, independent of supplied source names; missing, malformed, duplicated, or ambiguous targets fail.",
+    "sourceNamePreservation": "Every listed sourceNameRole must remain in its expected structural role; all roles must pass for a task pass.",
+    "trainingTargetOverlap": "Count response strings exactly equal to any expectedFile in the frozen P3-02 authored training split; overlap is not proof of memorization.",
+    "unrelatedContentPreservation": "UTF-8 bytes before and after the authorized target span must match the supplied input exactly."
+  },
+  "milestone": "P3-03",
+  "model": {
+    "checkpointHashReverifiedDuringPreparation": false,
+    "checkpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+    "checkpointStep": 100,
+    "contextLength": 512,
+    "name": "Plex Nano",
+    "p302BundleManifestSha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+    "parameters": 27566080,
+    "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+    "vocabularySize": 16384
+  },
+  "p302TrainingSplit": {
+    "candidatePath": "training/phase3/drafts/p3-02-exact-replacements-v1.jsonl",
+    "candidateSha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+    "overlapFound": false,
+    "prospectiveCompleteFileOverlap": {
+      "prospectiveInputsMatchingTrainingInputs": 0,
+      "prospectiveInputsMatchingTrainingTargets": 0,
+      "prospectiveTargetsMatchingTrainingInputs": 0,
+      "prospectiveTargetsMatchingTrainingTargets": 0
+    },
+    "recordCount": 144,
+    "trainingTargetCount": 144
+  },
+  "preparedAgainstGitCommit": "94ef152d5ffbdac370110a7c1b3e4f397d03f701",
+  "preparedDate": "2026-10-17",
+  "requestTemplates": [
+    {
+      "family": "button-text",
+      "language": "html",
+      "template": "Change the button text to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "link-destination",
+      "language": "html",
+      "template": "Change the link destination to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "placeholder",
+      "language": "html",
+      "template": "Change the input placeholder to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "aria-label",
+      "language": "html",
+      "template": "Change the navigation aria-label to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "gap",
+      "language": "css",
+      "template": "Change the gap to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "padding",
+      "language": "css",
+      "template": "Change the padding to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "color",
+      "language": "css",
+      "template": "Change the text color to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "radius",
+      "language": "css",
+      "template": "Change the border radius to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "retry-limit",
+      "language": "javascript",
+      "template": "Change the retry limit to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "message",
+      "language": "javascript",
+      "template": "Change the message to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "selector",
+      "language": "javascript",
+      "template": "Change the selector to {value}. Return the complete file. Preserve everything else exactly."
+    },
+    {
+      "family": "default-size",
+      "language": "javascript",
+      "template": "Change the default size to {value}. Return the complete file. Preserve everything else exactly."
+    }
+  ],
+  "schemaVersion": 1,
+  "serialization": {
+    "encoding": "UTF-8",
+    "responseContract": "complete edited file text only",
+    "template": "Edit the supplied file to satisfy the request.\nLanguage: {language}\nRequest: {request}\nFile:\n{input_file}\nEdited file:"
+  },
+  "status": "prepared-unexecuted-evaluation-not-authorized",
+  "taskCount": 72,
+  "tasks": [
+    {
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "<button id=\"harborAction\">Launch</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Launch. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"harborAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Launch. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 30,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Launch",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p303-html-button-text-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "<button id=\"harborAction\">Inspect</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Inspect. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"harborAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Inspect. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 30,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Inspect",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p303-html-button-text-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-html-button-text-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "<button id=\"harborAction\">Reset</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"harborAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Reset. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"harborAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Reset. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 30,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Reset",
+        "sourceLiteral": "Open",
+        "startCharacter": 26
+      },
+      "taskId": "p303-html-button-text-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "<button id=\"orbitAction\">Launch</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Launch. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"orbitAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Launch. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 29,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Launch",
+        "sourceLiteral": "Open",
+        "startCharacter": 25
+      },
+      "taskId": "p303-html-button-text-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "<button id=\"orbitAction\">Inspect</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Inspect. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"orbitAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Inspect. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 29,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Inspect",
+        "sourceLiteral": "Open",
+        "startCharacter": 25
+      },
+      "taskId": "p303-html-button-text-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-html-button-text-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "<button id=\"orbitAction\">Reset</button>",
+      "family": "button-text",
+      "inputFile": "<button id=\"orbitAction\">Open</button>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the button text to Reset. Return the complete file. Preserve everything else exactly.\nFile:\n<button id=\"orbitAction\">Open</button>\nEdited file:",
+      "request": "Change the button text to Reset. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitAction",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "button id attribute",
+          "tag": "button"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 29,
+        "extraction": {
+          "kind": "html-text",
+          "tag": "button"
+        },
+        "requestedLiteral": "Reset",
+        "sourceLiteral": "Open",
+        "startCharacter": 25
+      },
+      "taskId": "p303-html-button-text-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/alpha\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"harbor-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "harbor-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 35,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/alpha",
+        "sourceLiteral": "/start",
+        "startCharacter": 29
+      },
+      "taskId": "p303-html-link-destination-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/beta\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /beta. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"harbor-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /beta. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "harbor-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 35,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/beta",
+        "sourceLiteral": "/start",
+        "startCharacter": 29
+      },
+      "taskId": "p303-html-link-destination-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "<a class=\"harbor-link\" href=\"/gamma\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"harbor-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"harbor-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "harbor-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 35,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/gamma",
+        "sourceLiteral": "/start",
+        "startCharacter": 29
+      },
+      "taskId": "p303-html-link-destination-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/alpha\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"orbit-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /alpha. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "orbit-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 34,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/alpha",
+        "sourceLiteral": "/start",
+        "startCharacter": 28
+      },
+      "taskId": "p303-html-link-destination-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/beta\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /beta. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"orbit-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /beta. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "orbit-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 34,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/beta",
+        "sourceLiteral": "/start",
+        "startCharacter": 28
+      },
+      "taskId": "p303-html-link-destination-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-html-link-destination-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "<a class=\"orbit-link\" href=\"/gamma\">Go</a>",
+      "family": "link-destination",
+      "inputFile": "<a class=\"orbit-link\" href=\"/start\">Go</a>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.\nFile:\n<a class=\"orbit-link\" href=\"/start\">Go</a>\nEdited file:",
+      "request": "Change the link destination to /gamma. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "class",
+          "expected": "orbit-link",
+          "kind": "html-attribute",
+          "match": "class-token",
+          "role": "anchor class name",
+          "tag": "a"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 34,
+        "extraction": {
+          "attribute": "href",
+          "kind": "html-attribute",
+          "tag": "a"
+        },
+        "requestedLiteral": "/gamma",
+        "sourceLiteral": "/start",
+        "startCharacter": 28
+      },
+      "taskId": "p303-html-link-destination-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find files\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"harborQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 43,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find files",
+        "sourceLiteral": "Search",
+        "startCharacter": 37
+      },
+      "taskId": "p303-html-placeholder-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find pages\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"harborQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 43,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find pages",
+        "sourceLiteral": "Search",
+        "startCharacter": 37
+      },
+      "taskId": "p303-html-placeholder-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "<input id=\"harborQuery\" placeholder=\"Find people\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"harborQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"harborQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harborQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 43,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find people",
+        "sourceLiteral": "Search",
+        "startCharacter": 37
+      },
+      "taskId": "p303-html-placeholder-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find files\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"orbitQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find files. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find files",
+        "sourceLiteral": "Search",
+        "startCharacter": 36
+      },
+      "taskId": "p303-html-placeholder-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find pages\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"orbitQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find pages. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find pages",
+        "sourceLiteral": "Search",
+        "startCharacter": 36
+      },
+      "taskId": "p303-html-placeholder-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-html-placeholder-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "<input id=\"orbitQuery\" placeholder=\"Find people\">",
+      "family": "placeholder",
+      "inputFile": "<input id=\"orbitQuery\" placeholder=\"Search\">",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.\nFile:\n<input id=\"orbitQuery\" placeholder=\"Search\">\nEdited file:",
+      "request": "Change the input placeholder to Find people. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbitQuery",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "input id attribute",
+          "tag": "input"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "placeholder",
+          "kind": "html-attribute",
+          "tag": "input"
+        },
+        "requestedLiteral": "Find people",
+        "sourceLiteral": "Search",
+        "startCharacter": 36
+      },
+      "taskId": "p303-html-placeholder-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Quick links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harbor-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Quick links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 33
+      },
+      "taskId": "p303-html-aria-label-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Site links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harbor-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Site links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 33
+      },
+      "taskId": "p303-html-aria-label-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "<nav id=\"harbor-nav\" aria-label=\"Help links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"harbor-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "harbor-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 42,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Help links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 33
+      },
+      "taskId": "p303-html-aria-label-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Quick links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Quick links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbit-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 41,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Quick links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 32
+      },
+      "taskId": "p303-html-aria-label-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Site links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Site links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbit-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 41,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Site links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 32
+      },
+      "taskId": "p303-html-aria-label-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-html-aria-label-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "<nav id=\"orbit-nav\" aria-label=\"Help links\">Links</nav>",
+      "family": "aria-label",
+      "inputFile": "<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>",
+      "language": "html",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: html\nRequest: Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.\nFile:\n<nav id=\"orbit-nav\" aria-label=\"Main menu\">Links</nav>\nEdited file:",
+      "request": "Change the navigation aria-label to Help links. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "attribute": "id",
+          "expected": "orbit-nav",
+          "kind": "html-attribute",
+          "match": "exact",
+          "role": "navigation id attribute",
+          "tag": "nav"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 41,
+        "extraction": {
+          "attribute": "aria-label",
+          "kind": "html-attribute",
+          "tag": "nav"
+        },
+        "requestedLiteral": "Help links",
+        "sourceLiteral": "Main menu",
+        "startCharacter": 32
+      },
+      "taskId": "p303-html-aria-label-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 4px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 4px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 4px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 67,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "4px",
+        "sourceLiteral": "8px",
+        "startCharacter": 64
+      },
+      "taskId": "p303-css-gap-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 12px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 12px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 12px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 67,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "12px",
+        "sourceLiteral": "8px",
+        "startCharacter": 64
+      },
+      "taskId": "p303-css-gap-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 20px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 20px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 20px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 67,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "20px",
+        "sourceLiteral": "8px",
+        "startCharacter": 64
+      },
+      "taskId": "p303-css-gap-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 4px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 4px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 4px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 65,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "4px",
+        "sourceLiteral": "8px",
+        "startCharacter": 62
+      },
+      "taskId": "p303-css-gap-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 12px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 12px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 12px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 65,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "12px",
+        "sourceLiteral": "8px",
+        "startCharacter": 62
+      },
+      "taskId": "p303-css-gap-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-css-gap-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 20px;\n}\n",
+      "family": "gap",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the gap to 20px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: grid;\n  gap: 8px;\n}\n\nEdited file:",
+      "request": "Change the gap to 20px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 65,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "gap"
+        },
+        "requestedLiteral": "20px",
+        "sourceLiteral": "8px",
+        "startCharacter": 62
+      },
+      "taskId": "p303-css-gap-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 6px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 6px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 6px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 72,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "6px",
+        "sourceLiteral": "8px",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-padding-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 14px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 14px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 14px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 72,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "14px",
+        "sourceLiteral": "8px",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-padding-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 22px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 22px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 22px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 72,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "22px",
+        "sourceLiteral": "8px",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-padding-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 6px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 6px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 6px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 70,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "6px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-padding-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 14px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 14px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 14px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 70,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "14px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-padding-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-css-padding-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 22px;\n}\n",
+      "family": "padding",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the padding to 22px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-panel {\n  display: block;\n  padding: 8px;\n}\n\nEdited file:",
+      "request": "Change the padding to 22px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-panel",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 70,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "padding"
+        },
+        "requestedLiteral": "22px",
+        "sourceLiteral": "8px",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-padding-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-css-color-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #224466;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #224466. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #224466. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 76,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#224466",
+        "sourceLiteral": "#111111",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-color-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-css-color-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #663322;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #663322. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #663322. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 76,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#663322",
+        "sourceLiteral": "#111111",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-color-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-css-color-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #226633;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #226633. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #226633. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 76,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#226633",
+        "sourceLiteral": "#111111",
+        "startCharacter": 69
+      },
+      "taskId": "p303-css-color-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-css-color-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #224466;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #224466. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #224466. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 74,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#224466",
+        "sourceLiteral": "#111111",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-color-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-css-color-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #663322;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #663322. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #663322. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 74,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#663322",
+        "sourceLiteral": "#111111",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-color-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-css-color-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #226633;\n}\n",
+      "family": "color",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the text color to #226633. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-label {\n  font-weight: 600;\n  color: #111111;\n}\n\nEdited file:",
+      "request": "Change the text color to #226633. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-label",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 74,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "color"
+        },
+        "requestedLiteral": "#226633",
+        "sourceLiteral": "#111111",
+        "startCharacter": 67
+      },
+      "taskId": "p303-css-color-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 2px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 2px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 85,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "2px",
+        "sourceLiteral": "4px",
+        "startCharacter": 82
+      },
+      "taskId": "p303-css-radius-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 10px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 10px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 10px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 85,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "10px",
+        "sourceLiteral": "4px",
+        "startCharacter": 82
+      },
+      "taskId": "p303-css-radius-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 18px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 18px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep harbor rule. */\n.harbor-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 18px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".harbor-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep harbor rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 85,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "18px",
+        "sourceLiteral": "4px",
+        "startCharacter": 82
+      },
+      "taskId": "p303-css-radius-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 2px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 2px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 83,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "2px",
+        "sourceLiteral": "4px",
+        "startCharacter": 80
+      },
+      "taskId": "p303-css-radius-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 10px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 10px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 10px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 83,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "10px",
+        "sourceLiteral": "4px",
+        "startCharacter": 80
+      },
+      "taskId": "p303-css-radius-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-css-radius-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 18px;\n}\n",
+      "family": "radius",
+      "inputFile": "/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n",
+      "language": "css",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: css\nRequest: Change the border radius to 18px. Return the complete file. Preserve everything else exactly.\nFile:\n/* Keep orbit rule. */\n.orbit-card {\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nEdited file:",
+      "request": "Change the border radius to 18px. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": ".orbit-card",
+          "kind": "css-first-selector",
+          "role": "first rule selector"
+        },
+        {
+          "expected": "/* Keep orbit rule. */",
+          "kind": "css-comment",
+          "role": "preserved namespace comment"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 83,
+        "extraction": {
+          "kind": "css-declaration",
+          "property": "border-radius"
+        },
+        "requestedLiteral": "18px",
+        "sourceLiteral": "4px",
+        "startCharacter": 80
+      },
+      "taskId": "p303-css-radius-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 3;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 3. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 3. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 53,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "3",
+        "sourceLiteral": "2",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-retry-limit-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 6;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 6. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 6. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 53,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "6",
+        "sourceLiteral": "2",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-retry-limit-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for harbor.\nconst harborRetries = 9;\nconst harborEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 9. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborRetries = 2;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 9. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 53,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "9",
+        "sourceLiteral": "2",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-retry-limit-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 3;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 3. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 3. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "3",
+        "sourceLiteral": "2",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-retry-limit-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 6;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 6. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 6. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "6",
+        "sourceLiteral": "2",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-retry-limit-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-retry-limit-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitRetries = 9;\nconst orbitEnabled = true;\n",
+      "family": "retry-limit",
+      "inputFile": "// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the retry limit to 9. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitRetries = 2;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the retry limit to 9. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitRetries",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Retries",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "9",
+        "sourceLiteral": "2",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-retry-limit-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Queued\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 59,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Queued\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-message-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Paused\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 59,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Paused\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-message-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for harbor.\nconst harborMessage = \"Done\";\nconst harborEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Done\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborMessage = \"Ready\";\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Done\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 59,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Done\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 52
+      },
+      "taskId": "p303-javascript-message-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Queued\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Queued\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 57,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Queued\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-message-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Paused\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Paused\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 57,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Paused\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-message-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-message-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitMessage = \"Done\";\nconst orbitEnabled = true;\n",
+      "family": "message",
+      "inputFile": "// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the message to \"Done\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitMessage = \"Ready\";\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the message to \"Done\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitMessage",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 57,
+        "extraction": {
+          "identifierSuffix": "Message",
+          "kind": "js-string"
+        },
+        "requestedLiteral": "\"Done\"",
+        "sourceLiteral": "\"Ready\"",
+        "startCharacter": 50
+      },
+      "taskId": "p303-javascript-message-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#one\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 80,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#one\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 74
+      },
+      "taskId": "p303-javascript-selector-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#two\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 80,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#two\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 74
+      },
+      "taskId": "p303-javascript-selector-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#three\");\nconst harborEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborTarget = document.querySelector(\"#old\");\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 80,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#three\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 74
+      },
+      "taskId": "p303-javascript-selector-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#one\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#one\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 78,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#one\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 72
+      },
+      "taskId": "p303-javascript-selector-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#two\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#two\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 78,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#two\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 72
+      },
+      "taskId": "p303-javascript-selector-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-selector-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#three\");\nconst orbitEnabled = true;\n",
+      "family": "selector",
+      "inputFile": "// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitTarget = document.querySelector(\"#old\");\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the selector to \"#three\". Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitTarget",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 78,
+        "extraction": {
+          "identifierSuffix": "Target",
+          "kind": "js-selector"
+        },
+        "requestedLiteral": "\"#three\"",
+        "sourceLiteral": "\"#old\"",
+        "startCharacter": 72
+      },
+      "taskId": "p303-javascript-selector-orbit-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 12;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 12. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 12. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "12",
+        "sourceLiteral": "10",
+        "startCharacter": 49
+      },
+      "taskId": "p303-javascript-default-size-harbor-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 16;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 16. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 16. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "16",
+        "sourceLiteral": "10",
+        "startCharacter": 49
+      },
+      "taskId": "p303-javascript-default-size-harbor-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-harbor",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for harbor.\nconst harborSize = 24;\nconst harborEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 24. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for harbor.\nconst harborSize = 10;\nconst harborEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 24. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for harbor.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "harborSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "harborEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "harbor",
+      "target": {
+        "endCharacter": 51,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "24",
+        "sourceLiteral": "10",
+        "startCharacter": 49
+      },
+      "taskId": "p303-javascript-default-size-harbor-2"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "contrastIndex": 0,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 12;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 12. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 12. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 49,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "12",
+        "sourceLiteral": "10",
+        "startCharacter": 47
+      },
+      "taskId": "p303-javascript-default-size-orbit-0"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "contrastIndex": 1,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 16;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 16. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 16. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 49,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "16",
+        "sourceLiteral": "10",
+        "startCharacter": 47
+      },
+      "taskId": "p303-javascript-default-size-orbit-1"
+    },
+    {
+      "contrastGroupId": "p303-javascript-default-size-orbit",
+      "contrastIndex": 2,
+      "expectedFile": "// Keep this note for orbit.\nconst orbitSize = 24;\nconst orbitEnabled = true;\n",
+      "family": "default-size",
+      "inputFile": "// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n",
+      "language": "javascript",
+      "prompt": "Edit the supplied file to satisfy the request.\nLanguage: javascript\nRequest: Change the default size to 24. Return the complete file. Preserve everything else exactly.\nFile:\n// Keep this note for orbit.\nconst orbitSize = 10;\nconst orbitEnabled = true;\n\nEdited file:",
+      "request": "Change the default size to 24. Return the complete file. Preserve everything else exactly.",
+      "sourceNameRoles": [
+        {
+          "expected": "// Keep this note for orbit.",
+          "kind": "js-first-line",
+          "role": "preserved namespace comment"
+        },
+        {
+          "expected": "orbitSize",
+          "kind": "js-identifier",
+          "role": "editable declaration identifier"
+        },
+        {
+          "expected": "orbitEnabled",
+          "kind": "js-identifier",
+          "role": "unrelated declaration identifier"
+        }
+      ],
+      "sourceNamespace": "orbit",
+      "target": {
+        "endCharacter": 49,
+        "extraction": {
+          "identifierSuffix": "Size",
+          "kind": "js-number"
+        },
+        "requestedLiteral": "24",
+        "sourceLiteral": "10",
+        "startCharacter": 47
+      },
+      "taskId": "p303-javascript-default-size-orbit-2"
+    }
+  ]
+}

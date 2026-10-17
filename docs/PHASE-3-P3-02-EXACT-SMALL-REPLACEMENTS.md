@@ -1,5 +1,11 @@
 # P3-02 — Exact Small Replacements
 
+## October 17 — Saved-response diagnosis complete
+
+Read the existing local 36-response audit and replayed the frozen scorer; every score and per-record audit field matched. **All 36 outputs replace supplied `account` names with `settings` or `search`; 8/12 contrast groups return identical code for three different requests; 25/36 outputs exactly match training targets.** The gate remains failed. These observations identify source-preservation and request-binding failures without establishing their internal cause. See the [response review, source hash, and reproduction steps](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md).
+
+This supersedes the pending raw-response diagnosis below. Next is a bounded diagnostic proposal separating source preservation from requested-value selection. No generation, model loading, checkpoint changes, optimizer updates, or final-holdout access occurred during this review; further training remains unauthorized. Historical results and contracts below are preserved.
+
 ## October 13 — P3-02 development gate: FAILED
 
 The owner ran the frozen step-100 greedy development evaluator and returned its exact summary. **Outcome: failed**. Out of **36 development tasks**, **0 exact edited files** and **0 unrelated-code preservation passes**. HTML, CSS and JavaScript each recorded **0/12 exact** and **0/12 preservation**. None of the **12 three-request contrast groups** had all three requests correct. All **36/36** completions decoded, terminated at EOS and retained the complete prompt at every generation step. The checkpoint SHA-256 remained `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`, with greedy temperature 0, seed 1337, and maximum 192 new tokens.
