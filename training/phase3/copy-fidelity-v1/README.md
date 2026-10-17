@@ -97,6 +97,8 @@ uv run --project training python training/phase3/copy-fidelity-v1/pack_bundle.py
 
 `--prepare` refuses an existing destination and aliases of its protected inputs, checks the 200 GiB storage cap, stages to a fresh temporary directory, verifies reconstruction before publication and cleans temporary files on failure. Do not remove, rewrite, or regenerate existing files to retry a failed run; inspect the failure first.
 
+**Checkpoint provenance distinction:** the original P3-02 checkpoint's `tokenizerRecord.bundleManifestSha256` identifies its inherited **P2-48 tokenizer bundle** (`71fec0882692f5eb1b47b72f4a9f539e53e77882d003649beacd5f341b5a4ea7`), while `datasetRecord.bundleManifestSha256` identifies the **P3-02 training dataset** (`0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354`). They are deliberately different; both must remain pinned. The first staging implementation incorrectly expected the P3-02 data hash in the tokenizer field and was corrected after the owner's local bundle successfully packed but source staging refused. This correction does not modify original checkpoint bytes or training permission.
+
 The zero-stage tool verifies the original **330,899,611-byte** P3-02 step-100 checkpoint at `$HOME\PlexArtifacts\file-edits\p3-02-first-run\checkpoints\step-0100.pt` against SHA-256 `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`, frozen trainer provenance and P3-02 tokenizer/dataset identities. It also inspects the newly prepared bundle. The default stage command is **read-only**:
 
 ```powershell
