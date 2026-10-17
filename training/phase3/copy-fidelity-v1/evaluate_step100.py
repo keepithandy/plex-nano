@@ -148,7 +148,12 @@ def _checkpoint_model(checkpoint: Path, device: torch.device) -> Any:
             or settings.get("bundleManifestSha256") != BUNDLE_SHA
             or record.get("candidateSha256") != CANDIDATE_SHA
             or record.get("bundleManifestSha256") != BUNDLE_SHA
-            or stage.get("baseCheckpointSha256") != PACK.SOURCE_BUNDLE_SHA and False
+            or stage.get("baseCheckpointSha256") != PACK.PREP.STEP100_SHA256
+            or stage.get("bundleManifestSha256") != BUNDLE_SHA
+            or stage.get("stageStep") != 0
+            or settings.get("samplerSha256") != "6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4"
+            or settings.get("baselineEvidenceSha256") != "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
+            or settings.get("checkpointReselectionAllowed") is not False
             or payload.get("tokenizerRecord", {}).get("tokenizerSha256") != TOKENIZER_SHA):
         raise ValueError("Fixed checkpoint tensor/config/provenance differs")
     return model.to(device).eval()
