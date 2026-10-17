@@ -121,3 +121,5 @@ Even after a successful bundle and zero-stage, **no additional training is autho
 The 384 examples are a small hypothesis-driven synthetic intervention, not evidence that 27M parameters suffice for exact copying. They intentionally isolate unseen identifiers and literal/source preservation but do not evaluate paraphrase robustness. Historical numeric results and manifests are immutable. No final holdout access, checkpoint reselection, model-size change or autonomous repository-agent pivot.
 
 Related: [original 42-task preparation](../diagnostics/p3-copy-edit-controls-v1/PREPARATION.md), [decision issue #177](https://github.com/keepithandy/plex-nano/issues/177), [recovery issue #181](https://github.com/keepithandy/plex-nano/issues/181).
+
+**Repository implementation verification:** The Linux and Windows CI paths cover pack/inspect integrity, split-exclusion, exact next-token masks, deterministic sampling, storage rollback, and step-zero authorization/weight preservation using synthetic fixtures. Passing CI proves the safety logic is exercised, not that the owner's local bundle or checkpoint stage was created.
