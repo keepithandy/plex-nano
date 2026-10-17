@@ -224,17 +224,20 @@ def score_responses(validation: list[dict], controls: list[dict],
         condition_key = ("copy" if condition == "copy" else "edit")
         result = (_score_validation(row, reply["actual"]) if origin == "validation"
                   else _score_control(row, reply["actual"]))
-        exact = result["exact"] and reply.get("stoppedAtEos") is True
-        preserved = result["unrelatedBytesPreserved"] and reply.get("stoppedAtEos") is True
+        complete = (reply.get("stoppedAtEos") is True
+                    and reply.get("decodeSucceeded") is True
+                    and reply.get("fullPromptVisibleForEveryGenerationStep") is True)
+        exact = result["exact"] and complete
+        preserved = result["unrelatedBytesPreserved"] and complete
         record = {
             "recordId": reply["recordId"], "scope": origin,
             "language": row["language"], "condition": condition,
             "exactCompleteFile": exact,
             "unrelatedBytesPreserved": preserved,
             "requestedValueCorrect": result["requestedValueCorrect"]
-                if reply.get("stoppedAtEos") is True else None,
+                if complete else None,
             "requestedValueExtractable": result["targetExtractable"]
-                if reply.get("stoppedAtEos") is True else False,
+                if complete else False,
             "stoppedAtEos": reply.get("stoppedAtEos") is True,
             "decodeSucceeded": reply.get("decodeSucceeded") is True,
             "fullPromptVisible": reply.get("fullPromptVisibleForEveryGenerationStep") is True,
@@ -247,6 +250,8 @@ def score_responses(validation: list[dict], controls: list[dict],
         counts[f"{origin}CopyTotal" if condition_key == "copy" else f"{origin}EditTotal"] += 1
         counts[f"{origin}CopyExact" if condition_key == "copy" else f"{origin}EditExact"] += bool(exact)
         counts[f"{origin}Preserved"] += bool(preserved)
+        counts[f"{origin}.{row['language']}.{condition_key}.total"] += 1
+        counts[f"{origin}.{row['language']}.{condition_key}.exact"] += bool(exact)
         counts[f"{origin}Eos"] += reply.get("stoppedAtEos") is True
         counts[f"{origin}FullPromptVisible"] += reply.get("fullPromptVisibleForEveryGenerationStep") is True
         if origin == "validation":
@@ -260,6 +265,13 @@ def score_responses(validation: list[dict], controls: list[dict],
         raise ValueError("Frozen contrast group composition changed")
     return {
         "validation": {
+            "perLanguage": {
+                lang: {
+                    "copies": {"exact": counts[f"validation.{lang}.copy.exact"], "total": 8},
+                    "edits": {"exact": counts[f"validation.{lang}.edit.exact"], "total": 24},
+                }
+                for lang in ("html", "css", "javascript")
+            },
             "cases": 96, "copies": {"exact": counts["validationCopyExact"], "total": 24},
             "edits": {"exact": counts["validationEditExact"], "total": 72},
             "fullyCorrectContrastGroups": sum(all(g) for g in val_groups.values()),
@@ -269,10 +281,21 @@ def score_responses(validation: list[dict], controls: list[dict],
             "gates": {
                 "copy24of24": counts["validationCopyExact"] == 24,
                 "editsAtLeast60of72": counts["validationEditExact"] >= 60,
+                "perLanguageAtLeast20of24Edits": all(
+                    counts[f"validation.{lang}.edit.exact"] >= 20
+                    for lang in ("html", "css", "javascript")
+                ),
                 "groupsAtLeast18of24": sum(all(g) for g in val_groups.values()) >= 18,
             },
         },
         "development": {
+            "perLanguage": {
+                lang: {
+                    "copies": {"exact": counts[f"development.{lang}.copy.exact"], "total": 2},
+                    "edits": {"exact": counts[f"development.{lang}.edit.exact"], "total": 12},
+                }
+                for lang in ("html", "css", "javascript")
+            },
             "cases": 42, "copies": {"exact": counts["developmentCopyExact"], "total": 6},
             "edits": {"exact": counts["developmentEditExact"], "total": 36},
             "fullyCorrectEditContrastGroups": sum(all(g) for g in dev_groups.values()),
@@ -287,6 +310,8 @@ def score_responses(validation: list[dict], controls: list[dict],
         "allValidationGatesPassed": (
             counts["validationCopyExact"] == 24
             and counts["validationEditExact"] >= 60
+            and all(counts[f"validation.{lang}.edit.exact"] >= 20
+                    for lang in ("html", "css", "javascript"))
             and sum(all(g) for g in val_groups.values()) >= 18
         ),
         "allDevelopmentGatesPassed": (
