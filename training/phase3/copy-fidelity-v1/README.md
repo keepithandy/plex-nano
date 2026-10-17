@@ -10,6 +10,8 @@ All six inspected copies replaced unseen cobalt/spruce identifiers with prior-st
 
 The P3-02 generator creates 216 authored edit examples (144 train, 36 validation, 36 development) from six repeating namespaces, with **zero exact-copy requests**. Its answer_only_target_mask supervises complete edited answers and EOS while masking the prompt. This is valid causal language-model training, but not enough to establish source-copy generalization; earlier decreased validation loss did not pass P3-02's 0/36 exact-edit development gate.
 
+The [six-case copy-output audit](COPY-FAILURE-AUDIT.md) preserves the owner-reported output patterns, syntax anomalies, and comparisons to the original P3-02 training records without claiming independent access to the local response envelope.
+
 ## Frozen candidate and data split
 
 Manifest: [copy-fidelity-candidate-v1.json](copy-fidelity-candidate-v1.json). Generator: [prepare_copy_fidelity.py](prepare_copy_fidelity.py).
