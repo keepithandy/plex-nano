@@ -118,6 +118,33 @@ These commands are for the owner's private PC because GitHub CI does not have th
 
 Even after a successful bundle and zero-stage, **no additional training is authorized**. The original proposal for at most 100 optimizer updates / 600 seconds requires a separately approved training implementation, objective/sampler audit, fresh authorization contract and provenance. This work does not authorize another generation run or a final-project holdout.
 
+## First-run runner and step-zero validation baseline — implementation only
+
+The next bounded experiment has a [first-run implementation](first_run.py) and a [**unapproved** first-run contract](../../pretraining/p3-copy-fidelity-first-run-authorization-draft.json). **No training occurred in this PR.** The historical P3-02 0/36 development gate and new original 42-task 0/42 report remain unchanged.
+
+This entry point has three distinct behaviors:
+
+1. **Default, read-only source preflight.** Independently verifies the original P3-02 checkpoint, the SHA-pinned new step-zero stage `3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9`, the existing frozen bundle `8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d`, exactly 288 train and 96 validation records, masks, and the full 1,600-draw deterministic sampler. The draw-index SHA-256 must equal `6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4`, cover all 288 training records, and have exactly **40,477** answer/EOS target positions. No weights are updated.
+2. **`--baseline`, read-only teacher-forced validation.** After full preflight, loads the fixed step-zero stage once more, performs a complete 96-example validation pass against precisely **2,420 supervised answer+EOS targets**, and returns mean cross-entropy and per-language cross-entropy. No optimizer, backward pass, output file, development evaluation, generation, or final holdout. Results are model-specific and **cannot be calculated on GitHub** because the private 331 MB checkpoint is on the owner's machine.
+3. **Future `--authorize-first-run` path is deliberately SEALED.** The implementation contains a max-100-update/600-second CUDA run with 16-example gradient accumulation, the previously frozen 1,600-record shuffled epoch sampler, teacher-forced validation steps 25/50/75/100, fixed checkpoints and non-overwriting artifact destination, but it **refuses before touching CUDA, data, or model files** because both reviewed SHA constants `APPROVED_CONTRACT_SHA256` and `APPROVED_BASELINE_SHA256` are `None`. CLI flags, draft JSON edits, or the old P3-02 training authorization cannot unlock this experiment. A separate explicit owner authorization and subsequent reviewed code change must pin the exact new approval contract and actual measured step-zero baseline SHA.
+
+Run the following commands in PowerShell from the repository root, **after pulling the merge**:
+
+```powershell
+# First review the input identities, unpacking and deterministic sampler, read-only.
+uv run --project training python training/phase3/copy-fidelity-v1/first_run.py
+
+# Independently measure the full step-zero validation loss using CUDA.
+# This does NOT generate edited files or train. CPU is available via --device cpu.
+uv run --project training python training/phase3/copy-fidelity-v1/first_run.py --baseline --device cuda
+```
+
+Record the full JSON output and send it for review. No result is yet claimed. **Do not run `--authorize-first-run`: it is intentionally blocked until an approved research contract and baseline are frozen.**
+
+A successful low step-zero loss would only establish the original checkpoint's cross-entropy against the *new* validation corpus, not complete-file copying. No post-training capability claim can be made without the already frozen actual output-generation gates (24/24 exact validation copies, ≥60/72 exact validation edits, ≥18/24 complete edit groups, unchanged 42-task development controls and fresh independent confirmation).
+
+**Research boundary:** 27,566,080 parameters, original 16,384-tokenizer and 512 context remain fixed. No checkpoint choice, optimizer updates, changed held-out names, generated test responses or final-project holdout access is made in this preparation.
+
 ## Research limitations
 
 The 384 examples are a small hypothesis-driven synthetic intervention, not evidence that 27M parameters suffice for exact copying. They intentionally isolate unseen identifiers and literal/source preservation but do not evaluate paraphrase robustness. Historical numeric results and manifests are immutable. No final holdout access, checkpoint reselection, model-size change or autonomous repository-agent pivot.
