@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "p3-copy-fidelity-first-run-contract-v1",
+  "status": "owner-approval-required",
+  "approvedBy": null,
+  "approvedDate": null,
+  "authorizationReference": null,
+  "modelTrainingAuthorized": false,
+  "stageCheckpointSha256": "3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9",
+  "bundleManifestSha256": "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d",
+  "candidateSha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a",
+  "samplerSha256": "6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4",
+  "baselineEvidenceSha256": null,
+  "maximumOptimizerUpdates": 100,
+  "maximumWallTimeSeconds": 600,
+  "seed": 1337,
+  "gradientAccumulation": 16,
+  "microBatch": 1,
+  "resumeAllowed": false,
+  "checkpointReselectionAllowed": false,
+  "finalHoldoutOpened": false,
+  "executionState": {
+    "trainingPerformed": false,
+    "optimizerUpdates": 0,
+    "stageVerifiedByOwner": true,
+    "baselinePending": true
+  },
+  "reviewBoundary": "Draft only. Explicit separate owner authorization after measuring and freezing the actual step-zero validation loss. Enabling a CLI flag or editing this JSON does not satisfy the SHA pins compiled into first_run.py."
+}
