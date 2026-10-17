@@ -1,6 +1,8 @@
 """Pure-Python, no-inference checks for P3 copy-versus-edit control preparation."""
+import hashlib
 import importlib.util
 import json
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -100,3 +102,38 @@ def test_explicit_verify_does_not_rewrite_candidate(tmp_path: Path, monkeypatch:
     target.write_bytes(frozen + b" ")
     with pytest.raises(SystemExit):
         PREP.main()
+
+FROZEN_MANIFEST = PACKET / "copy-edit-controls-v1.json"
+FROZEN_SHA256 = "17834efb801ac963a4672ae616ca47e9eea40b2568f01951c3891c7e4997f01a"
+
+
+def test_frozen_manifest_matches_builder_and_hash() -> None:
+    raw = FROZEN_MANIFEST.read_bytes()
+    assert raw == PREP.serialized_manifest()
+    assert hashlib.sha256(raw).hexdigest() == FROZEN_SHA256
+    assert b"\\r\\n" not in raw
+    frozen = json.loads(raw)
+    assert frozen["authorization"]["evaluationAuthorized"] is False
+    assert frozen["authorization"]["optimizerUpdates"] == 0
+
+
+def test_all_prompts_fit_conservative_byte_bpe_budget() -> None:
+    # Byte-level BPE starts from individual UTF-8 bytes and merges them.
+    # Even with no merges, the 192 requested tokens + EOS remain in context.
+    frozen = json.loads(FROZEN_MANIFEST.read_text(encoding="utf-8"))
+    for row in frozen["tasks"]:
+        assert len(row["prompt"].encode("utf-8")) + 192 + 1 <= 512
+        assert len(row["inputFile"].encode("utf-8")) == len(row["inputFile"])
+        assert row["prompt"] == PREP.PROMPT.format(
+            language=row["language"], request=row["request"], input_file=row["inputFile"],
+        )
+
+
+def test_frozen_manifest_windows_checkout_maintains_sha256() -> None:
+    repo = PACKET.parents[3]
+    path = FROZEN_MANIFEST.relative_to(repo).as_posix()
+    checked_out = subprocess.check_output(
+        ["git", "-c", "core.autocrlf=true", "cat-file", "--filters", f"HEAD:{path}"],
+        cwd=repo,
+    )
+    assert hashlib.sha256(checked_out).hexdigest() == FROZEN_SHA256
