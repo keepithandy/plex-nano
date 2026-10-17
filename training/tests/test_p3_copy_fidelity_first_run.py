@@ -17,33 +17,48 @@ RUN = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(RUN)
 
 
-def test_owner_approval_is_not_silently_inherited() -> None:
-    assert RUN.APPROVED_CONTRACT_SHA256 is None
-    assert RUN.APPROVED_BASELINE_SHA256 is None
-    assert RUN.APPROVAL.exists()
-    packet = json.loads(RUN.APPROVAL.read_text(encoding="utf-8"))
-    assert packet["status"] == "owner-approval-required"
-    assert packet["modelTrainingAuthorized"] is False
-    assert packet["baselineEvidenceSha256"] == "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
+def test_exact_owner_approval_is_pinned_and_not_inherited() -> None:
+    assert RUN.APPROVED_CONTRACT_SHA256 == (
+        "a7432a3bfa7942b6086bc8e64fa3b24290351acfd9fb700aac2af613a8c0911b"
+    )
+    assert RUN.APPROVED_BASELINE_SHA256 == (
+        "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
+    )
+    raw = RUN.APPROVAL.read_bytes()
+    assert b"\r" not in raw
+    assert hashlib.sha256(raw).hexdigest() == RUN.APPROVED_CONTRACT_SHA256
+    packet, pinned = RUN._approved_packet()
+    assert pinned == RUN.APPROVED_CONTRACT_SHA256
+    assert packet["status"] == "owner-approved-one-run"
+    assert packet["approvedDate"] == "2026-10-17"
+    assert packet["approvedBy"] == "keepithandy"
+    assert packet["modelTrainingAuthorized"] is True
+    assert packet["baselineEvidenceSha256"] == RUN.APPROVED_BASELINE_SHA256
     assert packet["stageCheckpointSha256"] == RUN.STAGE_SHA256
     assert packet["samplerSha256"] == RUN.SAMPLER_SHA256
     assert packet["maximumOptimizerUpdates"] == 100
     assert packet["maximumWallTimeSeconds"] == 600
+    assert packet["resumeAllowed"] is False
+    assert packet["checkpointReselectionAllowed"] is False
     assert packet["finalHoldoutOpened"] is False
+    assert packet["executionState"]["trainingPerformed"] is False
+    assert packet["executionState"]["runAuthorized"] is True
+    assert packet["executionState"]["oneRunOnly"] is True
 
 
-def test_training_refuses_before_touching_bundle_model_or_cuda(
+def test_training_requires_explicit_flag_and_pinned_contract_before_cuda(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(RUN, "preflight", lambda **_: pytest.fail("preflight read before authorization"))
     monkeypatch.setattr(RUN, "read_checkpoint", lambda *a: pytest.fail("model read before approval"))
     monkeypatch.setattr(RUN.torch.cuda, "is_available",
-                        lambda: pytest.fail("cuda touched before approval"))
+                        lambda: pytest.fail("cuda touched before authorization"))
     with pytest.raises(PermissionError, match="Explicit --authorize-first-run"):
         RUN.run_training()
-    with pytest.raises(PermissionError, match="NOT authorized"):
+    monkeypatch.setattr(RUN, "APPROVED_CONTRACT_SHA256", "0" * 64)
+    with pytest.raises(PermissionError, match="Frozen owner approval"):
         RUN.run_training(authorize_first_run=True)
-    with pytest.raises(PermissionError, match="NOT authorized"):
+    with pytest.raises(PermissionError, match="Frozen owner approval"):
         RUN._approved_packet()
 
 
@@ -167,8 +182,8 @@ def test_cli_exposes_safe_separate_read_only_actions():
     parser_script = (HERE / "first_run.py").read_text(encoding="utf-8")
     assert 'action.add_argument("--baseline"' in parser_script
     assert 'action.add_argument("--authorize-first-run"' in parser_script
-    assert "APPROVED_CONTRACT_SHA256: str | None = None" in parser_script
-    assert "APPROVED_BASELINE_SHA256: str | None = None" in parser_script
+    assert "APPROVED_CONTRACT_SHA256: str | None = " in parser_script
+    assert "APPROVED_BASELINE_SHA256: str | None = " in parser_script
     assert "if authorize_first_run is not True:" in parser_script
     assert "packet, authorization_sha = _approved_packet()" in parser_script
     assert "finalHoldoutOpened" in parser_script
@@ -228,7 +243,47 @@ def test_owner_reported_cuda_baseline_snapshot_is_frozen_and_not_training_approv
     assert packet["baselineEvidenceSha256"] == digest
     assert packet["executionState"]["baselinePending"] is False
     assert packet["executionState"]["baselineRecordedByOwner"] is True
-    assert packet["status"] == "owner-approval-required"
-    assert packet["modelTrainingAuthorized"] is False
-    assert RUN.APPROVED_CONTRACT_SHA256 is None
-    assert RUN.APPROVED_BASELINE_SHA256 is None
+    assert packet["status"] == "owner-approved-one-run"
+    assert packet["modelTrainingAuthorized"] is True
+    assert RUN.APPROVED_CONTRACT_SHA256 == hashlib.sha256(RUN.APPROVAL.read_bytes()).hexdigest()
+    assert RUN.APPROVED_BASELINE_SHA256 == digest
+
+
+def test_one_run_refuses_preexisting_output_before_cuda(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    existing_output = artifacts / "previous-run"
+    existing_output.mkdir()
+    monkeypatch.setattr(RUN, "OUTPUT_DIR", existing_output)
+    monkeypatch.setattr(RUN, "preflight", lambda **_: pytest.fail("preflight read before output check"))
+    monkeypatch.setattr(RUN.torch.cuda, "is_available",
+                        lambda: pytest.fail("cuda touched before output check"))
+    with pytest.raises(ValueError, match="unused reviewed directory"):
+        RUN.run_training(authorize_first_run=True, output_dir=existing_output,
+                         artifact_root=artifacts)
+
+
+def test_owner_approval_rejects_changed_baseline_sha_before_cuda(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(RUN, "APPROVED_BASELINE_SHA256", "f" * 64)
+    monkeypatch.setattr(RUN.torch.cuda, "is_available",
+                        lambda: pytest.fail("cuda touched with invalid baseline"))
+    with pytest.raises(PermissionError, match="Frozen owner approval"):
+        RUN.run_training(authorize_first_run=True)
+
+
+def test_training_compares_baseline_on_the_original_cuda_device() -> None:
+    code = (HERE / "first_run.py").read_text(encoding="utf-8")
+    assert 'observed = baseline(bundle_dir=bundle_dir, stage_checkpoint=stage_checkpoint,' in code
+    assert 'device_name="cuda")' in code
+    assert 'if abs(observed["meanValidationAnswerAndEosLoss"] -' in code
+    assert "MAX_STEPS = 100" in code
+    assert "MAX_SECONDS = 600" in code
+    assert "GRAD_ACCUMULATION = 16" in code
+    assert 'while steps < MAX_STEPS and time.perf_counter() < deadline' in code
+    assert 'output.mkdir(exist_ok=False)' in code
+    assert '"resumeAllowed": False' in code
+    assert '"checkpointReselectionAllowed": False' in code
