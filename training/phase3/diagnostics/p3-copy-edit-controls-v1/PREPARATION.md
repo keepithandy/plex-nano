@@ -1,6 +1,6 @@
 # Phase 3 — copy-versus-edit control preparation
 
-**Status: executable preparation only; no model run, training, or final holdout access.** This follows the October 17 **both-fail** replacement diagnostic (0/72 exact edits). It is **not** the formal P3-03 Insert and Delete milestone.
+**Status: fixed 42-task manifest frozen, local inference/scoring gates prepared; no model run, training, or final holdout access.** This follows the October 17 **both-fail** replacement diagnostic (0/72 exact edits). It is **not** the formal P3-03 Insert and Delete milestone.
 
 ## Question and design
 
@@ -18,19 +18,9 @@ Each language uses one replacement family and two fresh namespaces (`cobalt`, `s
 
 The builder verifies the exact P3-02 authored candidate and 72-task P3-03 manifest SHA-256 identities, checks all new input/expected complete-file texts against the prior **P3-02 training** and **72-task diagnostic** source/target sets, and refuses any overlap. Existing manifests cannot be overwritten. It uses no ML library or model resources.
 
-## Preparing and verifying an immutable manifest
+## Freeze and verification
 
-From the repository root:
-
-```powershell
-python training/phase3/diagnostics/p3-copy-edit-controls-v1/prepare_controls.py
-python training/phase3/diagnostics/p3-copy-edit-controls-v1/prepare_controls.py --verify
-uv run --project training pytest training/tests/test_p3_copy_edit_controls.py -q
-```
-
-The first command creates `copy-edit-controls-v1.json` **only if the path does not exist**. Record its reported SHA-256 and commit the manifest unmodified before authorizing or generating any model responses. The second command checks byte-for-byte reproducibility and never rewrites it. On Windows, commit/freeze should include an explicit LF checkout rule for the final JSON to keep its hash portable, as in the prior P3 diagnostic.
-
-The new tests run the builder and synthetic scorers only. They do not infer model behavior.
+The immutable candidate is already committed. Do **not** rerun the builder's create command on the frozen path; it intentionally refuses overwrites. Verify its deterministic bytes with `python training/phase3/diagnostics/p3-copy-edit-controls-v1/prepare_controls.py --verify`, and run the regression suite. The recorded SHA-256, context-budget checks, and local execution instructions appear in the October 17 addendum below.
 
 ## Explicit result rules and limits
 
@@ -38,7 +28,7 @@ Score exact file bytes on every task. On edits, if the response has unchanged by
 
 The strict candidate success thresholds are 6/6 exact copies, 18/18 minimal edits, and 18/18 context edits. If copying fails, review a source-copying representation; if copying passes but minimal edits fail, review target formation and request-value binding; if both pass but context edits fail, review preservation of unrelated code. All-pass performance would justify only fresh independent confirmation, **not** replacement of the failed P3-02 development gate.
 
-**Blocked / not authorized:** The builder does **not** freeze a manifest automatically into Git, validate tokenized prompt lengths, load the fixed step-100 checkpoint, run an evaluation, modify training weights, or open the final project holdout. Before any evaluation, separately verify the 512-token budget with the frozen tokenizer, checkpoint identity, inference configuration, and an approved one-run execution/provenance contract. No evaluation permission is implied by green CI.
+**Remaining runtime dependency:** The repo can freeze and verify the task manifest without weights, but running the model requires the owner's local P3-02 checkpoint and frozen tokenizer bundle. The guarded runner checks the real tokenizer, checkpoint, and inference policy locally. No optimizer updates or final-holdout access are allowed.
 
 ## October 17 freeze and execution gate
 
