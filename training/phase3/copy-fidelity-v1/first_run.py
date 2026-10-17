@@ -1,9 +1,9 @@
-"""P3 copy-fidelity fixed-source training proposal and read-only step-zero baseline.
+"""Owner-approved, SHA-pinned ONE bounded P3 copy-fidelity research training run.
 
-Default: read-only evidence and exact sampler replay; --baseline: teacher-forced
-validation loss only. --train is INTENTIONALLY SEALED until a later, separately
-reviewed owner-authorization contract SHA and baseline SHA are pinned in code.
-Creating a staged checkpoint does not authorize training. No inference here.
+Default is still read-only evidence/sampler preflight; --baseline is read-only.
+Only explicit --authorize-first-run can initiate a new CUDA run from the
+frozen stage and dataset with the exact separately approved contract.
+No resume, checkpoint reselection, or final project holdout. No generation.
 """
 from __future__ import annotations
 
@@ -40,11 +40,10 @@ STAGE_SHA256 = "3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9
 BUNDLE_SHA256 = "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d"
 CANDIDATE_SHA256 = "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a"
 SAMPLER_SHA256 = "6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4"
-# These MUST be set by a future reviewed PR after explicit owner authorization
-# and the owner's independently reported step-zero local baseline. Keep both
-# unset in this preparation PR: CLI flags or JSON edits alone cannot train.
-APPROVED_CONTRACT_SHA256: str | None = None
-APPROVED_BASELINE_SHA256: str | None = None
+# Owner approved exactly one first run on 2026-10-17. Both frozen hashes
+# must match byte-for-byte; no earlier P3-02 authorization is inherited.
+APPROVED_CONTRACT_SHA256: str | None = "a7432a3bfa7942b6086bc8e64fa3b24290351acfd9fb700aac2af613a8c0911b"
+APPROVED_BASELINE_SHA256: str | None = "5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01"
 BASELINE_PATH = ROOT / "training/pretraining/p3-copy-fidelity-step-zero-baseline-evidence.json"
 SEED = 1337
 MAX_STEPS = 100
@@ -258,14 +257,30 @@ def _approved_packet() -> tuple[dict[str, Any], str]:
     }
     if any(type(packet.get(k)) is not type(v) or packet[k] != v for k,v in expected.items()):
         raise PermissionError("Owner-approved training settings diverge from reviewed values")
-    if (not isinstance(packet.get("approvedDate"), str)
-            or len(packet["approvedDate"]) != 10
+    if (packet.get("approvedDate") != "2026-10-17"
+            or packet.get("executionState") != {
+                "trainingPerformed": False,
+                "optimizerUpdates": 0,
+                "stageVerifiedByOwner": True,
+                "baselinePending": False,
+                "baselineRecordedByOwner": True,
+                "runAuthorized": True,
+                "oneRunOnly": True,
+            }
             or not isinstance(packet.get("authorizationReference"), str)
-            or not packet["authorizationReference"].strip()
+            or "one bounded P3 copy-fidelity training run" not in packet["authorizationReference"]
             or packet.get("baselineEvidenceSha256") != APPROVED_BASELINE_SHA256
+            or evidence.get("status") != "copy-fidelity-step-zero-validation-baseline-measured-read-only"
+            or evidence.get("device") != "cuda"
             or evidence.get("stageCheckpointSha256") != STAGE_SHA256
             or evidence.get("bundleManifestSha256") != BUNDLE_SHA256
+            or evidence.get("sourceCheckpointSha256") != STAGE.SOURCE_SHA256
+            or evidence.get("candidateSha256") != CANDIDATE_SHA256
+            or evidence.get("sampler", {}).get("drawIndexSha256") != SAMPLER_SHA256
+            or evidence.get("validationRecordsEvaluated") != 96
             or evidence.get("supervisedTargetsEvaluated") != 2420
+            or evidence.get("trainingAuthorized") is not False
+            or evidence.get("finalHoldoutOpened") is not False
             or evidence.get("trainingPerformed") is not False
             or evidence.get("optimizerUpdates") != 0
             or type(evidence.get("meanValidationAnswerAndEosLoss")) is not float
@@ -303,7 +318,7 @@ def run_training(*, authorize_first_run: bool = False, bundle_dir: Path = BUNDLE
                  stage_checkpoint: Path = STAGE_CHECKPOINT,
                  output_dir: Path = OUTPUT_DIR,
                  artifact_root: Path = ARTIFACT_ROOT) -> dict[str, Any]:
-    """Sealed research implementation; never callable under the current draft."""
+    """One owner-approved CUDA run; refuses any existing output or altered evidence."""
     if authorize_first_run is not True:
         raise PermissionError("Explicit --authorize-first-run is required")
     packet, authorization_sha = _approved_packet()  # FIRST: refuse before model reads/writes
@@ -322,8 +337,10 @@ def run_training(*, authorize_first_run: bool = False, bundle_dir: Path = BUNDLE
     validation = _rows("validation", bundle_dir)
     draws, sampler = _draws(train)
     # Compare step-zero validation to exact separately reviewed baseline.
+    # Compare on the SAME device as the separately frozen owner baseline.
+    # CPU and CUDA loss can differ without any model weight change.
     observed = baseline(bundle_dir=bundle_dir, stage_checkpoint=stage_checkpoint,
-                        device_name="cpu")
+                        device_name="cuda")
     expected = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     if abs(observed["meanValidationAnswerAndEosLoss"] -
            expected["meanValidationAnswerAndEosLoss"]) > 0.02:
@@ -440,7 +457,7 @@ def main() -> None:
     action.add_argument("--baseline", action="store_true",
                         help="Read-only teacher-forced step-zero validation loss")
     action.add_argument("--authorize-first-run", action="store_true",
-                        help="SEALED: requires a future SHA-pinned owner approval and baseline")
+                        help="Execute exactly one owner-approved, SHA-pinned bounded CUDA run")
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     args = parser.parse_args()
     try:

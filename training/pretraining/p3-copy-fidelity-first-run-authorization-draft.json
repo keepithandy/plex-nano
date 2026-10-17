@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "kind": "p3-copy-fidelity-first-run-contract-v1",
-  "status": "owner-approval-required",
-  "approvedBy": null,
-  "approvedDate": null,
-  "authorizationReference": null,
-  "modelTrainingAuthorized": false,
+  "status": "owner-approved-one-run",
+  "approvedBy": "keepithandy",
+  "approvedDate": "2026-10-17",
+  "authorizationReference": "Owner's explicit 2026-10-17 approval in ChatGPT for one bounded P3 copy-fidelity training run: original verified stage, maximum 100 optimizer updates or 600 seconds whichever first, no automatic resume, no checkpoint reselection, final holdout closed.",
+  "modelTrainingAuthorized": true,
   "stageCheckpointSha256": "3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9",
   "bundleManifestSha256": "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d",
   "candidateSha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a",
@@ -24,7 +24,9 @@
     "optimizerUpdates": 0,
     "stageVerifiedByOwner": true,
     "baselinePending": false,
-    "baselineRecordedByOwner": true
+    "baselineRecordedByOwner": true,
+    "runAuthorized": true,
+    "oneRunOnly": true
   },
-  "reviewBoundary": "Owner-supplied CUDA step-zero baseline recorded in the immutable referenced evidence SHA. Draft only: no owner authorization for training. The trusted compiled APPROVED_CONTRACT_SHA256 and APPROVED_BASELINE_SHA256 values in first_run.py remain unset; editing the JSON or using the CLI flag alone cannot unlock the optimizer."
+  "reviewBoundary": "Owner-approved one bounded research training run. Requires exact SHA-pinned approval and baseline evidence, verified original stage/bundle/draw sequence, CUDA-only execution with no existing output, <=100 optimizer updates or <=600 seconds of training loop, no resume or checkpoint reselection, final project holdout closed. Training is only performed after an explicit --authorize-first-run CLI action on the owner's Windows machine. Authorization is consumed by the new output directory and is never reused."
 }
