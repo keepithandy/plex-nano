@@ -145,6 +145,36 @@ A successful low step-zero loss would only establish the original checkpoint's c
 
 **Research boundary:** 27,566,080 parameters, original 16,384-tokenizer and 512 context remain fixed. No checkpoint choice, optimizer updates, changed held-out names, generated test responses or final-project holdout access is made in this preparation.
 
+## Owner-approved single bounded training run · 2026-10-17
+
+**Authorization:** The owner explicitly approved one P3 copy-fidelity training run on October 17, 2026, limited to **100 optimizer updates or 600 seconds, whichever happens first**, from the unchanged verified stage. Training is still **not performed** merely by merging this approval. It begins only after the owner explicitly runs the CLI command on the Windows PC.
+
+- [Approved one-run contract](../../pretraining/p3-copy-fidelity-first-run-authorization-draft.json) SHA-256: `a7432a3bfa7942b6086bc8e64fa3b24290351acfd9fb700aac2af613a8c0911b` (filename retains `-draft` for stable versioned compatibility; contents now show `status: owner-approved-one-run` and `modelTrainingAuthorized: true`).
+- Independently frozen **owner-reported CUDA** baseline SHA-256: `5183726a621fb82539137b009c1514b5ed59d750e3ef4ad4bcd71453e644ff01`; step-zero mean teacher-forced loss **7.116717401614859**, 96 examples, 2,420 targets.
+- Starting zero-update checkpoint SHA-256: `3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9`; source step-100 SHA-256: `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`.
+- Frozen bundle SHA-256: `8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d`. The exact 1,600-record sampler has SHA-256 `6d21424636cdb6b5912dacd1564f51b63cc3f9897ec13cb5235e99c17930e9f4`.
+- The code verifies both compiled trusted hashes and the original stage, dataset, sampler, and baseline; **uses CUDA for the owner-approved baseline comparison** (to avoid comparing CPU and CUDA numeric drift); requires an unused dedicated output folder; does not resume, reselect checkpoints, or open the final holdout. Checkpoints only at fixed 25/50/75/100 steps. It trains only the 288 train rows; the 96 validation rows are for teacher-forced loss, not gradients.
+- The training-clock cap applies to the bounded update loop. Source-verification and baseline-check work occurs beforehand. If the bounded loop expires mid-update, remaining gradients are discarded; no optimizer step occurs for that incomplete update. An interrupted or partial run is recorded as incomplete and **is not automatically resumed**.
+
+From the repository root after pulling the authorized merge, verify the unchanged inputs first:
+
+```powershell
+git pull origin master
+uv run --project training python training/phase3/copy-fidelity-v1/first_run.py
+```
+
+Then explicitly initiate the **one** authorized run using:
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/first_run.py --authorize-first-run
+```
+
+The command writes only into the new `$HOME\PlexArtifacts\file-edits\p3-copy-fidelity-v1-first-run` folder (metrics, result JSON and fixed checkpoint files); it **refuses to overwrite an existing folder**. Preserve all historical checkpoints and the frozen baseline. If there is an error, do **not** delete the output and rerun: inspect the evidence before deciding whether any new authorization is necessary. The nonfatal missing-NumPy warning observed in earlier PyTorch verification has not prevented past runs, but does not guarantee this GPU run will pass.
+
+**After execution** report `result.json` fields `completedMaximumSteps`, `optimizerUpdates`, `answerAndEosTargetsProcessed`, `validation`, `fixedEndpointSha256`, `stageCheckpointSha256`, `bundleManifestSha256`, `finalHoldoutOpened` and checkpoint hashes. Do not report successful copying/editing solely from lower validation loss. Evaluation of exact-file generations remains a **separate, frozen, post-run step**.
+
+The older paragraphs in this document describing the runner as “SEALED” refer to the pre-authorization design and historical point in time. This later authorization supersedes the runner's disabled state, not its safety requirements or the earlier failed P3-02 evaluation.
+
 ## Research limitations
 
 The 384 examples are a small hypothesis-driven synthetic intervention, not evidence that 27M parameters suffice for exact copying. They intentionally isolate unseen identifiers and literal/source preservation but do not evaluate paraphrase robustness. Historical numeric results and manifests are immutable. No final holdout access, checkpoint reselection, model-size change or autonomous repository-agent pivot.
