@@ -9,6 +9,7 @@ This folder contains the **historical research record**, not a list of current p
 | Question | Document |
 |---|---|
 | What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](../Plex-ROADMAP.md) |
+| How do I diagnose P3-02 failures without training? | [P3-02-D1 read-only diagnostic](PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
 | What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |
 | Did P3-02 pass unseen file-edit tasks? | [Frozen development-gate summary](../training/pretraining/p3-02-development-gate-result-summary.json): **No — 0/36 exact edits** |

@@ -9,6 +9,7 @@ models/
 .env.*
 training/.venv/
 training/.uv-cache/
+training/.test-tmp/
 training/artifacts/
 training/data/raw/
 training/phase2/data/raw/

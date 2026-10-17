@@ -1,5 +1,7 @@
 # P3-03 — Source Preservation and Request-Value Binding
 
+**Naming clarification after repository synchronization:** this packet retains the attached proposal's P3-03 label and frozen artifact identifiers for provenance. The formal roadmap's P3-03 milestone remains **Insert and Delete**. The incoming **P3-02-D1** tool analyzes the 36 existing P3-02 completions; this separate 72-task proposal remains preparation only and has not been run.
+
 **Status: preparation complete; evaluation is not authorized.** This bounded diagnostic measures how the 27,566,080-parameter Plex Nano coding model handles a request to edit one supplied HTML, CSS, or JavaScript file. It separates source-name preservation, requested-value selection, unrelated-content preservation, exact-file correctness, and contrast sensitivity. These are observable output categories; they do not establish an internal cause.
 
 ## Frozen artifacts
