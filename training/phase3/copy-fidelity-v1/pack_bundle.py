@@ -31,6 +31,7 @@ SOURCE_BUNDLE_SHA = "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9a
 CANDIDATE_SHA = "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a"
 TOKENIZER_SHA = "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
 MAX_STORAGE = 200 * 1024**3
+EXPECTED_TARGET_POSITIONS = {"train": 7300, "validation": 2420}
 PARTS = ("jsonl", "tokens.u16le", "weights.u8", "index.json")
 TOKENIZER_FILES = ("tokenizer.json", "tokenizer-config.json", "model-config.json")
 SPLITS = ("train", "validation")
@@ -133,7 +134,7 @@ def pack(tokenizer: Any) -> tuple[dict[str, dict[str, bytes]], dict[str, Any]]:
             if split == "train":
                 target_lengths.append(sum(mask))
         if (len(index) != (288 if split == "train" else 96)
-                or sum(weights) != (7300 if split == "train" else 2420)):
+                or sum(weights) != EXPECTED_TARGET_POSITIONS[split]):
             # The target counts were *measured* by the owner using frozen
             # tokenizer: never silently replace them with a new dataset.
             raise ValueError(f"Observed frozen answer/EOS target counts changed: {split}")
