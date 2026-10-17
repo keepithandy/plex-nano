@@ -105,17 +105,21 @@ def _rows(split: str, bundle_dir: Path) -> list[tuple[str, tuple[int, ...], tupl
     return result
 
 
-def _draws(records: list[tuple[str, tuple[int, ...], tuple[int, ...]]]) -> tuple[list[int], dict[str, Any]]:
-    if len(records) != 288:
-        raise ValueError("Sampler requires exact 288-record train split")
+def _draw_indices(count: int) -> tuple[list[int], str]:
+    if count != 288:
+        raise ValueError("Only the exact 288-record frozen train split can be sampled")
     rng = random.Random(SEED)
-    draws = []
+    draws: list[int] = []
     while len(draws) < MAX_STEPS * GRAD_ACCUMULATION:
-        epoch = list(range(len(records)))
+        epoch = list(range(count))
         rng.shuffle(epoch)
         draws.extend(epoch[:MAX_STEPS * GRAD_ACCUMULATION - len(draws)])
     raw = struct.pack("<" + "H" * len(draws), *draws)
-    digest = hashlib.sha256(raw).hexdigest()
+    return draws, hashlib.sha256(raw).hexdigest()
+
+
+def _draws(records: list[tuple[str, tuple[int, ...], tuple[int, ...]]]) -> tuple[list[int], dict[str, Any]]:
+    draws, digest = _draw_indices(len(records))
     targets = sum(sum(records[i][2]) for i in draws)
     if (digest != SAMPLER_SHA256 or len(set(draws)) != 288 or targets != 40477):
         raise ValueError("Frozen deterministic sampler SHA/coverage/target positions changed")
@@ -252,6 +256,7 @@ def _approved_packet() -> tuple[dict[str, Any], str]:
     if any(type(packet.get(k)) is not type(v) or packet[k] != v for k,v in expected.items()):
         raise PermissionError("Owner-approved training settings diverge from reviewed values")
     if (not isinstance(packet.get("approvedDate"), str)
+            or len(packet["approvedDate"]) != 10
             or not isinstance(packet.get("authorizationReference"), str)
             or not packet["authorizationReference"].strip()
             or packet.get("baselineEvidenceSha256") != APPROVED_BASELINE_SHA256
