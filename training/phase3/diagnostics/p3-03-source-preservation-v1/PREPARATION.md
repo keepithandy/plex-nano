@@ -12,7 +12,7 @@
 
 Manifest SHA-256: `119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578`.
 
-Preparation code SHA-256 values: builder `6c47c22c2d9e0b2331ad99e113b0bd1861c4bb704df9af5fd71278cd7cbf3127`; current analyzer `d36a6b00e7a38c3abbb194bd9cc3ab3843da308fb98d310867b7f6f96715c6a9` (revised decision reporting and controlled scoring checks; the frozen manifest is unchanged).
+Preparation code SHA-256 values: builder `6c47c22c2d9e0b2331ad99e113b0bd1861c4bb704df9af5fd71278cd7cbf3127`; current analyzer `32d20cf38b808cc97cbeffc5464b63a63e8807343c49b9c9f20e33659e0cf27b` (revised decision reporting and controlled scoring checks; the frozen manifest is unchanged).
 
 The prospective overlap check found **zero** matches in all four comparisons: P3-03 inputs against P3-02 training inputs and targets, and P3-03 expected files against P3-02 training inputs and targets. No examples were replaced. The frozen P3-02 candidate hash was verified as `98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403`.
 
@@ -51,3 +51,7 @@ It refuses a modified manifest, mismatched checkpoint/configuration metadata, in
 ## Workspace provenance
 
 The manifest records preparation against local commit `94ef152d5ffbdac370110a7c1b3e4f397d03f701`. The checkout was already 14 commits behind `origin/master` and had uncommitted P3-02 documentation changes and `training/.test-tmp/`. Those owner changes were preserved; no synchronization was attempted.
+
+## Scorer reliability correction
+
+The scorer now excludes declarations inside JavaScript block comments and template literals. Synthetic regressions cover all four JavaScript families, commented duplicates, literal comment markers, Windows checkout hashing, and CLI input failures. Expected input failures exit with code 2 and a concise diagnostic. The frozen manifest hash is unchanged; LF checkout rules preserve its bytes. These checks do not generate model responses or establish model capability.

@@ -204,13 +204,61 @@ _JS_DOUBLE_STRING = re.compile(r'^"(?:[^"\\]|\\.)*"$')
 _JS_SELECTOR = re.compile(r'^document\.querySelector\(\s*("(?:[^"\\]|\\.)*")\s*\)$')
 
 
+def _js_code_mask(text: str) -> str:
+    """Mask comments and literals without changing offsets or line boundaries.
+
+    This bounded scorer recognizes the prepared const declarations only. Template
+    literals (including interpolation) are opaque, never candidate declarations.
+    """
+    masked = list(text)
+    state = "code"
+    quote = ""
+    i = 0
+    while i < len(text):
+        char = text[i]
+        pair = text[i:i + 2]
+        if state == "code":
+            if pair in ("//", "/*"):
+                state = "line-comment" if pair == "//" else "block-comment"
+                masked[i:i + 2] = "  "
+                i += 2
+                continue
+            if char in ('"', "'", "`"):
+                state, quote = "literal", char
+            else:
+                i += 1
+                continue
+        elif state == "line-comment" and char in "\r\n":
+            state = "code"
+        elif state == "block-comment" and pair == "*/":
+            masked[i:i + 2] = "  "
+            state = "code"
+            i += 2
+            continue
+        elif state == "literal":
+            if char == "\\":
+                masked[i] = " "
+                if i + 1 < len(text):
+                    if text[i + 1] not in "\r\n":
+                        masked[i + 1] = " "
+                    i += 2
+                    continue
+            elif char == quote:
+                state = "code"
+        if char not in "\r\n":
+            masked[i] = " "
+        i += 1
+    return "".join(masked)
+
+
 def _js_declarations(text: str) -> list[dict[str, Any]]:
     declarations = []
     offset = 0
+    code = _js_code_mask(text)
     for line_no, raw_line in enumerate(text.splitlines(keepends=True)):
         line = raw_line.rstrip("\r\n")
         match = _JS_CONST.fullmatch(line)
-        if match:
+        if match and re.match(r"^\s*const\b", code[offset:offset + len(line)]):
             start, end = match.span(2)
             declarations.append({"name": match.group(1), "initializer": match.group(2), "line": line_no,
                                  "valueStart": offset + start, "valueEnd": offset + end})
@@ -758,15 +806,18 @@ def analyze(manifest_path: Path, response_path: Path, report_path: Path, audit_p
                       "fullDiagnosticPass": summary["decision"]["fullDiagnosticPass"]}, indent=2))
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--responses", required=True, type=Path,
                         help="Separately authorized prediction envelope JSON; this tool never generates responses")
     parser.add_argument("--report", required=True, type=Path, help="New Markdown report path; existing files are refused")
     parser.add_argument("--audit", required=True, type=Path, help="New JSON audit path; existing files are refused")
-    args = parser.parse_args()
-    analyze(args.manifest, args.responses, args.report, args.audit)
+    args = parser.parse_args(argv)
+    try:
+        analyze(args.manifest, args.responses, args.report, args.audit)
+    except (OSError, ValueError) as exc:
+        parser.exit(2, f"p3-03-analyze: {exc}\n")
 
 
 if __name__ == "__main__":
