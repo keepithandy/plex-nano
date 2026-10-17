@@ -229,7 +229,10 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
         "status": "p3-source-binding-read-only-morphology-reviewed",
         "sourceCheckpointSha256": ENDPOINT_SHA,
         "totalCases": 138,
-        "allOriginalGeneratedFileGatesPassed": False,
+        "allOriginalGeneratedFileGatesPassed": (
+            report.get("allValidationGatesPassed") is True
+            and report.get("allDevelopmentGatesPassed") is True
+        ),
         "trainNamespaceIntrusionIsHeuristic": True,
         "sourceNamespacePresentIsNotExactPreservation": True,
         "requestedLiteralMentionIsNotProvenValueBinding": True,
