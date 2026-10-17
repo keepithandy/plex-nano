@@ -19,6 +19,7 @@ import torch
 from plex_training.artifacts import enforce_storage_limit, path_within_root
 from plex_training.checkpoint import read_checkpoint, save_checkpoint
 from plex_training.file_edit_replacements_development import DEFAULT_FROZEN_REPORT, _frozen_run_report
+from plex_training.file_conditioned_contract import TOKENIZER_BUNDLE_SHA256 as ORIGINAL_P248_TOKENIZER_BUNDLE_SHA
 from plex_training.file_edit_replacements_stage import _check_stage_payload as _check_prior_stage
 from plex_training.model import parameter_count
 from plex_training.tokenizer import CODEC, sha256_file
@@ -89,7 +90,7 @@ def source_preflight(*, source_checkpoint: Path = SOURCE_CHECKPOINT,
             or payload.get("codec") != CODEC
             or not isinstance(payload.get("tokenizerRecord"), dict)
             or payload["tokenizerRecord"].get("tokenizerSha256") != TOKENIZER_SHA
-            or payload["tokenizerRecord"].get("bundleManifestSha256") != ORIGINAL_P302_BUNDLE_SHA
+            or payload["tokenizerRecord"].get("bundleManifestSha256") != ORIGINAL_P248_TOKENIZER_BUNDLE_SHA
             or not isinstance(payload.get("initializationRecord"), dict)
             or not isinstance(payload.get("datasetRecord"), dict)
             or payload["datasetRecord"].get("bundleManifestSha256") != ORIGINAL_P302_BUNDLE_SHA):
@@ -148,9 +149,9 @@ def verify_stage(*, checkpoint: Path,
             or source_state.keys() != stage_state.keys()
             or any(not torch.equal(source_state[key], stage_state[key]) for key in source_state)):
         raise ValueError("Staged tensor weights differ from the original frozen endpoint")
-    return {"status": "copy-fidelity-zero-stage-verified",
+    return {**proof, "status": "copy-fidelity-zero-stage-verified",
             "stageCheckpointSha256": sha256_file(checkpoint),
-            **proof, "baseWeightsPreservedExactly": True,
+            "baseWeightsPreservedExactly": True,
             "stageStep": 0, "stageTokensProcessed": 0,
             "optimizerStateEmpty": True, "optimizerCreatedForSerializationOnly": True}
 

@@ -257,3 +257,113 @@ def test_verifier_rejects_mutated_tensor_weights(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="tensor weights"):
         STAGE.verify_stage(checkpoint=staged, source_checkpoint=source,
                            source_result=result, bundle_dir=bundle)
+
+
+
+def test_source_preflight_accepts_p248_tokenizer_and_p302_dataset_provenance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+):
+    """Reproduce original P3-02 step-100 metadata without private weights."""
+    assert STAGE.ORIGINAL_P248_TOKENIZER_BUNDLE_SHA == (
+        "71fec0882692f5eb1b47b72f4a9f539e53e77882d003649beacd5f341b5a4ea7"
+    )
+    assert STAGE.ORIGINAL_P248_TOKENIZER_BUNDLE_SHA != STAGE.ORIGINAL_P302_BUNDLE_SHA
+    checkpoint = tmp_path / "step-0100.pt"
+    checkpoint.write_bytes(b"synthetic-frozen-step100")
+    monkeypatch.setattr(STAGE, "SOURCE_SIZE", checkpoint.stat().st_size)
+    monkeypatch.setattr(STAGE, "SOURCE_SHA256", hashlib.sha256(checkpoint.read_bytes()).hexdigest())
+    monkeypatch.setattr(STAGE, "_frozen_run_report", lambda **_: {})
+    monkeypatch.setattr(STAGE.PACK, "inspect", lambda _: {
+        "candidateSha256": STAGE.CANDIDATE_SHA,
+        "bundleVerified": True,
+        "bundleManifestSha256": "synthetic-copy-fidelity-bundle",
+    })
+    model = SimpleNamespace(config=SimpleNamespace(context_length=512, vocab_size=16384))
+    monkeypatch.setattr(STAGE, "parameter_count", lambda model: 27566080)
+    payload = {
+        "step": 100, "codec": STAGE.CODEC, "initializationRecord": {},
+        "tokenizerRecord": {
+            "tokenizerSha256": STAGE.TOKENIZER_SHA,
+            "bundleManifestSha256": STAGE.ORIGINAL_P248_TOKENIZER_BUNDLE_SHA,
+        },
+        "datasetRecord": {
+            "bundleManifestSha256": STAGE.ORIGINAL_P302_BUNDLE_SHA,
+        },
+    }
+    monkeypatch.setattr(STAGE, "read_checkpoint", lambda *_: (model, payload))
+    kwargs = {
+        "source_checkpoint": checkpoint,
+        "source_result": tmp_path / "result.json",
+        "bundle_dir": tmp_path / "copy-fidelity-bundle",
+    }
+    result = STAGE.source_preflight(**kwargs)
+    assert result["status"] == "copy-fidelity-source-stage-read-only-preflight-passed"
+    assert result["sourceWeightsVerified"] is True
+    assert result["optimizerCreated"] is False
+    assert result["optimizerUpdates"] == 0
+
+    # The old bug incorrectly compared BOTH fields with the P3-02 dataset hash.
+    payload["tokenizerRecord"]["bundleManifestSha256"] = STAGE.ORIGINAL_P302_BUNDLE_SHA
+    with pytest.raises(ValueError, match="original P3-02 fixed endpoint"):
+        STAGE.source_preflight(**kwargs)
+    payload["tokenizerRecord"]["bundleManifestSha256"] = STAGE.ORIGINAL_P248_TOKENIZER_BUNDLE_SHA
+    payload["datasetRecord"]["bundleManifestSha256"] = STAGE.ORIGINAL_P248_TOKENIZER_BUNDLE_SHA
+    with pytest.raises(ValueError, match="original P3-02 fixed endpoint"):
+        STAGE.source_preflight(**kwargs)
+    payload["datasetRecord"]["bundleManifestSha256"] = STAGE.ORIGINAL_P302_BUNDLE_SHA
+    payload["step"] = True
+    with pytest.raises(ValueError, match="original P3-02 fixed endpoint"):
+        STAGE.source_preflight(**kwargs)
+    payload["step"] = 100
+    checkpoint.write_bytes(b"modified-frozen-step100")
+    with pytest.raises(ValueError, match="checkpoint bytes changed"):
+        STAGE.source_preflight(**kwargs)
+
+
+def test_read_only_stage_verifier_reports_stage_status_and_matching_weights(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+):
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    source = tmp_path / "source.pt"
+    source.write_bytes(b"unchanged-original")
+    checkpoint = tmp_path / "stage.pt"
+    checkpoint.write_bytes(b"synthetic-stage-checkpoint")
+    mock_dataset = {
+        "bundleManifestSha256": "verified-new-copy-fidelity-bundle",
+        "candidateSha256": STAGE.CANDIDATE_SHA,
+        "bundleVerified": True,
+        "splits": {
+            "train": {"records": 288, "answerAndEosTargetPositions": 7300},
+            "validation": {"records": 96, "answerAndEosTargetPositions": 2420},
+        },
+    }
+    monkeypatch.setattr(STAGE.PACK, "inspect", lambda _: mock_dataset)
+    monkeypatch.setattr(STAGE, "source_preflight", lambda **_: {
+        "status": "copy-fidelity-source-stage-read-only-preflight-passed",
+        "bundleManifestSha256": mock_dataset["bundleManifestSha256"],
+        "sourceWeightsVerified": True,
+        "optimizerUpdates": 0,
+    })
+    original, copied = torch.nn.Linear(2, 2), torch.nn.Linear(2, 2)
+    copied.load_state_dict(original.state_dict())
+    original.config = copied.config = SimpleNamespace(context_length=512, vocab_size=16384)
+    stage_payload = {
+        "step": 0, "tokensProcessedTotal": 0, "seed": 1337,
+        "codec": STAGE.CODEC, "trainingSettings": STAGE._settings(),
+        "stageTransitionRecord": STAGE._transition(mock_dataset["bundleManifestSha256"]),
+        "datasetRecord": STAGE._dataset_record(mock_dataset),
+        "scheduleState": None,
+        "optimizerStateDict": {"state": {}, "param_groups": [{}]},
+        "tokenizerRecord": {"tokenizerSha256": STAGE.TOKENIZER_SHA},
+    }
+    checkpoints = iter([(original, {}), (copied, stage_payload)])
+    monkeypatch.setattr(STAGE, "read_checkpoint", lambda *_: next(checkpoints))
+    monkeypatch.setattr(STAGE, "parameter_count", lambda _: 27566080)
+    result = STAGE.verify_stage(
+        checkpoint=checkpoint, source_checkpoint=source, bundle_dir=bundle,
+    )
+    assert result["status"] == "copy-fidelity-zero-stage-verified"
+    assert result["baseWeightsPreservedExactly"] is True
+    assert result["optimizerStateEmpty"] is True
+    assert result["optimizerUpdates"] == 0
