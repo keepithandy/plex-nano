@@ -175,6 +175,28 @@ The command writes only into the new `$HOME\PlexArtifacts\file-edits\p3-copy-fid
 
 The older paragraphs in this document describing the runner as “SEALED” refer to the pre-authorization design and historical point in time. This later authorization supersedes the runner's disabled state, not its safety requirements or the earlier failed P3-02 evaluation.
 
+## Fixed step-100 generation evaluation — next capability gate
+
+Following the owner's completed one-run step-100 training (100 updates; fixed checkpoint SHA-256 `c96800281811d710f92322bac37f31a0386994bc7f64b59fd127b4631e470230`), the only meaningful next improvement check is whether **generated complete files** are correct. Validation loss dropped from **7.1167174 to 2.7984009**, but a previous P3-02 experiment also improved loss while failing all generated exact-file edits. We therefore do **not** infer that copy fidelity has improved.
+
+The [read-only generation evaluator](evaluate_step100.py) reuses only the frozen **96 never-trained validation** cases from the `copy-fidelity-candidate-v1.json` SHA and **42 already-inspected developer controls** from the original copy/edit manifest SHA `17834efb801ac963a4672ae616ca47e9eea40b2568f01951c3891c7e4997f01a`. Both input sets are checked byte-for-byte; original control files and their historical checkpoint references remain unchanged. The **final project holdout stays closed**.
+
+It loads only the **fixed, hash-verified step-100 checkpoint**, validates checkpoint training provenance and saved report, uses greedy temperature 0 / seed 1337 / maximum **192** output tokens with full prompt visibility, and reports exact full-file agreement, EOS, source preservation, extractable requested literals, per-language edit/copy results and contrast-group accuracy. Missing source boundaries produce **unknown**, not a fabricated requested-value score. Full correctness requires EOS, successful decode, and full prompt visibility. No optimizer, gradient, training, checkpoint selection, modification of inputs, or automatic retry.
+
+**Prespecified validation success targets:** 24/24 unchanged copies, ≥60/72 exact edits, ≥20/24 exact edits in **each language**, and ≥18/24 fully correct four-case groups. **Historical developer regression:** 6/6 exact copies and ≥30/36 exact edits on the original 42 controls. Developer controls have been inspected before and are not pristine final holdout. In both cases exact copying means matching every output character, including whitespace.
+
+Run from the repository root on the owner's PC, in order. The first command is **read-only, metadata-only preflight**; the second performs **model generation** but no training, and saves the only new evaluation report under `$HOME\PlexArtifacts\file-edits\p3-copy-fidelity-v1-step100-evaluation\evaluation-result.json`.
+
+```powershell
+git pull origin master
+uv run --project training python training/phase3/copy-fidelity-v1/evaluate_step100.py
+uv run --project training python training/phase3/copy-fidelity-v1/evaluate_step100.py --evaluate --device cuda
+```
+
+**Do not rerun `--evaluate` if a report directory already exists**, and do not delete it to retry after a failure. Save the complete report and provide its score summary for research review. Checkpoint `step-0075.pt` had lower teacher-forced loss but **must not** be used for a retrospective alternative endpoint. A failed generation result is a legitimate research outcome, not grounds for automatic training or checkpoint reselection.
+
+CI exercises scorer semantics and the synthetic evaluation path only: real GPU checkpoint inference requires the owner's private Windows files. This is an evaluation gate, not a new authorized optimizer run.
+
 ## Research limitations
 
 The 384 examples are a small hypothesis-driven synthetic intervention, not evidence that 27M parameters suffice for exact copying. They intentionally isolate unseen identifiers and literal/source preservation but do not evaluate paraphrase robustness. Historical numeric results and manifests are immutable. No final holdout access, checkpoint reselection, model-size change or autonomous repository-agent pivot.
