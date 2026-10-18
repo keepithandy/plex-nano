@@ -185,6 +185,7 @@ def _optional_history(path: Path | None) -> tuple[list[bytes], dict[str, str]]:
             or not manifest["files"] or len(manifest["files"]) > 100):
         raise ValueError("Expected explicit non-final-holdout history inventory")
     raw_files, sha_map = [], {}
+    total_history_bytes = 0
     for item in manifest["files"]:
         if (not isinstance(item, dict)
                 or set(item) != {"path", "sha256"}
@@ -202,6 +203,9 @@ def _optional_history(path: Path | None) -> tuple[list[bytes], dict[str, str]]:
         if (any("holdout" in part.lower() for part in canonical.parts)
                 or str(canonical) in sha_map):
             raise ValueError("Holdout alias or duplicate history path refused")
+        total_history_bytes += source.stat().st_size
+        if total_history_bytes > MAX_LOCAL_INVENTORY_BYTES:
+            raise ValueError("Aggregate history input exceeds memory limit")
         raw = source.read_bytes()
         if _sha(raw) != item["sha256"]:
             raise ValueError("History file SHA mismatch")
