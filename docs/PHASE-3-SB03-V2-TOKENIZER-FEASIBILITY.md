@@ -73,7 +73,7 @@ Only explicitly named **non-final-holdout** historical files may be screened. Yo
 }
 ```
 
-Use `--history-inventory C:\path\to\inventory.json`. The tool validates the content hash of each named source before searching. Paths containing *holdout* are refused, symbolic links are refused, no directories are crawled, and individual files over **128 MiB** are refused to keep the memory footprint bounded. The inventory itself must be no more than 1 MiB and contain at most 100 file records. Large historical source files require a separately reviewed streaming inventory mechanism before they can be counted as screened.
+Use `--history-inventory C:\path\to\inventory.json`. The tool validates the content hash of each named source before searching. Paths containing *holdout* are refused, symbolic links are refused, no directories are crawled, and individual files over **128 MiB** and **more than 128 MiB total historical source bytes** are refused to keep the memory footprint bounded. The inventory itself must be no more than 1 MiB and contain at most 100 file records. Large historical source files require a separately reviewed streaming inventory mechanism before they can be counted as screened.
 
 A provided inventory **does not automatically prove completeness**. New source names remain provisional until the owner and independent reviewer can attest that every ancestor training source was enumerated. Private data should remain local; report only relevant hashes/collision statistics to GitHub.
 
