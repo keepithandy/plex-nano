@@ -90,7 +90,11 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 ```
 
 
-### SB-02 — Competing intervention proposals — owner review required
+### SB-02 — Intervention choice approved for preparation (hypothesis A)
+
+The owner approved the next technical development step: **deterministic training-namespace diversity** (hypothesis A), not a new optimizer run or model evaluation. [SB-03 candidate and parity-readiness detail](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md) is separately documented with complete SHA identities and required owner-local checks.
+
+### Original competing intervention proposals — preserved decision record
 
 Prepare small, falsifiable alternatives rather than rerunning the same 100-step loop:
 
