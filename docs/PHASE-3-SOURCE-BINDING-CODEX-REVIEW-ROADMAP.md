@@ -98,7 +98,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 
 ### SB-03 · Candidate dataset and stage design
 
-**Review status: GREEN for a no-execution contract/checklist review; GATED for actual bundle, checkpoint staging or data transformation beyond already frozen SB-01 proposal.**
+**Review status: GREEN for deterministic candidate proposal and code review; code-frozen 288/96 matched intervention exists, with 48 training names and a full-coverage sampler. GATED for actual new bundle, checkpoint staging, optimizer work, or model generation.**
 
 **Codex tasks:**
 - Define a hypothetical reproducible candidate with manifest SHA, token-budget audit, train/validation/development namespace and full-file overlap checks, answer/EOS target masks and deterministic sampler specification.
