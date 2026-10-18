@@ -94,7 +94,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 - Rank these **only after SB-00 real morphology data**. Do not infer mechanism from six illustrative samples or loss alone.
 - Document any proposed source-span/patch alternative as an **independent contract and separate score**, never a retroactive pass on the full-file task.
 
-**Exit criterion:** owner reviews and selects one hypothesis; **no training automatically follows**.
+**Exit criterion:** owner approved **hypothesis A (diverse training namespaces) for preparation**. Full [SB-03 matched dataset and tokenizer/history gates](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md); **no training automatically follows**.
 
 ### SB-03 · Candidate dataset and stage design
 
