@@ -28,7 +28,7 @@ The report reveals selected-name collisions only in user-identified training sou
 
 Only include actual **non-final-holdout** text sources you can independently trace to the training run ancestry (e.g., source `.jsonl` files *actually used* to produce the frozen token bundles). Inspect documented Phase 1/2 dataset manifests, training contracts and the owner-local training bundle manifests first. Do **not** guess dataset paths or supply binary model weights or token-only binary arrays as source text. No sealed final benchmark or unseen final holdout belongs here.
 
-Use the following PowerShell as a template, replacing `<escape><ACTUAL NON-HOLDOUT TEXT SOURCE PATH></escape>` with absolute paths identified from your training lineage. Add one entry per source file (do not use wildcards).
+Use the following PowerShell as a template, replacing the example `C:\\ABSOLUTE\\PATH\\TO\\ACTUAL\\TRAINING\\train.jsonl` with absolute paths identified from your training lineage. Add one entry per source file (do not use wildcards).
 
 ```powershell
 $sourceFiles = @(
