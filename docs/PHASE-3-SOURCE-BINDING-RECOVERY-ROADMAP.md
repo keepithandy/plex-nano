@@ -66,7 +66,7 @@ Save the JSON output externally if needed, and supply the `inputReportSha256` an
 
 ### SB-01 — Fresh source-binding microprobe design — *preparation* green-lit
 
-**Prepare and freeze, but do not run inference yet.** Propose **48 model-free records**:
+**Prepared and SHA-frozen for review; do NOT run inference.** The [deterministic fixture builder](../training/phase3/copy-fidelity-v1/prepare_source_binding_microprobe.py) and [48-case proposal manifest](../training/phase3/copy-fidelity-v1/source-binding-microprobe-v1.json) are in CI with SHA-256 `0a30df999f8e1c0f12cf0f6e4a71e0eab814bdd99b3bd83d0e2184637ad31fda`. Source names `ulvar` and `nyxen` are checked against all four SHA-pinned historical candidate/control files. The model has not been run against this proposal. The fixture contains **48 model-free records**:
 
 - 3 languages × 2 contexts (minimal / unrelated code) × 2 previously unused source-name namespaces × 4 contrast cases (unchanged copy + 3 different requested values);
 - 12 unchanged-copy cases, 36 edits, 12 four-case groups;
@@ -78,7 +78,14 @@ Before choosing namespaces, scan **all** frozen prior train, validation, develop
 
 **Proposed pass gates (must be frozen before inference):** 12/12 untouched copies, ≥30/36 exact edits, ≥10/12 exact edits for each language, ≥9/12 complete four-case groups, 100% correct source-namespace preservation on passed files. Also publish failure counts and request-conditioned contrast sensitivity. No post-hoc scoring-rule changes.
 
-**Exit gate:** reviewed manifest + deterministic builder + SHA + contamination report + tests. Generation on the frozen probe requires a separate decision after owner review.
+**Exit gate:** deterministic builder, manifest SHA, contamination guard and synthetic tests are implemented; owner review and any live generation authorization remain pending. Generation on the frozen probe requires a separate decision after owner review.
+
+**Reproduce the 48-case SHA/structure (read-only):**
+
+```powershell
+uv run --project training python training/phase3/copy-fidelity-v1/prepare_source_binding_microprobe.py
+```
+
 
 ### SB-02 — Competing intervention proposals — owner review required
 
@@ -115,6 +122,8 @@ Assess new microprobes and established 96 validation / 42 developer controls wit
 - No auto-generated benchmark that leaks names or targets from inspected results into training.
 - No claim of source preservation from mere identifier substring occurrence; no claim of correct request selection when the replacement boundary is unextractable.
 - No promotion to P3-03 Insert/Delete or Phase 4 until useful exact-file capability is measured.
+
+For a complete **Codex-ready issue-by-issue greenlight matrix**, acceptance tests, refusal gates, and copy/paste reviewer instructions, see [P3-SB Codex Review Roadmap](PHASE-3-SOURCE-BINDING-CODEX-REVIEW-ROADMAP.md). Only [issue #189](https://github.com/keepithandy/plex-nano/issues/189) is currently open; SB-00 through SB-05 are its milestones, not separate authorized training tasks.
 
 ## 5. Owner review checklist
 
