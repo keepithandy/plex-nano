@@ -22,7 +22,7 @@ def test_committed_microprobe_is_byte_exact_and_proposal_only():
     original = PREP.OUTPUT.read_bytes()
     assert original == PREP.serialized()
     digest = hashlib.sha256(original).hexdigest()
-    assert len(digest) == 64
+    assert digest == "0a30df999f8e1c0f12cf0f6e4a71e0eab814bdd99b3bd83d0e2184637ad31fda"
     manifest = PREP.make_manifest()
     assert manifest["status"] == "frozen-proposal-only-evaluation-not-authorized"
     assert manifest["authorization"] == {
