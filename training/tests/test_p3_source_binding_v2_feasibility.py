@@ -196,6 +196,26 @@ def test_explicit_training_history_inventory_sha_and_collision(tmp_path):
         V2._optional_history(meta)
 
 
+def test_explicit_training_history_aggregate_byte_limit(tmp_path, monkeypatch):
+    a, b = tmp_path / "history-a.txt", tmp_path / "history-b.txt"
+    a.write_bytes(b"abcdef")
+    b.write_bytes(b"ghijkl")
+    manifest = tmp_path / "history.json"
+    manifest.write_text(json.dumps({
+        "scope": "non-final-holdout-training-corpora",
+        "files": [
+            {
+                "path": str(source.resolve()),
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            }
+            for source in (a, b)
+        ],
+    }), encoding="utf-8")
+    monkeypatch.setattr(V2, "MAX_LOCAL_INVENTORY_BYTES", 9)
+    with pytest.raises(ValueError, match="Aggregate history"):
+        V2._optional_history(manifest)
+
+
 def test_explicit_final_holdout_path_is_refused(tmp_path):
     directory = tmp_path / "final-holdout"
     directory.mkdir()
