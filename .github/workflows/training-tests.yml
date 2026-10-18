@@ -80,6 +80,7 @@ jobs:
           training/tests/test_p3_copy_fidelity_first_run.py
           training/tests/test_p3_copy_fidelity_step100_generation.py
           training/tests/test_p3_source_binding_diagnostic.py
+          training/tests/test_p3_source_binding_microprobe.py
           training/tests/test_answer_focused_records.py
           training/tests/test_benchmark.py
           training/tests/test_complete_records.py
