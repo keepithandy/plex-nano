@@ -74,6 +74,10 @@ The initial technical proposal specified 1,600 repeated `random.Random(1337).ran
 
 Both arms must start from identical weights and fresh optimizer state and share identical draw indices and the same validation cases. The comparator and intervention are two distinct future optimizer runs, **each requiring separate owner approval**.
 
+## Actual owner-local tokenizer finding (October 18, 2026)
+
+**BLOCKED.** The owner validated both candidate and sampler checksums but the real frozen Plex tokenizer reported **240/384 prompt/answer+EOS length mismatches**, with **40,439 comparator** versus **44,925 intervention** draw-weighted supervised targets. Equal ASCII length was not enough. **Do not train from this V1 proposal.** Its fixed SHA, original 96 validation records, sampler and failure evidence remain unchanged. [Separate V2 read-only tokenizer-aware feasibility roadmap](PHASE-3-SB03-V2-TOKENIZER-FEASIBILITY.md) provides the next safe research preparation; a matched V2 candidate does not yet exist.
+
 ## 5. Blocking audits before any later training decision
 
 The proposed candidate is intentionally frozen with `tokenizerParityVerified=false` and `entireHistoricalTrainingInventoryVerified=false`. It must remain **not ready for training**, even when GitHub CI is green, until these gates are satisfied:
