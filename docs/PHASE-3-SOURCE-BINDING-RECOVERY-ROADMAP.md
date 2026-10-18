@@ -109,9 +109,9 @@ Choose **one** primary intervention based on SB-00 and SB-01 evidence. A copy/sp
 
 **Exit gate:** predeclared hypothesis, fixed measurable pass/fail signal, single-variable comparison, independent owner decision.
 
-### SB-03 — Freeze any training candidate — not yet authorized
+### SB-03 — Reproducible candidate proposal prepared; local readiness gates pending
 
-Only after approved SB-02 selection: reproducible records, tokenizer accounting, row-level train/validation/development exclusion, exact answer/EOS target masks, explicit fixed checkpoint lineage, deterministic sampler and source-integrity inspection. **Staging is not training authorization.**
+The [SHA-frozen matched 288/96 proposal](../training/phase3/copy-fidelity-v1/sb03-namespace-diversity-proposal-v1.json) and [deterministic builder](../training/phase3/copy-fidelity-v1/prepare_namespace_diversity_candidate.py) are prepared for technical review. Frozen candidate SHA-256 is `4bbdc55782d9447271323378367831656dc1f05cb5bb174138738a6a7e5e7dea`; full-coverage sampler SHA-256 is `9ddf29a3a2972cee0c8c2f79db97d7ef3f823065a2db6ee0840e89bb01760c13`. The proposed 48 new train names preserve source lengths and exact task structure; all 96 validation records are unchanged. The read-only tokenizer comparator preflight is implemented but **has not run on the owner's real frozen tokenizer**, and global training-history exclusion is incomplete. **The candidate is therefore NOT training-ready**; no stage, bundle, optimizer or newly generated model response is authorized. [Detailed blockers and owner-local read-only commands](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
 
 ### SB-04 — One separately approved bounded intervention — not yet authorized
 
