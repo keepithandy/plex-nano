@@ -76,5 +76,6 @@ jobs:
           training/tests/test_p3_source_binding_microprobe.py
           training/tests/test_p3_source_binding_scoring.py
           training/tests/test_p3_source_binding_diversity_candidate.py
+          training/tests/test_p3_source_binding_v2_feasibility.py
           training/tests/test_file_edit_replacements_diagnostic.py::test_from_file_uses_saved_evidence_and_does_not_write_over_it
           -q
