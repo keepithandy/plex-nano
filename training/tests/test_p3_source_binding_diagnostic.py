@@ -6,6 +6,8 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -50,6 +52,9 @@ def mock_report(val, dev, *, nonempty=None):
         "bundleManifestSha256": D.BUNDLE_SHA,
         "candidateSha256": D.CANDIDATE_SHA,
         "controlManifestSha256": D.CONTROL_SHA,
+        "tokenizerSha256": D.TOKENIZER_SHA,
+        "stageCheckpointSha256": D.STAGE_SHA,
+        "authorizationContractSha256": D.CONTRACT_SHA,
         "trainingPerformed": False, "optimizerUpdates": 0,
         "finalHoldoutOpened": False,
         "developmentControlsPreviouslyInspected": True,
@@ -138,11 +143,82 @@ def test_changed_provenance_or_training_field_refused(frozen):
         ("optimizerUpdates", 1),
         ("finalHoldoutOpened", True),
         ("bundleManifestSha256", "1" * 64),
+        ("tokenizerSha256", "1" * 64),
+        ("stageCheckpointSha256", "1" * 64),
+        ("authorizationContractSha256", "1" * 64),
     ]:
         modified = copy.deepcopy(report)
         modified[key] = bad
         with pytest.raises(ValueError, match="original fixed-endpoint"):
             D.analyze(modified, val, dev)
+
+
+def test_complete_aggregate_reconciliation_and_perfect_synthetic_pass(frozen):
+    val, dev = frozen
+    perfect = {r.get("id", r.get("taskId")): r["expectedFile"] for r in val + dev}
+    result = D.analyze(mock_report(val, dev, nonempty=perfect), val, dev)
+    assert result["allOriginalGeneratedFileGatesPassed"] is True
+    report = mock_report(val, dev)
+    for scope in ("validation", "development"):
+        for field, bad in [("cases", 1), ("perLanguage", {}), ("gates", {}),
+                           ("copies", {"exact": 0, "total": 999})]:
+            changed = copy.deepcopy(report)
+            changed[scope][field] = bad
+            with pytest.raises(ValueError, match="Saved summary disagrees"):
+                D.analyze(changed, val, dev)
+    for key in ("allValidationGatesPassed", "allDevelopmentGatesPassed"):
+        changed = copy.deepcopy(report)
+        changed[key] = True
+        with pytest.raises(ValueError, match="derived capability gates"):
+            D.analyze(changed, val, dev)
+
+
+@pytest.mark.parametrize("key,bad", [
+    ("maxNewTokens", 192.0), ("temperature", False), ("seed", 1337.0),
+    ("checkpointReselectionAllowed", 0),
+])
+def test_generation_policy_rejects_type_aliases(frozen, key, bad):
+    val, dev = frozen
+    report = mock_report(val, dev)
+    report["generation"][key] = bad
+    with pytest.raises(ValueError, match="Generation policy"):
+        D.analyze(report, val, dev)
+
+
+@pytest.mark.parametrize("key", ["stoppedAtEos", "decodeSucceeded", "fullPromptVisible"])
+def test_completion_flags_must_be_boolean(frozen, key):
+    val, dev = frozen
+    report = mock_report(val, dev)
+    report["perRecord"][0][key] = 1
+    with pytest.raises(ValueError, match="malformed"):
+        D.analyze(report, val, dev)
+
+
+def test_cli_preserves_saved_input_bytes_and_rejects_non_object(frozen, tmp_path):
+    val, dev = frozen
+    path = tmp_path / "saved.json"
+    raw = (json.dumps(mock_report(val, dev)) + "\n").encode("utf-8")
+    path.write_bytes(raw)
+    result = subprocess.run([sys.executable, str(HERE / "diagnose_saved_outputs.py"),
+                             "--report", str(path)], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert path.read_bytes() == raw
+    assert json.loads(result.stdout)["inputReportSha256"] == hashlib.sha256(raw).hexdigest()
+    path.write_text("[]", encoding="utf-8")
+    result = subprocess.run([sys.executable, str(HERE / "diagnose_saved_outputs.py"),
+                             "--report", str(path)], capture_output=True, text=True)
+    assert result.returncode == 2
+    assert "JSON object" in result.stderr
+
+
+@pytest.mark.parametrize("key,bad", [("generatedTokenCount", True),
+                                     ("generatedTokenCount", 192)])
+def test_impossible_generation_token_counts_are_rejected(frozen, key, bad):
+    val, dev = frozen
+    report = mock_report(val, dev)
+    report["perRecord"][0][key] = bad
+    with pytest.raises(ValueError, match="malformed"):
+        D.analyze(report, val, dev)
 
 
 def test_manifest_bytes_are_frozen_and_wrong_hash_fails(tmp_path: Path):

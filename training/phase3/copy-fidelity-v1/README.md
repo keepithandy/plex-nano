@@ -4,6 +4,8 @@
 
 **New read-only diagnostic:** `diagnose_saved_outputs.py` checks the owner's existing `evaluation-result.json` against the frozen candidate/control manifests without importing PyTorch, running inference, writing files, or changing the checkpoint. It emits the source report SHA and explicitly labels namespace/literal occurrence as heuristics, not exact copied-file success.
 
+**Source-binding technical review:** [Recorded SB-00 evidence and SB-01–05 preparation](../../../docs/PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md). The existing report is now measured: all 138 omit their supplied namespace and contain training-name text. The unchanged 48-case fixture passes frozen-tokenizer audit; SB-02–04 designs and SB-05 synthetic scorer are ready for review. No new model execution is authorized.
+
 **Status: deterministic candidate frozen; neither training nor inference is authorized by this preparation.** This is replacement recovery, separate from formal roadmap P3-03 Insert and Delete.
 
 ## Evidence and diagnosis
