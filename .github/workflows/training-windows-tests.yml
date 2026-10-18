@@ -73,5 +73,6 @@ jobs:
           training/tests/test_p3_copy_fidelity_first_run.py
           training/tests/test_p3_copy_fidelity_step100_generation.py
           training/tests/test_p3_source_binding_diagnostic.py
+          training/tests/test_p3_source_binding_microprobe.py
           training/tests/test_file_edit_replacements_diagnostic.py::test_from_file_uses_saved_evidence_and_does_not_write_over_it
           -q
