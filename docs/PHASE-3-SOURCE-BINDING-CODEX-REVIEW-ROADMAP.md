@@ -105,7 +105,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 - Require original model/tokenizer/config hashes, fresh artifact destination, no overwrites, no new final holdout accesses.
 - Make clear that staging and data preparation never authorize optimizer steps; include precise owner-review boundaries.
 
-**Exit criterion:** reproducibility specification and SHA-pinned model-free candidate proposal are available. **Local frozen-tokenizer parity and full training-history inventory remain pending**; no stage/bundle created and neither future matched run is authorized. [Read-only checks and blocker details](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
+**Exit criterion:** reproducibility specification and SHA-pinned model-free candidate proposal are available. **Real tokenizer parity FAILED (240/384 paired rows; 40,439 vs 44,925 supervised draw-weighted positions). V1 remains frozen, and a separate [V2 tokenizer-aware feasibility proposal](PHASE-3-SB03-V2-TOKENIZER-FEASIBILITY.md) is available for owner-local read-only testing. Full training-history inventory remains pending**; no stage/bundle created and neither future matched run is authorized. [Read-only checks and blocker details](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
 
 ### SB-04 · One bounded training experiment (conditional)
 
