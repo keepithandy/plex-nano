@@ -170,7 +170,7 @@ def test_reject_bad_tokenizer_or_bad_search_budget():
             V2.search(ByteTokenizer(), attempts_per_slot=val)
 
 
-def test_explicit_non_holdout_inventory_sha_and_collision(tmp_path):
+def test_explicit_training_history_inventory_sha_and_collision(tmp_path):
     data = tmp_path / "p3-history.txt"
     data.write_bytes(b"extra nonholdout data taper\n")
     meta = tmp_path / "history.json"
