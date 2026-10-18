@@ -19,7 +19,6 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
-import random
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
@@ -34,7 +33,7 @@ MICRO_NAMES = ("ulvar", "nyxen")
 SLOTS_PER_NAME = 8
 SEED = 1337
 DRAW_COUNT = 1600
-EXPECTED_DRAW_SHA = "d496d160c5e579037061495f5cd3d64895b3d2209b2718d86d226677eadd818d"
+EXPECTED_DRAW_SHA = "9ddf29a3a2972cee0c8c2f79db97d7ef3f823065a2db6ee0840e89bb01760c13"
 SOURCE_SHA = "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a"
 MICRO_SHA = "0a30df999f8e1c0f12cf0f6e4a71e0eab814bdd99b3bd83d0e2184637ad31fda"
 TOKENIZER_SHA = "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
@@ -111,12 +110,19 @@ def _names(previous: dict[str, bytes]) -> dict[str, list[str]]:
 
 def _draws() -> list[int]:
     """Frozen full-coverage shuffled epochs, not randrange with uncovered rows."""
-    rng = random.Random(SEED)
-    draw = []
+    draw: list[int] = []
+    epoch_number = 0
     while len(draw) < DRAW_COUNT:
-        epoch = list(range(288))
-        rng.shuffle(epoch)
+        # Cryptographic hash sorts each complete epoch. This fixes every draw
+        # independently of Python's platform-specific PRNG implementation.
+        epoch = sorted(
+            range(288),
+            key=lambda i: hashlib.sha256(
+                f"p3-sb03|{SEED}|{epoch_number}|{i}".encode("ascii")
+            ).digest(),
+        )
         draw.extend(epoch[:DRAW_COUNT - len(draw)])
+        epoch_number += 1
     counters = Counter(draw)
     if (len(draw) != DRAW_COUNT or len(counters) != 288
             or min(counters.values()) < 5 or max(counters.values()) > 6
@@ -236,7 +242,7 @@ def make() -> dict[str, Any]:
         "validationNamespaces": list(VAL_NAMES),
         "microprobeExcludedNamespaces": list(MICRO_NAMES),
         "sampler": {
-            "policy": "seed1337-full-coverage-shuffled-epochs-1600-positions",
+            "policy": "sha256-permuted-full-coverage-epochs-1600-positions",
             "seed": SEED,
             "draws": DRAW_COUNT, "uniqueTrainRecords": len(set(draws)),
             "minimumRecordDraws": min(Counter(draws).values()),
