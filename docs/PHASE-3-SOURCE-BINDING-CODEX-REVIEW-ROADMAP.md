@@ -6,6 +6,8 @@
 **Predecessor:** [#181 — FAILED capability, research completed and closed](https://github.com/keepithandy/plex-nano/issues/181).  
 **This file is the Codex-facing implementation/review plan.** It is *not* a new authorization to execute model inference, train, modify frozen datasets/checkpoints, or open the final holdout.
 
+**Technical review update (October 17):** [Recorded findings, actual SB-00 measurements, tokenizer audit and SB-02–05 specifications](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md). SB-00 local evidence is now available; SB-01 bytes remain unchanged. No new model execution is authorized or claimed.
+
 ## What "green-lit" means here
 
 **GREEN — work may proceed:** read-only inspection, source-controlled analysis/scripts, deterministic microprobe *preparation*, CI-only synthetic tests, technical design/specification, provenance checks, documentation and PR review. The implementation must never change the original experiments or make claims of observed model improvement.
@@ -47,7 +49,7 @@ Older 96-case validation rows influenced loss monitoring, and original 42 develo
 - Verify there are **no writes to original report, checkpoints, tokenizer, datasets or final holdout**; no torch import, no generation or training.
 - Review synthetic fail-closed tests for altered summaries, scrambled records and inconsistent scorer fields.
 
-**Exit criterion:** diagnostic validated by CI; owner subsequently runs it once on the saved local `evaluation-result.json`; record `inputReportSha256`, full case count and observed morphology summary in #189 **without claiming the local measurement has already been performed**.
+**Exit criterion:** diagnostic validated by CI and measured on the saved local `evaluation-result.json`; record `inputReportSha256`, full case count and observed morphology. **Local measurement is now complete**, recorded in the [technical review evidence](../training/pretraining/p3-source-binding-technical-review-evidence.json). Issue #189 remains open for the experimental decisions and unresolved capability gates.
 
 **Read-only owner command (after pulling merged master):**
 
@@ -73,6 +75,8 @@ uv run --project training python training/phase3/copy-fidelity-v1/diagnose_saved
 - Freeze (not retrospectively optimize) the proposed gates: 12/12 exact copies, ≥30/36 exact edits, ≥10/12 per language, ≥9/12 full four-case contrast groups, byte-exact preservation of unrelated source.
 
 **Exit criterion:** deterministic proposal SHA and CI tests pass. The owner still reviews the proposal before **any** live model generation on its 48 cases.
+
+Actual frozen-tokenizer verification is recorded in the technical review: all 48 rows roundtrip within 512/192 bounds, with answer/EOS target-mask checks. Historical exclusion is established for the four pinned P3 inputs, not every earlier pretraining corpus.
 
 **Model-free verification:**
 

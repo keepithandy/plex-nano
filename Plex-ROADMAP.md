@@ -283,9 +283,9 @@ The October 17 fixed-endpoint run selected **both fail**: 0/72 source-name passe
 
 ### P3-SB — Source-Binding Recovery (before P3-03)
 
-**Status: evidence-reviewed, planning only; SB-01 48-case fixture is prepared and SHA-pinned, not evaluated.** [Six-gate P3-SB roadmap](docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) and [successor issue #189](https://github.com/keepithandy/plex-nano/issues/189). The first two **preparatory gates** are technically green-lit for review: **SB-00**, read-only morphology audit of the owner's existing 138 saved responses, and **SB-01**, deterministic design/freeze of tiny 48-case copy-versus-edit microprobes. Owner review of the roadmap takes precedence before further evaluation or training.
+**Status: SB-00 existing-output diagnosis measured; SB-01 fixture/tokenizer verified, not model-evaluated.** [Technical review and evidence](docs/PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md), [six-gate roadmap](docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) and [successor issue #189](https://github.com/keepithandy/plex-nano/issues/189). All 138 saved outputs omit the supplied namespace and contain training-name text; exact files remain 0/138. The 48-case fixture is unchanged and SHA-pinned. Owner review precedes further model evaluation or training.
 
-**SB-02** hypothesis comparison, **SB-03** proposed bundle/stage, **SB-04** a potential separately owner-authorized training intervention, and **SB-05** generated-file scoring are *conditional proposals only*. Keep 27M parameters, original tokenizer/context, fixed step-100 provenance and sealed final project holdout. Report exact-file and source-namespace preservation as primary capability metrics, not validation loss alone.
+**SB-02–04** have design proposals for owner review; **SB-05** has a pure scorer tested with synthetic strings. No new candidate/bundle/stage or model responses were created. All experimental execution remains separately gated. Keep 27M parameters, original tokenizer/context, fixed step-100 provenance and sealed final project holdout. Report exact-file and source-namespace preservation as primary capability metrics, not validation loss alone.
 
 ### P3-03 — Insert and Delete
 

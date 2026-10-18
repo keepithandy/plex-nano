@@ -6,6 +6,8 @@
 
 **Predecessor:** [Completed P3 copy-fidelity experiment #181](https://github.com/keepithandy/plex-nano/issues/181). **Successor:** [P3-SB recovery issue #189](https://github.com/keepithandy/plex-nano/issues/189).
 
+**October 17 technical-review update:** [SB-00 evidence and SB-01 tokenizer verification](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) are now recorded: 138/138 supplied namespaces absent, 138/138 training-name intrusions, 0/138 exact files. SB-02–04 have reviewable design proposals and SB-05 has a synthetic-only pure scorer. This adds no live evaluation or training authorization.
+
 ## 1. Decision record — what is known
 
 The owner authorized **one** bounded P3 copy-fidelity run, which finished 100/100 optimizer updates in 102.9443 seconds, covering 40,477 answer/EOS supervision positions. Independently verified **fixed step-100** checkpoint SHA-256:
@@ -53,12 +55,11 @@ Quantify per-scope, language, condition and contextual shape:
 - correct requested value **only when the original source boundaries are extractable**; weaker literal occurrence is counted separately and never represented as a successful edit;
 - exact-file outcome and unrelated-source preservation, cross-checked against the frozen scorer; source input-report SHA for independent owner review.
 
-**Exit gate:** all 138 cases accounted for, original saved summary reconciled, report SHA recorded, no modified historical input files, a prioritized list of observed failure families. The script itself produces no checkpoint, optimizer or output files, and does not import PyTorch. CI tests synthetic reports only; **real full-report results remain pending owner-local execution**.
+**Exit gate completed locally:** all 138 cases accounted for, original saved summary reconciled, report SHA recorded, no modified historical input files, failure families documented in the [technical review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md). The script itself produces no checkpoint, optimizer or output files, and does not import PyTorch. CI tests synthetic reports only. The existing report SHA is `971a78971387200df9523c6ca177006f60f2834be0664c2b590e6ec72f06a197`.
 
 From the root of the local repository:
 
 ```powershell
-git pull origin master
 uv run --project training python training/phase3/copy-fidelity-v1/diagnose_saved_outputs.py
 ```
 
@@ -74,11 +75,13 @@ Save the JSON output externally if needed, and supply the `inputReportSha256` an
 - source name retained exactly, adjacent HTML tags/CSS rules/JS declarations unchanged; complete-file whitespace and EOS included;
 - render the exact request+file prompt; no hidden source shortening, generation truncation or sliding-window eviction.
 
-Before choosing namespaces, scan **all** frozen prior train, validation, developer and diagnostic corpora for identifier/subsequence conflicts. Seed and split decisions are frozen in a manifest with full-file SHA-256 and source-to-target relation proofs; never silently fold inspected developer controls back into a clean holdout.
+The current exclusion check covers the four listed P3 files. A future claim of global training-history exclusion must enumerate and SHA-pin all historical training corpora, failing closed on missing history; the current check does not establish that broader claim. Do not read the final holdout to screen names. Seed and split decisions are frozen in a manifest with full-file SHA-256 and source-to-target relation proofs; never silently fold inspected developer controls back into a clean holdout.
 
 **Proposed pass gates (must be frozen before inference):** 12/12 untouched copies, ≥30/36 exact edits, ≥10/12 exact edits for each language, ≥9/12 complete four-case groups, 100% correct source-namespace preservation on passed files. Also publish failure counts and request-conditioned contrast sensitivity. No post-hoc scoring-rule changes.
 
 **Exit gate:** deterministic builder, manifest SHA, contamination guard and synthetic tests are implemented; owner review and any live generation authorization remain pending. Generation on the frozen probe requires a separate decision after owner review.
+
+The actual frozen-tokenizer [read-only audit](../training/phase3/copy-fidelity-v1/review_source_binding_microprobe.py) also passes: maximum 95 prompt tokens, 50 answer/EOS tokens and 145 combined tokens; all 48 roundtrip exactly.
 
 **Reproduce the 48-case SHA/structure (read-only):**
 
@@ -135,4 +138,4 @@ Before proceeding past SB-01 preparation, review whether:
 4. A single intervention, explicit authorization and untouched final holdout remain mandatory.
 5. The failure record from issue #181 is permanently visible, rather than revised to imply training success.
 
-**Technical disposition:** Green-light *read-only SB-00 and SB-01 proposal/fixture preparation only*. All later phases are **conditional proposals** and need explicit owner approval. Closing #181 is a record-keeping action after CI, not a declaration of capability success.
+**Technical disposition:** SB-00 is locally measured and SB-01 preparation verified. SB-02–04 [design specifications](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) and SB-05 pure scoring/synthetic tests are prepared for review; later experimental execution remains conditional on fresh explicit owner approval. Closing #181 is a record-keeping action after CI, not a declaration of capability success.

@@ -25,6 +25,9 @@ CANDIDATE_SHA = "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7
 CONTROL_SHA = "17834efb801ac963a4672ae616ca47e9eea40b2568f01951c3891c7e4997f01a"
 ENDPOINT_SHA = "c96800281811d710f92322bac37f31a0386994bc7f64b59fd127b4631e470230"
 BUNDLE_SHA = "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d"
+TOKENIZER_SHA = "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
+STAGE_SHA = "3524620d830d363585d501285a9cfdea09d1c2448be08239e2516d78291b3ca9"
+CONTRACT_SHA = "a7432a3bfa7942b6086bc8e64fa3b24290351acfd9fb700aac2af613a8c0911b"
 TRAIN_NAMES = ("cedar", "lunar", "prism", "amber", "zephyr", "meadow")
 VALID_NAMES = ("granite", "saffron")
 CONTROL_NAMES = ("cobalt", "spruce")
@@ -66,6 +69,8 @@ def frozen_rows(candidate_path: Path = CANDIDATE,
 
 
 def _result_check(report: dict[str, Any]) -> None:
+    if not isinstance(report, dict):
+        raise ValueError("Input report must be a JSON object")
     expected = {
         "schemaVersion": 1,
         "kind": "p3-copy-fidelity-fixed-step100-generation-v1",
@@ -75,6 +80,9 @@ def _result_check(report: dict[str, Any]) -> None:
         "bundleManifestSha256": BUNDLE_SHA,
         "candidateSha256": CANDIDATE_SHA,
         "controlManifestSha256": CONTROL_SHA,
+        "tokenizerSha256": TOKENIZER_SHA,
+        "stageCheckpointSha256": STAGE_SHA,
+        "authorizationContractSha256": CONTRACT_SHA,
         "trainingPerformed": False,
         "optimizerUpdates": 0,
         "finalHoldoutOpened": False,
@@ -84,12 +92,11 @@ def _result_check(report: dict[str, Any]) -> None:
            report[key] != value for key, value in expected.items()):
         raise ValueError("Input is not the original fixed-endpoint generation report")
     generation = report.get("generation")
-    if (not isinstance(generation, dict)
-            or generation.get("kind") != "greedy-complete-file-v1"
-            or generation.get("maxNewTokens") != 192
-            or generation.get("temperature") != 0.0
-            or generation.get("seed") != 1337
-            or generation.get("checkpointReselectionAllowed") is not False):
+    policy = {"kind": "greedy-complete-file-v1", "maxNewTokens": 192,
+              "temperature": 0.0, "seed": 1337, "checkpointReselectionAllowed": False}
+    if (not isinstance(generation, dict) or any(
+            type(generation.get(k)) is not type(v) or generation[k] != v
+            for k, v in policy.items())):
         raise ValueError("Generation policy changed from the frozen evaluation")
 
 
@@ -124,6 +131,8 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
     response_counts: Counter[tuple[str, str, str, str]] = Counter()
     illustrative: list[dict[str, Any]] = []
     all_ids = set()
+    group_results: dict[tuple[str, str], list[bool]] = defaultdict(list)
+    language_exact: Counter[tuple[str, str, str]] = Counter()
 
     for i, (row, saved_row) in enumerate(zip(expected_rows, saved)):
         scope = "validation" if i < len(val) else "development"
@@ -136,8 +145,11 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
                 or saved_row.get("condition") != row["condition"]
                 or type(saved_row.get("actual")) is not str
                 or saved_row.get("expectedFile") != row["expectedFile"]
+                or any(type(saved_row.get(k)) is not bool for k in
+                       ("stoppedAtEos", "decodeSucceeded", "fullPromptVisible"))
                 or type(saved_row.get("generatedTokenCount")) is not int
-                or not 0 <= saved_row["generatedTokenCount"] <= 192):
+                or not 0 <= saved_row["generatedTokenCount"] <= 192
+                or (saved_row["stoppedAtEos"] and saved_row["generatedTokenCount"] == 192)):
             raise ValueError("Saved per-record response changed, reordered or malformed")
         all_ids.add(expected_id)
         actual = saved_row["actual"]
@@ -145,6 +157,10 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
                        ("stoppedAtEos", "decodeSucceeded", "fullPromptVisible"))
         boundaries, value_correct = _boundary_score(row, actual)
         exact = complete and actual == row["expectedFile"]
+        language_exact[(scope, row["language"], condition)] += exact
+        if scope == "validation" or condition == "edit":
+            group_id = row["groupId"] if scope == "validation" else row["contrastGroupId"]
+            group_results[(scope, group_id)].append(exact)
         preserved = complete and boundaries
         extracted = boundaries if complete and condition == "edit" else (
             None if complete and condition == "copy" else False)
@@ -207,19 +223,56 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
                 "requestedValueCorrectWhenExtractable": requested,
             })
 
-    # Fail closed on discrepancies between full raw records and top-level scores.
+    # Reconstruct EVERY original aggregate, including gates, from raw responses.
+    # Do not trust a saved pass flag merely because its per-case counts agree.
+    gates_by_scope = {}
     for scope, source in (("validation", report.get("validation")),
                           ("development", report.get("development"))):
         if not isinstance(source, dict):
             raise ValueError("Saved aggregate scores are missing")
         c = by_scope[scope]
-        if (source.get("cases") != c["cases"]
-                or source.get("copies", {}).get("exact") != by_condition[f"{scope}.copy"]["exact"]
-                or source.get("edits", {}).get("exact") != by_condition[f"{scope}.edit"]["exact"]
-                or source.get("preservedSourceCount") != c["preserved"]
-                or source.get("eosCount") != c["eos"]
-                or source.get("fullPromptVisibleCount") != c["fullPromptVisible"]):
+        copies = by_condition[f"{scope}.copy"]
+        edits = by_condition[f"{scope}.edit"]
+        is_val = scope == "validation"
+        groups = [g for (s, _), g in group_results.items() if s == scope]
+        if (len(groups) != (24 if is_val else 12)
+                or any(len(g) != (4 if is_val else 3) for g in groups)):
+            raise ValueError("Frozen contrast group composition changed")
+        correct_groups = sum(all(g) for g in groups)
+        # Language totals and copy/edit counts come from the frozen task rows.
+        per_language = {
+            lang: {kind: {
+                "exact": language_exact[(scope, lang, "copy" if kind == "copies" else "edit")],
+                "total": (8 if is_val else 2) if kind == "copies" else (24 if is_val else 12),
+            } for kind in ("copies", "edits")}
+            for lang in LANGUAGES
+        }
+        gates = ({
+            "copy24of24": copies["exact"] == 24,
+            "editsAtLeast60of72": edits["exact"] >= 60,
+            "perLanguageAtLeast20of24Edits": all(
+                per_language[lang]["edits"]["exact"] >= 20 for lang in LANGUAGES),
+            "groupsAtLeast18of24": correct_groups >= 18,
+        } if is_val else {
+            "copy6of6": copies["exact"] == 6,
+            "editsAtLeast30of36": edits["exact"] >= 30,
+        })
+        derived = {
+            "cases": c["cases"], "copies": {"exact": copies["exact"], "total": copies["cases"]},
+            "edits": {"exact": edits["exact"], "total": edits["cases"]},
+            "perLanguage": per_language, "preservedSourceCount": c["preserved"],
+            "eosCount": c["eos"], "fullPromptVisibleCount": c["fullPromptVisible"],
+            "gates": gates,
+            "fullyCorrectContrastGroups" if is_val else "fullyCorrectEditContrastGroups": correct_groups,
+            "contrastGroups" if is_val else "editContrastGroups": len(groups),
+        }
+        gates_by_scope[scope] = all(gates.values())
+        # JSON equality distinguishes bool/int/float (Python dict equality does not).
+        if json.dumps(source, sort_keys=True) != json.dumps(derived, sort_keys=True):
             raise ValueError("Saved summary disagrees with original raw file outputs")
+        key = "allValidationGatesPassed" if is_val else "allDevelopmentGatesPassed"
+        if report.get(key) is not gates_by_scope[scope]:
+            raise ValueError("Saved summary disagrees with derived capability gates")
     duplicates = {
         "reusedOutputRecords": sum(n for n in response_counts.values() if n > 1),
         "reusedOutputGroups": sum(1 for n in response_counts.values() if n > 1),
@@ -230,8 +283,7 @@ def analyze(report: dict[str, Any], val: list[dict], dev: list[dict]) -> dict[st
         "sourceCheckpointSha256": ENDPOINT_SHA,
         "totalCases": 138,
         "allOriginalGeneratedFileGatesPassed": (
-            report.get("allValidationGatesPassed") is True
-            and report.get("allDevelopmentGatesPassed") is True
+            gates_by_scope["validation"] and gates_by_scope["development"]
         ),
         "trainNamespaceIntrusionIsHeuristic": True,
         "sourceNamespacePresentIsNotExactPreservation": True,
