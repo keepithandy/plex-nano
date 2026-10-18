@@ -141,7 +141,7 @@ def test_duplicate_paths_and_nontext_are_refused(tmp_path: Path):
         AUDIT._inventory(manifest)
 
 
-def test_final_holdout_and_symlinks_are_refused(tmp_path: Path):
+def test_sealed_benchmark_and_symlinks_are_refused(tmp_path: Path):
     d = tmp_path / "final-holdout"
     d.mkdir()
     source = d / "test.txt"
