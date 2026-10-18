@@ -94,18 +94,18 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 - Rank these **only after SB-00 real morphology data**. Do not infer mechanism from six illustrative samples or loss alone.
 - Document any proposed source-span/patch alternative as an **independent contract and separate score**, never a retroactive pass on the full-file task.
 
-**Exit criterion:** owner reviews and selects one hypothesis; **no training automatically follows**.
+**Exit criterion:** owner approved **hypothesis A (diverse training namespaces) for preparation**. Full [SB-03 matched dataset and tokenizer/history gates](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md); **no training automatically follows**.
 
 ### SB-03 · Candidate dataset and stage design
 
-**Review status: GREEN for a no-execution contract/checklist review; GATED for actual bundle, checkpoint staging or data transformation beyond already frozen SB-01 proposal.**
+**Review status: GREEN for deterministic candidate proposal and code review; code-frozen 288/96 matched intervention exists, with 48 training names and a full-coverage sampler. GATED for actual new bundle, checkpoint staging, optimizer work, or model generation.**
 
 **Codex tasks:**
 - Define a hypothetical reproducible candidate with manifest SHA, token-budget audit, train/validation/development namespace and full-file overlap checks, answer/EOS target masks and deterministic sampler specification.
 - Require original model/tokenizer/config hashes, fresh artifact destination, no overwrites, no new final holdout accesses.
 - Make clear that staging and data preparation never authorize optimizer steps; include precise owner-review boundaries.
 
-**Exit criterion:** reviewable reproducibility specification; no stage/bundle created without separate approval.
+**Exit criterion:** reproducibility specification and SHA-pinned model-free candidate proposal are available. **Local frozen-tokenizer parity and full training-history inventory remain pending**; no stage/bundle created and neither future matched run is authorized. [Read-only checks and blocker details](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
 
 ### SB-04 · One bounded training experiment (conditional)
 

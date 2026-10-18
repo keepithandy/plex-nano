@@ -4,6 +4,10 @@
 
 **Disposition:** SB-00 measured from the existing local report; SB-01 fixture/tokenizer verified; SB-02–04 specifications proposed for independent owner review; SB-05 pure scorer implemented and tested with synthetic strings. No new model responses, checkpoint load, stage, bundle or optimizer updates. No final project holdout access. The predecessor remains a failed **0/138** exact-file experiment.
 
+## Owner decision / follow-on preparation
+
+The owner approved **hypothesis A: deterministic train-namespace diversity** for the next preparatory step after this independent SB-00/SB-01 technical review. The [follow-on SB-03 candidate](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md) has now been drafted with **48 new source names, unchanged 96-row validation, SHA-pinned original comparator, 1,600 index-equivalent training draws and full 288-record coverage**. It is **not token-count parity certified** or globally training-history screened. The technical-review hypothesis discussion below is preserved as the decision's original historical basis. Neither fresh live model generation nor training has been authorized.
+
 ## Review findings, by severity
 
 | Severity | Finding | Resolution / remaining gate |
