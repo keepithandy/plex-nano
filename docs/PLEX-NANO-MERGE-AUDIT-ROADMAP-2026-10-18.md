@@ -1,6 +1,6 @@
 # Plex Nano · Audit & recovery roadmap
 
-> **Current focus: R2 — review the verified training-source inventory, then screen it.**<br>
+> **Current focus: R2 — screen the reviewed training-source inventory.**<br>
 > R1 is complete: the audit repairs are published and both remote checks passed.<br>
 > The model's recorded copy/edit capability remains **0/138 exact files**.
 
@@ -37,7 +37,7 @@
 | V1 dataset proposal | 🔴 **240/384 token-count mismatches** | Preserve V1 as the failed preparation record. |
 | V2 tokenizer feasibility | ✅ **48/48 names; 384/384 signatures matched** | Token lengths can be matched against the five screened P3 corpora. |
 | Saved V2 proposal | ✅ **Owner-reported file and SHA verified** in [PR #195](https://github.com/keepithandy/plex-nano/pull/195) | It remains an unapproved proposal requiring independent review. |
-| Historical-source screening | 🟡 **Recorded ancestry traced; independent coverage review and screening pending** | Ten SHA-verified training texts identified, including two private Phase 3 bundles. |
+| Historical-source screening | 🟡 **Recorded input coverage reviewed; collision screening pending** | Ten SHA-verified texts cover the documented inputs; no known missing training text. |
 | New training or model evaluation | 🔒 **Not authorized** | Preparation and passing tests do not grant execution permission. |
 
 ### The route through the work
@@ -62,7 +62,7 @@
 | [**R5 / Q5 — Run and measure the comparison**](#r5) | Carry out the authorized runs and test generated files for exact copying, requested edits and preservation of unrelated code. | Did coding behavior improve enough to meet the declared gates? |
 | [**R6 / Q6 — Confirm on fresh supplied code**](#r6) | Test replacement edits on a new independent set, then review whether to attempt harder edits such as adding or removing requested code. | Does the improvement transfer beyond the small controlled probe? |
 
-**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's recorded inventory is now available; independent coverage review and screening remain the prerequisite for finalizing that experiment.
+**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's recorded inventory and coverage review are now available; screening and interpretation remain the prerequisite for finalizing that experiment.
 
 ---
 
@@ -96,7 +96,7 @@
 
 ### 🟡 R2 · Establish historical training-source coverage
 
-**Status:** ancestry tracing completed on October 18. The recorded chain and ten training-text hashes are verified; independent coverage review and collision screening remain pending.
+**Status:** ancestry tracing and recorded-input coverage review completed on October 18. All ten training texts and their complete token ranges are accounted for; collision screening remains pending. This was a second review pass by the same assistant, not external independent certification.
 
 **Why it matters:** a name can be absent from the five P3 datasets while appearing in older training text. We need evidence before describing the proposed names as unseen across the model's ancestry.
 
@@ -109,7 +109,7 @@
 **Work left**
 
 - [x] Trace the fixed checkpoint's actual ancestor training corpora, including older Phase 2 and private sources. Identify exact training-text paths and hashes from provenance records; do not infer ancestry from nearby folders. **Evidence:** [ancestry trace and exact paths](PHASE-3-R2-TRAINING-ANCESTRY-TRACE-2026-10-18.md), [ten-file inventory](../training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json), [verification receipt](../training/pretraining/p3-sb03-v2-training-ancestry-trace.json). The chain starts at fresh random initialization, then P2-29; the P2-28 trained pilot is a sibling, and older pre-reset weights are outside this ancestry.
-- [ ] Review the inventory for completeness and identify unavailable or ambiguous sources. Keep the final project holdout outside it.
+- [x] Review the inventory for completeness and identify unavailable or ambiguous sources. Keep the final project holdout outside it. **Evidence:** [coverage review and remaining limits](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md), [review receipt](../training/pretraining/p3-sb03-v2-training-inventory-coverage-review.json). No known missing training text or unresolved recorded source identity; all 4,163 rows match the full packed streams. Inventory unchanged; global novelty remains unproven.
 - [ ] Run the checker against the explicit inventory and record proposed train-name collisions, per-file hashes and coverage limits. The five P3 checks remain a partial exclusion claim.
 - [ ] Review the frozen evaluation namespaces' exclusion claims against the relevant training history as well; do not assume a train-name collision check covers them automatically.
 - [ ] If names collide, preserve the existing proposal and create a separately reviewed revision, or explicitly narrow the research claim. Do not relabel partly screened names globally unseen.
@@ -217,7 +217,7 @@ Use this space to capture changes as we dissect the plan. These are discussion p
 | Reference | Topic | Notes / proposed change |
 |---|---|---|
 | Q1 / R1 | Any remaining reporting concerns? | — |
-| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | Recorded ancestry and ten-file inventory verified; independent coverage review and screening remain pending. |
+| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | Recorded ancestry and ten-file coverage reviewed; collision screening and interpretation remain pending. |
 | **Q3 / R3** | **Fair comparison and falsifiable outcome** | **Next discussion: does a wider range of training names improve source-name preservation?** |
 | Q4 / R4 | Exact scope and separate execution decisions | — |
 | Q5 / R5 | Recovery, limited movement, inconclusive result or failure | — |

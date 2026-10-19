@@ -1,0 +1,735 @@
+{
+  "schemaVersion": 1,
+  "kind": "p3-sb03-v2-training-inventory-coverage-review-v1",
+  "reviewDate": "2026-10-18",
+  "reviewType": "second-pass-documentary-and-byte-coverage-review-by-same-assistant",
+  "priorTrace": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-training-ancestry-trace.json",
+    "sha256": "afdeaa8605a0d9e081c1f4ce381f6c9186c4b75e8bdf471f49df5cd4b91b5e8b",
+    "bytes": 49139
+  },
+  "inventory": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-training-text-inventory.json",
+    "sha256": "111784c169f9d180b8ec5329de7acda9f0259214847136a7fab3684ce24b58d1",
+    "bytes": 2892
+  },
+  "inventoryChanged": false,
+  "fixedCheckpoint": {
+    "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-first-run\\checkpoints\\step-0100.pt",
+    "sha256": "c96800281811d710f92322bac37f31a0386994bc7f64b59fd127b4631e470230",
+    "bytes": 330899227
+  },
+  "initialization": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\initializations\\p2-28-web-v1-step0\\initialization.pt",
+    "sha256": "06c27a452e2a62ed069729d2080b1d2fddb84d41bd336bbda489c066c23f8a86",
+    "bytes": 110303100
+  },
+  "stages": [
+    {
+      "stage": "P2-29",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\pilot\\p2-29-web-v1-500step\\pilot-checkpoint.pt",
+        "sha256": "3b8303f8a6f56527329774b51278b93588b8383205e85bb2f594a58349acca8e",
+        "bytes": 330898523
+      },
+      "parentCheckpointSha256": "06c27a452e2a62ed069729d2080b1d2fddb84d41bd336bbda489c066c23f8a86",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\datasets\\p2-26-web-batch-2-v2\\train.jsonl",
+        "sha256": "8d621a488f3554a976ea4ee0e9581fae2c07aff58ad7912b2f69f2cc0233aaa6",
+        "bytes": 6256500
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\tokenizer-reviews\\p2-27-web-v1\\candidates\\vocab-16384\\train.tokens.u16le",
+        "sha256": "a8ce0d446eb2edc7fbf1d93718a0696f24ef9d869300d64ec7b8aa87bb80278d",
+        "bytes": 2857374
+      },
+      "auxiliaryFiles": [],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\tokenizer-reviews\\p2-27-web-v1\\candidates\\vocab-16384\\manifest.json",
+        "sha256": "fb650f91bbc7f53e788a7f7c22af4950b079423229c1ef85bdd865025e56e880",
+        "bytes": 1211
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p2-29-result.json",
+        "sha256": "763a8dcbbf8360540cdcc71f0c027c72cc7d01feeff18f8d1f39807899e85473",
+        "bytes": 2922
+      },
+      "reportedSamplingAudit": null,
+      "coverage": {
+        "stage": "P2-29",
+        "trainingRows": 3071,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\tokenizer-reviews\\p2-27-web-v1\\candidates\\vocab-16384\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\tokenizer-reviews\\p2-27-web-v1\\candidates\\vocab-16384\\train.index.json",
+        "trainingIndexSha256": "ff7c316e294d8d8c36b3b27808cab31315956ce667d54bb5aac16690e9b88cfa",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\tokenizer-reviews\\p2-27-web-v1\\candidates\\vocab-16384\\source-dataset-manifest.json",
+          "sha256": "2f02f199d101050c9939df6d389851e46bbd858157cb68d7cb8cc75863178a91",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-30",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "28064a22f322d6b9cde04c2424f3c257de8c0803245c1db83072ab29c67f6d6e",
+        "bytes": 330902171
+      },
+      "parentCheckpointSha256": "3b8303f8a6f56527329774b51278b93588b8383205e85bb2f594a58349acca8e",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.jsonl",
+        "sha256": "05fb9b35277b979ef45473af5b2a2c98bef31ee2c1c3133f0af0c68d7cfba554",
+        "bytes": 128630
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.tokens.u16le",
+        "sha256": "27d6682349c4917aba43c6e9eadd95f468b692eb718ea330582302b9e2bacf58",
+        "bytes": 35766
+      },
+      "auxiliaryFiles": [],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\manifest.json",
+        "sha256": "7753b1518b737e7f6b8e0b64f4f829b027ed3aad5b33a7613b3715481448eec5",
+        "bytes": 1553
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-first-run\\run-result.json",
+        "sha256": "03888eec7517f7fef35e23c557a73332cac2098499c858001d4b92724e6295fe",
+        "bytes": 2734
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 18,
+        "minimumRecordSelections": 3,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 181849,
+        "recordsSelected": 156
+      },
+      "coverage": {
+        "stage": "P2-30",
+        "trainingRows": 156,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.index.json",
+        "trainingIndexSha256": "6f19b1d34b452efc0027a882b7702dff23c568506eba65aa949f877ed03a71ca",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\source-dataset-manifest.json",
+          "sha256": "bc3725297473733c69fa6c87546f22dc843eacb0879a486f3e307dc391c760ea",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-32",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "707e46f9e3e87cdd9beec705e2bd55701b37a40e79aad7ab93858fa63f8ebcf4",
+        "bytes": 330900187
+      },
+      "parentCheckpointSha256": "28064a22f322d6b9cde04c2424f3c257de8c0803245c1db83072ab29c67f6d6e",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.jsonl",
+        "sha256": "239eaf48f6ad5701e0abe7fcb1e98a2ea379a7377d7e8c523f267e5b9dbd4e71",
+        "bytes": 96858
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.tokens.u16le",
+        "sha256": "2048a0a623efaa5471b33077066524c679f5ce591ad0c0d4a0b6917e2bc47935",
+        "bytes": 54502
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.index.json",
+          "sha256": "d60e6ab00cb2d5f750ee14d75565c0791d7a5bbe2e05b5e6163d86cf88f00813",
+          "bytes": 7363
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\manifest.json",
+        "sha256": "a0d3663bf3ba9a9653ceb52e35594bf3271e4e56cc483dd66f9d149ca38bc6fd",
+        "bytes": 1408
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-first-run\\run-result.json",
+        "sha256": "c82a363ae63884db1514a19fb1ec5dbcfec14c76a34bba48756b66bd1012fde8",
+        "bytes": 2652
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 33,
+        "minimumRecordSelections": 12,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 605231,
+        "recordsSelected": 72
+      },
+      "coverage": {
+        "stage": "P2-32",
+        "trainingRows": 72,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.index.json",
+        "trainingIndexSha256": "d60e6ab00cb2d5f750ee14d75565c0791d7a5bbe2e05b5e6163d86cf88f00813",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\source-dataset-manifest.json",
+          "sha256": "5cf975e759e96ba83b21b4fda3c157dbc4309c9a44d7c5c9b319fcdd07e839a4",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-35",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "1fafce16260ab8910465517c7f571b34dccf7f21ec1ad9d281dad53ab87fbcd0",
+        "bytes": 330900251
+      },
+      "parentCheckpointSha256": "707e46f9e3e87cdd9beec705e2bd55701b37a40e79aad7ab93858fa63f8ebcf4",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.jsonl",
+        "sha256": "b921dd54657e77619835c5d9bce7a92c12c3a8f388d8ebe8ab8f6a9550ad69f3",
+        "bytes": 75717
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.tokens.u16le",
+        "sha256": "1780c059901706a1568e37729c8fd9697c135a3dfa3a798fb6d2affb3715cec9",
+        "bytes": 40854
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.index.json",
+          "sha256": "e10af50b9b2f9dd3f4d67a3a772122be15d82c472db3f2e87469ba9904a79f44",
+          "bytes": 9444
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\manifest.json",
+        "sha256": "17f02f7f0b786be770f964b445854684fee0a010793672149e7fcc6c611aae5d",
+        "bytes": 1409
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-first-run\\run-result.json",
+        "sha256": "2eb75ee65eb59168e53f636f610199e6ebfb674b376efea6053a5cfd39a0f7c2",
+        "bytes": 2660
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 24,
+        "minimumRecordSelections": 5,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 299958,
+        "recordsSelected": 108
+      },
+      "coverage": {
+        "stage": "P2-35",
+        "trainingRows": 108,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.index.json",
+        "trainingIndexSha256": "e10af50b9b2f9dd3f4d67a3a772122be15d82c472db3f2e87469ba9904a79f44",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\source-dataset-manifest.json",
+          "sha256": "bed8fc6be64fb94685fccc92323482501f48a2a16d2262180d9e20223a611605",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-38",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "9117e34433d6faa404117f557a48d12e840355ed5c7580d5b60f8e565564dbf6",
+        "bytes": 330900187
+      },
+      "parentCheckpointSha256": "1fafce16260ab8910465517c7f571b34dccf7f21ec1ad9d281dad53ab87fbcd0",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.jsonl",
+        "sha256": "ecff52a775a2f876b2a243b3254c37ac05bd75c72b372d2ecaddc06ae82b6ecf",
+        "bytes": 87003
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.tokens.u16le",
+        "sha256": "8a27ad57643e08e4471b22bdd1bab623455cfe11fe3066f75dfae9d6f1cc9894",
+        "bytes": 49586
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.index.json",
+          "sha256": "a75377175f1bbc4f88fc8f0796f77df82ab2d40265131f29777249ad404b4a86",
+          "bytes": 6519
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\manifest.json",
+        "sha256": "9a69a848cdf26f427a83d30590e40e447075c6a2397629084c824f20d6b81158",
+        "bytes": 1409
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-first-run\\run-result.json",
+        "sha256": "13739afbf1e13a0165107130c7f7c1f581a1293a817f1c4461f62c98cc579ec3",
+        "bytes": 2655
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 33,
+        "minimumRecordSelections": 12,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 548680,
+        "recordsSelected": 72
+      },
+      "coverage": {
+        "stage": "P2-38",
+        "trainingRows": 72,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.index.json",
+        "trainingIndexSha256": "a75377175f1bbc4f88fc8f0796f77df82ab2d40265131f29777249ad404b4a86",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\source-dataset-manifest.json",
+          "sha256": "3989e362032787d1a15951bda741e71a016cc2884e4a7cc5057129a66b6c891d",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-41",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "adec7fa31e40a52caa89aa7bb7150983ce7c4f1c5df899285cec3e3f24bf79cc",
+        "bytes": 330900251
+      },
+      "parentCheckpointSha256": "9117e34433d6faa404117f557a48d12e840355ed5c7580d5b60f8e565564dbf6",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.jsonl",
+        "sha256": "458de009e4ef227361e2813c7380bfa2d42739f36335ed333ea3b6a250800db3",
+        "bytes": 90318
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.tokens.u16le",
+        "sha256": "6026967d77319d9f4aaea205a87204f51c73f624a1603bb7f0991f24732a961e",
+        "bytes": 51198
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.index.json",
+          "sha256": "0ab27caccc5ba11d9d321660197794cff8d2c074fdb843f0149204234a328104",
+          "bytes": 6521
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\manifest.json",
+        "sha256": "a05e09493778ca772d583a17e01fbd3a5efa84c3897f7865f89ab9679518b22a",
+        "bytes": 1409
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-first-run\\run-result.json",
+        "sha256": "a82aff6567020a89ce0d675fb8d9b23a1c8b945d2bbca553752bc5dd21b0406a",
+        "bytes": 2617
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 33,
+        "minimumRecordSelections": 12,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 567311,
+        "recordsSelected": 72
+      },
+      "coverage": {
+        "stage": "P2-41",
+        "trainingRows": 72,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.index.json",
+        "trainingIndexSha256": "0ab27caccc5ba11d9d321660197794cff8d2c074fdb843f0149204234a328104",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\source-dataset-manifest.json",
+          "sha256": "1fc627fac77df7177d02910e9d7da93009557ed4622b360e88c4aa206b968056",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-44",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "69c357db13aae930374f013754a4b89c9bc071bd299c34cfa1c1ab362db0842e",
+        "bytes": 330900379
+      },
+      "parentCheckpointSha256": "adec7fa31e40a52caa89aa7bb7150983ce7c4f1c5df899285cec3e3f24bf79cc",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.jsonl",
+        "sha256": "0141dbd0209d10e2138a0a90ff688e97b4b1de39f91c28ca367ed7267b309789",
+        "bytes": 135646
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.tokens.u16le",
+        "sha256": "cf73a877ae67ad60abf51566417fe76a0df2672df476f6bb0929d4442888d6e3",
+        "bytes": 76560
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.index.json",
+          "sha256": "5364aef18ff9ce5c702989953bf19268c7f4a8af079e84fc2f90672e8a63fc09",
+          "bytes": 9797
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\manifest.json",
+        "sha256": "46d6e4501d56c45196e604fb78dafaaada49e6c386badaae07ffbd4d6794f5d6",
+        "bytes": 1719
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-first-run\\run-result.json",
+        "sha256": "dff61e5d214b0632e9b210a84735813503d9551c4d7f8c2d515a9de0d367a67c",
+        "bytes": 2622
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 24,
+        "minimumRecordSelections": 5,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 565641,
+        "recordsSelected": 108
+      },
+      "coverage": {
+        "stage": "P2-44",
+        "trainingRows": 108,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.index.json",
+        "trainingIndexSha256": "5364aef18ff9ce5c702989953bf19268c7f4a8af079e84fc2f90672e8a63fc09",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\source-dataset-manifest.json",
+          "sha256": "18d827d2e6bef3aaee41afacee163f16367dc6fc5198334f321c88f7623515b8",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P2-48",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+        "bytes": 330900379
+      },
+      "parentCheckpointSha256": "69c357db13aae930374f013754a4b89c9bc071bd299c34cfa1c1ab362db0842e",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.jsonl",
+        "sha256": "39879c1199e975096ba962fcad023b3b112c2c8b6444c0a3a9f35971a945d530",
+        "bytes": 73594
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.tokens.u16le",
+        "sha256": "2aa8cb0d7970ae8ac329f71fd5d2df00df2345181ae9e8e79534f44409b46785",
+        "bytes": 38754
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.index.json",
+          "sha256": "5d94bf9c3f0a0867cf945abd965f763c800444cba7162d6cbc522d5de049235f",
+          "bytes": 6512
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\manifest.json",
+        "sha256": "71fec0882692f5eb1b47b72f4a9f539e53e77882d003649beacd5f341b5a4ea7",
+        "bytes": 1646
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-first-run\\run-result.json",
+        "sha256": "4ab6dd6b5645865da68970a9ce910d722b9f084e840cfde1ac3347fe6a85b516",
+        "bytes": 2615
+      },
+      "reportedSamplingAudit": {
+        "examples": 1600,
+        "maximumRecordSelections": 33,
+        "minimumRecordSelections": 12,
+        "paddingTargetPositions": 0,
+        "realTargetPositions": 429375,
+        "recordsSelected": 72
+      },
+      "coverage": {
+        "stage": "P2-48",
+        "trainingRows": 72,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.index.json",
+        "trainingIndexSha256": "5d94bf9c3f0a0867cf945abd965f763c800444cba7162d6cbc522d5de049235f",
+        "copiedSourceManifest": {
+          "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\source-dataset-manifest.json",
+          "sha256": "6cab42b964f4d11680c4109cf4787f9074ba62a9cbff23f92b301d497f77771c",
+          "verified": true
+        }
+      }
+    },
+    {
+      "stage": "P3-02",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-02-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+        "bytes": 330899611
+      },
+      "parentCheckpointSha256": "fd86d11375e547f05b2fab7a36188ca30a7ecd0b0f38198de62bcddbfba489b7",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.jsonl",
+        "sha256": "45d42817582f6b909d08695dfc93336414762b198cae7a4e4d760c09bf7249de",
+        "bytes": 68592
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.tokens.u16le",
+        "sha256": "050a978831d60f88ccbb8508c989ce58f18f4025c554b9214e28014505c84f23",
+        "bytes": 33288
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.weights.u8",
+          "sha256": "6d90a490b1dc875e824392c705183b05e37b01fbbaf14e5f4bde7bc2c96ad9a4",
+          "bytes": 16500
+        },
+        {
+          "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.index.json",
+          "sha256": "cac689218b703ce88bea00a71141286df962152856257dcb4d1bbb40211e7b5d",
+          "bytes": 30220
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\manifest.json",
+        "sha256": "0cd6df3a6d8eec1d7da8c7a02af067b15299393d8b0e1756a071be17b9aca354",
+        "bytes": 2302
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-02-first-run\\result.json",
+        "sha256": "07fb932964e6533a18f60a1aa2e6d167c57fb6aa481bba4551adbea01fcbda75",
+        "bytes": 2129
+      },
+      "reportedSamplingAudit": null,
+      "coverage": {
+        "stage": "P3-02",
+        "trainingRows": 144,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.index.json",
+        "trainingIndexSha256": "cac689218b703ce88bea00a71141286df962152856257dcb4d1bbb40211e7b5d",
+        "copiedSourceManifest": null
+      }
+    },
+    {
+      "stage": "P3-copy-fidelity-v1",
+      "checkpoint": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-first-run\\checkpoints\\step-0100.pt",
+        "sha256": "c96800281811d710f92322bac37f31a0386994bc7f64b59fd127b4631e470230",
+        "bytes": 330899227
+      },
+      "parentCheckpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+      "parentVerified": true,
+      "trainingText": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.jsonl",
+        "sha256": "682e12d1516243d94ef7601d13f7bf788472ad81db9c3f75a9e85cdeaafbfdaf",
+        "bytes": 121428
+      },
+      "trainingTokens": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.tokens.u16le",
+        "sha256": "780029e643a5a81b938629e6192e11121bd74d2cbcd6437b7eb388549a563972",
+        "bytes": 53704
+      },
+      "auxiliaryFiles": [
+        {
+          "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.weights.u8",
+          "sha256": "ee69e40fdfab76511236b6e43387285dd7939e1dae524bda96194c0d8c44768c",
+          "bytes": 26564
+        },
+        {
+          "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.index.json",
+          "sha256": "5b0a8333b29040fe6b4d6d2930f32c82510c6be4a988fe878a432d7d24575579",
+          "bytes": 63372
+        }
+      ],
+      "bundleManifest": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\manifest.json",
+        "sha256": "8eceed468fdcb7202484eba82c8ebb8159a0d9e05787538f2c81f06f62719e2d",
+        "bytes": 2167
+      },
+      "runReceipt": {
+        "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-first-run\\result.json",
+        "sha256": "15fcc1829f4575425833b7e2f95b39e30871b2b02c03afd0efa86e62c8d6a796",
+        "bytes": 2369
+      },
+      "reportedSamplingAudit": null,
+      "coverage": {
+        "stage": "P3-copy-fidelity-v1",
+        "trainingRows": 288,
+        "completeTokenCoverage": true,
+        "decodedTextMatchesAllRows": true,
+        "tokenizerPath": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\tokenizer.json",
+        "tokenizerSha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697",
+        "trainingIndexPath": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.index.json",
+        "trainingIndexSha256": "5b0a8333b29040fe6b4d6d2930f32c82510c6be4a988fe878a432d7d24575579",
+        "copiedSourceManifest": null
+      }
+    }
+  ],
+  "loaderEvidence": [
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\pilot.py",
+      "sha256": "55063e2cd5f17c1651e591f84256bf3ae5fcae725f22b7a30d1674230ec0f329",
+      "bytes": 22263
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\task_training.py",
+      "sha256": "e3584a6edb6fb89632c70e36a2697136b2b4add6d041f90f2f7a73729e976f08",
+      "bytes": 30767
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\structured_plan_training.py",
+      "sha256": "53e9b9541fd3f865dd8761677bb58223255f7063bcdc767f66d09d3f38a4b8dc",
+      "bytes": 56671
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\structured_plan_serialization_training.py",
+      "sha256": "ede68495e20d660a3824178e2e6b0b479e5d4d5a6a4af5bfd7a426480e8f6666",
+      "bytes": 57207
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\structured_plan_semantic_binding_training.py",
+      "sha256": "156bf4fce8a2326cf0387f1c8b6a1dd519096fc3c3c4de67fac5813dabb10cc4",
+      "bytes": 57583
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\structured_plan_request_binding_training.py",
+      "sha256": "6a349d9cc90c976aad967cc18cdbc675292b99c1f39f912cd00c675d6e86eb97",
+      "bytes": 51096
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\structured_plan_evidence_composition_run.py",
+      "sha256": "eff17b2227eac7a69d59a09b203ea593b418ffccbef46bcd7d5401a5b34897e5",
+      "bytes": 23361
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\request_grounded_coding_run.py",
+      "sha256": "0b6424422ffc27bc136d2a19920e048ff687117632a62ef6bffd91fd9fe5075a",
+      "bytes": 23709
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\file_edit_replacements_run.py",
+      "sha256": "a86fef60afe085478c93d9091b56b9d1fdec12381a2ff6e16e6eed3ed516c97e",
+      "bytes": 26270
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\first_run.py",
+      "sha256": "a00fdbfffb532bd52403325ef09a11ed50bc5ea1c5922b7e743b89d5b3950751",
+      "bytes": 24406
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\pack_bundle.py",
+      "sha256": "6279d227bb294e1fd20874f4f1399ff0978d36ba70ecddd4f9c1d29bc7c273c5",
+      "bytes": 12449
+    }
+  ],
+  "summary": {
+    "trainingSourcesReviewed": 10,
+    "trainingRowsReviewed": 4163,
+    "checkpointFilesRehashed": 11,
+    "tokenizerFilesVerified": 10,
+    "completeTextTokenCoverageStages": 10,
+    "copiedSourceManifestsVerified": 8,
+    "runReceiptsVerified": 10,
+    "knownMissingTrainingTextSources": [],
+    "unresolvedRecordedSourceIdentityAmbiguities": [],
+    "recordedInputCoverageComplete": true,
+    "completenessReviewPerformed": true,
+    "externalIndependentReviewPerformed": false,
+    "historicalTrainingLineageComplete": false,
+    "readyForCollisionScreen": true,
+    "collisionScreenPerformed": false,
+    "readyForTraining": false
+  },
+  "resolvedAmbiguities": [
+    {
+      "id": "p241-pre-run-flag",
+      "resolution": "Actual local completed run-result.json exists; endpoint SHA and bundle identity match. No missing P2-41 text."
+    },
+    {
+      "id": "p248-p247-naming",
+      "resolution": "P2-48 trains the P2-47-authored curriculum; source manifest, candidate identity and actual train text agree. It is one corpus."
+    },
+    {
+      "id": "tokenizer-bundle-links",
+      "resolution": "All ten actual tokenizer.json files share the frozen tokenizer SHA; repack source-bundle pointers are not additional weight ancestry or evidence of extra training."
+    },
+    {
+      "id": "private-bundles",
+      "resolution": "Both owner-local Phase 3 text/token pairs are available and fully represented in inventory; P2-30 source metadata separately identifies owner-approved Codex-authored material."
+    },
+    {
+      "id": "pre-reset-and-pilot",
+      "resolution": "Fresh step-zero P2-29 replay excludes older weights and the P2-28 trained sibling."
+    },
+    {
+      "id": "formatted-input",
+      "resolution": "Decoded packed token text equals every JSONL text field and covers every token range; rendered prompts and answers are included."
+    }
+  ],
+  "limits": [
+    {
+      "id": "sample-exposure",
+      "detail": "This inventory covers the full eligible train splits. P2-29 random-window sampling does not prove every byte was seen. Seven later Phase 2 run receipts report all train records selected; P3 exact draw exposure is not newly reconstructed in this review."
+    },
+    {
+      "id": "local-reproducibility",
+      "detail": "Repository training artifacts are ignored by Git and two Phase 3 bundles are outside the checkout. Remote readers need those exact preserved bytes; availability was verified only on this machine."
+    },
+    {
+      "id": "recorded-history-scope",
+      "detail": "Coverage is complete for the recorded checkpoint chain and its frozen inputs. This is not external independent certification or proof against undocumented changes; historicalTrainingLineageComplete remains false."
+    },
+    {
+      "id": "upstream-rebuild-scope",
+      "detail": "Eight copied source manifests are verified. Original raw clones and full candidate files are not required to screen the exact consumed text; their current availability and rebuild reproducibility were not audited."
+    },
+    {
+      "id": "collision-interpretation",
+      "detail": "The existing auditor scans raw JSONL bytes, which include metadata and escaped JSON text. A reported match is conservative and is not itself proof that a name occurred in model input; collision screening has not run."
+    },
+    {
+      "id": "sealed-evaluation",
+      "detail": "Validation/development/final-holdout content was not opened or inventoried. This review cannot attest their disjointness by comparing contents."
+    }
+  ],
+  "execution": {
+    "modelLoaded": false,
+    "torchImported": false,
+    "inferencePerformed": false,
+    "trainingPerformed": false,
+    "optimizerUpdates": 0,
+    "checkpointStaged": false,
+    "finalHoldoutOpened": false,
+    "collisionScreenPerformed": false
+  }
+}
