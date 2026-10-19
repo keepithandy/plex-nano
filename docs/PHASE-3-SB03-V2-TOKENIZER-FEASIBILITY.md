@@ -1,6 +1,6 @@
 # P3-SB03 V2 — Tokenizer-Aware Source-Identifier Feasibility
 
-**October 18 audit receipt:** the default read-only search selected **48/48 names**, matched **384/384** paired token-count signatures and preserved all 96 validation rows against the five screened P3 corpora. No extra historical files were screened and no V2 file was saved. Training-ready remains false. The [audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) records the in-memory proposal checksum and the remaining history/review gates.
+**Earlier October 18 audit receipt (before the owner saved V2):** the default read-only search selected **48/48 names**, matched **384/384** paired token-count signatures and preserved all 96 validation rows against the five screened P3 corpora. No extra historical files were screened and no V2 file was saved. Training-ready remains false. The [audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) records the in-memory proposal checksum and the remaining history/review gates.
 
 **Decision: V1 is blocked; V2 search is MODEL-FREE FEASIBILITY ONLY.** No model loading, training, inference, optimizer stage, candidate bundle, checkpoint selection or final-holdout access is authorized here. [Tracking issue #189](https://github.com/keepithandy/plex-nano/issues/189).
 
@@ -105,4 +105,6 @@ For owner review, supply the concise JSON receipt and the resulting draft hash (
 - No live model evaluation on the new 48-case microprobe is authorized; no matched comparator or intervention optimizer arm is authorized. Each future arm would require **its own fresh approval**, independently pinned stage/bundle, and full intervention comparison design.
 - If exact parity cannot be established after reasonable reviewed search bounds, do **not** fabricate a token-matched experiment. Report that result, then review a controlled, clearly different design (e.g., token-exposure-normalized training). Its causal claim would differ and require a separate contract.
 
-**Next acceptance gate:** owner-local V2 search receipt, accurate historical training-source inventory, reviewed SHA-pinned provisional V2 rows, and a deliberate new authorization decision before any model computation.
+**Actual owner-reported outcome (October 18, 2026):** V2 real-tokenizer search succeeded for **48/48 names and 384/384 paired records**. The resulting unapproved V2 proposal was written locally with independent PowerShell SHA-256 `5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21`, matching the tool's expected digest. The remaining gate is [explicit streaming non-final-holdout training ancestor screening](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md), not another tokenizer-name search. Neither run is authorized.
+
+**Next acceptance gate:** complete and independently reviewed historical training-source inventory with no name collisions, separate reviewer-approved training bundles/authorization, and an actual generated-file model score before claiming capability improvement.

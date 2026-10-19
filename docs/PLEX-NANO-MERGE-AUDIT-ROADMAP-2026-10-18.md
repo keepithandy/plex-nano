@@ -1,5 +1,7 @@
 # Plex Nano merge-audit recovery roadmap
 
+**Merge update (October 18):** audit repairs are retained in local commit `fe1367f` while integrating [PR #195](https://github.com/keepithandy/plex-nano/pull/195), which adds the [streaming training-ancestry checker](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md). The incoming report records a saved owner-local V2 proposal with the same SHA as the earlier in-memory receipt below. Complete ancestor-source screening, independent V2 review, fresh remote CI for the audit repairs and new model-execution approvals remain pending. The merged tree passed 672 tests from the required workflow list on Windows and 314 prescribed Windows checks. The original audit snapshot below is preserved.
+
 **Prepared:** October 18, 2026. **Audit day:** October 17, 2026, America/New_York (00:00–24:00 EDT; October 17 04:00 through October 18 04:00 UTC, end exclusive).  
 **Repository:** [keepithandy/plex-nano](https://github.com/keepithandy/plex-nano). **Audited checkout:** `5a93b65fd6abb39b10f81202c1eebf73d17d6361`. Yesterday's final merge was `28a95bf65887914a296d8bc9ed9986fab0baf88f`.  
 **Purpose:** improve the 27,566,080-parameter coding model's ability to preserve and edit user-supplied HTML, CSS and JavaScript. Keep the 512-token context and 16,384-token tokenizer fixed.
