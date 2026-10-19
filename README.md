@@ -89,6 +89,8 @@ drop in code or a file
 
 **R3 preparation update:** [V2 reselection against reviewed history](docs/PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) stopped at `prism.0` within both 2,500- and 20,000-candidate bounds. Failure receipts are frozen; no complete revised manifest exists. V1 and the original V2 remain unchanged. The comparison design remains under review.
 
+**Comparison recommendation:** the [R3 design review](docs/PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md) proposes six screened names versus 48 screened names, rebuilding both arms. A model-free witness matches all 384 paired token lengths and retains the original 96 validation rows; all 54 proposed spellings have zero matches in the ten recorded ancestor texts. This distinct protocol still requires adoption and independent review. No coding improvement or training authorization is claimed.
+
 ### Phase 1 — Model foundation
 
 Complete.

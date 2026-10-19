@@ -1,6 +1,6 @@
 # Plex Nano · Audit & recovery roadmap
 
-> **Current focus: review the comparison design after V2 reselection failed against the reviewed history. R2's original exclusion gate still fails.**<br>
+> **Current focus: review adoption of the proposed six-versus-48 comparison using screened spellings in both arms. Its tokenizer feasibility is verified; the original V2 remains blocked.**<br>
 > R1 is complete: the audit repairs are published and both remote checks passed.<br>
 > The model's recorded copy/edit capability remains **0/138 exact files**.
 
@@ -38,6 +38,7 @@
 | V2 tokenizer feasibility | ✅ **48/48 names; 384/384 signatures matched** | Token lengths can be matched against the five screened P3 corpora. |
 | Saved V2 proposal | ✅ **Owner-reported file and SHA verified** in [PR #195](https://github.com/keepithandy/plex-nano/pull/195) | It remains an unapproved proposal requiring independent review. |
 | Historical-source screening | 🧱 **Train/evaluation reviews completed; V2 gate failed** | Eight proposed train names and five older evaluation spellings have ancestor-text matches. Claims narrowed; original artifacts preserved. |
+| Alternative comparison | 🟡 **Design review complete; adoption pending** | A distinct six-versus-48 witness has 384/384 paired token lengths and zero matches for its 54 names in the listed history. This is preparation evidence. |
 | New training or model evaluation | 🔒 **Not authorized** | Preparation and passing tests do not grant execution permission. |
 
 ### The route through the work
@@ -46,7 +47,7 @@
 |---|---|---|---|
 | [R1](#r1) | ✅ Complete | Deliver the reporting repairs. | Published commit and successful remote checks. |
 | [R2](#r2) | 🧱 Audit complete; gate failed | Document name exclusions and their limits against recorded history. | Train and evaluation scans recorded; narrowed claim chosen. A future revised comparison still requires review. |
-| [R3](#r3) | 🧱 Reselection failed | Review the blocked dataset design, then freeze a fair comparison and scoring rules. | Reviewed V2 dataset, matched conditions and fixed criteria. |
+| [R3](#r3) | 🟡 Alternative proposed | Review adoption of the paired six-versus-48 design, then freeze a fair comparison and scoring rules. | Distinct reviewed arm manifests, matched conditions and fixed criteria. |
 | [R4](#r4) | 🔒 Owner decision | Prepare precise execution packets. | Separate decisions for staging, each training arm and evaluation. |
 | [R5](#r5) | ⚪ Later | Measure generated-file recovery. | Raw outputs, independent scores and a comparison of both arms. |
 | [R6](#r6) | ⚪ Later | Confirm transfer before harder edits. | A fresh replacement test supports the next milestone. |
@@ -62,7 +63,7 @@
 | [**R5 / Q5 — Run and measure the comparison**](#r5) | Carry out the authorized runs and test generated files for exact copying, requested edits and preservation of unrelated code. | Did coding behavior improve enough to meet the declared gates? |
 | [**R6 / Q6 — Confirm on fresh supplied code**](#r6) | Test replacement edits on a new independent set, then review whether to attempt harder edits such as adding or removing requested code. | Does the improvement transfer beyond the small controlled probe? |
 
-**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's train/evaluation scans and explicit claim narrowing are complete. A separately reviewed revision or new comparison contract must address the mixed historical exposure before any experiment can be finalized.
+**Next discussion topic: R3 / Q3.** The [comparison design review](PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md) recommends six screened spellings versus 48 screened spellings, with both arms rebuilt and paired token counts matched. A concrete model-free witness passed the preparation checks. This changes the original comparator and research question; protocol adoption, independent review and arm-specific scoring remain pending. Original V2 stays blocked.
 
 ---
 
@@ -126,15 +127,20 @@ All listed R2 audit actions are complete. The failed exclusion gate remains a co
 
 <a id="r3"></a>
 
-### 🧱 R3 · Freeze a defensible V2 comparison and scoring contract
+### 🟡 R3 · Review the alternative and freeze a defensible comparison contract
 
-**Status:** the original V2 has tokenizer parity but fails history exclusion. The [reviewed-history reselection](PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) also failed at `prism.0` within both 2,500- and 20,000-candidate bounds. Search evidence is frozen; no complete revised manifest exists. Independent review and the final comparison contract remain pending.
+**Status:** the original V2 has tokenizer parity but fails history exclusion. The [reviewed-history reselection](PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) also failed at `prism.0` within both 2,500- and 20,000-candidate bounds. Search evidence is frozen; no complete revised V2 manifest exists. Independent review and the final comparison contract remain pending.
+
+**New design review:** the [paired six-versus-48 alternative](PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md) is recommended, with a distinct design witness and recorded checks: 54 screened names, zero listed-history matches, 384/384 paired prompt/answer lengths, unchanged 96 validation rows, and exactly 43,841 draw-weighted answer/EOS targets per arm. Both arms use new spellings. This does not clear the original V2 gate or establish coding improvement.
 
 **Why it matters:** we want to test whether a wider range of training identifiers improves supplied-code editing. A fair comparison must control the other conditions.
 
-- [ ] Repeat V2 selection with the reviewed history inventory and freeze a distinct reviewed V2 manifest/SHA. Keep V1 and the existing unreviewed V2 proposal intact.
+- [x] Review alternative designs after strict V2 reselection failed; record a recommendation and its changed research claim.
+- [x] Construct and second-pass check a model-free paired witness for the recommended alternative.
+- [ ] Adopt or revise the distinct comparison protocol; independently review and freeze its L6/D48 arm manifests and outcome rules. The witness is not an approved training manifest.
 
-  **Attempt recorded:** all ten ancestor hashes verified; both searches selected 16/48 slots before stopping at `prism.0`. V1 and original V2 hashes remain unchanged. This combined task stays open because no complete manifest could be frozen; review the selection method or a distinct comparison contract before proceeding.
+- **Original V2 route retained as blocked:** repeat selection with the reviewed inventory and freeze a distinct reviewed V2 manifest/SHA. Both searches selected 16/48 slots before stopping at `prism.0`; no complete manifest could be frozen. V1 and original V2 remain unchanged. If the distinct alternative is adopted, it has its own gates below; it does not turn this original task into a pass.
+
 - [ ] Independently verify all **384** prompt/answer token signatures, the unchanged **96** validation rows, **72/24** intact train/validation groups, source-to-target relations, train/evaluation separation and the full-coverage draw indices.
 - [ ] Match both arms' token exposure and answer/EOS masks. Start both from the **same fixed checkpoint**, with the same optimizer initialization, order, seed, budget and endpoint rule.
 - [ ] Distinguish the fresh comparator from the completed historical run: its starting state and sampler are not interchangeable with that historical control.
@@ -151,7 +157,7 @@ All listed R2 audit actions are complete. The failed exclusion gate remains a co
 | Exact edits in each language | **≥10/12** |
 | Fully correct four-case contrast groups | **≥9/12** |
 
-> **Exit gate:** a reviewed V2 manifest, full-history scope, matched-arm design, scorer version and immutable success/failure rules. The candidate remains unready while any required check is unresolved.
+> **Exit gate:** adopted protocol, independently reviewed arm manifests, explicit recorded-history scope, matched-arm design, scorer version and immutable success/failure rules. The original V2 requirements remain failed under their original design; a distinct alternative does not retroactively satisfy them. No candidate is ready while its required checks are unresolved.
 
 **Q3 · Discussion:** what measured difference would support the diversity hypothesis, and what result would make us reject it?
 

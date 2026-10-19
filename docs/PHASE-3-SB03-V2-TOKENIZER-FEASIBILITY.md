@@ -111,4 +111,6 @@ For owner review, supply the concise JSON receipt and the resulting draft hash (
 
 **Reviewed-history reselection (October 18):** the [R3 replay](PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) verified all ten inventoried sources and repeated selection with case-insensitive history exclusion at 2,500 and 20,000 attempts per slot. Both stopped at `prism.0` with 16/48 slots selected. No complete revised proposal or reviewed manifest was created. The original V1/V2 artifacts remain unchanged; bounded failure receipts and a second-pass review are frozen separately.
 
+**Alternative now reviewed:** the [six-versus-48 comparison proposal](PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md) rebuilds both arms with screened spellings and demonstrates exact token-length parity between those new arms. Its separate design witness is not a successful V2 revision, adopted protocol or authorized experiment.
+
 **Next acceptance gate:** resolve the documented token-parity/history-exclusion conflict under a reviewed comparison design, establish a complete reviewed candidate, then obtain separate bundle/training/evaluation decisions. A generated-file score is required before claiming capability improvement.
