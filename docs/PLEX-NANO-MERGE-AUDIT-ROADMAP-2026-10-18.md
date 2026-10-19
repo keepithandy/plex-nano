@@ -53,6 +53,17 @@
 
 **How to dissect this:** use the R-number for a milestone and the Q-number for its main discussion question. Each milestone separates completed work, remaining tasks and its exit gate. The detailed audit tables are preserved in the evidence drawer.
 
+### What is lined up after R2?
+
+| Where to look | What we would do | What we want to learn or establish |
+|---|---|---|
+| [**R3 / Q3 — Design a fair comparison**](#r3) | Compare the original training-name distribution with a wider range of names, keeping the starting model and other declared conditions matched. Fix the scoring rules beforehand. | Does more varied training help Plex preserve the names in supplied code? |
+| [**R4 / Q4 — Set the run limits and decisions**](#r4) | Specify the exact data, starting model, training budget, stopping rules and separate execution permissions. | Is each proposed action concrete and bounded enough to review? |
+| [**R5 / Q5 — Run and measure the comparison**](#r5) | Carry out the authorized runs and test generated files for exact copying, requested edits and preservation of unrelated code. | Did coding behavior improve enough to meet the declared gates? |
+| [**R6 / Q6 — Confirm on fresh supplied code**](#r6) | Test replacement edits on a new independent set, then review whether to attempt harder edits such as adding or removing requested code. | Does the improvement transfer beyond the small controlled probe? |
+
+**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's actual inventory and screening remain the prerequisite for finalizing that experiment.
+
 ---
 
 <a id="milestones"></a>
@@ -206,8 +217,8 @@ Use this space to capture changes as we dissect the plan. These are discussion p
 | Reference | Topic | Notes / proposed change |
 |---|---|---|
 | Q1 / R1 | Any remaining reporting concerns? | — |
-| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | **Start here.** |
-| Q3 / R3 | Fair comparison and falsifiable outcome | — |
+| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | Term explained; actual inventory and screening remain pending. |
+| **Q3 / R3** | **Fair comparison and falsifiable outcome** | **Next discussion: does a wider range of training names improve source-name preservation?** |
 | Q4 / R4 | Exact scope and separate execution decisions | — |
 | Q5 / R5 | Recovery, limited movement, inconclusive result or failure | — |
 | Q6 / R6 | Evidence needed before harder edits | — |
