@@ -2,6 +2,8 @@
 
 > **Review completed: October 18, 2026.** The ten-file inventory covers the frozen training inputs identified by the recorded checkpoint chain. **No known training-text source is unavailable, and no recorded source identity remains unresolved.** Name-collision screening is next.
 
+**Subsequent result:** [the checker has now run](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md). It verified all ten hashes and found eight proposed names in five ancestor texts. This coverage-review receipt preserves its earlier pre-screening state; the original V2 remains unchanged and fails the selected-name exclusion gate.
+
 This was a second review pass by the same assistant, not external independent certification. It does not establish global name novelty or authorize training. The final project holdout remained sealed and outside the inventory.
 
 ## Coverage checked

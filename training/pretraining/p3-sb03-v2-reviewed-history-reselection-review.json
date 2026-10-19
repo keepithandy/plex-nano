@@ -1,0 +1,101 @@
+{
+  "bundleCreated": false,
+  "codeIdentities": [
+    {
+      "path": "training/phase3/copy-fidelity-v1/review_namespace_diversity_v2.py",
+      "sha256": "5d756deb8b5abb844314c52622f75871a42650fefe9c9b211010d6975e750922"
+    },
+    {
+      "path": "training/phase3/copy-fidelity-v1/audit_v2_ancestor_history.py",
+      "sha256": "a2985d9ba8227cf9d459071a0d8627dfa3ad5e808ec9e4c2a142de85c5a98a61"
+    },
+    {
+      "path": "training/phase3/copy-fidelity-v1/prepare_namespace_diversity_candidate.py",
+      "sha256": "0c1146433ba45e1314b40f7056fcb3c90577972df7d3f934ad073e1f1b3d5a82"
+    }
+  ],
+  "complete384RowParityReviewed": false,
+  "diagnostic": {
+    "fiveLetterLowercaseVocabularyWords": 880,
+    "interpretation": "Consistent with a token-parity/exclusion conflict; bounded search failure, not exhaustive impossibility proof.",
+    "originalPrismTokenIds": [
+      11068
+    ],
+    "vocabularyWordsAbsentFromListedAncestorBytes": 0
+  },
+  "executionDriver": {
+    "argv": [
+      "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\.venv\\Scripts\\python.exe",
+      "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\.test-artifacts\\repeat_v2_history_selection.py",
+      "20000"
+    ],
+    "pathAtExecution": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\.test-artifacts\\repeat_v2_history_selection.py",
+    "sha256": "6d826fb0a9b21009271801d74e6844d010b70c0401c1fe3afd62e422f5b4e111",
+    "source": "\"\"\"Owner-authorized model-free V2 selection replay against pinned ancestry.\"\"\"\nimport hashlib\nimport importlib.util\nimport json\nfrom pathlib import Path\nimport sys\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT / 'training/src'))\nHERE = ROOT / 'training/phase3/copy-fidelity-v1'\ndef module(name, path):\n    spec = importlib.util.spec_from_file_location(name, path)\n    result = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(result)\n    return result\nv2 = module('v2_search', HERE / 'review_namespace_diversity_v2.py')\naudit = module('v2_audit', HERE / 'audit_v2_ancestor_history.py')\nsha = lambda raw: hashlib.sha256(raw).hexdigest()\ninventory = ROOT / 'training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json'\nassert sha(inventory.read_bytes()) == '111784c169f9d180b8ec5329de7acda9f0259214847136a7fab3684ce24b58d1'\noriginal_v2 = audit.PROPOSAL\nassert sha(original_v2.read_bytes()) == audit.EXPECTED_V2_SHA256\nfiles = audit._inventory(inventory)\nhistory = []\nshas = {}\nfor item in files:\n    raw = Path(item['path']).read_bytes()\n    assert sha(raw) == item['sha256']\n    history.append(raw.lower())\n    shas[item['path']] = item['sha256']\nprint('Verified ten recorded ancestor files; beginning bounded case-insensitive search.', flush=True)\nlimit = int(sys.argv[1]) if len(sys.argv) > 1 else 2500\nreceipt, proposal = v2.search(v2.tokenizer_from_file(), attempts_per_slot=limit,\n                            extra_history=history, extra_history_shas=shas)\nout = ROOT / f'.test-artifacts/v2-history-selection-replay-{limit}.json'\nwith out.open('xb') as fp:\n    fp.write(v2.V1._canonical(receipt))\nif proposal is not None:\n    (ROOT / '.test-artifacts/v2-history-selection-draft.json').write_bytes(v2.V1._canonical(proposal))\nprint(json.dumps({k: v for k, v in receipt.items() if k != 'slotResults'}, indent=2))\nprint(json.dumps(receipt['slotResults'], indent=2))\n"
+  },
+  "failedSlot": "prism.0",
+  "finalHoldoutOpened": false,
+  "globallyUnseenClaim": false,
+  "historicalTrainingLineageComplete": false,
+  "inferenceAuthorized": false,
+  "inventory": {
+    "path": "training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json",
+    "sha256": "111784c169f9d180b8ec5329de7acda9f0259214847136a7fab3684ce24b58d1"
+  },
+  "inventoryFileCount": 10,
+  "kind": "p3-sb03-v2-reviewed-history-reselection-review-v1",
+  "matchingRule": "case-insensitive-ASCII-substring-in-raw-file-bytes",
+  "modelLoaded": false,
+  "newValidationArtifactCreated": false,
+  "nextDecision": "Review a distinct comparison contract; retain exclusion/parity as blocked rather than silently relaxing either.",
+  "optimizerUpdates": 0,
+  "partialSelectionRowsSecondPassTokenVerified": 96,
+  "preservedInputs": [
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\sb03-namespace-diversity-proposal-v1.json",
+      "sha256": "4bbdc55782d9447271323378367831656dc1f05cb5bb174138738a6a7e5e7dea"
+    },
+    {
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-sb03-v2-feasibility\\v2-proposal-unreviewed.json",
+      "sha256": "5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\copy-fidelity-candidate-v1.json",
+      "sha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a"
+    },
+    {
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\tokenizer.json",
+      "sha256": "2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476aa1ea765af2697"
+    }
+  ],
+  "rawReceiptCaveat": "Original generic five-P3 labels and global-history-unverified flags remain verbatim; this review specifies the actual additional ten-file scope.",
+  "recordedInputCoverageComplete": true,
+  "requiredSlots": 48,
+  "reviewDate": "2026-10-18",
+  "reviewType": "same-assistant-second-pass-not-external-independent-review",
+  "reviewedManifestCreated": false,
+  "schemaVersion": 1,
+  "scope": "ten-explicit-recorded-ancestor-training-texts-plus-five-frozen-p3-files",
+  "searchAdaptation": "Verified ancestor bytes lowercased before passing to existing search; lowercase candidate stream unchanged. Five P3 checks unchanged.",
+  "searches": [
+    {
+      "attemptsPerSlot": 2500,
+      "path": "training/pretraining/p3-sb03-v2-reviewed-history-reselection-2500-result.json",
+      "sha256": "12d6efbc0941b8995a0b78f53f2bb8c5924f4dc44dea59520726f30ab0437b3a",
+      "totalCandidatesTested": 16623
+    },
+    {
+      "attemptsPerSlot": 20000,
+      "path": "training/pretraining/p3-sb03-v2-reviewed-history-reselection-20000-result.json",
+      "sha256": "1df0290a7eaf147eadacd14f7384da971468145f8b92c599dc8e497f34220c10",
+      "totalCandidatesTested": 34123
+    }
+  ],
+  "slotsAfterFirstFailureNotAttempted": 31,
+  "stageCreated": false,
+  "status": "blocked-no-complete-proposal-no-reviewed-manifest-frozen",
+  "successfulSlotsBeforeStop": 16,
+  "trainingAuthorized": false,
+  "trainingReady": false,
+  "verifiedSourceBytes": 7134286
+}

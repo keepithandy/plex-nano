@@ -1,6 +1,6 @@
 # Plex Nano · Audit & recovery roadmap
 
-> **Current focus: R2 — screen the reviewed training-source inventory.**<br>
+> **Current focus: review the comparison design after V2 reselection failed against the reviewed history. R2's original exclusion gate still fails.**<br>
 > R1 is complete: the audit repairs are published and both remote checks passed.<br>
 > The model's recorded copy/edit capability remains **0/138 exact files**.
 
@@ -37,7 +37,7 @@
 | V1 dataset proposal | 🔴 **240/384 token-count mismatches** | Preserve V1 as the failed preparation record. |
 | V2 tokenizer feasibility | ✅ **48/48 names; 384/384 signatures matched** | Token lengths can be matched against the five screened P3 corpora. |
 | Saved V2 proposal | ✅ **Owner-reported file and SHA verified** in [PR #195](https://github.com/keepithandy/plex-nano/pull/195) | It remains an unapproved proposal requiring independent review. |
-| Historical-source screening | 🟡 **Recorded input coverage reviewed; collision screening pending** | Ten SHA-verified texts cover the documented inputs; no known missing training text. |
+| Historical-source screening | 🧱 **Train/evaluation reviews completed; V2 gate failed** | Eight proposed train names and five older evaluation spellings have ancestor-text matches. Claims narrowed; original artifacts preserved. |
 | New training or model evaluation | 🔒 **Not authorized** | Preparation and passing tests do not grant execution permission. |
 
 ### The route through the work
@@ -45,8 +45,8 @@
 | Stage | Status | Plain-language objective | Completion evidence |
 |---|---|---|---|
 | [R1](#r1) | ✅ Complete | Deliver the reporting repairs. | Published commit and successful remote checks. |
-| [R2](#r2) | 🟡 Next | Establish which source texts the model learned from. | Reviewed inventory, file hashes and collision results. |
-| [R3](#r3) | 🧱 Needs R2 | Freeze a fair comparison and scoring rules. | Reviewed V2 dataset, matched conditions and fixed criteria. |
+| [R2](#r2) | 🧱 Audit complete; gate failed | Document name exclusions and their limits against recorded history. | Train and evaluation scans recorded; narrowed claim chosen. A future revised comparison still requires review. |
+| [R3](#r3) | 🧱 Reselection failed | Review the blocked dataset design, then freeze a fair comparison and scoring rules. | Reviewed V2 dataset, matched conditions and fixed criteria. |
 | [R4](#r4) | 🔒 Owner decision | Prepare precise execution packets. | Separate decisions for staging, each training arm and evaluation. |
 | [R5](#r5) | ⚪ Later | Measure generated-file recovery. | Raw outputs, independent scores and a comparison of both arms. |
 | [R6](#r6) | ⚪ Later | Confirm transfer before harder edits. | A fresh replacement test supports the next milestone. |
@@ -62,7 +62,7 @@
 | [**R5 / Q5 — Run and measure the comparison**](#r5) | Carry out the authorized runs and test generated files for exact copying, requested edits and preservation of unrelated code. | Did coding behavior improve enough to meet the declared gates? |
 | [**R6 / Q6 — Confirm on fresh supplied code**](#r6) | Test replacement edits on a new independent set, then review whether to attempt harder edits such as adding or removing requested code. | Does the improvement transfer beyond the small controlled probe? |
 
-**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's recorded inventory and coverage review are now available; screening and interpretation remain the prerequisite for finalizing that experiment.
+**Next discussion topic: R3 / Q3.** Its central idea is to test whether a wider range of training names helps source-name preservation. R2's train/evaluation scans and explicit claim narrowing are complete. A separately reviewed revision or new comparison contract must address the mixed historical exposure before any experiment can be finalized.
 
 ---
 
@@ -94,9 +94,11 @@
 
 <a id="r2"></a>
 
-### 🟡 R2 · Establish historical training-source coverage
+### 🧱 R2 · Establish historical training-source coverage
 
-**Status:** ancestry tracing and recorded-input coverage review completed on October 18. All ten training texts and their complete token ranges are accounted for; collision screening remains pending. This was a second review pass by the same assistant, not external independent certification.
+**Status:** ancestry tracing, recorded-input coverage review and the requested collision scan completed on October 18. **Eight of 48 proposed train names collide** in five ancestor texts: `bonus`, `hover`, `inser`, `layer`, `media`, `proxy`, `track`, `users`. All ten hashes verified; all eight identities were confirmed in actual model-input text. The original V2 remains unchanged and fails the source-exclusion gate. This work is not external independent certification.
+
+**Evaluation review and claim disposition:** [ten frozen evaluation spellings were checked separately](PHASE-3-R2-FROZEN-EVALUATION-NAMESPACE-REVIEW-2026-10-18.md). `account`, `cobalt`, `gallery`, `harbor` and `orbit` have ancestor-text matches; `harbor`/`orbit` match inside longer strings only. No matches were found for `ulvar`, `nyxen`, `granite`, `saffron` or `spruce` in the ten listed inputs. **Chosen path: preserve all proposals and fixtures; explicitly narrow the claim.** Current V2 is tokenizer-matched preparation with mixed historical spelling exposure, not a globally unseen-name intervention. Older controls remain diagnostics; no-match names are described only as absent under the stated rule in the listed history. No execution gate is waived.
 
 **Why it matters:** a name can be absent from the five P3 datasets while appearing in older training text. We need evidence before describing the proposed names as unseen across the model's ancestry.
 
@@ -110,11 +112,13 @@
 
 - [x] Trace the fixed checkpoint's actual ancestor training corpora, including older Phase 2 and private sources. Identify exact training-text paths and hashes from provenance records; do not infer ancestry from nearby folders. **Evidence:** [ancestry trace and exact paths](PHASE-3-R2-TRAINING-ANCESTRY-TRACE-2026-10-18.md), [ten-file inventory](../training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json), [verification receipt](../training/pretraining/p3-sb03-v2-training-ancestry-trace.json). The chain starts at fresh random initialization, then P2-29; the P2-28 trained pilot is a sibling, and older pre-reset weights are outside this ancestry.
 - [x] Review the inventory for completeness and identify unavailable or ambiguous sources. Keep the final project holdout outside it. **Evidence:** [coverage review and remaining limits](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md), [review receipt](../training/pretraining/p3-sb03-v2-training-inventory-coverage-review.json). No known missing training text or unresolved recorded source identity; all 4,163 rows match the full packed streams. Inventory unchanged; global novelty remains unproven.
-- [ ] Run the checker against the explicit inventory and record proposed train-name collisions, per-file hashes and coverage limits. The five P3 checks remain a partial exclusion claim.
-- [ ] Review the frozen evaluation namespaces' exclusion claims against the relevant training history as well; do not assume a train-name collision check covers them automatically.
-- [ ] If names collide, preserve the existing proposal and create a separately reviewed revision, or explicitly narrow the research claim. Do not relabel partly screened names globally unseen.
+- [x] Run the checker against the explicit inventory and record proposed train-name collisions, per-file hashes and coverage limits. **Evidence:** [collision report](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md), [raw checker result](../training/pretraining/p3-sb03-v2-ancestor-screen-result.json), [execution and interpretation receipt](../training/pretraining/p3-sb03-v2-ancestor-screen-execution.json). Ten files / 7,134,286 bytes verified; eight names collide, all in the eight `prism` replacement slots (48 proposed train rows). The five P3 checks remain a partial exclusion claim; the forty unmatched names are clear only within the listed sources and matching rule.
+- [x] Review the frozen evaluation namespaces' exclusion claims against the relevant training history as well; do not assume a train-name collision check covers them automatically. **Evidence:** [six-set evaluation-name review](PHASE-3-R2-FROZEN-EVALUATION-NAMESPACE-REVIEW-2026-10-18.md), [per-file SHA and match receipt](../training/pretraining/p3-sb03-frozen-evaluation-namespace-history-review.json). Historical P3-02 claims use only the first nine stages; current endpoint reuse uses all ten. The original comparator, V1 and V2 train splits themselves have zero matches for these ten evaluation spellings; ancestor exposure remains relevant.
+- [x] If names collide, preserve the existing proposal and create a separately reviewed revision, or explicitly narrow the research claim. **Chosen: explicit claim narrowing**, recorded in the evaluation-name review and receipt. Original V1, V2 and all evaluation fixtures remain unchanged; no replacement dataset was created. No partly screened name is certified globally unseen. A stronger future exclusion claim still needs a separately reviewed revision/contract.
 
-> **Exit gate:** a reproducible SHA inventory, a reviewed coverage assessment and a collision receipt support the intended unseen-name claim. An inventory file or a zero-collision result alone does not establish completeness.
+> **Exit gate — not met:** the current V2 has confirmed collisions. A reproducible SHA inventory, a reviewed coverage assessment and a collision receipt must support the intended unseen-name claim. An inventory file or a zero-collision result alone does not establish completeness.
+
+All listed R2 audit actions are complete. The failed exclusion gate remains a constraint on R3; narrower wording does not approve a changed experiment or new model execution.
 
 **Q2 · Discussion:** can we trace every relevant training source, and what claim is defensible if some sources cannot be recovered?
 
@@ -124,11 +128,13 @@
 
 ### 🧱 R3 · Freeze a defensible V2 comparison and scoring contract
 
-**Status:** tokenizer feasibility is demonstrated; history clearance, independent review and the final comparison contract are pending.
+**Status:** the original V2 has tokenizer parity but fails history exclusion. The [reviewed-history reselection](PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) also failed at `prism.0` within both 2,500- and 20,000-candidate bounds. Search evidence is frozen; no complete revised manifest exists. Independent review and the final comparison contract remain pending.
 
 **Why it matters:** we want to test whether a wider range of training identifiers improves supplied-code editing. A fair comparison must control the other conditions.
 
 - [ ] Repeat V2 selection with the reviewed history inventory and freeze a distinct reviewed V2 manifest/SHA. Keep V1 and the existing unreviewed V2 proposal intact.
+
+  **Attempt recorded:** all ten ancestor hashes verified; both searches selected 16/48 slots before stopping at `prism.0`. V1 and original V2 hashes remain unchanged. This combined task stays open because no complete manifest could be frozen; review the selection method or a distinct comparison contract before proceeding.
 - [ ] Independently verify all **384** prompt/answer token signatures, the unchanged **96** validation rows, **72/24** intact train/validation groups, source-to-target relations, train/evaluation separation and the full-coverage draw indices.
 - [ ] Match both arms' token exposure and answer/EOS masks. Start both from the **same fixed checkpoint**, with the same optimizer initialization, order, seed, budget and endpoint rule.
 - [ ] Distinguish the fresh comparator from the completed historical run: its starting state and sampler are not interchangeable with that historical control.
@@ -217,7 +223,7 @@ Use this space to capture changes as we dissect the plan. These are discussion p
 | Reference | Topic | Notes / proposed change |
 |---|---|---|
 | Q1 / R1 | Any remaining reporting concerns? | — |
-| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | Recorded ancestry and ten-file coverage reviewed; collision screening and interpretation remain pending. |
+| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | Train/evaluation audits complete; claims narrowed. Eight train names and five evaluation spellings match ancestor text. A revised comparison remains unapproved. |
 | **Q3 / R3** | **Fair comparison and falsifiable outcome** | **Next discussion: does a wider range of training names improve source-name preservation?** |
 | Q4 / R4 | Exact scope and separate execution decisions | — |
 | Q5 / R5 | Recovery, limited movement, inconclusive result or failure | — |

@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "kind": "p3-sb03-v2-ancestor-screen-execution-and-interpretation-v1",
+  "runDate": "2026-10-18",
+  "checker": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\audit_v2_ancestor_history.py",
+    "sha256": "a2985d9ba8227cf9d459071a0d8627dfa3ad5e808ec9e4c2a142de85c5a98a61",
+    "bytes": 9867
+  },
+  "proposal": {
+    "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-sb03-v2-feasibility\\v2-proposal-unreviewed.json",
+    "sha256": "5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21",
+    "bytes": 330673
+  },
+  "inventory": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-training-text-inventory.json",
+    "sha256": "111784c169f9d180b8ec5329de7acda9f0259214847136a7fab3684ce24b58d1",
+    "bytes": 2892
+  },
+  "coverageReview": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-training-inventory-coverage-review.json",
+    "sha256": "79fd024f29ab776d266c7965e308f187588d72f1e3757c7a6e77bc2e48a2d4cb",
+    "bytes": 38915
+  },
+  "rawCheckerResult": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-screen-result.json",
+    "sha256": "f3b6702c4e43926d69679cbabf92081882f3363edaa647dfdae70c46b0c26114",
+    "bytes": 3304
+  },
+  "command": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\.venv\\Scripts\\python.exe C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\audit_v2_ancestor_history.py --inventory C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-training-text-inventory.json --proposal C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-sb03-v2-feasibility\\v2-proposal-unreviewed.json",
+  "exitCode": 0,
+  "summary": {
+    "selectedNames": 48,
+    "verifiedSourceFiles": 10,
+    "verifiedSourceBytes": 7134286,
+    "filesWithNameCollisions": 5,
+    "distinctCollidingNames": 8,
+    "collidingNames": [
+      "bonus",
+      "hover",
+      "inser",
+      "layer",
+      "media",
+      "proxy",
+      "track",
+      "users"
+    ],
+    "namesWithoutListedSourceMatch": [
+      "abbens",
+      "agjibf",
+      "auaex",
+      "bapel",
+      "botmuk",
+      "cxfyo",
+      "detula",
+      "dfbwi",
+      "evcli",
+      "formnn",
+      "fosil",
+      "gaold",
+      "hrqlpq",
+      "inpqu",
+      "ismeat",
+      "isskr",
+      "jaoayd",
+      "jswat",
+      "jwaft",
+      "labves",
+      "lalep",
+      "ldzozd",
+      "ljebb",
+      "lkfwkz",
+      "lowtb",
+      "lsyhv",
+      "ndhmy",
+      "odduo",
+      "owwntf",
+      "pjltr",
+      "qhaav",
+      "qnehe",
+      "raceas",
+      "rpljk",
+      "rtflv",
+      "shcjk",
+      "tipea",
+      "ubtnpq",
+      "whefie",
+      "zkngdg"
+    ],
+    "allRawCollisionIdentitiesConfirmedInTrainingText": true,
+    "sourceExclusionGatePassed": false,
+    "globalNameNoveltyEstablished": false,
+    "historicalTrainingLineageComplete": false,
+    "historyCoverageOnlyListedFiles": true,
+    "earlierFiveP3ChecksRemainPartial": true,
+    "readyForTraining": false,
+    "trainRowsUsingCollidingNames": 48
+  },
+  "fileResults": [
+    {
+      "stage": "P2-29",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\datasets\\p2-26-web-batch-2-v2\\train.jsonl",
+      "bytes": 6256500,
+      "collidingNames": [
+        "bonus",
+        "hover",
+        "inser",
+        "layer",
+        "media",
+        "proxy",
+        "track",
+        "users"
+      ],
+      "inventoryIndex": 1,
+      "role": "ancestor-training-text",
+      "sha256": "8d621a488f3554a976ea4ee0e9581fae2c07aff58ad7912b2f69f2cc0233aaa6",
+      "textFieldCollisions": [
+        {
+          "name": "bonus",
+          "textRowsWithSubstring": 72,
+          "textRowsWithStandaloneAsciiName": 72,
+          "exampleRecordIds": [
+            "12c4240892cf0a2cbc2253cf8702fcec1cd702ec4c5396351c6b4e33560e9db9",
+            "6e83b58a50fdca1e299755f9e0a51c61a9f438993151a221412d65686897bc35",
+            "bb9cc70bb68e1d867b4298e9ffc41bbf523a6a752884bbcc6f62aa772ba9b177"
+          ]
+        },
+        {
+          "name": "hover",
+          "textRowsWithSubstring": 78,
+          "textRowsWithStandaloneAsciiName": 74,
+          "exampleRecordIds": [
+            "208eacfa22d55cdb43e7b49d5f121e5da4e88398bc651aa6cb513903c5ae74d5",
+            "86db9f8b5b9c85af58cb0c2f414c88081539a494f64bf0850b9633d2cf25ee3a",
+            "516a20a89d8d06ee933e6526620ff83c05a659659900984617190f6162548e87"
+          ]
+        },
+        {
+          "name": "inser",
+          "textRowsWithSubstring": 27,
+          "textRowsWithStandaloneAsciiName": 0,
+          "exampleRecordIds": [
+            "e5c2fb32cd0660ce7a275e3c7aff470d525374863218dfb3ad4ebe86c4ceca7c",
+            "76d65fb4630843c9cf3974bc62329fac806d761c4d056e13da59982534266931",
+            "ab833646955ea355433cbb75c7dad331e88b4a6206d01b0e422880227ff8019b"
+          ]
+        },
+        {
+          "name": "layer",
+          "textRowsWithSubstring": 52,
+          "textRowsWithStandaloneAsciiName": 15,
+          "exampleRecordIds": [
+            "b52bd66a4be686ecb2c41cf61ec835c55688fa57359c2de354065fd40a6d6fd1",
+            "190feaf48295607fd83af3d5cb76c8e9b92bd04af0e4b337e19f0cb18b2f6aa9",
+            "8a09a06d0e13586ca170a2e00773190df7c0d4b8ac58febfb19c6093493cfd6a"
+          ]
+        },
+        {
+          "name": "media",
+          "textRowsWithSubstring": 226,
+          "textRowsWithStandaloneAsciiName": 184,
+          "exampleRecordIds": [
+            "8965ee9744a817af0dca5d6148a2d12b55c27f9fa07826fda62e6f5ff7f3141c",
+            "f8ee9ad7c5a5b5e2d25ec1e1ce661487303b9345a962e3838afd177ca3009ede",
+            "435c418cf9c4302456a9e0134a2bc3e92cc736a71355849558ae4a9c51cb359c"
+          ]
+        },
+        {
+          "name": "proxy",
+          "textRowsWithSubstring": 12,
+          "textRowsWithStandaloneAsciiName": 12,
+          "exampleRecordIds": [
+            "211a7cac8d294f19803d9ce1415c1d9ff53c86af73238bca3d2f1fbf86e20c7c",
+            "dfd9f272f8102d9b33d4c7f1a58ef79d8c8ec2d250b6e0c097c1235373658c47",
+            "d34039f5ba4f1b35d35875b84f4e422d41becc77f26f69f29fd44e314d8ea950"
+          ]
+        },
+        {
+          "name": "track",
+          "textRowsWithSubstring": 39,
+          "textRowsWithStandaloneAsciiName": 26,
+          "exampleRecordIds": [
+            "97509443434582c8e94aac88b2056e97a5ef9a62cc3f940389d687d2dbb2b643",
+            "c922447c4d463894089dc325744e7b719a8139bd5b15e33fa8e14cdbf6e59918",
+            "750209fce10f6e1306ed85767c5c9541cd35a63da2e385cfdf503f2fe72440f7"
+          ]
+        },
+        {
+          "name": "users",
+          "textRowsWithSubstring": 10,
+          "textRowsWithStandaloneAsciiName": 7,
+          "exampleRecordIds": [
+            "cf91e2daabfd9bfc889d76b1caeb778e76d5bc94691bfc9540c01115cd5f3d59",
+            "7ea93903f58d5b48a94f226945f05d5410e153de5366d23fe5d54d7b1dc90b65",
+            "a33efe47ff1eb587f9e0496910d5ccb11083c12bd72a54399086fdaaa05c6715"
+          ]
+        }
+      ],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-30",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.jsonl",
+      "bytes": 128630,
+      "collidingNames": [
+        "track"
+      ],
+      "inventoryIndex": 2,
+      "role": "ancestor-training-text",
+      "sha256": "05fb9b35277b979ef45473af5b2a2c98bef31ee2c1c3133f0af0c68d7cfba554",
+      "textFieldCollisions": [
+        {
+          "name": "track",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 0,
+          "exampleRecordIds": [
+            "4aea2171121f023c4850fadb5d996dc6cba40443f9f5fc2b218198c057dccdef"
+          ]
+        }
+      ],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-32",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.jsonl",
+      "bytes": 96858,
+      "collidingNames": [
+        "media"
+      ],
+      "inventoryIndex": 3,
+      "role": "ancestor-training-text",
+      "sha256": "239eaf48f6ad5701e0abe7fcb1e98a2ea379a7377d7e8c523f267e5b9dbd4e71",
+      "textFieldCollisions": [
+        {
+          "name": "media",
+          "textRowsWithSubstring": 8,
+          "textRowsWithStandaloneAsciiName": 8,
+          "exampleRecordIds": [
+            "p2-32-css-print-hidden-01",
+            "p2-32-css-print-hidden-02",
+            "p2-32-css-print-hidden-03"
+          ]
+        }
+      ],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-35",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.jsonl",
+      "bytes": 75717,
+      "collidingNames": [
+        "media"
+      ],
+      "inventoryIndex": 4,
+      "role": "ancestor-training-text",
+      "sha256": "b921dd54657e77619835c5d9bce7a92c12c3a8f388d8ebe8ab8f6a9550ad69f3",
+      "textFieldCollisions": [
+        {
+          "name": "media",
+          "textRowsWithSubstring": 6,
+          "textRowsWithStandaloneAsciiName": 6,
+          "exampleRecordIds": [
+            "p235-ht-06-a",
+            "p235-ht-06-b",
+            "p235-ht-06-c"
+          ]
+        }
+      ],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-38",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.jsonl",
+      "bytes": 87003,
+      "collidingNames": [
+        "layer",
+        "media"
+      ],
+      "inventoryIndex": 5,
+      "role": "ancestor-training-text",
+      "sha256": "ecff52a775a2f876b2a243b3254c37ac05bd75c72b372d2ecaddc06ae82b6ecf",
+      "textFieldCollisions": [
+        {
+          "name": "layer",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 0,
+          "exampleRecordIds": [
+            "p238-css-g08-02"
+          ]
+        },
+        {
+          "name": "media",
+          "textRowsWithSubstring": 3,
+          "textRowsWithStandaloneAsciiName": 3,
+          "exampleRecordIds": [
+            "p238-css-g08-01",
+            "p238-css-g08-02",
+            "p238-css-g08-03"
+          ]
+        }
+      ],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-41",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.jsonl",
+      "bytes": 90318,
+      "collidingNames": [],
+      "inventoryIndex": 6,
+      "role": "ancestor-training-text",
+      "sha256": "458de009e4ef227361e2813c7380bfa2d42739f36335ed333ea3b6a250800db3",
+      "textFieldCollisions": [],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-44",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.jsonl",
+      "bytes": 135646,
+      "collidingNames": [],
+      "inventoryIndex": 7,
+      "role": "ancestor-training-text",
+      "sha256": "0141dbd0209d10e2138a0a90ff688e97b4b1de39f91c28ca367ed7267b309789",
+      "textFieldCollisions": [],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P2-48",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.jsonl",
+      "bytes": 73594,
+      "collidingNames": [],
+      "inventoryIndex": 8,
+      "role": "ancestor-training-text",
+      "sha256": "39879c1199e975096ba962fcad023b3b112c2c8b6444c0a3a9f35971a945d530",
+      "textFieldCollisions": [],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P3-02",
+      "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.jsonl",
+      "bytes": 68592,
+      "collidingNames": [],
+      "inventoryIndex": 9,
+      "role": "ancestor-training-text",
+      "sha256": "45d42817582f6b909d08695dfc93336414762b198cae7a4e4d760c09bf7249de",
+      "textFieldCollisions": [],
+      "rawMatchesConfirmedInText": true
+    },
+    {
+      "stage": "P3-copy-fidelity-v1",
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.jsonl",
+      "bytes": 121428,
+      "collidingNames": [],
+      "inventoryIndex": 10,
+      "role": "ancestor-training-text",
+      "sha256": "682e12d1516243d94ef7601d13f7bf788472ad81db9c3f75a9e85cdeaafbfdaf",
+      "textFieldCollisions": [],
+      "rawMatchesConfirmedInText": true
+    }
+  ],
+  "interpretation": {
+    "matchingRule": "Case-insensitive ASCII substring, including occurrences inside longer words; no word boundary required.",
+    "supplementalCheck": "Parsed text fields of the exact same ten hash-verified JSONL files, compared all 48 names, and confirmed every raw collision identity in actual training text. No private text excerpts retained.",
+    "standaloneDiagnostic": "Informational row count only: ASCII [a-z0-9_$] treated as identifier characters. Does not alter the predeclared substring gate.",
+    "rowsAreEligibleInputs": "Occurrence establishes presence in the frozen training corpus, not proof that each byte entered sampled gradients.",
+    "decision": "Unreviewed V2 cannot be described as excluding all selected names from these ancestor inputs. Preserve V1 and original V2; a separate revision must reselect colliding names, recheck frozen-tokenizer parity and refreeze identity before any later authorization."
+  },
+  "coverageLimits": [
+    "Only the ten explicitly inventoried texts were screened; their recorded input coverage was reviewed by the same assistant, not externally certified.",
+    "The earlier five P3 dataset checks remain a partial exclusion claim; these ten ancestor inputs are a separate provenance-backed screen, not a universal novelty proof.",
+    "The forty names without a match are clear only under this case-insensitive ASCII substring rule in these listed bytes and parsed text fields; no Unicode equivalence or semantic-name analysis is claimed.",
+    "The inventory covers full eligible train splits; exact draw exposure is not reconstructed.",
+    "Validation/development/final-holdout contents were not opened or added.",
+    "Private and ignored artifacts are currently available on this machine; reproduction elsewhere requires their exact bytes."
+  ],
+  "execution": {
+    "modelLoaded": false,
+    "inferencePerformed": false,
+    "trainingPerformed": false,
+    "optimizerUpdates": 0,
+    "checkpointStaged": false,
+    "finalHoldoutOpened": false
+  },
+  "collidingSlots": [
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 1,
+      "proposedName": "inser"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 2,
+      "proposedName": "bonus"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 3,
+      "proposedName": "users"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 4,
+      "proposedName": "layer"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 5,
+      "proposedName": "proxy"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 6,
+      "proposedName": "media"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 7,
+      "proposedName": "track"
+    },
+    {
+      "originalNamespace": "prism",
+      "slotIndex": 8,
+      "proposedName": "hover"
+    }
+  ],
+  "argv": [
+    "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\audit_v2_ancestor_history.py",
+    "--inventory",
+    "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-training-text-inventory.json",
+    "--proposal",
+    "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-sb03-v2-feasibility\\v2-proposal-unreviewed.json"
+  ]
+}

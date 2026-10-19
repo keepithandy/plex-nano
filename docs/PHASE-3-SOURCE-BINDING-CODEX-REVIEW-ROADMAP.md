@@ -1,6 +1,6 @@
 # Plex Nano — Codex Review Roadmap: All Open Issue Gates
 
-**October 18 audit update:** use the [merge-audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) for the current work order and local reporting repairs. V2 tokenizer-only feasibility now matches all 48 names and 384 paired signatures against five P3 corpora. Historical-source screening, reviewed V2 bytes and new model-execution decisions remain pending; original capability results are unchanged.
+**October 18 audit update:** use the [merge-audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) for the current work order and local reporting repairs. V2 tokenizer-only feasibility now matches all 48 names and 384 paired signatures against five P3 corpora. The [ten-source ancestor scan](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md) confirms eight proposed-name collisions after all listed hashes verified. The original V2 stays unchanged; the [evaluation-name review and claim narrowing](PHASE-3-R2-FROZEN-EVALUATION-NAMESPACE-REVIEW-2026-10-18.md) are recorded. Original artifacts retain documented exposure limits; a revised comparison and new model-execution decisions remain pending. The five P3 checks remain partial; original capability results are unchanged.
 
 **Prepared:** October 17, 2026  
 **Repository:** `keepithandy/plex-nano`, branch `master`  
@@ -29,7 +29,7 @@ There is **one actual open GitHub issue** (#189), divided into six milestone wor
 | Complete-file validation | 0/24 copies, 0/72 edits, 0/24 complete groups |
 | Original inspected development controls | 0/6 copies, 0/36 edits (0/42 exact) |
 | EOS / full prompt visibility | 138/138 |
-| Source-preservation failures | 138/138; six sample outputs replaced unseen `granite` with training names such as `meadow`, `prism` |
+| Source-preservation failures | 138/138; six sample outputs replaced supplied `granite` with training names such as `meadow`, `prism` |
 | Final project holdout | SEALED; do not open |
 | Status of experiment #181 | CLOSED **with failed capability**, not success |
 
@@ -65,7 +65,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/diagnose_saved
 
 **Files:** `training/phase3/copy-fidelity-v1/prepare_source_binding_microprobe.py`, `source-binding-microprobe-v1.json`, `training/tests/test_p3_source_binding_microprobe.py`.
 
-**Actual prepared proposal:** 3 languages × 2 **new names** (`ulvar`, `nyxen`) × 2 contexts (minimal / unrelated context) × 4 requests (exact unchanged copy + 3 distinct literal edits). This yields 48 records: 12 copies, 36 edits and 12 four-case contrast groups.
+**Actual prepared proposal:** 3 languages × 2 **proposed source names** (`ulvar`, `nyxen`) × 2 contexts (minimal / unrelated context) × 4 requests (exact unchanged copy + 3 distinct literal edits). This yields 48 records: 12 copies, 36 edits and 12 four-case contrast groups.
 
 **Proposal fixture SHA-256:** `0a30df999f8e1c0f12cf0f6e4a71e0eab814bdd99b3bd83d0e2184637ad31fda`. It is **not a model evaluation result**.
 
@@ -78,7 +78,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/diagnose_saved
 
 **Exit criterion:** deterministic proposal SHA and CI tests pass. The owner still reviews the proposal before **any** live model generation on its 48 cases.
 
-Actual frozen-tokenizer verification is recorded in the technical review: all 48 rows roundtrip within 512/192 bounds, with answer/EOS target-mask checks. Historical exclusion is established for the four pinned P3 inputs, not every earlier pretraining corpus.
+Actual frozen-tokenizer verification is recorded in the technical review: all 48 rows roundtrip within 512/192 bounds, with answer/EOS target-mask checks. The original exclusion claim covers four pinned P3 inputs. The later [evaluation-name review](PHASE-3-R2-FROZEN-EVALUATION-NAMESPACE-REVIEW-2026-10-18.md) found no microprobe-name matches in ten listed ancestor inputs; neither check certifies global novelty.
 
 **Model-free verification:**
 
@@ -107,7 +107,7 @@ uv run --project training python training/phase3/copy-fidelity-v1/prepare_source
 - Require original model/tokenizer/config hashes, fresh artifact destination, no overwrites, no new final holdout accesses.
 - Make clear that staging and data preparation never authorize optimizer steps; include precise owner-review boundaries.
 
-**Exit criterion:** reproducibility specification and SHA-pinned model-free candidate proposal are available. **Real tokenizer parity FAILED (240/384 paired rows; 40,439 vs 44,925 supervised draw-weighted positions). V1 remains frozen; the [V2 tokenizer-aware feasibility search](PHASE-3-SB03-V2-TOKENIZER-FEASIBILITY.md) **passed 48/48 names and 384/384 real tokenizer signatures** according to owner-local evidence, and its saved V2 proposal SHA was checked. A [streaming exact-SHA ancestor corpus audit](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md) is now prepared. Full historical non-holdout training-source inventory remains pending**; no stage/bundle created and neither future matched run is authorized. [Read-only checks and blocker details](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
+**Exit criterion:** reproducibility specification and SHA-pinned model-free candidate proposal are available. **Real tokenizer parity FAILED (240/384 paired rows; 40,439 vs 44,925 supervised draw-weighted positions). V1 remains frozen; the [V2 tokenizer-aware feasibility search](PHASE-3-SB03-V2-TOKENIZER-FEASIBILITY.md) **passed 48/48 names and 384/384 real tokenizer signatures** according to owner-local evidence, and its saved V2 proposal SHA was checked. A [streaming exact-SHA ancestor corpus audit](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md) has run against the reviewed ten-file inventory and confirmed eight proposed-name collisions. The evaluation-name review and explicit narrowing are recorded; a separately reviewed comparison remains pending**; no stage/bundle created and neither future matched run is authorized. [Read-only checks and blocker details](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md).
 
 ### SB-04 · One bounded training experiment (conditional)
 

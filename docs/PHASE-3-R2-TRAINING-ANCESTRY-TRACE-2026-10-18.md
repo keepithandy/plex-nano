@@ -1,6 +1,6 @@
 # R2 - Fixed-checkpoint training ancestry
 
-> **Tracing complete.** The later [recorded-input coverage review](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md) found no missing training text or unresolved source identity. Collision screening remains pending. The original trace receipt preserves its pre-review state.
+> **Tracing complete.** The later [recorded-input coverage review](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md) found no missing training text or unresolved source identity. The subsequent [collision screen](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md) found eight proposed names in ancestor text. The original trace receipt preserves its pre-review state.
 
 **Verified locally: October 18, 2026.** Ten training-text files, ten training-token files, and eleven checkpoint files (including the fresh initialization) were hashed. Every listed training text/token hash matched its provenance record. The ten training splits contain **4,163 records** in total; this is a sum of split memberships, not a claim of unique records across stages.
 
@@ -316,7 +316,7 @@ The frozen tokenizer SHA is `2d5102623cf8e8e51925ab5e6ea05716221013538c5b661476a
 ## Next roadmap gates
 
 1. **Completed for recorded inputs:** [review the inventory against linked records and account for ambiguities](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md). External independent certification has not been performed.
-2. Run the existing streamed name-collision auditor against this exact inventory and preserve its per-file hash/collision receipt.
+2. **Completed:** [run the streamed name-collision auditor](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md) against this exact inventory and preserve its per-file hash/collision receipt. Eight names collide; the current V2 exclusion gate fails.
 3. Review coverage and collision results before freezing a revised V2 proposal. Training authorization remains separate.
 
 [Return to R2 in the merge-audit roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md#r2)

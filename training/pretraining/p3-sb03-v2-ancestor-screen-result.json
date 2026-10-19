@@ -1,0 +1,119 @@
+{
+  "caseInsensitive": true,
+  "collidingNames": [
+    "bonus",
+    "hover",
+    "inser",
+    "layer",
+    "media",
+    "proxy",
+    "track",
+    "users"
+  ],
+  "fileResults": [
+    {
+      "bytes": 6256500,
+      "collidingNames": [
+        "bonus",
+        "hover",
+        "inser",
+        "layer",
+        "media",
+        "proxy",
+        "track",
+        "users"
+      ],
+      "inventoryIndex": 1,
+      "role": "ancestor-training-text",
+      "sha256": "8d621a488f3554a976ea4ee0e9581fae2c07aff58ad7912b2f69f2cc0233aaa6"
+    },
+    {
+      "bytes": 128630,
+      "collidingNames": [
+        "track"
+      ],
+      "inventoryIndex": 2,
+      "role": "ancestor-training-text",
+      "sha256": "05fb9b35277b979ef45473af5b2a2c98bef31ee2c1c3133f0af0c68d7cfba554"
+    },
+    {
+      "bytes": 96858,
+      "collidingNames": [
+        "media"
+      ],
+      "inventoryIndex": 3,
+      "role": "ancestor-training-text",
+      "sha256": "239eaf48f6ad5701e0abe7fcb1e98a2ea379a7377d7e8c523f267e5b9dbd4e71"
+    },
+    {
+      "bytes": 75717,
+      "collidingNames": [
+        "media"
+      ],
+      "inventoryIndex": 4,
+      "role": "ancestor-training-text",
+      "sha256": "b921dd54657e77619835c5d9bce7a92c12c3a8f388d8ebe8ab8f6a9550ad69f3"
+    },
+    {
+      "bytes": 87003,
+      "collidingNames": [
+        "layer",
+        "media"
+      ],
+      "inventoryIndex": 5,
+      "role": "ancestor-training-text",
+      "sha256": "ecff52a775a2f876b2a243b3254c37ac05bd75c72b372d2ecaddc06ae82b6ecf"
+    },
+    {
+      "bytes": 90318,
+      "collidingNames": [],
+      "inventoryIndex": 6,
+      "role": "ancestor-training-text",
+      "sha256": "458de009e4ef227361e2813c7380bfa2d42739f36335ed333ea3b6a250800db3"
+    },
+    {
+      "bytes": 135646,
+      "collidingNames": [],
+      "inventoryIndex": 7,
+      "role": "ancestor-training-text",
+      "sha256": "0141dbd0209d10e2138a0a90ff688e97b4b1de39f91c28ca367ed7267b309789"
+    },
+    {
+      "bytes": 73594,
+      "collidingNames": [],
+      "inventoryIndex": 8,
+      "role": "ancestor-training-text",
+      "sha256": "39879c1199e975096ba962fcad023b3b112c2c8b6444c0a3a9f35971a945d530"
+    },
+    {
+      "bytes": 68592,
+      "collidingNames": [],
+      "inventoryIndex": 9,
+      "role": "ancestor-training-text",
+      "sha256": "45d42817582f6b909d08695dfc93336414762b198cae7a4e4d760c09bf7249de"
+    },
+    {
+      "bytes": 121428,
+      "collidingNames": [],
+      "inventoryIndex": 10,
+      "role": "ancestor-training-text",
+      "sha256": "682e12d1516243d94ef7601d13f7bf788472ad81db9c3f75a9e85cdeaafbfdaf"
+    }
+  ],
+  "filesWithNameCollisions": 5,
+  "finalHoldoutOpened": false,
+  "historicalTrainingLineageComplete": false,
+  "historyCoverageOnlyListedFiles": true,
+  "inventoryFileCount": 10,
+  "kind": "p3-sb03-v2-streaming-ancestor-screen-v1",
+  "modelLoaded": false,
+  "newInferenceAuthorized": false,
+  "optimizerUpdates": 0,
+  "readyForTraining": false,
+  "selectedNames": 48,
+  "status": "listed-sources-include-training-name-collisions",
+  "trainingAuthorized": false,
+  "v2ProposalSha256": "5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21",
+  "verifiedSourceBytes": 7134286,
+  "verifiedSourceFiles": 10
+}

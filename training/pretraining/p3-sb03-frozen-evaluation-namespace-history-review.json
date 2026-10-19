@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 1,
+  "kind": "p3-frozen-evaluation-namespace-history-exclusion-review-v1",
+  "reviewDate": "2026-10-18",
+  "checkerPrimitive": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\audit_v2_ancestor_history.py",
+    "sha256": "a2985d9ba8227cf9d459071a0d8627dfa3ad5e808ec9e4c2a142de85c5a98a61",
+    "functions": [
+      "_inventory",
+      "_stream_sha_and_matches"
+    ],
+    "note": "Uses the existing read-only scanner primitive with separately SHA-verified frozen evaluation names, not the hardcoded 48-train-name audit entry point."
+  },
+  "inventory": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-training-text-inventory.json",
+    "sha256": "111784c169f9d180b8ec5329de7acda9f0259214847136a7fab3684ce24b58d1"
+  },
+  "fixtures": {
+    "microprobe": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\source-binding-microprobe-v1.json",
+      "sha256": "0a30df999f8e1c0f12cf0f6e4a71e0eab814bdd99b3bd83d0e2184637ad31fda",
+      "bytes": 39951
+    },
+    "copyFidelity": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\copy-fidelity-candidate-v1.json",
+      "sha256": "9414d1da7672a386a920d1935723e9133d011c9c3a4029e5d5800f643835ca7a",
+      "bytes": 375129
+    },
+    "developerControls": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\diagnostics\\p3-copy-edit-controls-v1\\copy-edit-controls-v1.json",
+      "sha256": "17834efb801ac963a4672ae616ca47e9eea40b2568f01951c3891c7e4997f01a",
+      "bytes": 43914
+    },
+    "p303Diagnostic": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\diagnostics\\p3-03-source-preservation-v1\\p3-03-source-preservation-v1.json",
+      "sha256": "119eaa829825e3daa6c9156bd0ba84dfa32726dc2ebfa3d7cfd9ccf7612df578",
+      "bytes": 110673
+    },
+    "p302Candidate": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\drafts\\p3-02-exact-replacements-v1.jsonl",
+      "sha256": "98d7ff276cf28d2509ad775c95c49ae0ffdb975de7e47f11e54430f3ca426403",
+      "bytes": 128214
+    },
+    "v1Proposal": {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\phase3\\copy-fidelity-v1\\sb03-namespace-diversity-proposal-v1.json",
+      "sha256": "4bbdc55782d9447271323378367831656dc1f05cb5bb174138738a6a7e5e7dea",
+      "bytes": 325026
+    },
+    "v2Proposal": {
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-sb03-v2-feasibility\\v2-proposal-unreviewed.json",
+      "sha256": "5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21",
+      "bytes": 330673
+    }
+  },
+  "currentEndpointSha256": "c96800281811d710f92322bac37f31a0386994bc7f64b59fd127b4631e470230",
+  "historicalP302EndpointSha256": "020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d",
+  "historyPrefixForP302": 9,
+  "allCurrentHistoryFiles": 10,
+  "validationRowsUnchangedAcrossBaseV1V2": true,
+  "evaluationSets": [
+    {
+      "id": "SB01-microprobe",
+      "fixture": "microprobe",
+      "rowKey": "rows",
+      "namespaceKey": "sourceNamespace",
+      "expectedNames": [
+        "nyxen",
+        "ulvar"
+      ],
+      "historicalCutoff": 10,
+      "role": "proposed frozen microprobe; no inference in this review",
+      "rowCount": 48,
+      "currentEndpointHistory": {
+        "nyxen": [],
+        "ulvar": []
+      },
+      "historicalEndpointHistory": {
+        "nyxen": [],
+        "ulvar": []
+      },
+      "listedHistoryNameExclusionPassed": true,
+      "historicalEndpointNameExclusionPassed": true
+    },
+    {
+      "id": "copy-fidelity-validation",
+      "fixture": "copyFidelity",
+      "rowKey": "rows[split=validation]",
+      "namespaceKey": "namespace",
+      "expectedNames": [
+        "granite",
+        "saffron"
+      ],
+      "historicalCutoff": 10,
+      "role": "validation previously used for loss monitoring and generated-file diagnostics; unchanged across V1/V2",
+      "rowCount": 96,
+      "currentEndpointHistory": {
+        "granite": [],
+        "saffron": []
+      },
+      "historicalEndpointHistory": {
+        "granite": [],
+        "saffron": []
+      },
+      "listedHistoryNameExclusionPassed": true,
+      "historicalEndpointNameExclusionPassed": true
+    },
+    {
+      "id": "copy-edit-developer-controls",
+      "fixture": "developerControls",
+      "rowKey": "tasks",
+      "namespaceKey": "namespace",
+      "expectedNames": [
+        "cobalt",
+        "spruce"
+      ],
+      "historicalCutoff": 9,
+      "role": "previously inspected 42 controls, originally pinned to P3-02; reused at copy-fidelity endpoint",
+      "rowCount": 42,
+      "currentEndpointHistory": {
+        "cobalt": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 1
+          }
+        ],
+        "spruce": []
+      },
+      "historicalEndpointHistory": {
+        "cobalt": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 1
+          }
+        ],
+        "spruce": []
+      },
+      "listedHistoryNameExclusionPassed": false,
+      "historicalEndpointNameExclusionPassed": false
+    },
+    {
+      "id": "P303-source-preservation-diagnostic",
+      "fixture": "p303Diagnostic",
+      "rowKey": "tasks",
+      "namespaceKey": "sourceNamespace",
+      "expectedNames": [
+        "harbor",
+        "orbit"
+      ],
+      "historicalCutoff": 9,
+      "role": "historical developer diagnostic originally pinned to P3-02",
+      "rowCount": 72,
+      "currentEndpointHistory": {
+        "harbor": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 2
+          }
+        ],
+        "orbit": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 1
+          }
+        ]
+      },
+      "historicalEndpointHistory": {
+        "harbor": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 2
+          }
+        ],
+        "orbit": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 1
+          }
+        ]
+      },
+      "listedHistoryNameExclusionPassed": false,
+      "historicalEndpointNameExclusionPassed": false
+    },
+    {
+      "id": "P302-validation-context",
+      "fixture": "p302Candidate",
+      "rowKey": "candidateSplit=validation",
+      "namespaceKey": "generator CONTEXT_NAMES/SPLITS",
+      "expectedNames": [
+        "gallery"
+      ],
+      "historicalCutoff": 9,
+      "role": "older P3-02 validation context used for loss monitoring",
+      "rowCount": 36,
+      "currentEndpointHistory": {
+        "gallery": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 17
+          }
+        ]
+      },
+      "historicalEndpointHistory": {
+        "gallery": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 17
+          }
+        ]
+      },
+      "listedHistoryNameExclusionPassed": false,
+      "historicalEndpointNameExclusionPassed": false
+    },
+    {
+      "id": "P302-development-context",
+      "fixture": "p302Candidate",
+      "rowKey": "candidateSplit=development",
+      "namespaceKey": "generator CONTEXT_NAMES/SPLITS",
+      "expectedNames": [
+        "account"
+      ],
+      "historicalCutoff": 9,
+      "role": "older P3-02 development context; previously inspected",
+      "rowCount": 36,
+      "currentEndpointHistory": {
+        "account": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 13
+          },
+          {
+            "stage": "P2-30",
+            "inventoryIndex": 2,
+            "textRowsWithSubstring": 1
+          },
+          {
+            "stage": "P2-35",
+            "inventoryIndex": 4,
+            "textRowsWithSubstring": 6
+          },
+          {
+            "stage": "P2-38",
+            "inventoryIndex": 5,
+            "textRowsWithSubstring": 1
+          },
+          {
+            "stage": "P2-41",
+            "inventoryIndex": 6,
+            "textRowsWithSubstring": 6
+          },
+          {
+            "stage": "P2-44",
+            "inventoryIndex": 7,
+            "textRowsWithSubstring": 12
+          },
+          {
+            "stage": "P3-02",
+            "inventoryIndex": 9,
+            "textRowsWithSubstring": 4
+          }
+        ]
+      },
+      "historicalEndpointHistory": {
+        "account": [
+          {
+            "stage": "P2-29",
+            "inventoryIndex": 1,
+            "textRowsWithSubstring": 13
+          },
+          {
+            "stage": "P2-30",
+            "inventoryIndex": 2,
+            "textRowsWithSubstring": 1
+          },
+          {
+            "stage": "P2-35",
+            "inventoryIndex": 4,
+            "textRowsWithSubstring": 6
+          },
+          {
+            "stage": "P2-38",
+            "inventoryIndex": 5,
+            "textRowsWithSubstring": 1
+          },
+          {
+            "stage": "P2-41",
+            "inventoryIndex": 6,
+            "textRowsWithSubstring": 6
+          },
+          {
+            "stage": "P2-44",
+            "inventoryIndex": 7,
+            "textRowsWithSubstring": 12
+          },
+          {
+            "stage": "P3-02",
+            "inventoryIndex": 9,
+            "textRowsWithSubstring": 4
+          }
+        ]
+      },
+      "listedHistoryNameExclusionPassed": false,
+      "historicalEndpointNameExclusionPassed": false
+    }
+  ],
+  "fileResults": [
+    {
+      "inventoryIndex": 1,
+      "stage": "P2-29",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\datasets\\p2-26-web-batch-2-v2\\train.jsonl",
+      "sha256": "8d621a488f3554a976ea4ee0e9581fae2c07aff58ad7912b2f69f2cc0233aaa6",
+      "bytes": 6256500,
+      "rawCollidingNames": [
+        "account",
+        "cobalt",
+        "gallery",
+        "harbor",
+        "orbit"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 13,
+          "textRowsWithStandaloneAsciiName": 13,
+          "exampleRecordIds": [
+            "f8ee9ad7c5a5b5e2d25ec1e1ce661487303b9345a962e3838afd177ca3009ede",
+            "435c418cf9c4302456a9e0134a2bc3e92cc736a71355849558ae4a9c51cb359c",
+            "720463b533097da44bad9953f08cec50c41fbae4c6283cf5bee7963f569a9d78"
+          ]
+        },
+        {
+          "name": "cobalt",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 1,
+          "exampleRecordIds": [
+            "51d2b61fa447a1c5ef4809cd1e98479af5c302a9df15c28d2dee5fc21bc658e6"
+          ]
+        },
+        {
+          "name": "gallery",
+          "textRowsWithSubstring": 17,
+          "textRowsWithStandaloneAsciiName": 17,
+          "exampleRecordIds": [
+            "b30d5da8215d78ce85debe25d48689ac045a03b54603de77ba306fe3c2abad9a",
+            "a0f13ad1f5fe2c20ad362c21d544c995b500001358628eaf3e9b50ae7a8046d5",
+            "c7e366ef2192c3e92c7c6e76c6cd7762c31c5c0f131610ff4668f4521422ffff"
+          ]
+        },
+        {
+          "name": "harbor",
+          "textRowsWithSubstring": 2,
+          "textRowsWithStandaloneAsciiName": 0,
+          "exampleRecordIds": [
+            "a1427165801624d03204a01f55a35abcc6acaf8ab01f7f8220efa806f846a991",
+            "a2616bac85663f457a4cd9ac6cda76f8d7a75aa45b0d041fd46390760cfdb83b"
+          ]
+        },
+        {
+          "name": "orbit",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 0,
+          "exampleRecordIds": [
+            "2a4bd94e7541603f3d3058fa5ad8a4f7f34a828682ef564cd6ead2ebfc6069a8"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 2,
+      "stage": "P2-30",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.jsonl",
+      "sha256": "05fb9b35277b979ef45473af5b2a2c98bef31ee2c1c3133f0af0c68d7cfba554",
+      "bytes": 128630,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 1,
+          "exampleRecordIds": [
+            "9d497d2bde2b85fb3aca88d56787efc78b31ed4828960bddcae4f64a0fa20987"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 3,
+      "stage": "P2-32",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.jsonl",
+      "sha256": "239eaf48f6ad5701e0abe7fcb1e98a2ea379a7377d7e8c523f267e5b9dbd4e71",
+      "bytes": 96858,
+      "rawCollidingNames": [],
+      "textFieldCollisions": []
+    },
+    {
+      "inventoryIndex": 4,
+      "stage": "P2-35",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.jsonl",
+      "sha256": "b921dd54657e77619835c5d9bce7a92c12c3a8f388d8ebe8ab8f6a9550ad69f3",
+      "bytes": 75717,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 6,
+          "textRowsWithStandaloneAsciiName": 6,
+          "exampleRecordIds": [
+            "p235-ht-01-a",
+            "p235-ht-01-b",
+            "p235-ht-01-c"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 5,
+      "stage": "P2-38",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.jsonl",
+      "sha256": "ecff52a775a2f876b2a243b3254c37ac05bd75c72b372d2ecaddc06ae82b6ecf",
+      "bytes": 87003,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 1,
+          "textRowsWithStandaloneAsciiName": 1,
+          "exampleRecordIds": [
+            "p238-html-g01-03"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 6,
+      "stage": "P2-41",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.jsonl",
+      "sha256": "458de009e4ef227361e2813c7380bfa2d42739f36335ed333ea3b6a250800db3",
+      "bytes": 90318,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 6,
+          "textRowsWithStandaloneAsciiName": 6,
+          "exampleRecordIds": [
+            "p241-html-g04-03",
+            "p241-html-g08-03",
+            "p241-css-g04-03"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 7,
+      "stage": "P2-44",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.jsonl",
+      "sha256": "0141dbd0209d10e2138a0a90ff688e97b4b1de39f91c28ca367ed7267b309789",
+      "bytes": 135646,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 12,
+          "textRowsWithStandaloneAsciiName": 12,
+          "exampleRecordIds": [
+            "p244-html-g04-01",
+            "p244-html-g04-02",
+            "p244-html-g04-03"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 8,
+      "stage": "P2-48",
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.jsonl",
+      "sha256": "39879c1199e975096ba962fcad023b3b112c2c8b6444c0a3a9f35971a945d530",
+      "bytes": 73594,
+      "rawCollidingNames": [],
+      "textFieldCollisions": []
+    },
+    {
+      "inventoryIndex": 9,
+      "stage": "P3-02",
+      "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.jsonl",
+      "sha256": "45d42817582f6b909d08695dfc93336414762b198cae7a4e4d760c09bf7249de",
+      "bytes": 68592,
+      "rawCollidingNames": [
+        "account"
+      ],
+      "textFieldCollisions": [
+        {
+          "name": "account",
+          "textRowsWithSubstring": 4,
+          "textRowsWithStandaloneAsciiName": 4,
+          "exampleRecordIds": [
+            "p302-html-aria-label-00-2",
+            "p302-html-aria-label-01-2",
+            "p302-html-aria-label-02-2"
+          ]
+        }
+      ]
+    },
+    {
+      "inventoryIndex": 10,
+      "stage": "P3-copy-fidelity-v1",
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.jsonl",
+      "sha256": "682e12d1516243d94ef7601d13f7bf788472ad81db9c3f75a9e85cdeaafbfdaf",
+      "bytes": 121428,
+      "rawCollidingNames": [],
+      "textFieldCollisions": []
+    }
+  ],
+  "summary": {
+    "evaluationSets": 6,
+    "uniqueEvaluationNames": 10,
+    "verifiedSourceFiles": 10,
+    "verifiedSourceBytes": 7134286,
+    "collidingEvaluationNames": [
+      "account",
+      "cobalt",
+      "gallery",
+      "harbor",
+      "orbit"
+    ],
+    "allRawCollisionIdentitiesConfirmedInText": true,
+    "historicalTrainingLineageComplete": false,
+    "globalNameNoveltyEstablished": false,
+    "originalArtifactsModified": false,
+    "newRevisionCreated": false,
+    "claimNarrowingChosen": true,
+    "readyForTraining": false,
+    "prospectiveTrainSplitsChecked": 3,
+    "prospectiveTrainingEvaluationNameCollisions": 0,
+    "clearEvaluationNamesInListedHistory": [
+      "granite",
+      "nyxen",
+      "saffron",
+      "spruce",
+      "ulvar"
+    ]
+  },
+  "limits": [
+    "Case-insensitive ASCII substring matches, including occurrences inside longer words, across the exact listed train inputs only.",
+    "Historical P3-02 results use only the first nine ancestry stages; the tenth copy-fidelity stage is screened separately for current/future reuse.",
+    "A text occurrence does not establish exact draw exposure or model memorization; byte counts and training-row memberships are not inference scores.",
+    "The prior four/five P3 checks remain limited to their frozen artifacts; this review does not certify global unseen names.",
+    "The inventory and same-assistant coverage review establish recorded inputs, not externally certified universal completeness.",
+    "Loss-monitored validation and previously inspected developer diagnostics are not untouched final evaluation. No final project holdout is read or inventoried."
+  ],
+  "execution": {
+    "modelLoaded": false,
+    "optimizerUpdates": 0,
+    "inferencePerformed": false,
+    "trainingPerformed": false,
+    "checkpointStaged": false,
+    "finalHoldoutOpened": false
+  },
+  "prospectiveTrainSplitChecks": [
+    {
+      "fixture": "copyFidelity",
+      "trainRows": 288,
+      "textFields": [
+        "prompt",
+        "expectedFile"
+      ],
+      "matching": "case-insensitive ASCII substring",
+      "collidingEvaluationNames": []
+    },
+    {
+      "fixture": "v1Proposal",
+      "trainRows": 288,
+      "textFields": [
+        "prompt",
+        "expectedFile"
+      ],
+      "matching": "case-insensitive ASCII substring",
+      "collidingEvaluationNames": []
+    },
+    {
+      "fixture": "v2Proposal",
+      "trainRows": 288,
+      "textFields": [
+        "prompt",
+        "expectedFile"
+      ],
+      "matching": "case-insensitive ASCII substring",
+      "collidingEvaluationNames": []
+    }
+  ],
+  "p302ContextNamespaceProvenance": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\src\\plex_training\\file_edit_replacements.py",
+    "sha256": "c3f5d0ea4c5005ad2174d40132f1488c04fa5e88e840063b235814cb3154516c",
+    "constantMapping": {
+      "cart": "train",
+      "profile": "train",
+      "search": "train",
+      "settings": "train",
+      "gallery": "validation",
+      "account": "development"
+    },
+    "method": "AST literal constants plus confirmation that each selected frozen row inputFile/expectedFile contains its assigned context name."
+  },
+  "claimDisposition": {
+    "chosenAction": "Preserve original proposals and explicitly narrow research claims; no replacement dataset or evaluation generated.",
+    "proposedTrainingNames": "The current unapproved V2 is a tokenizer-matched preparation artifact with eight ancestor-text collisions, not a history-excluded new-name intervention. It remains blocked under the existing source-exclusion gate.",
+    "evaluationNames": "For ulvar, nyxen, granite, saffron and spruce, no case-insensitive ASCII substring was found in the ten listed training-text inputs. This is a listed-history statement, not global novelty certification.",
+    "historicalControls": "Cobalt, gallery and account have standalone ASCII-name matches in ancestor input text; harbor and orbit match only inside longer strings. These older cases are fixed diagnostics, not evidence of globally unseen identifiers.",
+    "interpretationBoundary": "Spelling exposure does not establish full identifier/file reuse, memorization, or an unchanged historical score. Exact-file and semantic contamination were not audited here.",
+    "executionBoundary": "No source-exclusion gate or training permission is waived by narrower wording. Any future revision requires a distinct reviewed identity, screening and tokenizer parity; existing thresholds and historical results remain unchanged."
+  },
+  "trainingAncestryTrace": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-training-ancestry-trace.json",
+    "sha256": "afdeaa8605a0d9e081c1f4ce381f6c9186c4b75e8bdf471f49df5cd4b91b5e8b",
+    "bytes": 49139
+  },
+  "trainingCoverageReview": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-training-inventory-coverage-review.json",
+    "sha256": "79fd024f29ab776d266c7965e308f187588d72f1e3757c7a6e77bc2e48a2d4cb",
+    "bytes": 38915
+  },
+  "priorTrainNameCheckerResult": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-screen-result.json",
+    "sha256": "f3b6702c4e43926d69679cbabf92081882f3363edaa647dfdae70c46b0c26114",
+    "bytes": 3304
+  },
+  "priorTrainNameCheckerExecution": {
+    "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\pretraining\\p3-sb03-v2-ancestor-screen-execution.json",
+    "sha256": "fea0dcecade7062d859ddef3f2d22cc8eb7aa3e022874d9eee93eda73f56080d",
+    "bytes": 16538
+  }
+}
