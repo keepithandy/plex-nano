@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "scope": "p3-sb03-v2-non-holdout-ancestor-training-text-inventory-v1",
+  "files": [
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\datasets\\p2-26-web-batch-2-v2\\train.jsonl",
+      "sha256": "8d621a488f3554a976ea4ee0e9581fae2c07aff58ad7912b2f69f2cc0233aaa6",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\task-finetune\\p2-30-request-v3-16k\\train.jsonl",
+      "sha256": "05fb9b35277b979ef45473af5b2a2c98bef31ee2c1c3133f0af0c68d7cfba554",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-32-training-bundle\\train.jsonl",
+      "sha256": "239eaf48f6ad5701e0abe7fcb1e98a2ea379a7377d7e8c523f267e5b9dbd4e71",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-35-training-bundle\\train.jsonl",
+      "sha256": "b921dd54657e77619835c5d9bce7a92c12c3a8f388d8ebe8ab8f6a9550ad69f3",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-38-training-bundle\\train.jsonl",
+      "sha256": "ecff52a775a2f876b2a243b3254c37ac05bd75c72b372d2ecaddc06ae82b6ecf",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-41-training-bundle\\train.jsonl",
+      "sha256": "458de009e4ef227361e2813c7380bfa2d42739f36335ed333ea3b6a250800db3",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\structured-plan\\p2-44-training-bundle\\train.jsonl",
+      "sha256": "0141dbd0209d10e2138a0a90ff688e97b4b1de39f91c28ca367ed7267b309789",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\OneDrive\\Documents\\ChatGPT\\plex-0.1\\training\\artifacts\\request-grounded\\p2-48-training-bundle\\train.jsonl",
+      "sha256": "39879c1199e975096ba962fcad023b3b112c2c8b6444c0a3a9f35971a945d530",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\PlexArtifacts\\p3-02-training-bundle\\train.jsonl",
+      "sha256": "45d42817582f6b909d08695dfc93336414762b198cae7a4e4d760c09bf7249de",
+      "role": "ancestor-training-text"
+    },
+    {
+      "path": "C:\\Users\\quali\\PlexArtifacts\\file-edits\\p3-copy-fidelity-v1-bundle\\train.jsonl",
+      "sha256": "682e12d1516243d94ef7601d13f7bf788472ad81db9c3f75a9e85cdeaafbfdaf",
+      "role": "ancestor-training-text"
+    }
+  ]
+}

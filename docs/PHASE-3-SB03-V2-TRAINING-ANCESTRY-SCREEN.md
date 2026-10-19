@@ -6,7 +6,7 @@
 
 ## 1. Why one more provenance audit matters
 
-The successful V2 search screened **five SHA-frozen P3 repository datasets**, but a 27,566,080-parameter scratch-trained model has **prior Phase 1/2 training lineage** and owner-local source artifacts. Names such as `users`, `media`, `proxy`, and `track` are plausible prior training text; being a single tokenizer vocabulary entry does **not** prove the model has never seen the spelling in training. The new test must measure actual historical training-source overlap instead of assuming any selected name is unseen.
+The successful V2 search screened **five SHA-frozen P3 repository datasets**, but the fixed 27,566,080-parameter checkpoint also has earlier Phase 2 training inputs and owner-local source artifacts. The [October 18 trace](PHASE-3-R2-TRAINING-ANCESTRY-TRACE-2026-10-18.md) establishes a fresh initialization followed by P2-29 through the recorded Phase 2/3 chain; earlier pre-reset Phase 1/2 weights and the P2-28 trained pilot are outside this weight ancestry. Names such as `users`, `media`, `proxy`, and `track` are plausible prior training text; being a single tokenizer vocabulary entry does **not** prove the model has never seen the spelling in training. The new test must measure actual historical training-source overlap instead of assuming any selected name is unseen.
 
 An earlier V1 proposal also failed the real tokenizer parity gate: **240/384 unequal records**, with 40,439 versus 44,925 draw-weighted supervised answer/EOS positions. V1 and the original finished step-100 model checkpoints stay unchanged.
 
@@ -25,6 +25,8 @@ The script:
 The report reveals selected-name collisions only in user-identified training sources; it is not an evaluation of Plex's ability to code.
 
 ## 3. Prepare an explicit inventory on Windows
+
+**Recorded ancestry inventory available:** [ten exact training-text paths and SHA-256 values](../training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json), supported by the [checkpoint and bundle verification receipt](../training/pretraining/p3-sb03-v2-training-ancestry-trace.json). All ten listed texts and corresponding training-token files matched their recorded hashes on October 18. Eight texts are repository-local Phase 2 artifacts; two are private owner-local Phase 3 artifacts. Independent completeness review and collision screening remain pending. This inventory uses absolute paths for this Windows checkout; any relocation must preserve the recorded hashes.
 
 Only include actual **non-final-holdout** text sources you can independently trace to the training run ancestry (e.g., source `.jsonl` files *actually used* to produce the frozen token bundles). Inspect documented Phase 1/2 dataset manifests, training contracts and the owner-local training bundle manifests first. Do **not** guess dataset paths or supply binary model weights or token-only binary arrays as source text. No sealed final benchmark or unseen final holdout belongs here.
 
@@ -58,12 +60,10 @@ $inventory | ConvertTo-Json -Depth 7 | Out-File -LiteralPath $destination -Encod
 
 ## 4. Run the read-only streamed review
 
-From the repository root, after the relevant PR is merged:
+From the repository root, after reviewing the inventory for completeness:
 
 ```powershell
-git pull origin master
-
-uv run --project training python training/phase3/copy-fidelity-v1/audit_v2_ancestor_history.py --inventory "$HOME\PlexArtifacts\file-edits\p3-sb03-v2-feasibility\ancestor-training-text-inventory.json"
+uv run --project training python training/phase3/copy-fidelity-v1/audit_v2_ancestor_history.py --inventory "training/pretraining/p3-sb03-v2-ancestor-training-text-inventory.json"
 ```
 
 The command prints a JSON report. **No model is loaded, no GPU is used, no optimizer updates happen, and neither the inventory nor the original training files are modified.** Do not report the full file contents; hashes, file count and collision summary are sufficient.
