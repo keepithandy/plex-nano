@@ -1,14 +1,241 @@
-# Plex Nano merge-audit recovery roadmap
+# Plex Nano · Audit & recovery roadmap
 
-**Merge update (October 18):** audit repairs are retained in local commit `fe1367f` while integrating [PR #195](https://github.com/keepithandy/plex-nano/pull/195), which adds the [streaming training-ancestry checker](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md). The incoming report records a saved owner-local V2 proposal with the same SHA as the earlier in-memory receipt below. Complete ancestor-source screening, independent V2 review, fresh remote CI for the audit repairs and new model-execution approvals remain pending. The merged tree passed 672 tests from the required workflow list on Windows and 314 prescribed Windows checks. The original audit snapshot below is preserved.
+> **Current focus: R2 — establish the model's training-source history.**<br>
+> R1 is complete: the audit repairs are published and both remote checks passed.<br>
+> The model's recorded copy/edit capability remains **0/138 exact files**.
 
-**Prepared:** October 18, 2026. **Audit day:** October 17, 2026, America/New_York (00:00–24:00 EDT; October 17 04:00 through October 18 04:00 UTC, end exclusive).  
-**Repository:** [keepithandy/plex-nano](https://github.com/keepithandy/plex-nano). **Audited checkout:** `5a93b65fd6abb39b10f81202c1eebf73d17d6361`. Yesterday's final merge was `28a95bf65887914a296d8bc9ed9986fab0baf88f`.  
-**Purpose:** improve the 27,566,080-parameter coding model's ability to preserve and edit user-supplied HTML, CSS and JavaScript. Keep the 512-token context and 16,384-token tokenizer fixed.
+**Repository:** [keepithandy/plex-nano](https://github.com/keepithandy/plex-nano)<br>
+**Prepared:** October 18, 2026 · **Reading mode:** review and discussion<br>
+**Product:** a small coding model that edits **user-supplied HTML, CSS and JavaScript**<br>
+**Controlled baseline:** 27,566,080 parameters · 512-token context · 16,384-token vocabulary
 
-**Decision:** the reports support a failed copy/edit capability result. Repair reporting reliability, complete historical-source screening, and review a newly frozen V2 comparison before any further model experiment. This roadmap is ready for owner review; subsequent milestones have not been started as training or live evaluation.
+[At a glance](#at-a-glance) · [Milestones R1–R6](#milestones) · [Discussion notes](#discussion) · [Fixed boundaries](#boundaries) · [Evidence drawer](#evidence)
 
-## 1. Completed audit and repairs
+---
+
+<a id="at-a-glance"></a>
+
+## 🧭 At a glance
+
+### Status key
+
+| Marker | Meaning |
+|---|---|
+| ✅ **Complete** | The named work has supporting evidence. |
+| 🟡 **Next** | The immediate work to discuss and carry out. |
+| 🧱 **Blocked** | A required prerequisite is unresolved. |
+| 🔒 **Owner decision** | Model execution needs its own explicit authorization. |
+| ⚪ **Later** | Depends on earlier milestones. |
+| 🔴 **Failed result** | A recorded capability gate failed; retain the result. |
+
+### What is settled, and what is open?
+
+| Area | Current position | What it means for us |
+|---|---|---|
+| Audit repairs and merge | ✅ **Published; Linux and Windows passed** at `caf3284` | R1's delivery gate is met. |
+| Actual generated code | 🔴 **0/138 exact files** | Reliable copying/editing has not been demonstrated. |
+| V1 dataset proposal | 🔴 **240/384 token-count mismatches** | Preserve V1 as the failed preparation record. |
+| V2 tokenizer feasibility | ✅ **48/48 names; 384/384 signatures matched** | Token lengths can be matched against the five screened P3 corpora. |
+| Saved V2 proposal | ✅ **Owner-reported file and SHA verified** in [PR #195](https://github.com/keepithandy/plex-nano/pull/195) | It remains an unapproved proposal requiring independent review. |
+| Historical-source screening | 🟡 **Tool available; complete source inventory and screening pending** | This is the immediate research blocker. |
+| New training or model evaluation | 🔒 **Not authorized** | Preparation and passing tests do not grant execution permission. |
+
+### The route through the work
+
+| Stage | Status | Plain-language objective | Completion evidence |
+|---|---|---|---|
+| [R1](#r1) | ✅ Complete | Deliver the reporting repairs. | Published commit and successful remote checks. |
+| [R2](#r2) | 🟡 Next | Establish which source texts the model learned from. | Reviewed inventory, file hashes and collision results. |
+| [R3](#r3) | 🧱 Needs R2 | Freeze a fair comparison and scoring rules. | Reviewed V2 dataset, matched conditions and fixed criteria. |
+| [R4](#r4) | 🔒 Owner decision | Prepare precise execution packets. | Separate decisions for staging, each training arm and evaluation. |
+| [R5](#r5) | ⚪ Later | Measure generated-file recovery. | Raw outputs, independent scores and a comparison of both arms. |
+| [R6](#r6) | ⚪ Later | Confirm transfer before harder edits. | A fresh replacement test supports the next milestone. |
+
+**How to dissect this:** use the R-number for a milestone and the Q-number for its main discussion question. Each milestone separates completed work, remaining tasks and its exit gate. The detailed audit tables are preserved in the evidence drawer.
+
+---
+
+<a id="milestones"></a>
+
+## 🛠 Milestones
+
+<a id="r1"></a>
+
+### ✅ R1 · Publish and verify the audit repairs
+
+**Status:** complete for the implementation through `caf32842c3912bfc75b983d5e7c6bd808d8b26c1`.
+
+**Purpose:** make the existing reports reject malformed evidence and make the relevant checks portable.
+
+- [x] Review and fix the scorer/gate defects and Windows path assertions.
+- [x] Preserve the repairs in `fe1367f` and combine them with PR #195 in merge `caf3284`.
+- [x] Publish the merge. The actual delivery path used a local merge and push; no separate audit-repair PR was created.
+- [x] Verify successful remote [Linux checks](https://github.com/keepithandy/plex-nano/actions/runs/39179180285) and [Windows checks](https://github.com/keepithandy/plex-nano/actions/runs/39179180184) on that exact merge SHA.
+- [x] Preserve frozen data, predictions, checkpoint identities and historical thresholds.
+
+**Validation record:** the merged tree previously passed **672** tests from the required workflow list on Windows and **314** prescribed Windows checks. Earlier **92 / 661 / 303** repair checks remain recorded in the historical audit below. This formatting pass did not rerun model or test computations.
+
+> **Exit gate — met:** the repairs are committed, published and remotely verified. These successful runs apply to `caf3284`; later code changes need checks for their own revision.
+
+**Q1 · Discussion:** are any reporting concerns still missing from the completed repair scope?
+
+---
+
+<a id="r2"></a>
+
+### 🟡 R2 · Establish historical training-source coverage
+
+**Status:** next. The checker exists; a complete source inventory and its real screening results are still missing.
+
+**Why it matters:** a name can be absent from the five P3 datasets while appearing in older training text. We need evidence before describing the proposed names as unseen across the model's ancestry.
+
+**Already in place**
+
+- [x] [PR #195](https://github.com/keepithandy/plex-nano/pull/195) supplies a [streaming SHA and collision auditor](PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md).
+- [x] The auditor checks explicit source files in bounded chunks, including name matches across chunk boundaries. Large files no longer require the earlier reader's 128 MiB aggregate in-memory approach.
+- [x] Its result remains provisional: it cannot certify that a supplied inventory includes every historical training source.
+
+**Work left**
+
+- [ ] Trace the fixed checkpoint's actual ancestor training corpora, including older Phase 2 and private sources. Identify exact training-text paths and hashes from provenance records; do not infer ancestry from nearby folders.
+- [ ] Review the inventory for completeness and identify unavailable or ambiguous sources. Keep the final project holdout outside it.
+- [ ] Run the checker against the explicit inventory and record proposed train-name collisions, per-file hashes and coverage limits. The five P3 checks remain a partial exclusion claim.
+- [ ] Review the frozen evaluation namespaces' exclusion claims against the relevant training history as well; do not assume a train-name collision check covers them automatically.
+- [ ] If names collide, preserve the existing proposal and create a separately reviewed revision, or explicitly narrow the research claim. Do not relabel partly screened names globally unseen.
+
+> **Exit gate:** a reproducible SHA inventory, a reviewed coverage assessment and a collision receipt support the intended unseen-name claim. An inventory file or a zero-collision result alone does not establish completeness.
+
+**Q2 · Discussion:** can we trace every relevant training source, and what claim is defensible if some sources cannot be recovered?
+
+---
+
+<a id="r3"></a>
+
+### 🧱 R3 · Freeze a defensible V2 comparison and scoring contract
+
+**Status:** tokenizer feasibility is demonstrated; history clearance, independent review and the final comparison contract are pending.
+
+**Why it matters:** we want to test whether a wider range of training identifiers improves supplied-code editing. A fair comparison must control the other conditions.
+
+- [ ] Repeat V2 selection with the reviewed history inventory and freeze a distinct reviewed V2 manifest/SHA. Keep V1 and the existing unreviewed V2 proposal intact.
+- [ ] Independently verify all **384** prompt/answer token signatures, the unchanged **96** validation rows, **72/24** intact train/validation groups, source-to-target relations, train/evaluation separation and the full-coverage draw indices.
+- [ ] Match both arms' token exposure and answer/EOS masks. Start both from the **same fixed checkpoint**, with the same optimizer initialization, order, seed, budget and endpoint rule.
+- [ ] Distinguish the fresh comparator from the completed historical run: its starting state and sampler are not interchangeable with that historical control.
+- [ ] Version SB-05 scoring/provenance for the actual arm identities. The present scorer accepts only historical checkpoint `c968…0230`; it cannot certify an arbitrary future arm.
+- [ ] Fix the comparison's effect measure and a result that would refute the identifier-diversity hypothesis **before** observing either arm's outputs. A small single-seed result supports a bounded claim.
+- [ ] Preserve exact unrelated-byte checks, wrong/unknown requested-value distinctions, EOS/decode/context checks and raw per-case provenance.
+
+**Absolute SB-01 gates — unchanged**
+
+| Metric | Required outcome |
+|---|---:|
+| Exact unchanged copies | **12/12** |
+| Exact requested edits | **≥30/36** |
+| Exact edits in each language | **≥10/12** |
+| Fully correct four-case contrast groups | **≥9/12** |
+
+> **Exit gate:** a reviewed V2 manifest, full-history scope, matched-arm design, scorer version and immutable success/failure rules. The candidate remains unready while any required check is unresolved.
+
+**Q3 · Discussion:** what measured difference would support the diversity hypothesis, and what result would make us reject it?
+
+---
+
+<a id="r4"></a>
+
+### 🔒 R4 · Prepare fresh execution packets for an owner decision
+
+**Status:** preparation can be reviewed; new model execution is not authorized.
+
+**Why it matters:** approval must refer to concrete inputs, a bounded operation and a fixed stopping rule.
+
+- [ ] Review new packed bundles and zero-update stages separately from optimizer permission. Pin their bytes, starting-weight equality, empty optimizer, target accounting, fresh destinations and storage budget.
+- [ ] Freeze explicit per-arm contracts: maximum updates/wall time, learning rate, accumulation, seed/device, validation/checkpoint schedule, finite-loss/gradient aborts, no overwrite/resume and fixed endpoint.
+- [ ] Obtain independent fresh owner authorization for each comparator/intervention training arm and for new checkpoint generation on the **48-case** probe.
+- [ ] Ensure closed historical approvals cannot be reused for either new arm. Preserve the original one-run evidence even if output folders move.
+
+> **Exit gate:** concrete reviewed execution packets and explicit owner decisions. A roadmap, successful preflight or passing CI grants no execution permission.
+
+**Q4 · Discussion:** are the inputs, limits, stop conditions and requested permissions precise enough to review each action separately?
+
+---
+
+<a id="r5"></a>
+
+### ⚪ R5 · Measure actual generated-file recovery
+
+**Status:** conditional on R1–R4.
+
+**Why it matters:** the product requires correct generated code changes. Lower teacher-forced loss has not established that capability.
+
+- [ ] Execute only individually authorized arms; keep immutable run/checkpoint receipts and incomplete or failed outcomes.
+- [ ] Evaluate only predeclared endpoints and response sets with the approved decoding policy. Label historical **96/42** controls as previously inspected.
+- [ ] Report each arm's exact-copy/edit and group results by language/context, source retention, wrong/unknown values and EOS/decode/prompt status. Compare the predeclared effect and absolute gates.
+- [ ] Record improvement below a gate as limited movement; keep capability recovery open. If both arms pass similarly, do not attribute the result to identifier diversity.
+- [ ] If copying fails, review an independent objective/copying hypothesis. If copying passes but edits fail, review request/value binding. Do not extend training automatically.
+
+> **Exit gate:** raw generated responses and an independent scorer replay support the disposition. Loss alone cannot close [issue #189](https://github.com/keepithandy/plex-nano/issues/189).
+
+**Q5 · Discussion:** how will we distinguish recovery, limited improvement, an inconclusive comparison and failure?
+
+---
+
+<a id="r6"></a>
+
+### ⚪ R6 · Confirm replacement transfer before harder edits
+
+**Status:** future; depends on a successful R5 disposition.
+
+**Why it matters:** passing a small controlled probe does not establish reliable edits on fresh supplied code.
+
+- [ ] Freeze a fresh independent replacement confirmation set and criteria before model exposure, without opening the final project holdout.
+- [ ] Confirm minimal correct changes on supplied HTML/CSS/JavaScript with unfamiliar identifiers and unrelated context.
+- [ ] Reassess remaining weaknesses and decide whether P3-03 Insert/Delete is justified. Preserve Phase 2's closeout and its documented limitations.
+
+> **Exit gate:** owner-reviewed evidence supports the next coding milestone. Model size, tokenizer and context remain controlled unless a distinct milestone changes them.
+
+**Q6 · Discussion:** what independent replacement evidence is sufficient before moving to harder edit types?
+
+---
+
+<a id="discussion"></a>
+
+## 💬 Discussion notes
+
+Use this space to capture changes as we dissect the plan. These are discussion prompts, not experimental approvals.
+
+| Reference | Topic | Notes / proposed change |
+|---|---|---|
+| Q1 / R1 | Any remaining reporting concerns? | — |
+| **Q2 / R2** | **Training ancestry, missing sources and the unseen-name claim** | **Start here.** |
+| Q3 / R3 | Fair comparison and falsifiable outcome | — |
+| Q4 / R4 | Exact scope and separate execution decisions | — |
+| Q5 / R5 | Recovery, limited movement, inconclusive result or failure | — |
+| Q6 / R6 | Evidence needed before harder edits | — |
+
+<a id="boundaries"></a>
+
+## 📌 Fixed boundaries
+
+| Keep fixed | Meaning |
+|---|---|
+| Product contract | Coding request + user-supplied code/file context → correct code change. |
+| Controlled model | 27,566,080 parameters; 512-token context; 16,384-token vocabulary. |
+| Historical evidence | Keep failed results, original numeric records, datasets, raw outputs, hashes and checkpoints intact. |
+| Evaluation interpretation | A literal mention is not a correct bound edit; an unextractable target is not an independently observed wrong value. |
+| Research permissions | Preparation, staging, training and generation remain separate decisions. |
+| Final project holdout | Keep sealed; do not use it to screen names or build the training-source inventory. |
+| Scope of this edit | Document review and presentation only. No experiment was started. |
+
+---
+
+<a id="evidence"></a>
+
+## 📚 Evidence drawer
+
+The original audit's facts, hashes and all 17 merge records are retained below. Expand only the material relevant to the question being discussed.
+
+<details>
+<summary><strong>A · Completed repairs and original validation record</strong></summary>
 
 - [x] Reconciled all **17** merged PRs against GitHub merge timestamps, descriptions, actual merge/head SHAs, changed sources, reports and test coverage. PRs #191–193 belong to October 17 locally despite October 18 UTC timestamps.
 - [x] Verified **32 successful Linux/Windows PR-head runs** across the 16 code/workflow PRs, plus the successful TypeScript run for #179. #175 changed only a gitlink and triggered no workflow. Inspected job steps; checked the numerical CI claims in #186–193 directly against their job logs. PR discussion/review timelines returned no comments.
@@ -29,9 +256,14 @@ The generator checks EOS before appending a token to the returned text-token lis
 
 **Validation of the local repairs:** **92 focused tests passed; 661 tests passed from the current required Linux-workflow file list run on Windows; 303 prescribed Windows-portability tests passed.** Added 46 regression cases; 39 failed before the repairs and all passed afterward. Initial sandbox runs encountered temporary-directory access failures; the reported completed suites used normal temporary-folder access. Existing NumPy/CUDA initialization warnings were nonfatal. Tests use synthetic fixtures and small test models, not new Plex research training.
 
-**Delivery state:** repairs are local working-tree changes, not a published PR or merged change. Historical remote CI proves the original PR heads, not these new edits. Fresh remote Linux/Windows validation is the first remaining gate.
+> **Historical delivery state:** these repairs were uncommitted at the initial audit. They were subsequently committed as `fe1367f`, included in merge `caf3284`, pushed, and verified by the Linux and Windows runs linked in R1. The 661/303 counts above belong to the original repair snapshot; the merged tree later passed 672/314 local checks.
 
-## 2. Evidence boundary to carry forward
+</details>
+
+<details>
+<summary><strong>B · Recorded model results, V1/V2 findings and immutable receipts</strong></summary>
+
+> **Historical snapshot:** the following measurements describe the original audit. Its statement that no V2 file was saved applies to that audit run; PR #195 later recorded the owner-saved proposal.
 
 | Evaluation / observation | Verified outcome | Interpretation |
 |---|---|---|
@@ -61,79 +293,10 @@ Full immutable receipts verified during this audit:
 
 The complete 138-case replay equals the committed [technical-review evidence](../training/pretraining/p3-source-binding-technical-review-evidence.json). Private raw reports remain local. Historical source-code hashes describe the tools at their original review revision; the repairs do not rewrite those receipts.
 
-## 3. Next work, in order
+</details>
 
-### R1 — Publish and verify the audit repairs
-
-**Status: local implementation complete; publication and remote checks pending.**
-
-- [ ] Review the narrow scorer/gate changes and portable assertions as one scoped patch.
-- [ ] Create a PR with the actual reproduced defects, 661/303 local results and immutable-result replay evidence.
-- [ ] Require successful Linux and Windows checks on the final PR head, then verify the merged SHA's checks if merged.
-- [ ] Confirm that no frozen JSON, checkpoint, historical threshold or saved prediction changed.
-
-**Exit:** reviewed repair commit with fresh passing remote CI. Do not reuse yesterday's successful CI as evidence for this patch.
-
-### R2 — Establish historical training-source coverage
-
-**Status: blocking research prerequisite.**
-
-- [ ] Enumerate the actual ancestor training corpora for the fixed starting checkpoint, including older Phase 2 and private sources. Identify explicit training-source paths and exact hashes; do not infer ancestry from nearby folders.
-- [ ] Screen proposed train names and frozen evaluation namespaces against that inventory, recording collisions and any missing/unavailable sources. The five P3 corpus checks are only a partial exclusion claim.
-- [ ] If the inventory exceeds the V2 reader's 128 MiB aggregate limit, prepare a separately reviewed streaming audit with bounded reads and boundary-safe substring matching. Retain explicit source selection.
-- [ ] Keep the final project holdout outside the inventory and closed.
-- [ ] Resolve any collisions through a new proposal/version or narrow the research claim explicitly; never relabel partly screened names globally unseen.
-
-**Exit:** reproducible SHA inventory, coverage assessment and collision receipt sufficient to review the intended unseen-name claim. An inventory file alone does not prove completeness.
-
-### R3 — Freeze a defensible V2 comparison and scoring contract
-
-**Status: tokenizer feasibility demonstrated; final reviewed dataset and contract pending.**
-
-- [ ] Repeat V2 selection with the reviewed history inventory and freeze a distinct reviewed V2 manifest/SHA. Keep V1 unchanged.
-- [ ] Independently verify all 384 prompt/answer token signatures, unchanged 96 validation rows, 72/24 intact train/validation groups, source-to-target relations, train/evaluation separation and exact full-coverage draw indices.
-- [ ] Freeze both arms' equal token exposure and answer/EOS masks. Both must start from the **same fixed checkpoint**, with the same optimizer initialization, order, seed, budget and endpoint rule.
-- [ ] Distinguish the fresh comparator from the already completed historical run; neither its starting state nor its sampler is an interchangeable historical control.
-- [ ] Version the pure SB-05 scoring/provenance contract for the actual arm identities. The present scorer deliberately accepts only the historical `c968…0230` checkpoint; it cannot certify an arbitrary future arm.
-- [ ] Predeclare the comparison's effect measure and what outcome would refute the identifier-diversity hypothesis before seeing either arm's outputs. A small single-seed result supports only a bounded claim.
-- [ ] Preserve SB-01's absolute gates: **12/12 exact copies, ≥30/36 exact edits, ≥10/12 edits per language, ≥9/12 fully correct groups**. Keep exact unrelated-byte preservation, requested-value wrong/unknown distinctions, EOS/decode/context and raw per-case provenance.
-
-**Exit:** reviewed V2 manifest, full-history scope, matched-arm design, scorer version and immutable success/failure rules. No training-ready claim while any required check remains unresolved.
-
-### R4 — Prepare fresh execution packets for an owner decision
-
-**Status: not authorized as model execution.**
-
-- [ ] Review any new packed bundle and zero-update stage separately from optimizer permission. Pin their bytes, starting-weight equality, empty optimizer, target accounting, fresh destinations and storage budget.
-- [ ] Freeze explicit per-arm contracts: maximum updates/wall time, learning rate, accumulation, seed/device, validation/checkpoint schedule, finite-loss/gradient aborts, no overwrite/resume and fixed endpoint.
-- [ ] Require independent fresh owner authorization for each comparator/intervention arm and for new checkpoint generation on the 48-case probe.
-- [ ] Ensure consumed/closed historical approvals cannot be reused as authorization for either new arm. Preserve original one-run evidence even if local output folders are moved.
-
-**Exit:** concrete reviewed execution packets and explicit owner decisions. This roadmap and a successful preflight grant no execution permission.
-
-### R5 — Measure actual generated-file recovery
-
-**Status: conditional on R1–R4.**
-
-- [ ] Execute only the individually authorized arms; retain immutable run/checkpoint receipts and incomplete/failed outcomes.
-- [ ] Evaluate only the predeclared endpoints and response sets using the approved fixed decoding policy. Keep historical 96/42 controls labeled as previously inspected.
-- [ ] Report both arms' exact-copy/edit and group results by language/context, source retention, wrong/unknown values and EOS/decode/prompt status. Compare the predeclared effect and absolute gates.
-- [ ] If the intervention improves a metric but still fails a gate, record limited movement and keep capability recovery open. If both arms pass similarly, do not attribute the result to identifier diversity.
-- [ ] If copying fails, return to an independently reviewed objective/copying hypothesis. If copying passes but edits fail, review request/value binding. Do not extend training automatically.
-
-**Exit:** raw generated responses and independent scorer replay support the disposition. Loss alone cannot close [issue #189](https://github.com/keepithandy/plex-nano/issues/189).
-
-### R6 — Confirm replacement transfer before harder edits
-
-**Status: future, dependent on a successful R5 disposition.**
-
-- [ ] Freeze a fresh independent replacement confirmation set and criteria before model exposure, without opening the final project holdout.
-- [ ] Confirm minimal correct changes on supplied HTML/CSS/JavaScript with unfamiliar identifiers and unrelated context.
-- [ ] Reassess remaining weaknesses and decide whether P3-03 Insert/Delete is justified. Phase 2 remains closed with its documented limitations; do not rewrite that closeout as solved transfer.
-
-**Exit:** owner-reviewed evidence supports the next coding milestone. Model size, tokenizer and context remain controlled unless a distinct milestone changes them.
-
-## 4. Coverage of every October 17 merge
+<details>
+<summary><strong>C · Every October 17 merge and its original CI evidence</strong></summary>
 
 All linked CI runs below were successful at the audited original PR heads. **Merge / head** records both identities so a passed branch revision is not confused with a squash-merge commit.
 
@@ -159,3 +322,35 @@ All linked CI runs below were successful at the audited original PR heads. **Mer
 
 [PR #194](https://github.com/keepithandy/plex-nano/pull/194) merged on **October 18** and is outside yesterday's 17-PR count. Its V2 successor tool was inspected and exercised read-only because it resolves #193's immediate tokenizer-feasibility question. This audit does not claim model improvement, fresh optimizer updates, new real-model responses or final-holdout access.
 
+</details>
+
+<details>
+<summary><strong>D · Scope and revision history</strong></summary>
+
+| Record | Scope / revision |
+|---|---|
+| Original audit day | October 17, 2026, America/New_York: 00:00–24:00 EDT; October 17 04:00 through October 18 04:00 UTC, end exclusive. |
+| Original audited checkout | `5a93b65fd6abb39b10f81202c1eebf73d17d6361` |
+| October 17 final merge | `28a95bf65887914a296d8bc9ed9986fab0baf88f` |
+| Audit repairs | Local commit `fe1367f`, included in published merge `caf32842c3912bfc75b983d5e7c6bd808d8b26c1`. |
+| October 18 successor | [PR #195](https://github.com/keepithandy/plex-nano/pull/195): streaming history checker and owner-reported saved V2 proposal. |
+| Latest status verification in this review | Linux and Windows push workflows both completed successfully for `caf32842c3912bfc75b983d5e7c6bd808d8b26c1`; see R1. |
+
+The initial audit constructed V2 proposal bytes in memory. The owner subsequently reported saving a proposal with the same SHA, as recorded in PR #195. Neither event establishes complete training ancestry, clears collisions, or authorizes model execution.
+
+</details>
+
+<details>
+<summary><strong>E · Plain-language glossary</strong></summary>
+
+| Term | Meaning in this roadmap |
+|---|---|
+| Comparator | The experiment arm using the original training-name distribution. |
+| Intervention | The arm testing a wider range of training names while holding the other declared conditions fixed. |
+| Training ancestry | The actual earlier source texts used to train the checkpoint's predecessors. |
+| Token-count parity | Paired prompts and answers have matching token counts under the same tokenizer. |
+| Checkpoint | A saved model state; its exact identity is bound by a SHA-256 hash. |
+| EOS | End-of-sequence token, used to indicate that generation finished. |
+| Contrast group | Several requests against the same supplied source, scored together to test request-dependent changes. |
+
+</details>
