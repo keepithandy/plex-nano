@@ -1,5 +1,7 @@
 # P3-SB03 V2 — Tokenizer-Aware Source-Identifier Feasibility
 
+**October 18 audit receipt:** the default read-only search selected **48/48 names**, matched **384/384** paired token-count signatures and preserved all 96 validation rows against the five screened P3 corpora. No extra historical files were screened and no V2 file was saved. Training-ready remains false. The [audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) records the in-memory proposal checksum and the remaining history/review gates.
+
 **Decision: V1 is blocked; V2 search is MODEL-FREE FEASIBILITY ONLY.** No model loading, training, inference, optimizer stage, candidate bundle, checkpoint selection or final-holdout access is authorized here. [Tracking issue #189](https://github.com/keepithandy/plex-nano/issues/189).
 
 ## 1. Preserved V1 result (October 18, 2026)

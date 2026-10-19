@@ -179,7 +179,7 @@ class EvidenceCompositionTrainingPreflightTests(unittest.TestCase):
         self.assertEqual(report["proposedValidationSteps"], [0, 25, 50, 75, 100])
         self.assertEqual(report["proposedCheckpointSteps"], [25, 50, 75, 100])
         self.assertEqual(report["proposedDevice"], "cpu")
-        self.assertEqual(report["outputWouldBe"], "structured-plan/p2-44-first-run")
+        self.assertEqual(Path(report["outputWouldBe"]), Path("structured-plan") / "p2-44-first-run")
         self.assertFalse(report["automaticContinuation"])
         self.assertFalse(report["resumeAllowed"])
 

@@ -139,7 +139,8 @@ def test_scorer_rejects_missing_duplicate_or_reordered_cases(frozen):
             E.score_responses(val, controls, rows)
 
 
-def test_training_endpoint_report_requires_pinned_sha_and_history(tmp_path, monkeypatch):
+@pytest.fixture
+def endpoint_report(tmp_path, monkeypatch):
     report_file = tmp_path / "result.json"
     endpoint = tmp_path / "step-0100.pt"
     endpoint.write_bytes(b"synthetic checkpoint")
@@ -166,12 +167,69 @@ def test_training_endpoint_report_requires_pinned_sha_and_history(tmp_path, monk
                                        (100, 2.7984008651134396)]],
     }
     report_file.write_text(json.dumps(report), encoding="utf-8")
+    return report, report_file, endpoint
+
+
+def test_training_endpoint_report_requires_pinned_sha_and_history(endpoint_report):
+    report, report_file, endpoint = endpoint_report
     proof = E._run_metadata(report_file, endpoint)
     assert proof["fixedCheckpointSha256"] == E.CHECKPOINT_SHA
     report["fixedEndpointSha256"] = "0" * 64
     report_file.write_text(json.dumps(report), encoding="utf-8")
     with pytest.raises(ValueError, match="authorized fixed endpoint"):
         E._run_metadata(report_file, endpoint)
+
+
+@pytest.mark.parametrize("index", range(5))
+@pytest.mark.parametrize("loss", [float("nan"), float("inf"), -1.0, True, "2.5"])
+def test_endpoint_report_rejects_nonfinite_or_malformed_loss_history(endpoint_report, index, loss):
+    report, report_file, endpoint = endpoint_report
+    report["validation"][index]["meanValidationAnswerAndEosLoss"] = loss
+    report_file.write_text(json.dumps(report), encoding="utf-8")
+    with pytest.raises(ValueError, match="history"):
+        E._run_metadata(report_file, endpoint)
+
+
+@pytest.mark.parametrize("section", ["validation", "checkpoints"])
+@pytest.mark.parametrize("value", [None, {}, "bad entry"])
+def test_endpoint_report_rejects_malformed_timeline_entries(endpoint_report, section, value):
+    report, report_file, endpoint = endpoint_report
+    report[section][0] = value
+    report_file.write_text(json.dumps(report), encoding="utf-8")
+    with pytest.raises(ValueError):
+        E._run_metadata(report_file, endpoint)
+
+
+@pytest.mark.parametrize(("key", "value"), [
+    ("generatedTokenCount", None), ("generatedTokenCount", True),
+    ("generatedTokenCount", -1), ("generatedTokenCount", 193),
+    ("generatedTokenCount", 192), ("stoppedAtEos", 1),
+    ("decodeSucceeded", "true"), ("fullPromptVisibleForEveryGenerationStep", 1),
+    ("actual", "\ud800"),
+])
+def test_scorer_rejects_malformed_completion_evidence(frozen, key, value):
+    val, controls = frozen
+    replies = responses_from_rows(val, controls)
+    replies[0][key] = value
+    with pytest.raises(ValueError):
+        E.score_responses(val, controls, replies)
+
+
+@pytest.mark.parametrize("value", [None, "bad entry", []])
+def test_scorer_rejects_nonobject_completion_entries(frozen, value):
+    val, controls = frozen
+    replies = responses_from_rows(val, controls)
+    replies[0] = value
+    with pytest.raises(ValueError):
+        E.score_responses(val, controls, replies)
+
+
+def test_token_cap_without_eos_is_valid_failure_evidence(frozen):
+    val, controls = frozen
+    replies = responses_from_rows(val, controls)
+    replies[0].update(generatedTokenCount=192, stoppedAtEos=False)
+    scores = E.score_responses(val, controls, replies)
+    assert scores["perRecord"][0]["exactCompleteFile"] is False
 
 
 class FakeTokenizer:

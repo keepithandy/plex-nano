@@ -110,19 +110,33 @@ def _run_metadata(result_path: Path, checkpoint: Path) -> dict[str, Any]:
         "interrupted": False,
         "maximumOptimizerUpdates": 100, "maximumWallTimeSeconds": 600,
     }
-    if any(type(result.get(k)) is not type(v) or result[k] != v for k, v in keys.items()):
+    if (not isinstance(result, dict) or any(
+            type(result.get(k)) is not type(v) or result[k] != v for k, v in keys.items())):
         raise ValueError("Training result differs from authorized fixed endpoint")
     saves = result.get("checkpoints")
     if (not isinstance(saves, list) or len(saves) != 4
+            or any(not isinstance(c, dict) or type(c.get("step")) is not int
+                   or type(c.get("sha256")) is not str or len(c["sha256"]) != 64
+                   or any(ch not in "0123456789abcdef" for ch in c["sha256"])
+                   for c in saves)
             or [c["step"] for c in saves] != [25, 50, 75, 100]
+            or [c.get("path") for c in saves] != [f"step-{s:04d}.pt" for s in (25, 50, 75, 100)]
             or saves[-1].get("sha256") != CHECKPOINT_SHA
-            or saves[-1].get("path") != "step-0100.pt"):
+    ):
         raise ValueError("Training result has changed checkpoint timeline")
     vals = result.get("validation")
-    if (not isinstance(vals, list) or [v["step"] for v in vals] != [0, 25, 50, 75, 100]
+    # NaN comparisons are false: endpoint tolerances alone do not validate a
+    # measured history. Check every entry before arithmetic or key access.
+    if (not isinstance(vals, list) or len(vals) != 5
+            or any(not isinstance(v, dict) or type(v.get("step")) is not int
+                   or type(v.get("meanValidationAnswerAndEosLoss")) is not float
+                   or not math.isfinite(v["meanValidationAnswerAndEosLoss"])
+                   or v["meanValidationAnswerAndEosLoss"] < 0 for v in vals)
+            or [v["step"] for v in vals] != [0, 25, 50, 75, 100]
             or abs(vals[0]["meanValidationAnswerAndEosLoss"] - 7.116717401614859) > 1e-9
             or abs(vals[-1]["meanValidationAnswerAndEosLoss"] - 2.7984008651134396) > 1e-9
-            or not isinstance(result.get("elapsedSeconds"), (int, float))
+            or type(result.get("elapsedSeconds")) not in (int, float)
+            or not math.isfinite(result["elapsedSeconds"])
             or not 0 < result["elapsedSeconds"] <= 600):
         raise ValueError("Training result history no longer matches owner-reported run")
     return {"runResultSha256": sha256_file(result_path),
@@ -211,14 +225,21 @@ def score_responses(validation: list[dict], controls: list[dict],
     expected_ids = [r["id"] for r in validation] + [r["taskId"] for r in controls]
     if (len(expected_ids) != 138 or len(set(expected_ids)) != 138
             or not isinstance(responses, list)
+            or any(not isinstance(r, dict) for r in responses)
             or [r.get("recordId") for r in responses] != expected_ids):
         raise ValueError("Evaluation must score all 138 frozen responses exactly once in order")
     scored: list[dict[str, Any]] = []
     group_pass: dict[str, list[bool]] = defaultdict(list)
     counts = Counter()
     for i, (row, reply) in enumerate(zip(validation + controls, responses)):
-        if type(reply.get("actual")) is not str:
-            raise ValueError("All decoded actual files must be strings")
+        if (type(reply.get("actual")) is not str
+                or type(reply.get("generatedTokenCount")) is not int
+                or not 0 <= reply["generatedTokenCount"] <= MAX_NEW
+                or any(type(reply.get(key)) is not bool for key in
+                       ("stoppedAtEos", "decodeSucceeded", "fullPromptVisibleForEveryGenerationStep"))
+                or (reply["stoppedAtEos"] and reply["generatedTokenCount"] == MAX_NEW)):
+            raise ValueError("Malformed completion text, flags or token budget")
+        reply["actual"].encode("utf-8")
         origin = "validation" if i < len(validation) else "development"
         condition = row["condition"]
         condition_key = ("copy" if condition == "copy" else "edit")

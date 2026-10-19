@@ -1,5 +1,7 @@
 # Plex Nano — P3-SB Source-Binding Recovery Roadmap
 
+**October 18 audit update:** the [merge-audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) supplies the next work order. All saved capability failures replay unchanged. V1 token parity failed; V2 now matches 48 names across 384 paired token signatures against five P3 corpora in a read-only check. Full historical-source screening, reviewed V2 bytes and fresh model-execution decisions remain pending.
+
 **Status:** REVIEWED RESEARCH PROPOSAL — SB-00 read-only diagnosis and SB-01 *design/preparation* technically green-lit. **No training, model reselection, final-project holdout, or new inference experiment is authorized by this document.** Owner roadmap review comes before any further experiment.
 
 **Current model:** 27,566,080 scratch-trained parameters; 16,384-token vocabulary; 512-token context; supplied single HTML/CSS/JavaScript file plus a request.

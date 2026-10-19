@@ -181,7 +181,7 @@ class RequestGroundedTrainingPreflightTests(unittest.TestCase):
         self.assertEqual(report["proposedValidationSteps"], [0, 25, 50, 75, 100])
         self.assertEqual(report["proposedCheckpointSteps"], [25, 50, 75, 100])
         self.assertEqual(report["proposedDevice"], "cpu")
-        self.assertEqual(report["outputWouldBe"], "request-grounded/p2-48-first-run")
+        self.assertEqual(Path(report["outputWouldBe"]), Path("request-grounded") / "p2-48-first-run")
         self.assertFalse(report["automaticContinuation"])
         self.assertFalse(report["resumeAllowed"])
 

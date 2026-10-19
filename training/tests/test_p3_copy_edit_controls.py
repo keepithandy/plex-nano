@@ -231,6 +231,7 @@ def test_scorer_changed_target_boundaries_are_unscorable() -> None:
     "missing", "duplicate", "wrong-id", "not-string", "wrong-checkpoint",
     "invalid-authorization", "non-eos-boolean", "prompt-eviction",
     "unexpected-training", "wrong-manifest", "wrong-step-type",
+    "impossible-eos-at-cap", "invalid-unicode",
 ])
 def test_scorer_rejects_invalid_envelopes(case: str) -> None:
     frozen = SCORE.read_manifest()
@@ -255,6 +256,10 @@ def test_scorer_rejects_invalid_envelopes(case: str) -> None:
         env["execution"]["optimizerUpdatesDuringDiagnostic"] = 1
     elif case == "wrong-manifest":
         env["manifestSha256"] = "bad"
+    elif case == "impossible-eos-at-cap":
+        env["generationAudit"][0]["generatedTokenCount"] = 192
+    elif case == "invalid-unicode":
+        env["responses"][0]["actual"] = "\ud800"
     else:
         env["execution"]["checkpointStep"] = True
     with pytest.raises(ValueError):

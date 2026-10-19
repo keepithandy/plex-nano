@@ -1,5 +1,7 @@
 # Plex Nano — Codex Review Roadmap: All Open Issue Gates
 
+**October 18 audit update:** use the [merge-audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) for the current work order and local reporting repairs. V2 tokenizer-only feasibility now matches all 48 names and 384 paired signatures against five P3 corpora. Historical-source screening, reviewed V2 bytes and new model-execution decisions remain pending; original capability results are unchanged.
+
 **Prepared:** October 17, 2026  
 **Repository:** `keepithandy/plex-nano`, branch `master`  
 **Issue audit:** **One open issue, [#189 — P3-SB Source-Binding Recovery](https://github.com/keepithandy/plex-nano/issues/189).** No other open repository issues or PRs were returned by the GitHub audit.  

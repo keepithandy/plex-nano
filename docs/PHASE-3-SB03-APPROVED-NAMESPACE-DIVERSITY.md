@@ -1,5 +1,7 @@
 # P3-SB03 — Approved intervention choice and matched namespace-diversity preparation
 
+**October 18 audit update:** V1 failed real token parity on 240/384 paired rows and remains frozen. The [audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) records successful read-only V2 feasibility against five P3 corpora: 48 names and all 384 token-count signatures matched, with no V2 file saved. Complete historical-source screening and independent review still precede a frozen V2 or new model execution. The original V1 design record below is retained.
+
 **Research decision:** Hypothesis **A — train-namespace diversity** is selected for technical development following owner approval. This document green-lights *model-free candidate preparation, frozen comparison and read-only parity checks*. It does **not** authorize a training run, checkpoint stage, model generation, new final holdout access, or a matched comparator run.
 
 **Repository tracking:** [source-binding issue #189](https://github.com/keepithandy/plex-nano/issues/189) · [technical failure review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) · [six-stage roadmap](PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md).

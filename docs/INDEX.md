@@ -8,6 +8,7 @@ This folder contains the **historical research record**, not a list of current p
 
 | Question | Document |
 |---|---|
+| What remains after auditing the October 17 merges? | [October 18 audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md): all 17 merges, verified failures, local reporting fixes and ordered research gates |
 | What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](../Plex-ROADMAP.md) |
 | How do I diagnose P3-02 failures without training? | [P3-02-D1 read-only diagnostic](PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
@@ -15,8 +16,8 @@ This folder contains the **historical research record**, not a list of current p
 | What did the 42-task copy/edit probe show? | [Completed diagnostic issue #177](https://github.com/keepithandy/plex-nano/issues/177): owner-reported **0/42 exact, 0/6 copies**, source-name loss; owner retains raw responses locally |
 | What happened in the completed P3 copy-fidelity experiment? | [Closed evidence record #181](https://github.com/keepithandy/plex-nano/issues/181): **100-step training complete, teacher-forced loss 7.1167 → 2.7984; generation 0/138 exact**, final holdout closed |
 | How do I review all green-lit source-binding issue work in Codex? | [Codex Review Roadmap](PHASE-3-SOURCE-BINDING-CODEX-REVIEW-ROADMAP.md): issue #189 SB-00–SB-05 matrix, gated permissions, checks and review prompt |
-| What is ready in source-binding recovery? | [Technical review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md): SB-00 measured, SB-01 verified; [approved SB-02 and SB-03 frozen *proposal*](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md) introduces 48 train names and a 1,600-draw sampler, **failed** the owner's real tokenizer-parity audit (240/384 mismatches); [V2 read-only feasibility tool](PHASE-3-SB03-V2-TOKENIZER-FEASIBILITY.md) prepared, still needs owner-local evaluation, historical training inventory and separate training permission; [#189](https://github.com/keepithandy/plex-nano/issues/189) remains open |
-| What did the 72-task source/value diagnostic show? | [Replacement-failure decision](PHASE-3-REPLACEMENT-FAILURE-DECISION.md): both axes failed; next controlled proposal |
+| What is ready in source-binding recovery? | [Technical review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md): SB-00 measured, SB-01 verified; [approved SB-02 and SB-03 frozen *proposal*](PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md) introduces 48 train names and a 1,600-draw sampler, **failed** the owner's real tokenizer-parity audit (240/384 mismatches); [October 18 V2 read-only audit](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) matched 48 names across 384 paired rows against five P3 corpora; complete historical-source screening, reviewed frozen V2 bytes and new experimental permissions remain pending; [#189](https://github.com/keepithandy/plex-nano/issues/189) remains open |
+| What did the 72-task source/value diagnostic show? | [Replacement-failure decision](PHASE-3-REPLACEMENT-FAILURE-DECISION.md): frozen both-fail decision, with 68/72 target boundaries unscorable; next controlled proposal |
 | Did P3-02 pass unseen file-edit tasks? | [Frozen development-gate summary](../training/pretraining/p3-02-development-gate-result-summary.json): **No — 0/36 exact edits** |
 | What was the fixed trained model checkpoint? | [Frozen first-run result](../training/pretraining/p3-02-first-run-result.json): step 100, fixed SHA-256 |
 | What was the Phase 2 conclusion? | [P2-50 closeout](PHASE-2-P2-50-CLOSEOUT.md) |

@@ -83,10 +83,12 @@ def _check_envelope(manifest: dict[str, Any], envelope: dict[str, Any]) -> dict[
             raise ValueError("Response/audit task order or identity differs from frozen manifest")
         if row["taskId"] in seen or type(row.get("actual")) is not str:
             raise ValueError("Duplicate task ID or invalid response text")
+        row["actual"].encode("utf-8")
         seen.add(row["taskId"])
         if (type(audit.get("generatedTokenCount")) is not int
             or not 0 <= audit["generatedTokenCount"] <= 192
             or type(audit.get("stoppedAtEos")) is not bool
+            or (audit["stoppedAtEos"] and audit["generatedTokenCount"] == 192)
             or audit.get("fullPromptVisibleForEveryGenerationStep") is not True):
             raise ValueError(f"Invalid generation status for {row['taskId']}")
     return meta
