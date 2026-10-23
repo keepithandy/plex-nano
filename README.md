@@ -61,6 +61,15 @@ The current model focuses on **HTML, CSS, and JavaScript**.
 
 No pretrained model weights are used for the current Plex Nano research line.
 
+### Separate Plex 600M architecture (review only)
+
+A proposed **600,372,480-parameter from-scratch model** is implemented in
+[`training/src/plex_training/plex600.py`](training/src/plex_training/plex600.py).
+Its [architecture review](docs/PLEX-600M-ARCHITECTURE-REVIEW.md) explains the model
+configuration, memory considerations, and lightweight tests. **This is untrained
+source code only**, not a new Plex Nano checkpoint, approved experiment, or change
+to the 27M model. There is no 600M tokenizer or training runner yet.
+
 ## What Plex is being trained to do
 
 Plex should learn to:
