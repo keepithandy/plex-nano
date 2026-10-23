@@ -30,7 +30,7 @@ The existing `ModelConfig` and `PlexLanguageModel` still describe **only** the 2
 | Normalization | RMSNorm |
 | Output embedding | Tied to token input embedding |
 | Attention | Causal `torch.nn.functional.scaled_dot_product_attention` |
-| Weight initialization | Random normal (`std=0.02`) for linear + embedding matrices |
+| Weight initialization | Random normal (`std=0.02`) for linear + embedding matrices; residual output projections scaled by `1/sqrt(2 * layers)` |
 | Activation checkpointing | Optional, disabled until explicitly enabled |
 | Pretrained weights | **None** |
 | Tokenizer | **Not yet built** for this model |
