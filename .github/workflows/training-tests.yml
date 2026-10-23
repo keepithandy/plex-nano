@@ -97,5 +97,6 @@ jobs:
           training/tests/test_web_dataset.py
           training/tests/test_web_materialize.py
           training/tests/test_web_sources.py
+          training/tests/test_plex600.py
           training/tests/test_ci_test_inventory.py
           -q
