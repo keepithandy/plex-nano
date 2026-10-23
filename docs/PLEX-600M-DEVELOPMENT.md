@@ -35,11 +35,11 @@ RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. A full-si
 | Architecture and exact size | **Implemented** | [Plex600Model](../training/src/plex_training/plex600.py) and [design review](PLEX-600M-ARCHITECTURE-REVIEW.md) |
 | Lightweight model forward/backward, causal mask, weighted loss | **Tested in CI** | [tests](../training/tests/test_plex600.py), Linux and Windows workflow |
 | PR #197 | **Merged to master** | [Merge](https://github.com/keepithandy/plex-nano/pull/197), commit `156ef1de959e7c991d16e28a7a8caf80ac17fa20` |
-| Dedicated 600M tokenizer preparation | **Implemented; CI verification in progress** | [600M setup CLI](../training/src/plex_training/plex600_setup.py), [guard tests](../training/tests/test_plex600_setup.py) |
+| Dedicated 600M tokenizer preparation | **Implemented; Linux and Windows CI passed** | [600M setup CLI](../training/src/plex_training/plex600_setup.py), [guard tests](../training/tests/test_plex600_setup.py) |
 | Input data and independent split/provenance verification | **Bundle verification implemented; large-scale dataset absent** | Requires reviewed rights, disjoint splits, and SHA-pinned data |
-| Record-bounded next-token batches | **Implemented; CI verification in progress** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |\n| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
+| Record-bounded next-token batches | **Implemented; Linux and Windows CI passed** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |\n| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
 | Full 600M optimizer updates | **Not authorized / not run** | No 600M trained weights exist |
-| Real-world coding ability | **Not measured** | Random weights are not a working assistant |
+| Real-world coding ability | **Not measured** | Random weights are not a working assistant |\n| Regression status for current foundation | **Green** | Linux 678 passed / 9 skipped; Windows 329 passed (see links below) |
 
 ## First engineering deliverable
 
@@ -76,3 +76,12 @@ uv run --project training python -m pytest training/tests/test_plex600.py traini
 ```
 
 A tiny training dataset may yield **fewer** than 32,768 learned tokens; that does not invalidate the model's vocabulary *capacity* and is not evidence of model training. The batch sampler pads short records and ignores its padding in the loss; windows never cross an EOS/document boundary. **No optimizer update is executed by these commands.**
+
+## Verified first-foundation result
+
+- **Linux:** [training-tests run 39886569785](https://github.com/keepithandy/plex-nano/actions/runs/39886569785): **678 passed, 9 skipped**, PyTorch emitted an optional NumPy initialization warning.
+- **Windows:** [training-windows-tests run 39886569715](https://github.com/keepithandy/plex-nano/actions/runs/39886569715): **329 passed**, same optional NumPy initialization warning.
+- **Tested code:** 600M architecture shape and causal/gradient behavior using small configurations; fresh scratch tokenizer identity and approved-data fit; SHA and split corruption refusal; token/window sampling that stays inside individual records; small-model next-token backward pass.
+- **Evidence limit:** CI did **not** instantiate or train all 600M parameters, run on the owner's GPU, acquire substantial training data, or certify language skill. No 600M model checkpoint or weights exist.
+
+**First milestone outcome: PASS for repository-side foundation, NOT YET VERIFIED for full-size GPU training.** The next independent gate is a reviewed, bounded 600M CUDA memory/forward/backward check, followed by dataset/tokenizer source review and separately authorized optimizer execution.
