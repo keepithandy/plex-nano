@@ -63,7 +63,7 @@ class Plex600Config:
         return self.width // self.attention_heads
 
     def parameter_count(self) -> int:
-        """Count every trainable parameter, including untied LayerNorm alternatives.
+        """Count all trainable parameters in this specific architecture.
 
         This design uses RMSNorm (scale only), no linear biases, and a tied
         token embedding / LM output projection. RoPE has no trained weights.
@@ -197,6 +197,11 @@ class Plex600Model(nn.Module):
         self.embedding_dropout = nn.Dropout(self.config.dropout)
         self.gradient_checkpointing = False
         self.apply(self._initialize)
+        # Scale deep residual branches at scratch initialization.
+        residual_std = 0.02 / math.sqrt(2 * self.config.layers)
+        for block in self.blocks:
+            nn.init.normal_(block.attention.o_proj.weight, mean=0.0, std=residual_std)
+            nn.init.normal_(block.feed_forward.down_proj.weight, mean=0.0, std=residual_std)
 
     @staticmethod
     def _initialize(module: nn.Module) -> None:
@@ -225,14 +230,16 @@ class Plex600Model(nn.Module):
         if targets is None and target_weights is not None:
             raise ValueError("target_weights require targets")
         if targets is not None:
-            if targets.shape != input_ids.shape or targets.dtype != torch.long:
+            if (targets.shape != input_ids.shape or targets.dtype != torch.long
+                    or targets.device != input_ids.device):
                 raise ValueError("targets must be long tensors aligned with input_ids")
             if bool(((targets != -100) & ((targets < 0) | (targets >= self.config.vocab_size))).any()):
                 raise ValueError("target token id is outside vocabulary")
             if not bool((targets != -100).any()):
                 raise ValueError("at least one target must be supervised")
             if target_weights is not None:
-                if target_weights.shape != targets.shape or not torch.is_floating_point(target_weights):
+                if (target_weights.shape != targets.shape or target_weights.device != targets.device
+                        or not torch.is_floating_point(target_weights)):
                     raise ValueError("target_weights must be floating tensors aligned with targets")
                 if not bool(torch.isfinite(target_weights).all()) or bool((target_weights < 0).any()):
                     raise ValueError("target_weights must be finite and nonnegative")
