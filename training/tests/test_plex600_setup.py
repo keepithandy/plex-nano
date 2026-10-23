@@ -10,6 +10,10 @@ from pathlib import Path
 import tempfile
 import unittest
 
+import random
+
+from plex_training.plex600_batches import Plex600PackedExamples
+from plex_training.plex600 import Plex600Config, Plex600Model
 from plex_training.plex600_setup import (
     MODEL_CAPACITY,
     MODEL_FAMILY,
@@ -133,6 +137,59 @@ class Plex600SetupTests(unittest.TestCase):
             packed.write_bytes(packed.read_bytes() + b"\x00\x00")
             with self.assertRaisesRegex(ValueError, "SHA mismatch"):
                 check_tokenizer_bundle(path)
+
+    def test_verified_record_bounded_batches_and_small_model_backward(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            train_tokenizer(dataset, root / "bundle", vocab_size=300,
+                            model_family=MODEL_FAMILY)
+            with Plex600PackedExamples(root / "bundle", split="train") as source:
+                x, y = source.sample_batch(random.Random(11), batch_size=2, sequence_length=32)
+                again_x, again_y = source.sample_batch(
+                    random.Random(11), batch_size=2, sequence_length=32
+                )
+                self.assertTrue((x == again_x).all().item())
+                self.assertTrue((y == again_y).all().item())
+                self.assertEqual(tuple(x.shape), (2, 32))
+                self.assertEqual(tuple(y.shape), (2, 32))
+                self.assertTrue(bool((y >= 0).all()))
+                self.assertTrue(bool((x[:, 1:] == y[:, :-1]).all()))
+                # The tiny model exercises the full next-token loss/gradient path,
+                # not an optimizer update or the full-size 600M allocation.
+                config = Plex600Config(
+                    vocab_size=300, context_length=32, width=64, layers=2,
+                    attention_heads=4, key_value_heads=2, feed_forward_width=128,
+                )
+                model = Plex600Model(config)
+                _, loss = model(x, y)
+                self.assertTrue(bool(loss.isfinite()))
+                loss.backward()
+                self.assertTrue(any(p.grad is not None for p in model.parameters()))
+            with self.assertRaisesRegex(ValueError, "closed"):
+                source.sample_batch(random.Random(11))
+
+    def test_short_record_padding_does_not_cross_eos_or_splits(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.dataset(root)
+            train_tokenizer(root / "dataset", root / "bundle", vocab_size=300,
+                            model_family=MODEL_FAMILY)
+            with Plex600PackedExamples(root / "bundle", split="validation") as samples:
+                x, y = samples.sample_batch(random.Random(1), sequence_length=128)
+                active = y[0] != -100
+                self.assertGreater(int(active.sum()), 0)
+                self.assertLess(int(active.sum()), 128)
+                self.assertEqual(int(y[0, active][-1]), 3)
+                self.assertTrue(bool((y[0, ~active] == -100).all()))
+                self.assertTrue(bool((x[0, ~active] == 0).all()))
+                self.assertEqual(int(y[0, :].max()), int(y[0, active].max()))
+                with self.assertRaisesRegex(ValueError, "Invalid batch"):
+                    samples.sample_batch(random.Random(1), batch_size=0)
+                with self.assertRaisesRegex(ValueError, "Invalid batch"):
+                    samples.sample_batch(random.Random(1), sequence_length=1025)
+            with self.assertRaisesRegex(ValueError, "split"):
+                Plex600PackedExamples(root / "bundle", split="holdout")
 
     def test_validation_text_does_not_affect_tokenizer_fit(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

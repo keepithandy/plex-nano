@@ -35,9 +35,9 @@ RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. A full-si
 | Architecture and exact size | **Implemented** | [Plex600Model](../training/src/plex_training/plex600.py) and [design review](PLEX-600M-ARCHITECTURE-REVIEW.md) |
 | Lightweight model forward/backward, causal mask, weighted loss | **Tested in CI** | [tests](../training/tests/test_plex600.py), Linux and Windows workflow |
 | PR #197 | **Merged to master** | [Merge](https://github.com/keepithandy/plex-nano/pull/197), commit `156ef1de959e7c991d16e28a7a8caf80ac17fa20` |
-| Dedicated 600M tokenizer preparation | **Pending verification** | Must not relabel an existing frozen 16K tokenizer as 32K |
-| Input data and independent split/provenance verification | **Not yet prepared for 600M** | Require reviewed rights, no validation leakage |
-| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
+| Dedicated 600M tokenizer preparation | **Implemented; CI verification in progress** | [600M setup CLI](../training/src/plex_training/plex600_setup.py), [guard tests](../training/tests/test_plex600_setup.py) |
+| Input data and independent split/provenance verification | **Bundle verification implemented; large-scale dataset absent** | Requires reviewed rights, disjoint splits, and SHA-pinned data |
+| Record-bounded next-token batches | **Implemented; CI verification in progress** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |\n| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
 | Full 600M optimizer updates | **Not authorized / not run** | No 600M trained weights exist |
 | Real-world coding ability | **Not measured** | Random weights are not a working assistant |
 
@@ -57,3 +57,22 @@ A safely testable, isolated foundation on `master`: exact architecture, simple r
 ## Log
 
 - **2026-10-22:** Confirmed the scratch-model goal and RTX 4080 SUPER hardware; merged architecture PR #197 after green Linux/Windows checks. Continued work directly on `master`, without new pull requests.
+
+## Safe local inspection commands
+
+From the root of the repository, these do not construct the full 600M model:
+
+```powershell
+uv run --project training python -m plex_training.plex600_setup inspect
+
+# After you have a reviewed, rights-approved, hashed dataset with disjoint
+# train/validation JSONL and its manifest:
+uv run --project training python -m plex_training.plex600_setup tokenizer-train --dataset-dir PATH_TO_REVIEWED_DATASET --output-dir PATH_TO_NEW_600M_BUNDLE --vocab-size 32768
+
+# Read-only verification of that freshly produced bundle:
+uv run --project training python -m plex_training.plex600_setup tokenizer-check --bundle-dir PATH_TO_NEW_600M_BUNDLE
+
+uv run --project training python -m pytest training/tests/test_plex600.py training/tests/test_plex600_setup.py -q
+```
+
+A tiny training dataset may yield **fewer** than 32,768 learned tokens; that does not invalidate the model's vocabulary *capacity* and is not evidence of model training. The batch sampler pads short records and ignores its padding in the loss; windows never cross an EOS/document boundary. **No optimizer update is executed by these commands.**
