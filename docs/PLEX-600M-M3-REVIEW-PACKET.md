@@ -14,7 +14,7 @@ below describes historical inputs, not a selected or approved 600M dataset.
 | Step | State | Required result |
 |---|---|---|
 | M3.1 — Inventory existing source evidence | Prepared below | Exact identities, historical roles, counts and evidence limits. |
-| M3.2 — Review scope and select candidate families | Next | Exact file scope, retained notices, related-source risks and a recorded 600M reuse decision. Identify what additional source coverage is needed. |
+| M3.2 — Review scope and select candidate families | Local subset/notice review complete; selection open | [3,228 records and eight notices verified](PLEX-600M-M3-SOURCE-REUSE-REVIEW.md); source decisions, file-level exceptions and similarity risks remain. |
 | M3.3 — Review source-family split | Proposed below | Fixed family assignments and documented prior exposure; investigate overlaps before claiming independence. |
 | M3.4 — Review development evaluation | Proposed below | Task coverage, scoring rules and exposure policy decided before authoring/freezing the actual set. |
 | M3.5 — Record preparation decision | Open | Approved corpus scope and storage budget, unresolved issues and the precise M4 work authorized. |
@@ -141,6 +141,7 @@ This design alone makes no capability claim and does not authorize inference.
 4. Record the precise preparation work permitted for M4. Keep tokenizer fitting,
    model evaluation, optimizer checks and training as separate later decisions.
 
-**Next concrete work:** examine the exact historical subset and packaged-notice
-evidence for the candidate families, then complete a source-by-source reuse
-recommendation. Do not mark M3 complete from this packet alone.
+**Subsequent evidence:** the [source reuse review](PLEX-600M-M3-SOURCE-REUSE-REVIEW.md)
+now verifies the exact local subsets and notices and records source-by-source
+recommendations. Next, review source-use scope, file-level exceptions and
+cross-family similarity risks before a source-selection decision. M3 remains open.
