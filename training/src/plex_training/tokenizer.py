@@ -136,10 +136,23 @@ class PlexTokenizer:
 
 
 def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16_384,
-                    min_frequency: int = 2, storage_limit_bytes: int = 200 * 1024**3) -> dict[str, Any]:
-    """Create a fresh tokenizer bundle; publish only after every check succeeds."""
-    if type(vocab_size) is not int or not 260 <= vocab_size <= DEFAULT_CONFIG.vocab_size:
-        raise ValueError("vocab-size must be 260..16384 (within the model's capacity)")
+                    min_frequency: int = 2, storage_limit_bytes: int = 200 * 1024**3,
+                    model_family: str = "plex-nano") -> dict[str, Any]:
+    """Create a verified, train-only BPE bundle for one explicitly selected model family.
+
+    Nano's default behavior and frozen 16K bundle remain unchanged. The 600M
+    family is a separate scratch tokenizer with its own model configuration.
+    """
+    if model_family == "plex-nano":
+        model_config = DEFAULT_CONFIG
+    elif model_family == "plex-600m-v1":
+        # Avoid importing PyTorch for the legacy tokenizer-only/Nano path.
+        from .plex600 import Plex600Config
+        model_config = Plex600Config()
+    else:
+        raise ValueError("Unrecognized model family; only Nano and Plex 600M are supported")
+    if type(vocab_size) is not int or not 260 <= vocab_size <= model_config.vocab_size:
+        raise ValueError(f"vocab-size must be 260..{model_config.vocab_size} (within model capacity)")
     if type(min_frequency) is not int or min_frequency < 1:
         raise ValueError("min-frequency must be a positive integer")
     if storage_limit_bytes <= 0:
@@ -264,7 +277,7 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
             "schemaVersion": 1, "codec": CODEC, "algorithm": "byte-level BPE",
             "library": "tokenizers", "libraryVersion": tokenizers.__version__,
             "requestedVocabularySize": vocab_size, "actualVocabularySize": plex.vocabulary_size,
-            "modelVocabularyCapacity": DEFAULT_CONFIG.vocab_size, "minFrequency": min_frequency,
+            "modelVocabularyCapacity": model_config.vocab_size, "minFrequency": min_frequency,
             "initialAlphabetBytes": 256, "normalization": "none",
             "addPrefixSpace": False, "useRegex": True,
             "specialTokens": dict(zip(SPECIAL_TOKENS, range(4))),
@@ -274,8 +287,10 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
             "trainingJsonlSha256": summary["trainJsonlSha256"],
             "tokenizerSha256": sha256_file(staging / "tokenizer.json"),
         }
+        if model_family != "plex-nano":
+            settings["modelFamily"] = model_family
         _write_json(staging / "tokenizer-config.json", settings)
-        _write_json(staging / "model-config.json", DEFAULT_CONFIG.to_dict())
+        _write_json(staging / "model-config.json", model_config.to_dict())
         # Preserve the exact reviewed manifest bytes that its SHA-256 names.
         shutil.copyfile(manifest_path, staging / "source-dataset-manifest.json")
         for relative, raw in notices.items():
@@ -322,7 +337,7 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
             "tokenizerSha256": settings["tokenizerSha256"],
             "modelConfigSha256": sha256_file(staging / "model-config.json"),
             "actualVocabularySize": plex.vocabulary_size,
-            "modelVocabularyCapacity": DEFAULT_CONFIG.vocab_size,
+            "modelVocabularyCapacity": model_config.vocab_size,
             "representativeRoundtrips": len(ROUNDTRIP_SAMPLES), **split_info,
         })
         budget()
@@ -333,7 +348,7 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
                 raise ValueError("Saved tokenizer roundtrip differs from fitted tokenizer")
         os.rename(staging, output_dir)
         return {"codec": CODEC, "actualVocabularySize": plex.vocabulary_size,
-                "modelVocabularyCapacity": DEFAULT_CONFIG.vocab_size,
+                "modelVocabularyCapacity": model_config.vocab_size,
                 "tokenizerSha256": settings["tokenizerSha256"],
                 "representativeRoundtrips": len(ROUNDTRIP_SAMPLES),
                 "train": split_info["train"], "validation": split_info["validation"],
