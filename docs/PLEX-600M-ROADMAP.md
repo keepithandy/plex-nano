@@ -44,7 +44,7 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M3 · Source and evaluation-split decision](#m3--source-and-evaluation-split-decision) | **Current planning gate** | A reviewed, concrete source inventory, split proposal and development-evaluation design. |
 | [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | **Bounded builder + synthetic tests implemented; actual corpus blocked** | Offline historical input/hash verification, quarantine audit, create-only train candidates; fresh validation, source rights and actual materialization still pending. |
 | [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | Waiting for M4 | Train-only scratch tokenizer, pinned bundle and source identities, roundtrips and source-binding verification. |
-| [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | Proposal and separate execution decision needed | Bounded hardware contract and recorded outcome for the proposed optimizer configuration. |
+| [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Fixed one-update runner implemented; target GPU measurement pending** | Explicit one-step AdamW contract, worker timeout, source and state guards; actual RTX 4080 SUPER result must be captured locally. |
 | [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | Waiting for data and hardware gates | A reviewed run contract, explicit training authorization and preserved result. |
 | [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | Waiting for saved weights and evaluation decision | Predeclared task scores, raw outputs, failure analysis and a recorded next research decision. |
 
@@ -171,6 +171,8 @@ failure. Define exactly whether an optimizer update is included.
 its result, including OOM or interruption. A pass applies to its declared
 configuration; it does not establish sustained training stability or coding
 ability.
+
+**M6 one-step report protocol:** [First optimizer-feasibility report](PLEX-600M-FIRST-OPTIMIZER-REPORT.md) fixes a single synthetic FP32 AdamW update with BF16 autocast, 14,000 MiB minimum free VRAM, at most 600 seconds, create-only local JSON reporting, and no dataset/model checkpoint access. The user approved pursuing this experiment on October 31; standard GitHub CI does not provide the owner's GPU. No new optimizer measurement should be reported until the local run actually completes.
 
 ### M7 · First bounded training pilot
 
