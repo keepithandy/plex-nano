@@ -144,7 +144,7 @@ def checked_approval(path: Path, *, bundle_sha: str, source_sha: str = SOURCE_SH
             or decision["sourceManifestSha256"] != source_sha
             or decision["bundleManifestSha256"] != bundle_sha
             or decision["finalHoldoutAllowed"] is not False):
-        raise Refusal("No valid owner-scoped M7 training authorization")
+        raise Refusal("No valid owner-scoped M7 training approval or authorization")
     return {"approvalSha256": hashlib.sha256(raw).hexdigest(),
             "trainingAuthorized": True, "approvedUpdates": UPDATES}
 
