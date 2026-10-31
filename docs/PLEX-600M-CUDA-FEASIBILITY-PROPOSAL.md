@@ -119,6 +119,14 @@ outcome remains inconclusive in that case. The runner's current bytes therefore
 have a different SHA from the historical run. This reporting change does not
 alter or re-execute the recorded check.
 
+**Subsequent portability repair:** fresh Git checkouts use LF source bytes with
+SHA-256 `59ee5a753f37e93f046a16111eddd68cf184b0298ffb27f08022a868320358bc`.
+The runner now explicitly accepts that exact form and the historical CRLF form
+`e7ad49628b1ebcf083991c385a9c55cff159c5567a6a0f6062d48418f26d1af2`, and
+records the actual byte hash in its source identity. Other byte changes are
+refused. This fixes the Linux CI source-pin mismatch without rewriting the
+historical result. Twenty local runner guard tests passed after the repair.
+
 ## Evidence available while drafting
 
 On October 31, 2026, read-only `nvidia-smi` reported an NVIDIA GeForce RTX 4080

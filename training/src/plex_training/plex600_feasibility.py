@@ -20,7 +20,10 @@ import time
 from typing import Any
 
 PROTOCOL = "plex-600m-cuda-feasibility-v1"
-MODEL_SHA256 = "e7ad49628b1ebcf083991c385a9c55cff159c5567a6a0f6062d48418f26d1af2"
+MODEL_SHA256 = "59ee5a753f37e93f046a16111eddd68cf184b0298ffb27f08022a868320358bc"
+# The historical GPU check used this exact CRLF form. Fresh checkouts use LF.
+ACCEPTED_MODEL_SHA256 = (MODEL_SHA256,
+    "e7ad49628b1ebcf083991c385a9c55cff159c5567a6a0f6062d48418f26d1af2")
 ROOT = Path(__file__).resolve().parents[3]
 MODEL_PATH = Path(__file__).with_name("plex600.py")
 TIMEOUT_SECONDS = 600
@@ -47,7 +50,8 @@ def plan(device_index: int = 0) -> dict[str, Any]:
         raise Refusal("Device index must be a nonnegative integer")
     return {
         "protocol": PROTOCOL, "status": "plan", "deviceIndex": device_index,
-        "modelSha256": MODEL_SHA256, "configuration": dict(CONFIGURATION),
+        "modelSha256": MODEL_SHA256, "acceptedModelSha256": list(ACCEPTED_MODEL_SHA256),
+        "configuration": dict(CONFIGURATION),
         "parameterCount": PARAMETERS, "seed": SEED, "batchSize": 1,
         "sequenceLength": TOKEN_COUNT, "supervisedTargets": TOKEN_COUNT - 1,
         "parameterDtype": "float32", "autocastDtype": "bfloat16",
@@ -61,7 +65,7 @@ def plan(device_index: int = 0) -> dict[str, Any]:
 def source_identity() -> dict[str, Any]:
     """Verify on-disk source and Git state without importing the model."""
     digest = hashlib.sha256(MODEL_PATH.read_bytes()).hexdigest()
-    if digest != MODEL_SHA256:
+    if digest not in ACCEPTED_MODEL_SHA256:
         raise Refusal("Model source SHA-256 does not match the fixed proposal")
     relative = MODEL_PATH.relative_to(ROOT).as_posix()
     options = dict(cwd=ROOT, text=True, capture_output=True, check=True, timeout=5)

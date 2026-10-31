@@ -56,9 +56,24 @@ class Plex600FeasibilityTests(unittest.TestCase):
     def test_actual_pinned_source_and_git_identity_are_consistent(self):
         report = check.source_identity()
         self.assertTrue(report["modelSourceClean"])
-        self.assertEqual(report["modelSha256"], check.MODEL_SHA256)
+        self.assertIn(report["modelSha256"], check.ACCEPTED_MODEL_SHA256)
         self.assertEqual(len(report["gitCommit"]), 40)
         self.assertEqual(len(report["runnerSha256"]), 64)
+
+    def test_exact_lf_and_historical_crlf_sources_are_both_pinned(self):
+        from types import SimpleNamespace
+        canonical = check.MODEL_PATH.read_bytes().replace(b"\r\n", b"\n")
+        for raw in (canonical, canonical.replace(b"\n", b"\r\n"), canonical + b" "):
+            path = MagicMock()
+            path.read_bytes.return_value = raw
+            path.relative_to.return_value.as_posix.return_value = "training/src/plex_training/plex600.py"
+            with patch.object(check, "MODEL_PATH", path), patch.object(check.subprocess, "run") as git:
+                git.side_effect = [SimpleNamespace(stdout=""), SimpleNamespace(stdout="a" * 40)]
+                if raw.endswith(b" "):
+                    with self.assertRaisesRegex(check.Refusal, "SHA-256"):
+                        check.source_identity()
+                else:
+                    self.assertIn(check.source_identity()["modelSha256"], check.ACCEPTED_MODEL_SHA256)
 
     def test_direct_worker_invocation_refuses_without_torch_import(self):
         env = dict(os.environ)
