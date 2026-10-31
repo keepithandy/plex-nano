@@ -138,7 +138,7 @@ class Plex600M7Tests(unittest.TestCase):
                 with patch.object(m7, "MIN_FREE_DISK", 0):
                     result = m7.output_path(root / "first-run", bundle=root / "tokenizer",
                                             dataset=m7.source.DATASET)
-                    self.assertEqual(result, root / "first-run")
+                    self.assertEqual(result, (root / "first-run").resolve())
                     result.mkdir()
                     with self.assertRaisesRegex(ValueError, "new directory"):
                         m7.output_path(result, bundle=root / "tokenizer",
