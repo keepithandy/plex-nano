@@ -48,8 +48,10 @@ IDs, and the sampler uses the verified index snapshot. Older 600M bundles that
 lack those hashes are refused; they are not silently modified. This binds an
 index to its bundle manifest, not to an independently authenticated manifest
 or verified source-record mapping. A jointly changed manifest and index can
-still pass. The packed token file is also reopened after verification, leaving
-a separate file-change race to address before relying on it for training.
+still pass. The subsequent [input-integrity work](PLEX-600M-INPUT-INTEGRITY-PLAN.md)
+replaces live token mappings with bounded verified snapshots and adds an explicit
+source-record check using independently supplied manifest hashes. This is not
+an automatic source or rights certification when constructing a sampler.
 
 Before relying on a dataset for 600M work, review and record:
 

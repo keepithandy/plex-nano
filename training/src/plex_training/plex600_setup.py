@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 from array import array
+from itertools import zip_longest
 import hashlib
 import json
 from pathlib import Path
@@ -17,12 +18,37 @@ import sys
 from typing import Any
 
 from .plex600 import Plex600Config
-from .tokenizer import PlexTokenizer, sha256_file, train_tokenizer
+from .tokenizer import PlexTokenizer, sha256_file, train_tokenizer, _records, _local_file
+from tokenizers import Tokenizer
 
 MODEL_FAMILY = "plex-600m-v1"
 MODEL_CAPACITY = Plex600Config().vocab_size
 MAX_INDEX_BYTES = 32 * 1024 * 1024
 MAX_RECORD_TOKENS = 1_048_577
+MAX_SNAPSHOT_BYTES = 256 * 1024 * 1024
+
+
+def _snapshot(path: Path, expected_hash: str, limit: int) -> bytes:
+    """Hash the immutable bytes consumers will use, with a hard read bound."""
+    if not path.is_file() or path.is_symlink():
+        raise ValueError("Expected a regular snapshot input")
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    if len(raw) > limit:
+        raise ValueError("Input exceeds the snapshot byte limit")
+    if hashlib.sha256(raw).hexdigest() != expected_hash:
+        raise ValueError("Snapshot SHA mismatch")
+    return raw
+
+
+def _token_snapshot(path: Path, info: dict[str, Any]) -> bytes:
+    size = info["tokens"] * 2
+    if size > MAX_SNAPSHOT_BYTES:
+        raise ValueError("Token split exceeds the 256 MiB snapshot limit")
+    raw = _snapshot(path, info["sha256"], size)
+    if len(raw) != size:
+        raise ValueError("Token snapshot byte count mismatch")
+    return raw
 
 
 def inspect() -> dict[str, Any]:
@@ -166,6 +192,54 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
     return report
 
 
+def check_source_binding(directory: Path, dataset_dir: Path, *,
+                         bundle_manifest_sha256: str, source_manifest_sha256: str) -> dict[str, Any]:
+    """Read-only comparison against independently supplied manifest identities.
+
+    Does not fit a tokenizer or infer rights/quality from a matching hash.
+    Only the explicitly supplied train/validation JSONL files are opened.
+    """
+    root, dataset = directory.resolve(strict=True), dataset_dir.resolve(strict=True)
+    manifest = json.loads(_snapshot(root / "manifest.json", bundle_manifest_sha256, 1024**2))
+    source = json.loads(_snapshot(dataset / "manifest.json", source_manifest_sha256, 1024**2))
+    if not isinstance(manifest, dict) or not isinstance(source, dict):
+        raise ValueError("Expected object manifests")
+    report, indices = _check_tokenizer_bundle(root)
+    if report["sourceDatasetManifestSha256"] != source_manifest_sha256:
+        raise ValueError("Source manifest identity differs from bundle")
+    if source.get("schemaVersion") != 1 or source.get("pipelineVersion") not in ("p1-14.2", "p2-02.0"):
+        raise ValueError("Unsupported source dataset manifest")
+    sources = {row["id"]: row for row in source["sources"]}
+    tokenizer_raw = _snapshot(root / "tokenizer.json", manifest["tokenizerSha256"], MAX_SNAPSHOT_BYTES)
+    tokenizer = PlexTokenizer(Tokenizer.from_str(tokenizer_raw.decode("utf-8")))
+    checked = {}
+    for split in ("train", "validation"):
+        info = report["verifiedSplits"][split]
+        pinned = manifest[split]
+        if (info["sha256"] != pinned["sha256"] or info["indexSha256"] != pinned["indexSha256"]
+                or info["records"] != pinned["records"] or info["tokens"] != pinned["tokenCount"]):
+            raise ValueError("Bundle identity changed during source verification")
+        raw = _token_snapshot(root / f"{split}.tokens.u16le", info)
+        records = _records(_local_file(dataset, split + ".jsonl"),
+                           source["summary"][split + "JsonlSha256"],
+                           source["summary"][split + "Records"], sources,
+                           family_stratified=source["pipelineVersion"] == "p2-02.0")
+        for record, index in zip_longest(records, indices[split]):
+            if record is None or index is None or record["recordId"] != index["recordId"]:
+                raise ValueError("Packed record identity/order differs from source")
+            ids = array("H", tokenizer.encode(record["text"]) + [3])
+            if sys.byteorder != "little":
+                ids.byteswap()
+            start, size = index["startToken"] * 2, index["tokenCount"] * 2
+            if ids.tobytes() != raw[start:start + size]:
+                raise ValueError("Packed record tokens differ from source text")
+        checked[split] = info["records"]
+    return {"modelFamily": MODEL_FAMILY, "sourceBindingVerified": True,
+            "bundleManifestSha256": bundle_manifest_sha256,
+            "sourceManifestSha256": source_manifest_sha256, "verifiedRecords": checked,
+            "modelLoaded": False, "optimizerUpdates": 0, "trainingAuthorized": False}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Plex 600M safe model/tokenizer setup")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -177,6 +251,11 @@ def main(argv: list[str] | None = None) -> int:
     fit.add_argument("--min-frequency", type=int, default=2)
     verify = commands.add_parser("tokenizer-check", help="Verify an existing 600M bundle without changes")
     verify.add_argument("--bundle-dir", type=Path, required=True)
+    binding = commands.add_parser("source-check", help="Compare packed records with explicitly supplied source")
+    binding.add_argument("--bundle-dir", type=Path, required=True)
+    binding.add_argument("--dataset-dir", type=Path, required=True)
+    binding.add_argument("--bundle-manifest-sha256", required=True)
+    binding.add_argument("--source-manifest-sha256", required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "inspect":
@@ -188,9 +267,13 @@ def main(argv: list[str] | None = None) -> int:
             )
             result = {"modelFamily": MODEL_FAMILY, "tokenizer": result,
                       "verifiedBundle": check_tokenizer_bundle(args.output_dir)}
+        elif args.command == "source-check":
+            result = check_source_binding(args.bundle_dir, args.dataset_dir,
+                        bundle_manifest_sha256=args.bundle_manifest_sha256,
+                        source_manifest_sha256=args.source_manifest_sha256)
         else:
             result = check_tokenizer_bundle(args.bundle_dir)
-    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
         print(f"Plex 600M setup refused: {exc}", file=sys.stderr)
         return 2
     print(json.dumps(result, sort_keys=True, indent=2))

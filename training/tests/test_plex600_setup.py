@@ -19,6 +19,7 @@ from plex_training.plex600_setup import (
     MODEL_CAPACITY,
     MODEL_FAMILY,
     check_tokenizer_bundle,
+    check_source_binding,
     inspect,
     main,
 )
@@ -26,6 +27,122 @@ from plex_training.tokenizer import PlexTokenizer, ROUNDTRIP_SAMPLES, train_toke
 
 
 class Plex600SetupTests(unittest.TestCase):
+    def test_token_snapshot_refuses_changes_before_capture_and_survives_later_writes(self):
+        from plex_training.plex600_setup import _check_tokenizer_bundle
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            train_tokenizer(self.dataset(root), root / "bundle", vocab_size=300, model_family=MODEL_FAMILY)
+            bundle = root / "bundle"
+            tokens = bundle / "train.tokens.u16le"
+            original = tokens.read_bytes()
+            for kind in ("replace", "in-place", "truncate"):
+                tokens.write_bytes(original)
+                def change_after_check(directory):
+                    result = _check_tokenizer_bundle(directory)
+                    if kind == "replace":
+                        tokens.unlink()
+                        tokens.write_bytes(b"\x04\x00" * (len(original) // 2))
+                    elif kind == "in-place":
+                        tokens.write_bytes(b"\x04\x00" + original[2:])
+                    else:
+                        tokens.write_bytes(original[:-2])
+                    return result
+                with self.subTest(kind=kind), patch("plex_training.plex600_batches._check_tokenizer_bundle",
+                                                    side_effect=change_after_check):
+                    with self.assertRaisesRegex(ValueError, "Snapshot SHA mismatch"):
+                        Plex600PackedExamples(bundle)
+            tokens.write_bytes(original)
+            with Plex600PackedExamples(bundle) as samples:
+                expected = samples.sample_batch(random.Random(2), sequence_length=8)
+                tokens.write_bytes(b"\x04\x00" * (len(original) // 2))
+                actual = samples.sample_batch(random.Random(2), sequence_length=8)
+                self.assertTrue(all(bool((a == b).all()) for a, b in zip(expected, actual)))
+                tokens.unlink()
+                actual = samples.sample_batch(random.Random(2), sequence_length=8)
+                self.assertTrue(all(bool((a == b).all()) for a, b in zip(expected, actual)))
+            self.assertEqual(samples._tokens, b"")
+
+    def test_token_snapshot_size_cap_refuses_before_read(self):
+        from plex_training.plex600_setup import _token_snapshot, MAX_SNAPSHOT_BYTES
+        with self.assertRaisesRegex(ValueError, "256 MiB"):
+            _token_snapshot(Path("does-not-exist"), {"tokens": MAX_SNAPSHOT_BYTES, "sha256": "unused"})
+
+    def test_source_binding_checks_external_identity_record_ids_and_exact_tokens(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            bundle = root / "bundle"
+            train_tokenizer(dataset, bundle, vocab_size=300, model_family=MODEL_FAMILY)
+            manifest_path = bundle / "manifest.json"
+            digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+            source_hash = digest(dataset / "manifest.json")
+            bundle_hash = digest(manifest_path)
+            def check(expected=bundle_hash):
+                return check_source_binding(bundle, dataset, bundle_manifest_sha256=expected,
+                                            source_manifest_sha256=source_hash)
+            self.assertEqual(check()["verifiedRecords"], {"train": 1, "validation": 1})
+            with redirect_stdout(StringIO()) as output:
+                self.assertEqual(main(["source-check", "--bundle-dir", str(bundle),
+                    "--dataset-dir", str(dataset), "--bundle-manifest-sha256", bundle_hash,
+                    "--source-manifest-sha256", source_hash]), 0)
+            self.assertTrue(json.loads(output.getvalue())["sourceBindingVerified"])
+            with self.assertRaisesRegex(ValueError, "Snapshot SHA mismatch"):
+                check_source_binding(bundle, dataset, bundle_manifest_sha256=bundle_hash,
+                                     source_manifest_sha256="0" * 64)
+            index = bundle / "train.index.json"
+            original_index = index.read_bytes()
+            rows = json.loads(original_index)
+            rows[0]["recordId"] = "forged-source-id"
+            index.write_text(json.dumps(rows))
+            manifest = json.loads(manifest_path.read_bytes())
+            manifest["train"]["indexSha256"] = digest(index)
+            manifest_path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, "Snapshot SHA mismatch"):
+                check()
+            with self.assertRaisesRegex(ValueError, "identity/order"):
+                check(digest(manifest_path))
+            index.write_bytes(original_index)
+            manifest["train"]["indexSha256"] = digest(index)
+            packed = bundle / "train.tokens.u16le"
+            raw = packed.read_bytes()
+            old = int.from_bytes(raw[:2], "little")
+            packed.write_bytes((5 if old == 4 else 4).to_bytes(2, "little") + raw[2:])
+            manifest["train"]["sha256"] = digest(packed)
+            manifest_path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, "tokens differ"):
+                check(digest(manifest_path))
+
+    def test_source_binding_refuses_reordered_source_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            train = dataset / "train.jsonl"
+            first = json.loads(train.read_bytes())
+            second = dict(first, recordId="second", text="const other = 12;\n")
+            second["contentSha256"] = hashlib.sha256(second["text"].encode()).hexdigest()
+            lines = [(json.dumps(r) + "\n").encode() for r in (first, second)]
+            source = json.loads((dataset / "manifest.json").read_bytes())
+            def write_source(parts):
+                train.write_bytes(b"".join(parts))
+                source["summary"]["trainRecords"] = 2
+                source["summary"]["trainJsonlSha256"] = hashlib.sha256(train.read_bytes()).hexdigest()
+                (dataset / "manifest.json").write_text(json.dumps(source))
+            write_source(lines)
+            bundle = root / "bundle"
+            train_tokenizer(dataset, bundle, vocab_size=300, model_family=MODEL_FAMILY)
+            write_source(list(reversed(lines)))
+            source_bytes = (dataset / "manifest.json").read_bytes()
+            source_hash = hashlib.sha256(source_bytes).hexdigest()
+            (bundle / "source-dataset-manifest.json").write_bytes(source_bytes)
+            manifest_path = bundle / "manifest.json"
+            manifest = json.loads(manifest_path.read_bytes())
+            manifest["sourceDatasetManifestSha256"] = source_hash
+            manifest_path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, "identity/order"):
+                check_source_binding(bundle, dataset,
+                    bundle_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+                    source_manifest_sha256=source_hash)
+
     @staticmethod
     def dataset(root: Path, *, validation: str = "Reserved example unseen by tokenizer 🚀\n") -> Path:
         dataset = root / "dataset"

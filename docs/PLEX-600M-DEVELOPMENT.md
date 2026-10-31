@@ -66,6 +66,12 @@ A safely testable, isolated foundation on `master`: exact architecture, simple r
 
 ## Safe local inspection commands
 
+**Input integrity follow-up:** [verified token snapshots and source checking](PLEX-600M-INPUT-INTEGRITY-PLAN.md)
+now address the token-file race and provide an explicit record-to-source check.
+Selected splits are capped at 256 MiB for the snapshot path. Local Windows
+setup/tokenizer/CI-inventory tests: **31 passed** with the existing optional
+NumPy warning; remote CI remains pending. No real corpus or model run was made.
+
 From the root of the repository, these do not construct the full 600M model:
 
 ```powershell

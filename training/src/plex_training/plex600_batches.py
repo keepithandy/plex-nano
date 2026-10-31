@@ -7,13 +7,14 @@ from __future__ import annotations
 
 from pathlib import Path
 import random
+from array import array
+import sys
 
 import torch
 from torch import Tensor
 
-from .data import TokenCorpus
 from .plex600 import Plex600Config
-from .plex600_setup import _check_tokenizer_bundle
+from .plex600_setup import _check_tokenizer_bundle, _token_snapshot
 
 
 class Plex600PackedExamples:
@@ -35,12 +36,15 @@ class Plex600PackedExamples:
         self.eligible_rows = [row for row in self.rows if row["tokenCount"] >= 2]
         if not self.eligible_rows:
             raise ValueError("No two-token record is available for next-token sampling")
-        self.corpus = TokenCorpus(self.bundle_dir / f"{split}.tokens.u16le")
+        # Hash exactly the private immutable bytes used by every later sample.
+        # Path replacement, truncation and in-place writes cannot alter them.
+        self._tokens = _token_snapshot(self.bundle_dir / f"{split}.tokens.u16le",
+                                       self.verification["verifiedSplits"][split])
         self._closed = False
 
     def close(self) -> None:
         if not self._closed:
-            self.corpus.close()
+            self._tokens = b""
             self._closed = True
 
     def __enter__(self) -> "Plex600PackedExamples":
@@ -67,7 +71,12 @@ class Plex600PackedExamples:
             valid_length = min(sequence_length, row["tokenCount"] - 1)
             max_start = row["tokenCount"] - valid_length - 1
             offset = rng.randint(0, max_start)
-            window = self.corpus._window(row["startToken"] + offset, valid_length + 1)
+            start = (row["startToken"] + offset) * 2
+            values = array("H")
+            values.frombytes(self._tokens[start:start + (valid_length + 1) * 2])
+            if sys.byteorder != "little":
+                values.byteswap()
+            window = torch.tensor(values, dtype=torch.long)
             inputs[index, :valid_length] = window[:-1]
             targets[index, :valid_length] = window[1:]
         return inputs, targets
