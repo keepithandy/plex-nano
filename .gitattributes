@@ -107,3 +107,11 @@ training/pretraining/plex600-m3-source-subset-review-2026-10-31.json text eol=lf
 training/pretraining/plex600-m3-overlap-notice-review.py text eol=lf
 training/pretraining/plex600-m3-overlap-notice-review-2026-10-31.json text eol=lf
 training/pretraining/plex600-m3-proposed-source-holds-v1.json text eol=lf
+
+# Owner-authored 600M pilot and original approval inputs must retain exact LF
+# bytes on Windows; hashes/rights evidence must never be rewritten in checkout.
+training/phase2/drafts/p2-02-code-pairs-v2.jsonl text eol=lf
+training/phase2/drafts/p2-02-request-following-v2/candidate.jsonl text eol=lf
+training/phase2/data/authored/p2-02-code-pairs-v2/approval.json text eol=lf
+training/phase2/data/authored/p2-02-request-following-v2/approval.json text eol=lf
+training/pretraining/plex600-owner-authored-pilot-v1/** text eol=lf
