@@ -6,6 +6,9 @@ This folder contains the **historical research record**, not a list of current p
 
 ## Read these first
 
+For the separate 600M track, use the [600M roadmap](PLEX-600M-ROADMAP.md) for
+ordered milestones and the current source/split planning gate.
+
 | Question | Document |
 |---|---|
 | What remains after auditing the October 17 merges? | [October 18 audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md): all 17 merges, verified failures, local reporting fixes and ordered research gates |
