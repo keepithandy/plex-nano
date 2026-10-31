@@ -45,7 +45,7 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | **Bounded builder + synthetic tests implemented; actual corpus blocked** | Offline historical input/hash verification, quarantine audit, create-only train candidates; fresh validation, source rights and actual materialization still pending. |
 | [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | **Rights-gated adapter implemented; real run pending** | M4 source-bound deterministic train/validation split and 600M-only tokenizer compatibility; measured token bundle pending. |
 | [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Owner-reported one-step RTX 4080 SUPER pass** | 600.37M parameters, one AdamW update, 10.04 GiB peak reserved VRAM; independently repeated/sustained throughput still pending. |
-| [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | Waiting for data and hardware gates | A reviewed run contract, explicit training authorization and preserved result. |
+| [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | **Four-update runner implemented; unexecuted** | Source-bound plan/preflight, approval-gated execution, validation and atomic checkpoint; no M7 optimizer updates yet. |
 | [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | Waiting for saved weights and evaluation decision | Predeclared task scores, raw outputs, failure analysis and a recorded next research decision. |
 
 M3–M8 are a **proposed sequence**, not completed or approved experiments. No
@@ -203,6 +203,8 @@ and its checkpoints separate.
 preserve its configuration, hashes, measurements and outcome, including an
 incomplete or failed run. Do not select a different endpoint after seeing
 results unless the contract allowed it in advance.
+
+**M7 implementation (October 31):** [Four-update pilot contract](PLEX-600M-M7-FOUR-UPDATE-CONTRACT.md) defines an execution-disabled-by-default, source-bound four-update CUDA runner, deterministic record sampling, before/after internal validation and create-only checkpoint/report validation. The owner's real 1,191-vocabulary tokenizer digest is pinned. **No M7 training authorization or optimizer updates have occurred.**
 
 ### M8 · Coding evaluation and next decision
 
