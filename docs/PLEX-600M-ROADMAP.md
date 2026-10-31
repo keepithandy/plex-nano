@@ -42,7 +42,7 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M1 · Architecture and foundation](#m1--architecture-and-foundation) | Implemented | Isolated architecture, preparation tools and recorded small-configuration CI. |
 | [M2 · Input integrity and initial GPU check](#m2--input-integrity-and-initial-gpu-check) | Implemented within stated limits | One fixed full-size forward/backward result; tested input-integrity checks and documented bounds. |
 | [M3 · Source and evaluation-split decision](#m3--source-and-evaluation-split-decision) | **Current planning gate** | A reviewed, concrete source inventory, split proposal and development-evaluation design. |
-| [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | Waiting for M3 decisions | Reviewed inputs, frozen identities, filtering and overlap reports, and reproducible train/validation manifests. |
+| [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | **Bounded builder + synthetic tests implemented; actual corpus blocked** | Offline historical input/hash verification, quarantine audit, create-only train candidates; fresh validation, source rights and actual materialization still pending. |
 | [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | Waiting for M4 | Train-only scratch tokenizer, pinned bundle and source identities, roundtrips and source-binding verification. |
 | [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | Proposal and separate execution decision needed | Bounded hardware contract and recorded outcome for the proposed optimizer configuration. |
 | [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | Waiting for data and hardware gates | A reviewed run contract, explicit training authorization and preserved result. |
@@ -137,6 +137,8 @@ scope, verify their identities and split assignment, and freeze the manifest.
 Exact deduplication alone does not prove the absence of related or
 near-duplicate material. This gate does not authorize tokenizer fitting or
 model training.
+
+**M4 implementation (October 31):** [Bounded M4 pipeline](PLEX-600M-M4-CORPUS-PIPELINE.md) provides offline, create-only review-data materialization with M3 hash and notice quarantine checks, scoped source-rights approvals, deterministic outputs, immutable audit hashes, a 16 MiB output budget, synthetic tests and a read-only output verifier. This is **not** an approved dataset or the M4 exit gate. The old historical validation is explicitly excluded from any new fresh evaluation split. No full 600M corpus has been produced or tokenizer fitted.
 
 ### M5 · Dedicated tokenizer and packed inputs
 
