@@ -87,6 +87,10 @@ forward/backward check does not establish that optimizer allocations fit.
 
 ### M3 · Source and evaluation-split decision
 
+The [M3 preparation packet](PLEX-600M-M3-REVIEW-PACKET.md) contains the existing
+source inventory, historical manifest identities, proposed source roles and a
+development-evaluation design. These proposals remain open for review.
+
 **Purpose:** decide what the model may learn from and how to measure progress
 on coding requests before any new data is exposed to it.
 

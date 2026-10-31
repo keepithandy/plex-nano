@@ -9,6 +9,11 @@ The [600M roadmap](PLEX-600M-ROADMAP.md) consolidates the proposed milestone
 sequence. The next planning gate is a concrete source and evaluation-split
 decision; the historical data review does not approve a 600M corpus.
 
+The [M3 preparation packet](PLEX-600M-M3-REVIEW-PACKET.md) is ready for the
+source/split review. It inventories eight historical repositories in five
+families and records proposed roles, evaluation coverage and outstanding
+decisions. No 600M data was prepared or tokenizer fitted for that packet.
+
 Build **Plex 600M** as a general language + practical coding model that can receive instructions, understand supplied HTML/CSS/JavaScript, generate coherent answers, debug and make precise edits. Demonstrate these skills on frozen development examples, not merely declining training loss. Human-observed failures feed reviewed future training data, not silent modifications to evaluation sets.
 
 - **Never replace this goal with an agent/repository navigator, pretrained-model adaptation or licensing/product roadmap.**
