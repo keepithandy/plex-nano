@@ -95,3 +95,7 @@ authorization, not permission to run uncontrolled updates.
 Never substitute a lower training loss for exact-code edit, behavioral or
 unrelated-code preservation evaluations. The protected final holdout remains
 sealed.
+
+## Owner-reported result (October 31)
+
+The owner supplied a local JSON report showing status pass on the RTX 4080 SUPER with one AdamW update, 10.04 GiB peak reserved VRAM, 0.1544369 s optimizer time, finite gradients and all 436 optimizer moment tensors validated. This is an **owner-supplied observation**, not a second independent GPU measurement or sustained training trial. The [machine-readable historical observation](../training/pretraining/plex600-m6-owner-reported-optimizer-result-2026-10-31.json) stores the numbers without fabricating a SHA-256 for the original local JSON file. Real coding ability and sustained training remain unmeasured.

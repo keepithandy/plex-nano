@@ -168,9 +168,17 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
     source_manifest_hash = sha256_file(manifest_path)
     manifest = _read_json(manifest_path)
     pipeline_version = manifest.get("pipelineVersion")
-    if manifest.get("schemaVersion") != 1 or pipeline_version not in {"p1-14.2", "p2-02.0"}:
-        raise ValueError("Expected a supported P1-14.2 or P2-02.0 curated dataset manifest")
-    family_stratified = pipeline_version == "p2-02.0"
+    if manifest.get("schemaVersion") != 1 or pipeline_version not in {"p1-14.2", "p2-02.0", "plex600-m5.0"}:
+        raise ValueError("Expected a supported P1/P2 or Plex 600M M5 curated dataset manifest")
+    if pipeline_version == "plex600-m5.0":
+        if (model_family != "plex-600m-v1"
+                or manifest.get("modelFamily") != model_family
+                or manifest.get("status") != "tokenizer-input-only-not-training-authorization"
+                or manifest.get("trainingAuthorized") is not False
+                or manifest.get("split", {}).get("previousHistoricalValidationReused") is not False
+                or manifest.get("split", {}).get("independentDevelopmentEvaluationCreated") is not False):
+            raise ValueError("Unapproved M5 train/validation or wrong model family")
+    family_stratified = pipeline_version in {"p2-02.0", "plex600-m5.0"}
     source_rows = manifest.get("sources")
     if not isinstance(source_rows, list) or not source_rows:
         raise ValueError("Dataset must have approved source provenance")

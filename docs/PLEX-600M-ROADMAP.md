@@ -43,8 +43,8 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M2 · Input integrity and initial GPU check](#m2--input-integrity-and-initial-gpu-check) | Implemented within stated limits | One fixed full-size forward/backward result; tested input-integrity checks and documented bounds. |
 | [M3 · Source and evaluation-split decision](#m3--source-and-evaluation-split-decision) | **Current planning gate** | A reviewed, concrete source inventory, split proposal and development-evaluation design. |
 | [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | **Bounded builder + synthetic tests implemented; actual corpus blocked** | Offline historical input/hash verification, quarantine audit, create-only train candidates; fresh validation, source rights and actual materialization still pending. |
-| [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | Waiting for M4 | Train-only scratch tokenizer, pinned bundle and source identities, roundtrips and source-binding verification. |
-| [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Fixed one-update runner implemented; target GPU measurement pending** | Explicit one-step AdamW contract, worker timeout, source and state guards; actual RTX 4080 SUPER result must be captured locally. |
+| [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | **Rights-gated adapter implemented; real run pending** | M4 source-bound deterministic train/validation split and 600M-only tokenizer compatibility; measured token bundle pending. |
+| [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Owner-reported one-step RTX 4080 SUPER pass** | 600.37M parameters, one AdamW update, 10.04 GiB peak reserved VRAM; independently repeated/sustained throughput still pending. |
 | [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | Waiting for data and hardware gates | A reviewed run contract, explicit training authorization and preserved result. |
 | [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | Waiting for saved weights and evaluation decision | Predeclared task scores, raw outputs, failure analysis and a recorded next research decision. |
 
@@ -155,6 +155,8 @@ intended inputs when that work is authorized.
 and storage limits. The 32,768 vocabulary size is a capacity; actual learned
 vocabulary and token counts must be measured. Resolve the 256 MiB per-split
 snapshot limit before using a larger split.
+
+**M5 adapter (October 31):** [M5 preparation guide](PLEX-600M-M5-PREPARATION.md) describes the rights-gated deterministic train/validation split and the new explicit 600M tokenizer input format. It is implemented and tested on synthetic data only; no real candidate data or new tokenizer has been materialized. The independent evaluation remains separate.
 
 ### M6 · Optimizer feasibility
 
