@@ -202,6 +202,68 @@ class Plex600FeasibilityTests(unittest.TestCase):
                 self.assertEqual(report["status"], expected)
                 run.assert_called_once()
 
+    def test_worker_source_change_after_parent_preflight_is_inconclusive_with_hint(self):
+        identity = {
+            "gitCommit": "a" * 40, "modelSourceClean": True,
+            "modelSha256": "b" * 64, "runnerSha256": "c" * 64,
+        }
+        reason = "Model source SHA-256 does not match the fixed proposal"
+
+        def run_worker(command, control, env):
+            output = StringIO()
+            with patch.dict(os.environ, env), patch.object(sys, "stdin", StringIO(json.dumps(control))), \
+                    patch.dict(sys.modules, {"torch": None}), redirect_stdout(output):
+                check._worker_entry()
+            return 0, output.getvalue(), "", False
+
+        # The first identity check is the parent preflight; the second is the
+        # worker's check after the model source has changed, before torch import.
+        with patch.object(check, "source_identity", side_effect=[identity, check.Refusal(reason)]), \
+                patch.object(check, "_supervise", side_effect=run_worker) as supervisor:
+            report = check.execute(0, authorized=True)
+        self.assertEqual(report["status"], "inconclusive")
+        self.assertEqual(report["error"], "Worker result failed provenance or measurement checks")
+        self.assertEqual(report["unverifiedWorkerRefusal"], reason)
+        self.assertEqual(report["source"], identity)
+        supervisor.assert_called_once()
+
+    def test_unverified_hint_does_not_accept_forged_or_malformed_results(self):
+        identity = {
+            "gitCommit": "a" * 40, "modelSourceClean": True,
+            "modelSha256": "b" * 64, "runnerSha256": "c" * 64,
+        }
+        reason = "Model source has local or staged modifications"
+        refusal = dict(check.plan(), status="refused", error=reason, workerSeconds=1.0)
+        changed_identity = dict(identity, gitCommit="d" * 40)
+        cases = [
+            (refusal, True),
+            (dict(refusal, source=changed_identity), True),
+            (dict(refusal, source=identity), False),  # Authenticated refusal follows the existing path.
+            (dict(refusal, source={}), False),
+            (dict(refusal, source=None), False),
+            (dict(refusal, source=dict(changed_identity, modelSourceClean=False)), False),
+            (dict(refusal, protocol="other"), False),
+            (dict(refusal, status="pass"), False),
+            (dict(refusal, status="failed"), False),
+            (dict(refusal, forwardCalls=True), False),
+            (dict(refusal, parameterCount=1), False),
+            (dict(refusal, error="arbitrary untrusted message"), False),
+            (dict(refusal, error=[reason]), False),
+            (dict(refusal, workerSeconds=True), False),
+            (dict(refusal, workerSeconds=601), False),
+            (dict(refusal, extra="untrusted"), False),
+            ({key: value for key, value in refusal.items() if key != "workerSeconds"}, False),
+        ]
+        for response, expected_hint in cases:
+            with self.subTest(response=response), patch.object(check, "source_identity", return_value=identity), \
+                    patch.object(check, "_supervise", return_value=(0, json.dumps(response), "", False)):
+                report = check.execute(0, authorized=True)
+                if response.get("source") == identity:
+                    self.assertEqual(report["status"], "refused")
+                else:
+                    self.assertEqual(report["status"], "inconclusive")
+                self.assertEqual(report.get("unverifiedWorkerRefusal"), reason if expected_hint else None)
+
     def test_matching_failure_is_preserved_and_missing_pass_measurements_rejected(self):
         failure = dict(check.plan(), status="failed", source={}, error="CUDA out of memory")
         with patch.object(check, "source_identity", return_value={}), patch.object(

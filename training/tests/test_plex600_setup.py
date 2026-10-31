@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import random
 
@@ -82,6 +83,10 @@ class Plex600SetupTests(unittest.TestCase):
             self.assertEqual(report["actualVocabularySize"], result["actualVocabularySize"])
             self.assertEqual(report["verifiedSplits"]["train"]["records"], 1)
             self.assertEqual(report["verifiedSplits"]["validation"]["records"], 1)
+            for split in ("train", "validation"):
+                digest = hashlib.sha256((root / f"bundle/{split}.index.json").read_bytes()).hexdigest()
+                self.assertEqual(report["verifiedSplits"][split]["indexSha256"], digest)
+                self.assertEqual(result[split]["indexSha256"], digest)
             self.assertEqual(report["optimizerUpdates"], 0)
             tokenizer = PlexTokenizer.load(root / "bundle")
             for sample in ROUNDTRIP_SAMPLES:
@@ -109,6 +114,8 @@ class Plex600SetupTests(unittest.TestCase):
             dataset = self.dataset(root)
             nano = train_tokenizer(dataset, root / "nano", vocab_size=300)
             self.assertEqual(nano["modelVocabularyCapacity"], 16_384)
+            self.assertNotIn("indexSha256", nano["train"])
+            self.assertNotIn("indexSha256", json.loads((root / "nano/manifest.json").read_text())["train"])
             with self.assertRaisesRegex(ValueError, "not configured for Plex 600M"):
                 check_tokenizer_bundle(root / "nano")
             with self.assertRaisesRegex(ValueError, "capacity"):
@@ -126,17 +133,106 @@ class Plex600SetupTests(unittest.TestCase):
             path = root / "bundle"
             indexed = path / "train.index.json"
             original = indexed.read_bytes()
+            manifest_path = path / "manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            original_manifest = manifest_path.read_bytes()
             rows = json.loads(original)
             rows[0]["startToken"] = 1
             indexed.write_text(json.dumps(rows))
+            manifest["train"]["indexSha256"] = hashlib.sha256(indexed.read_bytes()).hexdigest()
+            manifest_path.write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ValueError, "contiguous"):
                 check_tokenizer_bundle(path)
             indexed.write_bytes(original)
+            manifest_path.write_bytes(original_manifest)
             self.assertTrue(check_tokenizer_bundle(path)["verifiedSplits"])
             packed = path / "train.tokens.u16le"
             packed.write_bytes(packed.read_bytes() + b"\x00\x00")
             with self.assertRaisesRegex(ValueError, "SHA mismatch"):
                 check_tokenizer_bundle(path)
+
+    def test_index_record_id_change_and_missing_hash_refuse_both_splits(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            bundle = root / "bundle"
+            train_tokenizer(dataset, bundle, vocab_size=300, model_family=MODEL_FAMILY)
+            manifest_path = bundle / "manifest.json"
+            original_manifest = manifest_path.read_bytes()
+            for split in ("train", "validation"):
+                with self.subTest(split=split):
+                    index_path = bundle / f"{split}.index.json"
+                    original_index = index_path.read_bytes()
+                    rows = json.loads(original_index)
+                    rows[0]["recordId"] = "changed-identity"
+                    index_path.write_text(json.dumps(rows))
+                    with self.assertRaisesRegex(ValueError, "index SHA mismatch"):
+                        check_tokenizer_bundle(bundle)
+                    index_path.write_bytes(original_index)
+                    manifest = json.loads(original_manifest)
+                    del manifest[split]["indexSha256"]
+                    manifest_path.write_text(json.dumps(manifest))
+                    with self.assertRaisesRegex(ValueError, "legacy 600M bundle must be rebuilt"):
+                        check_tokenizer_bundle(bundle)
+                    manifest_path.write_bytes(original_manifest)
+            check_tokenizer_bundle(bundle)
+
+    def test_duplicate_index_ids_rejected_even_when_manifest_hash_is_updated(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            path = dataset / "train.jsonl"
+            row = json.loads(path.read_text(encoding="utf-8"))
+            row["recordId"] = "train-second"
+            row["text"] = "A different local training fixture.\n"
+            row["contentSha256"] = hashlib.sha256(row["text"].encode()).hexdigest()
+            raw = path.read_bytes() + (json.dumps(row, ensure_ascii=False) + "\n").encode("utf-8")
+            path.write_bytes(raw)
+            source_manifest = dataset / "manifest.json"
+            manifest = json.loads(source_manifest.read_text())
+            manifest["summary"]["trainRecords"] = 2
+            manifest["summary"]["trainJsonlSha256"] = hashlib.sha256(raw).hexdigest()
+            source_manifest.write_text(json.dumps(manifest))
+            bundle = root / "bundle"
+            train_tokenizer(dataset, bundle, vocab_size=300, model_family=MODEL_FAMILY)
+            index = bundle / "train.index.json"
+            rows = json.loads(index.read_bytes())
+            rows[1]["recordId"] = rows[0]["recordId"]
+            index.write_text(json.dumps(rows))
+            bundle_manifest_path = bundle / "manifest.json"
+            bundle_manifest = json.loads(bundle_manifest_path.read_text())
+            bundle_manifest["train"]["indexSha256"] = hashlib.sha256(index.read_bytes()).hexdigest()
+            bundle_manifest_path.write_text(json.dumps(bundle_manifest))
+            with self.assertRaisesRegex(ValueError, "Duplicate record ID"):
+                check_tokenizer_bundle(bundle)
+
+    def test_sampler_uses_checked_index_snapshot_if_file_changes_after_check(self) -> None:
+        from plex_training.plex600_setup import _check_tokenizer_bundle
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset = self.dataset(root)
+            bundle = root / "bundle"
+            train_tokenizer(dataset, bundle, vocab_size=300, model_family=MODEL_FAMILY)
+            index = bundle / "train.index.json"
+
+            def change_after_check(directory):
+                report, indices = _check_tokenizer_bundle(directory)
+                tampered = json.loads(index.read_bytes())
+                tampered[0]["recordId"] = "replaced-after-check"
+                tampered[0]["startToken"] = 999999
+                index.write_text(json.dumps(tampered))
+                return report, indices
+
+            with patch("plex_training.plex600_batches._check_tokenizer_bundle", side_effect=change_after_check):
+                with Plex600PackedExamples(bundle, split="train") as samples:
+                    self.assertEqual(samples.rows[0]["recordId"], "train")
+                    self.assertEqual(samples.rows[0]["startToken"], 0)
+                    x, y = samples.sample_batch(random.Random(11), sequence_length=8)
+                    self.assertEqual(tuple(x.shape), (1, 8))
+                    self.assertTrue(bool((y >= 0).all()))
+            with self.assertRaisesRegex(ValueError, "index SHA mismatch"):
+                check_tokenizer_bundle(bundle)
 
     def test_verified_record_bounded_batches_and_small_model_backward(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

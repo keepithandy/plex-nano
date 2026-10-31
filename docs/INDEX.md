@@ -10,7 +10,8 @@ This folder contains the **historical research record**, not a list of current p
 |---|---|
 | What remains after auditing the October 17 merges? | [October 18 audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md): all 17 merges, verified failures, local reporting fixes and ordered research gates |
 | What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](../Plex-ROADMAP.md) |
-| What is the separate 600M research track? | [600M development record](PLEX-600M-DEVELOPMENT.md): untrained scratch architecture and preparation tools; full-size GPU fit remains unmeasured. The 27M Nano baseline remains separate. |
+| What is the separate 600M research track? | [600M development record](PLEX-600M-DEVELOPMENT.md): untrained scratch architecture and preparation tools; one full-size forward/backward check passed, while optimizer and sustained-training fit remain unmeasured. The 27M Nano baseline remains separate. |
+| What source evidence exists for 600M? | [Data readiness review](PLEX-600M-DATA-READINESS-REVIEW.md): historical corpus scope, previously used validation, and evidence needed before a 600M data decision. |
 | How do I diagnose P3-02 failures without training? | [P3-02-D1 read-only diagnostic](PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
 | What happened in P3-02? | [P3-02 exact replacements](PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
 | What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |

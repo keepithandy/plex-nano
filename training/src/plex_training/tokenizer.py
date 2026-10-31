@@ -329,6 +329,8 @@ def train_tokenizer(dataset_dir: Path, output_dir: Path, *, vocab_size: int = 16
                 "records": len(offsets), "tokenCount": token_count, "textBytes": text_bytes,
                 "bytesPerTextToken": text_bytes / (token_count - len(offsets)),
                 "roundtripRecords": len(offsets), "jsonlSha256": summary[split + "JsonlSha256"]}
+            if model_family == "plex-600m-v1":
+                split_info[split]["indexSha256"] = sha256_file(staging / (split + ".index.json"))
         if sha256_file(manifest_path) != source_manifest_hash:
             raise ValueError("Source dataset manifest changed during tokenizer construction")
         _write_json(staging / "manifest.json", {

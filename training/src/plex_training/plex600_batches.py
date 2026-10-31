@@ -5,7 +5,6 @@ optimizer, dataset split, checkpoint or training authorization.
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 import random
 
@@ -14,7 +13,7 @@ from torch import Tensor
 
 from .data import TokenCorpus
 from .plex600 import Plex600Config
-from .plex600_setup import check_tokenizer_bundle
+from .plex600_setup import _check_tokenizer_bundle
 
 
 class Plex600PackedExamples:
@@ -29,10 +28,10 @@ class Plex600PackedExamples:
         if split not in ("train", "validation"):
             raise ValueError("split must be train or validation")
         self.bundle_dir = bundle_dir.resolve(strict=True)
-        self.verification = check_tokenizer_bundle(self.bundle_dir)
+        self.verification, indices = _check_tokenizer_bundle(self.bundle_dir)
         self.split = split
-        # A manifest/index was SHA/structure-verified before any corpus is opened.
-        self.rows = json.loads((self.bundle_dir / f"{split}.index.json").read_text(encoding="utf-8"))
+        # Use the exact parsed and verified snapshot; never reopen the index.
+        self.rows = indices[split]
         self.eligible_rows = [row for row in self.rows if row["tokenCount"] >= 2]
         if not self.eligible_rows:
             raise ValueError("No two-token record is available for next-token sampling")

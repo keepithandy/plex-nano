@@ -113,6 +113,12 @@ establishes only that this fixed forward/backward workload fit once; optimizer
 state, an optimizer update, sustained training and coding ability remain
 unmeasured. The final holdout remains closed.
 
+After the run, the runner was changed to retain a narrowly checked, explicitly
+unverified source-refusal hint if the worker cannot establish its identity; the
+outcome remains inconclusive in that case. The runner's current bytes therefore
+have a different SHA from the historical run. This reporting change does not
+alter or re-execute the recorded check.
+
 ## Evidence available while drafting
 
 On October 31, 2026, read-only `nvidia-smi` reported an NVIDIA GeForce RTX 4080

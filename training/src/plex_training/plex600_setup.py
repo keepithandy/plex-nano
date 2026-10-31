@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import argparse
 from array import array
+import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 from typing import Any
 
@@ -43,7 +45,25 @@ def _read_json(path: Path, *, limit_bytes: int = 1024 * 1024) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
+def _read_verified_index(path: Path, expected_sha256: Any) -> list[Any]:
+    """Hash exactly the bounded bytes that are parsed, without a second read."""
+    if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+        raise ValueError("Missing or invalid index SHA-256; legacy 600M bundle must be rebuilt")
+    if not path.is_file() or path.is_symlink():
+        raise ValueError("Expected a regular, bounded index file")
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_INDEX_BYTES + 1)
+    if len(raw) > MAX_INDEX_BYTES:
+        raise ValueError("Expected a regular, bounded index file")
+    if hashlib.sha256(raw).hexdigest() != expected_sha256:
+        raise ValueError("Packed index SHA mismatch")
+    rows = json.loads(raw.decode("utf-8"))
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("Packed index must be a nonempty array")
+    return rows
+
+
+def _check_tokenizer_bundle(directory: Path) -> tuple[dict[str, Any], dict[str, list[Any]]]:
     """Check SHA, family, config, split lengths, indexes, token ID and EOS framing.
 
     Does not open training source text, construct the language model or update
@@ -77,6 +97,7 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
         raise ValueError("Expected uint16 little-endian packed tokens")
 
     verified: dict[str, Any] = {}
+    verified_indices: dict[str, list[Any]] = {}
     for split in ("train", "validation"):
         info = manifest.get(split)
         if not isinstance(info, dict) or info.get("path") != split + ".tokens.u16le":
@@ -87,12 +108,11 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
             raise ValueError("Packed token split missing or is a symlink")
         if not isinstance(info.get("sha256"), str) or sha256_file(token_path) != info["sha256"]:
             raise ValueError("Packed token SHA mismatch")
-        rows = _read_json(index_path, limit_bytes=MAX_INDEX_BYTES)
-        if not isinstance(rows, list) or not rows:
-            raise ValueError("Packed index must be a nonempty array")
+        rows = _read_verified_index(index_path, info.get("indexSha256"))
         if info.get("records") != len(rows) or type(info.get("tokenCount")) is not int:
             raise ValueError("Packed split record count mismatch")
         expected_start = 0
+        record_ids: set[str] = set()
         with token_path.open("rb") as stream:
             for row in rows:
                 if not isinstance(row, dict) or set(row) != {"recordId", "startToken", "tokenCount"}:
@@ -102,6 +122,9 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
                         or type(start) is not int or start != expected_start
                         or type(count) is not int or not 1 <= count <= MAX_RECORD_TOKENS):
                     raise ValueError("Token index is not contiguous or is out of bounds")
+                if row["recordId"] in record_ids:
+                    raise ValueError("Duplicate record ID in packed index")
+                record_ids.add(row["recordId"])
                 packed = stream.read(count * 2)
                 if len(packed) != count * 2:
                     raise ValueError("Packed token data ends before index")
@@ -116,7 +139,9 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
                 raise ValueError("Unindexed packed token bytes remain")
         if expected_start != info["tokenCount"] or token_path.stat().st_size != expected_start * 2:
             raise ValueError("Packed token count/byte size mismatch")
-        verified[split] = {"records": len(rows), "tokens": expected_start, "sha256": info["sha256"]}
+        verified[split] = {"records": len(rows), "tokens": expected_start,
+                           "sha256": info["sha256"], "indexSha256": info["indexSha256"]}
+        verified_indices[split] = rows
 
     return {
         "modelFamily": MODEL_FAMILY,
@@ -128,7 +153,17 @@ def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
         "modelLoaded": False,
         "optimizerUpdates": 0,
         "trainingAuthorized": False,
-    }
+    }, verified_indices
+
+
+def check_tokenizer_bundle(directory: Path) -> dict[str, Any]:
+    """Verify bundle integrity without proving its source mapping or rights.
+
+    Index hashes are bound to the bundle manifest. A jointly modified manifest
+    and index require independent source review and cannot be detected here.
+    """
+    report, _ = _check_tokenizer_bundle(directory)
+    return report
 
 
 def main(argv: list[str] | None = None) -> int:

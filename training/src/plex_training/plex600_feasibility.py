@@ -275,6 +275,50 @@ def _valid_result(result: Any, device_index: int, identity: dict[str, Any]) -> b
     return True
 
 
+def _unverified_source_refusal(result: Any, device_index: int, identity: dict[str, Any]) -> str | None:
+    """Retain narrowly shaped source refusals without trusting worker provenance.
+
+    A worker may fail its source check before it can attach its identity. The
+    parent still cannot certify that response; this helper supplies a diagnostic
+    hint only and never changes the inconclusive outcome into a refusal or pass.
+    """
+    if not isinstance(result, dict) or result.get("status") != "refused":
+        return None
+    expected = plan(device_index)
+    expected["status"] = "refused"
+    allowed = set(expected) | {"error", "workerSeconds", "source"}
+    if set(result) - allowed or not (set(expected) | {"error", "workerSeconds"}) <= set(result):
+        return None
+    # JSON representations distinguish booleans from integers even though
+    # Python considers True == 1; the fixed plan must match exactly.
+    actual_plan = {key: result[key] for key in expected}
+    if json.dumps(actual_plan, sort_keys=True) != json.dumps(expected, sort_keys=True):
+        return None
+    error = result["error"]
+    if error not in (
+        "Model source SHA-256 does not match the fixed proposal",
+        "Model source has local or staged modifications",
+        "Cannot identify the current Git commit",
+    ):
+        return None
+    seconds = result["workerSeconds"]
+    if type(seconds) not in (int, float) or not math.isfinite(seconds) or not 0 <= seconds <= TIMEOUT_SECONDS:
+        return None
+    if "source" in result:
+        source = result["source"]
+        if not isinstance(source, dict) or source == identity:
+            return None
+        if set(source) != {"gitCommit", "modelSourceClean", "modelSha256", "runnerSha256"}:
+            return None
+        if source["modelSourceClean"] is not True:
+            return None
+        for key, length in (("gitCommit", 40), ("modelSha256", 64), ("runnerSha256", 64)):
+            value = source[key]
+            if not isinstance(value, str) or len(value) != length or any(c not in "0123456789abcdef" for c in value):
+                return None
+    return error
+
+
 def execute(device_index: int, *, authorized: bool = False) -> dict[str, Any]:
     report = plan(device_index)
     report["status"] = "refused"
@@ -304,6 +348,9 @@ def execute(device_index: int, *, authorized: bool = False) -> dict[str, Any]:
             result = json.loads(stdout, parse_constant=reject_constant)
             if not _valid_result(result, device_index, identity):
                 report.update(status="inconclusive", error="Worker result failed provenance or measurement checks")
+                hint = _unverified_source_refusal(result, device_index, identity)
+                if hint is not None:
+                    report["unverifiedWorkerRefusal"] = hint
             else:
                 report.update(result)
     except Refusal as error:
