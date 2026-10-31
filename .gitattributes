@@ -104,3 +104,6 @@ training/src/plex_training/plex600_feasibility.py text eol=lf
 # M3 audit driver/receipt hashes are byte identities, including on Windows.
 training/pretraining/plex600-m3-source-subset-review.py text eol=lf
 training/pretraining/plex600-m3-source-subset-review-2026-10-31.json text eol=lf
+training/pretraining/plex600-m3-overlap-notice-review.py text eol=lf
+training/pretraining/plex600-m3-overlap-notice-review-2026-10-31.json text eol=lf
+training/pretraining/plex600-m3-proposed-source-holds-v1.json text eol=lf

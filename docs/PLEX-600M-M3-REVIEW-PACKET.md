@@ -14,7 +14,7 @@ below describes historical inputs, not a selected or approved 600M dataset.
 | Step | State | Required result |
 |---|---|---|
 | M3.1 — Inventory existing source evidence | Prepared below | Exact identities, historical roles, counts and evidence limits. |
-| M3.2 — Review scope and select candidate families | Local subset/notice review complete; selection open | [3,228 records and eight notices verified](PLEX-600M-M3-SOURCE-REUSE-REVIEW.md); source decisions, file-level exceptions and similarity risks remain. |
+| M3.2 — Review scope and select candidate families | Subset audit and bounded notice/overlap triage complete; selection open | [Source audit](PLEX-600M-M3-SOURCE-REUSE-REVIEW.md) and [notice/overlap triage](PLEX-600M-M3-OVERLAP-NOTICE-REVIEW.md); 69 embedded-library/example records proposed for omission, with source decisions and remaining notice classification open. |
 | M3.3 — Review source-family split | Proposed below | Fixed family assignments and documented prior exposure; investigate overlaps before claiming independence. |
 | M3.4 — Review development evaluation | Proposed below | Task coverage, scoring rules and exposure policy decided before authoring/freezing the actual set. |
 | M3.5 — Record preparation decision | Open | Approved corpus scope and storage budget, unresolved issues and the precise M4 work authorized. |
@@ -143,5 +143,8 @@ This design alone makes no capability claim and does not authorize inference.
 
 **Subsequent evidence:** the [source reuse review](PLEX-600M-M3-SOURCE-REUSE-REVIEW.md)
 now verifies the exact local subsets and notices and records source-by-source
-recommendations. Next, review source-use scope, file-level exceptions and
-cross-family similarity risks before a source-selection decision. M3 remains open.
+recommendations. The [notice/overlap review](PLEX-600M-M3-OVERLAP-NOTICE-REVIEW.md)
+subsequently found embedded third-party scopes and proposes 69 omissions;
+the bounded cross-family similarity check flagged no pairs, within its stated
+limits. Next, decide the narrower candidate scope and classify the remaining
+notice queue before source selection. M3 remains open.

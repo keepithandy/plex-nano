@@ -19,6 +19,12 @@ verified 3,228 historical records, eight packaged notices and 90 locked starter
 files. No exact normalized-content duplicate was found across the two corpora.
 Source selection, similarity risks and the remaining M3 decisions stay open.
 
+The [subsequent notice and overlap triage](PLEX-600M-M3-OVERLAP-NOTICE-REVIEW.md)
+identified embedded third-party scopes and proposes omitting 69 records from an
+initial new subset. A bounded cross-family shingle check flagged no pairs at its
+fixed thresholds; this does not establish independence. No historical corpus
+was altered, and M3 source/split decisions remain open.
+
 Build **Plex 600M** as a general language + practical coding model that can receive instructions, understand supplied HTML/CSS/JavaScript, generate coherent answers, debug and make precise edits. Demonstrate these skills on frozen development examples, not merely declining training loss. Human-observed failures feed reviewed future training data, not silent modifications to evaluation sets.
 
 - **Never replace this goal with an agent/repository navigator, pretrained-model adaptation or licensing/product roadmap.**

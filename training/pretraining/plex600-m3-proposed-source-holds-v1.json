@@ -1,0 +1,1544 @@
+{
+  "kind": "plex600-m3-proposed-source-holds-v1",
+  "status": "review-proposal-only",
+  "reason": "Embedded library/example scopes require separate provenance review; propose omitting these 69 accepted records from an initial new subset.",
+  "overlapReviewSha256": "5684e1c5cd61977aa87ac37fdb4950a2437b9a5c9e46842cc102bcea19ba2145",
+  "proposedOmissions": [
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples-2/js/prettify.js",
+      "recordId": "ab833646955ea355433cbb75c7dad331e88b4a6206d01b0e422880227ff8019b",
+      "contentSha256": "c379fccc4d0dd65c7f9ebad6035e8393b2a7c926c917b70fb39136081c9e07b0",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/addon/hint/css-hint.js",
+      "recordId": "516a20a89d8d06ee933e6526620ff83c05a659659900984617190f6162548e87",
+      "contentSha256": "3735565b4e1be05d6246f5b8bbc0fa4c31e853a5afe3e298da0c58f6b8ccf29f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/addon/hint/show-hint.css",
+      "recordId": "4e2b27db42384e5c1a4d9b078ddb56ed2430d9ea0e5836571b560f4ad4b233de",
+      "contentSha256": "f4f8c8d48c155dcbf8e04dfb29b0d500974460d08204adfe0dda3be7bb3a2fc8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/addon/hint/show-hint.js",
+      "recordId": "09915ee3d777e1688523a866fe6b066c1f26c3d119bc176f492aafd0d1abe61c",
+      "contentSha256": "c42178438c3d8e162138f1ea8f31ca283aef039abad0b685ede90f63f329418d",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/lib/codemirror.css",
+      "recordId": "7ea93903f58d5b48a94f226945f05d5410e153de5366d23fe5d54d7b1dc90b65",
+      "contentSha256": "3d1e55d75f45cbf916b08d6de5c9d7a279297f49cfade92105d7b46e3b4db065",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/lib/codemirror.js",
+      "recordId": "97509443434582c8e94aac88b2056e97a5ef9a62cc3f940389d687d2dbb2b643",
+      "contentSha256": "3f4ada2d4084ae5c2c484cc14bbc067bfe9092a68e9eb17383ed04325539b2c7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/css.js",
+      "recordId": "c922447c4d463894089dc325744e7b719a8139bd5b15e33fa8e14cdbf6e59918",
+      "contentSha256": "6d98ae214e4d88c4adf1309fc7d041075be8a2d9fb67b42ff3d106dea877b6b6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/gss.html",
+      "recordId": "c753f2bd2f71d9561ef8a7ba5b4ec27cf8f7b7bb39518130ce80cfb1334f2202",
+      "contentSha256": "51e4852eef4a37d9ca28fd6fd2311ce1f075361f38cbf029bbbe162356633b5f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/gss_test.js",
+      "recordId": "77055d22c91b1d1b3ff008f08beb3588f9ca015f3dcfae8b7f200e45a7422fca",
+      "contentSha256": "baeaf2643fff208c2e1e120a5a1c7e0e526c64b9e3221e5389d2fc68eb74105f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/index.html",
+      "recordId": "3584e50b735ae6e0d8e24efd47b23c931915448ed68205dfb6b817e670d029ce",
+      "contentSha256": "242896758a390c89faee479ab2355361b756922fd7ed59adc4d8b726b3e944f5",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/less.html",
+      "recordId": "d6b8a2ce571bbd21e247a929b19bccf6b87e930688677d513c52940a8dbd79f8",
+      "contentSha256": "f5cb0f0bdae8d150d801b936243833a585fb83c7a8da4ad05a577b7d89d8bba9",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/less_test.js",
+      "recordId": "dbacc29b40ff6d780bfe6edbceb32fc0ffb419ad4c8d4fdd7e9bb7cb8ab780a9",
+      "contentSha256": "47404928d948d5108ef4325854aa8fbfb9e9bfd32cbbfa9ca6de18233840d2e7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/scss.html",
+      "recordId": "78146e3ed3e71fae8fc67b2f73ea69ddd4ea28a9d901b72f704cfc527af72471",
+      "contentSha256": "2e80ceee4303dce83d63aee00470bc42b892886919896dd8ff792df4431f106c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/scss_test.js",
+      "recordId": "b265ab3f2265ed1af71d915a676b06eb9913a143196935eb112453790a3d4720",
+      "contentSha256": "d43d94e7606d9fe0dc33b433c9c4c46f8cb9d62013336d1dac3332dfb95482de",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/test.js",
+      "recordId": "144ea78f6d5a620b4e0a3e403e1bdbef3975a58cd157ff197083cb1f8cfce5c0",
+      "contentSha256": "623f31fd2ad893cfba20bd7bdabddaceee401867a973a7c81ca019ed1dd4a0c9",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/3024-day.css",
+      "recordId": "479c181f4574b3e0d08bffccddc7ec63fb59514adb36e2b9c321228f97ff889c",
+      "contentSha256": "7c9126a1d8a38be70a6d96872f8af03215203f3c6595975314cc4f75f792b8f8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/3024-night.css",
+      "recordId": "2de3a5266272ce0f19721ac42ff8bb393133cf7a5dcfd4f9244c912f87527b6d",
+      "contentSha256": "93ada2f28acc83a589c2d65147497ef5732237b2a9e6dabb3d69d486e1d3a447",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/abcdef.css",
+      "recordId": "cd67a737b2489369f33e50a89c3d81d2ba8a56781b3a135da34d677c35917c92",
+      "contentSha256": "1633330107a264dae3f4c1e68045365ec662e85ccfd9b310a45d115dc10d801d",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/ambiance-mobile.css",
+      "recordId": "019941a28c03b9d9745f606e57512d15e36ee75cec2a211e4992660e8d4405cd",
+      "contentSha256": "356cf9d539a70462808d76851e24bb0049676621d00b6d851c2b1ee2b0f6ac57",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/base16-dark.css",
+      "recordId": "42a9ced788dc3a75765e9b7bca7e460c8f41513449cbb585e792bca3b2c61b17",
+      "contentSha256": "7a6192764bd3da158f07560942f47c6efb315dcc462b77e32d4fa140c7fd2241",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/base16-light.css",
+      "recordId": "6098697e68cb74aee4cb0ba3388e4149fada76af2c255bcd5b976038d4c383a7",
+      "contentSha256": "c74189d4291dd7a85a80a466a34168a170c59bdb12304c30f8d46d31ca0700d7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/bespin.css",
+      "recordId": "e703275c5927a14ee8d0e4d8348e744866b35f2642616969133ab2caac389bee",
+      "contentSha256": "d43da55a7859eabd94a7735eff8205c136812e2bdb037f85ab026320fd9b7b43",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/blackboard.css",
+      "recordId": "892468d702e4cd7920c9d27e7ac66177589c479fa0f8864f1039f7c6a9039bbd",
+      "contentSha256": "54f0811f00d130b3c3283cf679e7fbdcb8f93a6da88ae4011739220a816ce451",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/cobalt.css",
+      "recordId": "51d2b61fa447a1c5ef4809cd1e98479af5c302a9df15c28d2dee5fc21bc658e6",
+      "contentSha256": "0aa76afb0550eea97479bdd567d4fc84d4cafe6a6e32e1b6ef24ddde73d9125f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/colorforth.css",
+      "recordId": "a256256a0921554ab96de22fb65ed2ab1a6d4970000b0a67b8d82c106a609d06",
+      "contentSha256": "dcd47acd2cfbb0daa0bd6e73014a2eb623b44d51d06672d9db08efc4e2f2ab32",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/dracula.css",
+      "recordId": "aae62e75ac8fef9d80a285762843ce162f298c7f54ee47cb78b610be4734a048",
+      "contentSha256": "1bd5646590c0f4864d3fb10a91d531335603b1a37d158bfaa6de720a53bea5e7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/duotone-dark.css",
+      "recordId": "343e8285f507ddcc29cc1442b1de91ef8f7aabe2920daed96fd0d34ef4849ded",
+      "contentSha256": "0fc22f0963d8c9f5f9a9a8f6beb3e227b586773bb6e63067ad550e622fea9832",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/duotone-light.css",
+      "recordId": "e5ba2a37c5a0138e13797de6dc953435d485d1347090268ee3b1c8c7068e0c35",
+      "contentSha256": "54479ef43ef0d8b8775b407e6d01e2a770cdfeee2cba0041be5ed4b105293438",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/eclipse.css",
+      "recordId": "0e31b7d9614ba2801b4c8fe77ccaa5da8465b9dd44717dae98aff2bef27bd704",
+      "contentSha256": "03e23ee02926b2c8326e89ae331fe77a9af9263d847be591a1ce6d7ebc54b0fd",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/elegant.css",
+      "recordId": "a81d1650b861cb38bee7e7a7a345b40e1ef0de2bfc30e0b48d967b533e3c04fe",
+      "contentSha256": "02df81678be8cf0a780e430395b0f64eb778feac2216a3b1ecab52848abc8fe6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/erlang-dark.css",
+      "recordId": "0861cce7ec0bcf3e720ff99a7ab6c8ca78dfde737d90c47f9ab01f7c0de26eee",
+      "contentSha256": "0dc2474983d23edb9540968fa1b5cee4115887d57d2655ba21843082a4bc7796",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/hopscotch.css",
+      "recordId": "3ab9872f23ab6e04ffa0f526a31f204f71534aedebeedb44159012af771148c8",
+      "contentSha256": "2074da3b102459c64bb9d760c790d5dfbc4a1805a026419fe9494918adca5d54",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/icecoder.css",
+      "recordId": "b4ff369b84465dcacd8b4b903487dca3e6cfa61d729f3ab6da799dd89ccc7188",
+      "contentSha256": "04e5b0465536346ffabe9bdcf30340437bf41b31d984b2a9eb778b941ce299bc",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/isotope.css",
+      "recordId": "7c7aea1b17473273e1d083f6a2fa82d845665ba7e47a0815b8fc22c029e2b90e",
+      "contentSha256": "05a29f6e56dbdbaf74c75c585ad66ba6f4313dafc06e8f041b343fb851421ab1",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/lesser-dark.css",
+      "recordId": "40a2eb8e6f8e802d938938bc774495f8058de2193244079f8daccee3b73ad5cc",
+      "contentSha256": "80180694d372b121ba01881a57ce4bf1c18dec09687f95c213c4f929dbf84689",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/liquibyte.css",
+      "recordId": "5e312b4b385bdc1712782e1fb047522eb8c11a507629138417ccd6fc0a8441ee",
+      "contentSha256": "40d90ceab6f6cc7f42611fff8cd11692c0a80a433bf8d19cf2722c521ce3151e",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/material.css",
+      "recordId": "e6bcf591df5c05d7edc2a09b27d83a6afea105fdb1d2c54f67f4bd498d0f692c",
+      "contentSha256": "65781d32cc3b245aca4ec54137d6b3516859a2ebb6234362504bcfe99c9f8231",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/mbo.css",
+      "recordId": "d6a55b5ee509ee622aeca2422ff25a0ab28b7a3eb9f84a98294c810feeaa65af",
+      "contentSha256": "23f2216dd2d4ffad8a6cec20dde749f90daf87b45b98f35e19816e54552831c3",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/mdn-like.css",
+      "recordId": "16484752a0703dbb6c1cacce50df118f03e976375c43699aeeca45be825f8005",
+      "contentSha256": "9464424814264ff116e7de3bda85fa3a601bf4cf06ad95df8ecedea6db02400d",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/midnight.css",
+      "recordId": "938d41561864d959bd9fcc1acdb3a6027694e6ba6b16f0769db199fa68850586",
+      "contentSha256": "f718ea003eaf341524cfdd24975e297e9742eaae8964a91531560de8a38c8fb6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/monokai.css",
+      "recordId": "e06e3713c0bd6846f219b6b0277ae2b139b28af0c957a66ddd7f70078ad3f70e",
+      "contentSha256": "0e54146a84b7753326c8762f558d1fff022303dfa7dc048e345f5dcb54857763",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/neat.css",
+      "recordId": "722c6888bc3a4e4294aa413aff5c4c62b9cee06e662224117f7fdd1936611214",
+      "contentSha256": "58c2c2e5bc69c2f2e2a2e619a3799a0bd70a8754c137104daab4a39e53f42503",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/neo.css",
+      "recordId": "bc34093fef85435a4ba3c8ba46fdcfebda18f340c2630936b621855dace65080",
+      "contentSha256": "a919e6daa7d3fd0e76fbb0c2dab8268f6f998d381bf6cd76802eadb8b6f4b6fd",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/night.css",
+      "recordId": "6c52753d2216bd14dbb5d6c321f88deecaf0e0bf5c1ee3b8ffec737d03ceb41d",
+      "contentSha256": "c7a54ef3d1b6d1d6505b7b679ac6310fdee42aee41b00e1d41e79fc10e7858ab",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/panda-syntax.css",
+      "recordId": "63915384b64b40f5cdc66eed4e707ce42d323bae32d13c79d2d040c3b1ec6b73",
+      "contentSha256": "04dc2833e74de0aa68a6a97c52e0bd3ae201b9ee7288c81984f6274c0ed2f2b2",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/paraiso-dark.css",
+      "recordId": "2bdb326a538aae4c4d6ea21a7cabcb54d8638c845a9d00599b419f6a0fffb485",
+      "contentSha256": "fc551f1a32ca11d4023af6dc87ee3785fbb5fe5044cdac12057f0af9c1731d97",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/paraiso-light.css",
+      "recordId": "5f62cc0cb8bb6e3d3aaadcfe5fed12f50e19baf8fa639c3e165dbb6ec4dd6d29",
+      "contentSha256": "25ff9301f48317d13586f74c95eb8e665fb0e8e1364b41b6219d218a96d7f5a8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/pastel-on-dark.css",
+      "recordId": "737182b589ff18a967ac509878dbc5698a5381d8bf2926fb262c70ce65591424",
+      "contentSha256": "7f7cee8f18fea4b8db9885cf5db18333c4bb70984ce32bb4a123bb62f68ef8ed",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/railscasts.css",
+      "recordId": "c0fa6fee588f513ad9b9d8ae6bfb3f2dda5047bf899be3fb2be42eb15ff6f5f3",
+      "contentSha256": "e9ba2e428ab0547969c02c2e76fbdcc7ea296165620c652b220fa7427989ba48",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/rubyblue.css",
+      "recordId": "09805141094d60bfddad0d0375464f3a92c6a01ea1e92bca7052b81ea46ab098",
+      "contentSha256": "b780089b3f89041802a7691bc21f247f9895c75304cb858ba0c0f4b7a1303455",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/seti.css",
+      "recordId": "78f100d214eb80698e90b15bcdc73815c6d5e96dd3f167a13e4e7284b1be4ef6",
+      "contentSha256": "8b5ad8ea8ab81d23bdd8cd50be95f11fd1d61cdcd48a1b8ab4947ba4c751e96f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/solarized.css",
+      "recordId": "da4979221419031f2880add1cee8c8974621d30fe7aad563dcaec814fc8083b6",
+      "contentSha256": "6dac2fe96a4f7a232c65c209fb5278951281d9306f32b193a24046e66e93b023",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/the-matrix.css",
+      "recordId": "0fb0ee227679414ff21614c987c40dbee447be3d0faa2596ab58a0a220022438",
+      "contentSha256": "35bd22d0282b2a1a80039110a8ac182ab9b4afa2a80eca328ed008f9c39e1c4f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/tomorrow-night-bright.css",
+      "recordId": "07965eeb1195e971f5c94c49dd6ade4c7d935d14832dec12e82fb4a762463c76",
+      "contentSha256": "45ebddfc249b14c21d4e67f4671812ac874c59f11fb4ec27f20c3ce50e7b7103",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/tomorrow-night-eighties.css",
+      "recordId": "6ab69b1f5acd99aae87e4c7a215c596a6a9c8f12d499139745762afb7b74ea8e",
+      "contentSha256": "6b015d31eaaaa08bd35d85582ceabd11bc2b6f708c1a052c0f7a9450ce2366b1",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/ttcn.css",
+      "recordId": "74683bb2e7855210d297d6abf53dc7915dc88bef195672989849f7be74b4afbb",
+      "contentSha256": "ae120fa6f84cf4406ce3bb837895a9a76ce87d806c154edcf82b49a7a05fe00c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/twilight.css",
+      "recordId": "cac4dcd59b705162565e191e805b8273828710479a23363bbdd8e6de8b4efc92",
+      "contentSha256": "0309457c73be85f42b147b8c14c70e3450d406f98e69a82667d3e0a26b2a012a",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/vibrant-ink.css",
+      "recordId": "2e5f67a29b3ca2c83ef9615eedc38225e14b3014d3c9022b7079486d5cca8378",
+      "contentSha256": "f5af832b7aa7e8dbe01aa14f2fba607d77d41f18e44e23ed9755fb80ba5079c8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/xq-dark.css",
+      "recordId": "3b6c9c510e8a6b29226e9246ebff9efaab7ebae83bde90093b8329aa345f2244",
+      "contentSha256": "52c96beaa01c09e9410310cf53fe69ed7873c413c6cfc1086dc11eed6a246e2c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/xq-light.css",
+      "recordId": "2889c490260744b0a2aa4518edbb059c19efdfe4b9513c0f485df20ef0696f65",
+      "contentSha256": "a523f9e8fc269bddf78c79790e64238052436e73e77d5040dca371ebc7be9ecb",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/yeti.css",
+      "recordId": "c089491e11c490c37d504fb4bae8c410bfca75f6880c86e5628ac75ba244c1ff",
+      "contentSha256": "da9491138c44f479006cbf1fd78a38c664c2a71eb6d6042383cdd57062a67a8b",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/zenburn.css",
+      "recordId": "8b4e2471947dbe359c303a030be09c0ee374336a35a68c9c672aa79b74809121",
+      "contentSha256": "47780bcc6d429d434392aed5b63c26efed6bce3d34df1158573700ee189eab2f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "web-storage/jscolor/jscolor.js",
+      "recordId": "0e30500e9a6fc22d3a81a116daefafb0b4c63d3166acc43f9d9c4cfe058b01ca",
+      "contentSha256": "8655d9d2be66deed4fe12a829eb7b4f3508e6834aef4d41a675ce9a633613e67",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "webxr/gl-matrix.js",
+      "recordId": "6eef7ee15e6e7b0e6f3cb1d92482ce98d0bbc443f59ba907d9c37afda8a76c06",
+      "contentSha256": "52dcd90df9aa90232ca4d16213b3fdc5f11f3d0e6511c11a8d7fe7a9ea292017",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/legacy/normalize.css",
+      "recordId": "772eda252caa32f1c393ab31995a96d2b50b0c4e777401c5f02263cf29dc86c2",
+      "contentSha256": "f4d7e8250f8f124f8b7d087e5e260766a34b079fddc43e7b20d8c18ca1e92e51",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/legacy/skeleton.css",
+      "recordId": "9fc787b577cb337482a7862e66c8594fb673bb5d21f1c1497df37eac079456c4",
+      "contentSha256": "10207d6db44e2c69bcc0ea046c77074719478331aa6290ed3538034f20f3d308",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/practical-positioning-examples/tabs-manual.js",
+      "recordId": "e184f991374d2f6eecd4af74250440b3a0cbd1b79fed03c20cd0fd96ca9cd9cf",
+      "contentSha256": "a56eb9baa8f3adbf48960cf4cc7b945d198cf820a452edecc15ba5b202b40076",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "tools-testing/cross-browser-testing/javascript/es6-promise.js",
+      "recordId": "651667ef1cb46b4636b0ac35e61701a86bb0f84667301212649013fefdb8967f",
+      "contentSha256": "384329af7aeac3222268043817e1a0c3781e262799010185755ead4180a48ca1",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "tools-testing/cross-browser-testing/javascript/polyfills.js",
+      "recordId": "0382f9fc59ac0d11ac5418107d47d75cce0216608700b58eaafef973728d1249",
+      "contentSha256": "72a320a152726d9c0c347c5882aeb8fcce0fc8c077f9bb901ecae923e68eb793",
+      "groupId": "source-family-mdn-web-examples"
+    }
+  ],
+  "noticeTriageRecords": [
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "2-js-basics/1-data-types/README.md",
+      "recordId": "45d6e2e30d79d264e5847dd2ecfa1da51266969a173b9e8665dfb39b19f3468e",
+      "contentSha256": "0b50660b34539e227e56bd45e0d39009623711026dde23dfd4d647e138226ce4",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "2-js-basics/3-making-decisions/README.md",
+      "recordId": "8bcf57d746e6169e3f6917def4750bccfb2e76167f5e4a7b23add0f8c9657247",
+      "contentSha256": "368bdc5f01782e5872ef8d9c40377482a5cb21de9b23b11d079268c57641a744",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "3-terrarium/1-intro-to-html/README.md",
+      "recordId": "a3d73e79a3b325379b67ca214562f828a1c50490f418c4a7539029d031d8b843",
+      "contentSha256": "3f88d02dd287a0684d0ce45b238eee6b0dc8b1b4a18180cfbda241a2d40391a6",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "3-terrarium/2-intro-to-css/README.md",
+      "recordId": "eeec0d20b00c8da1dd09b490a500886d79a36b7d0616a6af3ed25e185b31678a",
+      "contentSha256": "cc201576f2f326ea562cbef3c82ebee2d7667aa206f6c69a124d522d675d7a26",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "3-terrarium/3-intro-to-DOM-and-closures/README.md",
+      "recordId": "685a3e705f6451228ff8326eee5d853555f61ad26e08f8d5a3d44249e53a77cd",
+      "contentSha256": "8db0e42ff9c32c85b8a11216193517447df7de5834a966d2d080e33c5885f01c",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "3-terrarium/solution/index.html",
+      "recordId": "52b39bd7657ee127118eb1a2edc8af54ba5b8534d87b1b943ceacebaf1129b99",
+      "contentSha256": "8e76d551c041b70d9031ad55d58df8eb6a4aa2686be2775dd2066109d6128438",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "4-typing-game/README.md",
+      "recordId": "126b1d9dfa8730b868640edcb5d07c58e58ba8e9f396f640fab2921a2b758928",
+      "contentSha256": "40762f88f51f2325dff537960aadf7d9878c275a145b8bc62a362c3d0a3c0f25",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "4-typing-game/typing-game/README.md",
+      "recordId": "bdab9ff75c7ace26581f62632aa3014b77c2a4c21a9baedc60ef55a4836e095d",
+      "contentSha256": "f0954812074692474420d6aaf42adc7f9c312ae105bd60ab9427e23a662c705f",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "6-space-game/1-introduction/README.md",
+      "recordId": "1f747f29a683a8d74f19ce0fc3443671108065bfef9e36a3b8e81b1cb8c5828b",
+      "contentSha256": "2ad1aa2e2db3ab131b25b154091ed37175fb01f751bb2bbb4da8f8eb527c652c",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "6-space-game/2-drawing-to-canvas/README.md",
+      "recordId": "dbc6ca7e15bc3bb4ddb47b2c4c823da2b693161d92e96e59413489ecd18f4923",
+      "contentSha256": "7cf333e40b3444a5406fed2b0e76105839668c7d9d3c79d45282797037764c30",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "6-space-game/solution/app.js",
+      "recordId": "3b0ab3e3150ceaacded2a77c8a8bcb8509cda0ef1ac9d8e9e9b174b22a5efb13",
+      "contentSha256": "780582e88d435a4624c0d62b99b2f1f3fcc351a73b102ac1240e00d4c57f06c0",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "7-bank-project/1-template-route/README.md",
+      "recordId": "edc117c7cbb09d71998a84692221c0cc64133e10a789437df07e926683d8815c",
+      "contentSha256": "eb28640721b42808c67ae714312cfce1b83cb1ee1cc897b8d3af4061fcfe9663",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "7-bank-project/2-forms/README.md",
+      "recordId": "ee0685a927b1267d0c1a979a1848dbb2a4402c96177d5b7a111cf54d8d86d416",
+      "contentSha256": "848cecd8d1ed9c312008771c6717a91a216fbfaaec6aebdc448fa3e7a3f5430e",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p1-14-starter-v1",
+      "split": "train",
+      "sourceId": "microsoft-web-dev",
+      "path": "7-bank-project/3-data/README.md",
+      "recordId": "3733b52d039e5996ec6b606e45ec1d98a532d299038f6575f09ef2080d427e87",
+      "contentSha256": "c8db731f82610ce44b930a2e3586c7e7151a2c98cdedb6b8d1d352518612ac65",
+      "groupId": "microsoft-web-dev-for-beginners"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "alt-style-sheets/index.html",
+      "recordId": "cf91e2daabfd9bfc889d76b1caeb778e76d5bc94691bfc9540c01115cd5f3d59",
+      "contentSha256": "8ad9356045312ed58ace5edfd9e27b78d4b799f0354e74672a3909495d1c1b8e",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "backdrop/script.js",
+      "recordId": "a92ece810bb746b4aba3b0a8b3a809a9add530f113824086b9be69e68eb81ae6",
+      "contentSha256": "78a44dbe9201ed2a824b22affbe120f030a2634e40249d5a5776f8152c005ddd",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples-2/css/prism.css",
+      "recordId": "76d65fb4630843c9cf3974bc62329fac806d761c4d056e13da59982534266931",
+      "contentSha256": "c5da2d2edc2a79468804bb7885039703f177a98486a3476f882362134f19b325",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples-2/js/prettify.js",
+      "recordId": "ab833646955ea355433cbb75c7dad331e88b4a6206d01b0e422880227ff8019b",
+      "contentSha256": "c379fccc4d0dd65c7f9ebad6035e8393b2a7c926c917b70fb39136081c9e07b0",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/addon/hint/css-hint.js",
+      "recordId": "516a20a89d8d06ee933e6526620ff83c05a659659900984617190f6162548e87",
+      "contentSha256": "3735565b4e1be05d6246f5b8bbc0fa4c31e853a5afe3e298da0c58f6b8ccf29f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/addon/hint/show-hint.js",
+      "recordId": "09915ee3d777e1688523a866fe6b066c1f26c3d119bc176f492aafd0d1abe61c",
+      "contentSha256": "c42178438c3d8e162138f1ea8f31ca283aef039abad0b685ede90f63f329418d",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/lib/codemirror.js",
+      "recordId": "97509443434582c8e94aac88b2056e97a5ef9a62cc3f940389d687d2dbb2b643",
+      "contentSha256": "3f4ada2d4084ae5c2c484cc14bbc067bfe9092a68e9eb17383ed04325539b2c7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/css.js",
+      "recordId": "c922447c4d463894089dc325744e7b719a8139bd5b15e33fa8e14cdbf6e59918",
+      "contentSha256": "6d98ae214e4d88c4adf1309fc7d041075be8a2d9fb67b42ff3d106dea877b6b6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/gss_test.js",
+      "recordId": "77055d22c91b1d1b3ff008f08beb3588f9ca015f3dcfae8b7f200e45a7422fca",
+      "contentSha256": "baeaf2643fff208c2e1e120a5a1c7e0e526c64b9e3221e5389d2fc68eb74105f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/less_test.js",
+      "recordId": "dbacc29b40ff6d780bfe6edbceb32fc0ffb419ad4c8d4fdd7e9bb7cb8ab780a9",
+      "contentSha256": "47404928d948d5108ef4325854aa8fbfb9e9bfd32cbbfa9ca6de18233840d2e7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/scss_test.js",
+      "recordId": "b265ab3f2265ed1af71d915a676b06eb9913a143196935eb112453790a3d4720",
+      "contentSha256": "d43d94e7606d9fe0dc33b433c9c4c46f8cb9d62013336d1dac3332dfb95482de",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/mode/css/test.js",
+      "recordId": "144ea78f6d5a620b4e0a3e403e1bdbef3975a58cd157ff197083cb1f8cfce5c0",
+      "contentSha256": "623f31fd2ad893cfba20bd7bdabddaceee401867a973a7c81ca019ed1dd4a0c9",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/duotone-dark.css",
+      "recordId": "343e8285f507ddcc29cc1442b1de91ef8f7aabe2920daed96fd0d34ef4849ded",
+      "contentSha256": "0fc22f0963d8c9f5f9a9a8f6beb3e227b586773bb6e63067ad550e622fea9832",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/duotone-light.css",
+      "recordId": "e5ba2a37c5a0138e13797de6dc953435d485d1347090268ee3b1c8c7068e0c35",
+      "contentSha256": "54479ef43ef0d8b8775b407e6d01e2a770cdfeee2cba0041be5ed4b105293438",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/mbo.css",
+      "recordId": "d6a55b5ee509ee622aeca2422ff25a0ab28b7a3eb9f84a98294c810feeaa65af",
+      "contentSha256": "23f2216dd2d4ffad8a6cec20dde749f90daf87b45b98f35e19816e54552831c3",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/midnight.css",
+      "recordId": "938d41561864d959bd9fcc1acdb3a6027694e6ba6b16f0769db199fa68850586",
+      "contentSha256": "f718ea003eaf341524cfdd24975e297e9742eaae8964a91531560de8a38c8fb6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/monokai.css",
+      "recordId": "e06e3713c0bd6846f219b6b0277ae2b139b28af0c957a66ddd7f70078ad3f70e",
+      "contentSha256": "0e54146a84b7753326c8762f558d1fff022303dfa7dc048e345f5dcb54857763",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/night.css",
+      "recordId": "6c52753d2216bd14dbb5d6c321f88deecaf0e0bf5c1ee3b8ffec737d03ceb41d",
+      "contentSha256": "c7a54ef3d1b6d1d6505b7b679ac6310fdee42aee41b00e1d41e79fc10e7858ab",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/pastel-on-dark.css",
+      "recordId": "737182b589ff18a967ac509878dbc5698a5381d8bf2926fb262c70ce65591424",
+      "contentSha256": "7f7cee8f18fea4b8db9885cf5db18333c4bb70984ce32bb4a123bb62f68ef8ed",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/xq-dark.css",
+      "recordId": "3b6c9c510e8a6b29226e9246ebff9efaab7ebae83bde90093b8329aa345f2244",
+      "contentSha256": "52c96beaa01c09e9410310cf53fe69ed7873c413c6cfc1086dc11eed6a246e2c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "editable-samples/codemirror/theme/xq-light.css",
+      "recordId": "2889c490260744b0a2aa4518edbb059c19efdfe4b9513c0f485df20ef0696f65",
+      "contentSha256": "a523f9e8fc269bddf78c79790e64238052436e73e77d5040dca371ebc7be9ecb",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "font-features/font-variant-numeric-example.html",
+      "recordId": "7295d101a7e1795c3f93bbcf1f90961ac537fc6730e7efa17e7dc80abf0734fc",
+      "contentSha256": "709e4ded67b27aa88cc70317d1a418c910ab948dd7f22d3f7a24ffe9171e5ab5",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "learn/getting-started/started2.html",
+      "recordId": "91570403d386252a4cc1fbf914da24cfc37021dc01e4444462d5c56a103fbd96",
+      "contentSha256": "b03bef553b9947d78c28b6f7a99d87fe8d7a847e15251459dc39ae5ae4aed8c7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "learn/getting-started/started3.html",
+      "recordId": "7b53efe7f068e723a368fb53afcbe48784181dd4491b822185d0c3c44d8b15ea",
+      "contentSha256": "e64501dac389dd57ec040e455eea846d8cb4bcd5f74dcba82622a6aa857a232c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "modules/compositing.html",
+      "recordId": "d8408fd2bb6477282600f04dc68bea140fdb56f347572c2dc49896b17d5bb3b6",
+      "contentSha256": "19c8577e8f1d3f5a74de2859db26b844199f3d70a513b77e0d1c741e3433a452",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "overscroll-behavior/index.html",
+      "recordId": "211302d35a8f96c42c8fb315c4bb23cdd5c56d76afa1048db299b2507fb11470",
+      "contentSha256": "ae95f3bb3bbd2515403377c55a82e5d3b620400f07eeaa06ce14faa62c235ec6",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "variable-fonts/font-stretch.html",
+      "recordId": "0caa58c787c64d8ff6720eb500ce721d50a81aaf93cce4df109d7563cb3ca205",
+      "contentSha256": "0f29e9ee12815a9f1c7b459ae4f713030d829cefb9027cb183204ea5122d9e31",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "variable-fonts/font-weight.html",
+      "recordId": "e6835a5aa6f0f28c35eeaafbdc8c6b72397b6523b3ed7f687a0b5062f31192d9",
+      "contentSha256": "def5c78fc86ae37ac324d4c339fffda48be43d8a2e582a3498393671bd32cdd3",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-css-examples",
+      "path": "variable-fonts/oblique.html",
+      "recordId": "616d1ee1c2a668fae9b575b7b1d07f869d129e9e8ebe16aece8c6beba21ca645",
+      "contentSha256": "273bfbd211d4dd7193fd5bd10f917013efde365a9375809a4500cda11b58faea",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "abort-api/index.html",
+      "recordId": "76b2703fd42b168d24aec4d96ade499d04d90d4908af3862a5907f59df8a77b3",
+      "contentSha256": "9bcba72f90eb0a1ce19e1a1d088c3fef5cd3dff1ae1e684d467c8b01b6d79a74",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "css-custom-functions/gradient-function/style.css",
+      "recordId": "33af80e9cc813d7d019af7bf87c47ef877a360865918b859cf1253e511a98b97",
+      "contentSha256": "ed8aff77dc160232a6813742027b589bc785a7a6feacead76de2c321bfb3470e",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "css-typed-arithmetic/animated-story-circle/index.html",
+      "recordId": "2a70a8682137c05de9454737b64dcdc4a427dfac76d43d6bbed0574607e21c1c",
+      "contentSha256": "c3cded0ef44e61c9b198f5f8e400b64ac62351d16e9c11f304e7e6f0d1b65b68",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "document-picture-in-picture/index.html",
+      "recordId": "49a523f45651f78c008b57e78a51b27f4cc4490693d7d15f52ab8c1141ab3f81",
+      "contentSha256": "359ae081594b340df6dc707c8939480f2cc9eaf4de7bee509de6a44b0a9311e8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "fullscreen-api/index.html",
+      "recordId": "505d10e2c59ebb24f2e925ba9d7c25611842b6d3b33b0a9fb6aa86fe36fab9cf",
+      "contentSha256": "ccd8883d158c8b3dfeb6e902168694161d5f75b2ba35551fcffabd1d53cf1119",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "geolocation-element/embedded-map/index.js",
+      "recordId": "e9210cd827f8fda180e1eb49d2d5354dc734ea41eca607f94a7e6da726bee916",
+      "contentSha256": "4e56ac818110dd1fbf1cb01205156589b3018aafb1875f171af9f507eb417a21",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "media-session/script.js",
+      "recordId": "c3c3cf586c025c81eb326df750cadf7c2f6a8f8e2c5a3d31cbad7e893aca28c1",
+      "contentSha256": "7cad2e90c1e431c3ca80b12d2cbf6eeb4429b5f4643b3eea4687a9f60c94da8b",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "media/mediaerror/index.html",
+      "recordId": "0ee4486407cfaafaf3cc8384e5a93d3761ccafbcbfb7e4bd6c9553cb59e2bb8a",
+      "contentSha256": "1a434933f6a002b50d6d3298a826661701dc471ce669baecb4e935ca1d254110",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "picture-in-picture/index.html",
+      "recordId": "f518e5cb980e059666be9a91449dc93d19a57af70c0a26a72730b13b6a536249",
+      "contentSha256": "716d3a1f8616f6ae50667eed37c4e84f2716db9f022b0687ae6622f0afece145",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "pointerevents/Multi-touch_interaction.html",
+      "recordId": "3cca9c0e0da25ad21e4161b7b9fcf844e3a3b920ce04b176909db1bbe74ef36e",
+      "contentSha256": "3b9799868d75136a39969af2d125aa5b0e92e3193bc3a408c5bccff3deec35d7",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "service-worker/simple-service-worker/image-list.js",
+      "recordId": "46d550e688bfb57e5bb455738f3acecb50284397fb3a5ce796702c07655214f6",
+      "contentSha256": "7a0cd2ed150738124c8d60eae6dfac202666f9d9c96cd8a04dce321607c3f92b",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "touchevents/Multi-touch_interaction.html",
+      "recordId": "1c9e2f1dee08d22619f46526c97733f56bb18bd01f73475b64af062306b5bdef",
+      "contentSha256": "335efcc4396b4ba0e9b35814952d2503823ab6605ae2aa91b03f6ac903f79213",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "web-storage/jscolor/jscolor.js",
+      "recordId": "0e30500e9a6fc22d3a81a116daefafb0b4c63d3166acc43f9d9c4cfe058b01ca",
+      "contentSha256": "8655d9d2be66deed4fe12a829eb7b4f3508e6834aef4d41a675ce9a633613e67",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "web-workers/offscreen-canvas-worker/index.html",
+      "recordId": "d719fd7d5f6992062065561db52010959f67a46865f332f00af523071bb6e2da",
+      "contentSha256": "b72e30bf99b882a86fb5f013402bcdca9990657215e43f53d187778856bab879",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-dom-examples",
+      "path": "webxr/gl-matrix.js",
+      "recordId": "6eef7ee15e6e7b0e6f3cb1d92482ce98d0bbc443f59ba907d9c37afda8a76c06",
+      "contentSha256": "52dcd90df9aa90232ca4d16213b3fdc5f11f3d0e6511c11a8d7fe7a9ea292017",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-interactive-examples",
+      "path": "live-examples/html-examples/content-sectioning/footer.html",
+      "recordId": "19d2583b5fb1caf1602a8644dbdea0aea5b6e0d67b310e690abd0c3b677645ae",
+      "contentSha256": "4e04929cc930f5f921c70cd2fd21076f1a9d28b93d0eb4f0b8efcab83d0b888f",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-interactive-examples",
+      "path": "live-examples/html-examples/inline-text-semantics/small.html",
+      "recordId": "60c2b6bd597040bb3734df7d66b013392d3a943d91d28e4c2ff7b8b94fc90565",
+      "contentSha256": "bcbed64a6f5faf04a1be5ce7b75a8fa18336cf1e127945a0e8b837b8d1cb71c4",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "accessibility/assessment-finished/index.html",
+      "recordId": "db962acabe4f2e890c8e4d9b7cc8ba6e955dcfa3c182147a2b27f6aa6e588bc5",
+      "contentSha256": "fd32c1e42285f01145087af48257e16407f31901b3708f777c5beb8c82d39bf8",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "accessibility/assessment-start/assessment-files/index.html",
+      "recordId": "70af39df6d12bcb604777084714d68818cbdccb1ff9e35c42b653cb6fd239bfd",
+      "contentSha256": "5c7c09a47a805041981a43eabd2d6ea52d0a02c47981ac7ac841ab008f91face",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/legacy/normalize.css",
+      "recordId": "772eda252caa32f1c393ab31995a96d2b50b0c4e777401c5f02263cf29dc86c2",
+      "contentSha256": "f4d7e8250f8f124f8b7d087e5e260766a34b079fddc43e7b20d8c18ca1e92e51",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/legacy/skeleton.css",
+      "recordId": "9fc787b577cb337482a7862e66c8594fb673bb5d21f1c1497df37eac079456c4",
+      "contentSha256": "10207d6db44e2c69bcc0ea046c77074719478331aa6290ed3538034f20f3d308",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/css-layout/practical-positioning-examples/tabs-manual.js",
+      "recordId": "e184f991374d2f6eecd4af74250440b3a0cbd1b79fed03c20cd0fd96ca9cd9cf",
+      "contentSha256": "a56eb9baa8f3adbf48960cf4cc7b945d198cf820a452edecc15ba5b202b40076",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/web-fonts/fonts/cicle_fina-demo.html",
+      "recordId": "9bd53e19e8580312e71cc22c2f1daa8749a222639df91d543427d7cdce685059",
+      "contentSha256": "6e52f30e4278da1ed051d38de7ff33720cae2ec0f57ae6281fdd73331807e69c",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "css/web-fonts/fonts/zantroke-demo.html",
+      "recordId": "c26fca6f5ee5784c29813831aa2a66fe7f07469c8b2b73baa601c2093c5c1dbb",
+      "contentSha256": "85f3d282c9fe1aea9c0d3ac07952efc8dc68884a4afef27120248144d78ac1fa",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "html/introduction-to-html/document_and_website_structure/index.html",
+      "recordId": "f907cf6d6d0c599ddce49e58a51ddfddf8765ef1e12d7875cb4536bb88c6b605",
+      "contentSha256": "8623d0ff8d0696128844a2315d8c23840cf839d52fab09fcd06eabb3e5e966ec",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "html/introduction-to-html/html-text-formatting/text-complete.html",
+      "recordId": "f284b197884c36d695ae62c9ff3d39479a98ccbf5ab6406f2376de506dcd506e",
+      "contentSha256": "d20d6f8f830587fdfeaf9330fbab333a3d2997ceed2f20c4909beafaba64cebb",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "html/introduction-to-html/html-text-formatting/text-start.html",
+      "recordId": "dfab1b29bf815d69f62866fd4ed8aef279ce472500c054cc4adb8eff23d5813d",
+      "contentSha256": "78352f627a439bf263a0e6b423d98a600524289b123cb92336a0bb736f12c75d",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/client-side-storage/cache-sw/video-store-offline/index.html",
+      "recordId": "514ea29eb8b2fe763136d4836c44cccf79b297208f17f4c68da027518a8fb349",
+      "contentSha256": "eeefc560f7b606d29f051baecdedae2b85310ec12d7c108b06177538a26b4462",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/client-side-storage/indexeddb/notes/index.html",
+      "recordId": "8a8ce9f33acb689b0c82bf5454ced52a8588c0c11a8a0e4cc9586d3735b2bb5c",
+      "contentSha256": "984f6d2d1d5a60d0e362d8e99ba8c5017a07786af6418d19a57a3451b275cdce",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/client-side-storage/indexeddb/video-store/index.html",
+      "recordId": "0995e756763a58a30649fdb3dc24f6de08bb441890e500cb5a08cbedd30f0b21",
+      "contentSha256": "9abbca8c67a51a52551f8d130fcca0e48ca5b5c341ee293e58c172548ccaec81",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/client-side-storage/web-storage/personal-greeting.html",
+      "recordId": "ee8d392ce8803df31aa4789da6ab354a3cf9846e936dbdf800791b9136a0a74d",
+      "contentSha256": "2cc2d4076cd8097a11342fa5fc0602c297904355f5b2f5a276eae6886b8fb142",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/introduction/web-audio/index.html",
+      "recordId": "8922a561d348ef7291b47e77ae8c5804f14dbd7803a7b87c692991e9271dc19e",
+      "contentSha256": "da081b02d06c8923aaddf8f231665af8f9e4b279ce5846b7da0a9b2ac045557b",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/video-audio/finished/index.html",
+      "recordId": "48565e97c5a6ca1ff888b6f3fea7abbe8b95f28e6b323b9f51e63f24c82f8508",
+      "contentSha256": "9ce5d7730774ea5e29fcf84db61bcfbd21356fb5e2a18c98e242fa792b9c8c95",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "javascript/apis/video-audio/start/index.html",
+      "recordId": "7fa948b2760d8a950230bd76d6bc78b6e4646c8615d9e0f034e22503e530b347",
+      "contentSha256": "31f49f988cc9de1e8876c7f04e392ee9ad495a8f6de3be06da308b10befbf021",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "tools-testing/cross-browser-testing/javascript/es6-promise.js",
+      "recordId": "651667ef1cb46b4636b0ac35e61701a86bb0f84667301212649013fefdb8967f",
+      "contentSha256": "384329af7aeac3222268043817e1a0c3781e262799010185755ead4180a48ca1",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "train",
+      "sourceId": "mdn-learning-area",
+      "path": "tools-testing/cross-browser-testing/javascript/polyfills.js",
+      "recordId": "0382f9fc59ac0d11ac5418107d47d75cce0216608700b58eaafef973728d1249",
+      "contentSha256": "72a320a152726d9c0c347c5882aeb8fcce0fc8c077f9bb901ecae923e68eb793",
+      "groupId": "source-family-mdn-web-examples"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "index.html",
+      "recordId": "167fdd1427a481eea921d63c8ef010919baac9341f6863f19ba59de77e67524f",
+      "contentSha256": "f04059bd80df6dd6f2afb4eda4eeb101f64e00e99dc464cb3d378f15ef7f11e5",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/app-page.html",
+      "recordId": "063764d4f2984e2ec3dc5e5ad90e6a23ba26e1eed9696fc56daf8573345c5f2d",
+      "contentSha256": "6e9cb12f5139940a68105c6f1694be84180ffdfe38c5be04b05f34f08447cca4",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/aside.html",
+      "recordId": "efe4b33d2abda0d210a21868cf65032c518d4e9a23a3339ba6db252b289e07f9",
+      "contentSha256": "a9b6f4617f3d96aae9ffdad48857201ec2786c7f51e291df2f701d3c2718bd82",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/band.html",
+      "recordId": "8db72849418c6e29e72365f5149abf5543ac2870850c5d7ae96f3d0e78074f11",
+      "contentSha256": "8ee94afb96c8a88ea5a222d57f9a45a045858e9fee2183a86a4b8213a1872033",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/blog-tailsaw.html",
+      "recordId": "7690258dd9cb567a97cd30736794ce27300b9a5482f6a76b7d0815349f951d33",
+      "contentSha256": "0d265f147d115430cf65971044456a39fc5d2d7383c91a0663f875728264c3b6",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/blogpost-tailsaw.html",
+      "recordId": "06ee3f7d84a23a342f36dec9c751120211de94825d326cdc539a8374072480d7",
+      "contentSha256": "3243a66df70a3f543be112a0e4a4fb95846089df013b4733a7f5b67c97784eb6",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/cards.html",
+      "recordId": "be7ba92ef379b658c66e9420329f94756b8a84347f638e548198cae229b9d4ef",
+      "contentSha256": "a09bb9a383a483f0a96d9c7b114fcdc17ee433302aed8628f52f9e5604a85fbe",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/cheatsheet.html",
+      "recordId": "d0d6ed18b07f2339de585cd686a0f48ec60f321fca32d20121de5c734d4fb5f7",
+      "contentSha256": "676e47297b54779c8a63431698f8268643a4436266fd694c303d96e497abbd52",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/forum.html",
+      "recordId": "532a5eebb28d6f87a39d5f2316d9710db3f9da8d70b2f46a9a97f4006b04cb45",
+      "contentSha256": "15a8333f10f49e830dd4d3b5da47cd7ceb3e6cb92e3dd16af136649e0703b317",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/hello-parallax.html",
+      "recordId": "be90ab29dcce727444ee2046068e245805ee5729bbbcd4958585566370f30670",
+      "contentSha256": "0d6f13b53fb72813889f65b4eb329f92ef58ca63113d05d76ceff896cce5961e",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/hero.html",
+      "recordId": "7a45817c3df7fcd4aa37d0f8dcfbf038cc3b4548de33d973eb8330e2571514a4",
+      "contentSha256": "ccd3d7177f59c6f8d8d22ed6e0ce124d6047169778e5e95f6b583db923d5cc38",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/inbox.html",
+      "recordId": "e05d7c45e4c89212bc99a78adfbcdfcb3cfd7d81974f4f72caed7a50c660fbb1",
+      "contentSha256": "43abd47b38bdc009e215b26761d590851602d6ab9fff8f1b3b61e67ea36bdd22",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/instaAlbum.html",
+      "recordId": "c0d1e19f116f7383efa2df94d6ba6c7b905c2da7dd263aff9aa76d9d7b67e2fe",
+      "contentSha256": "0663be96f8eb264a7db4f9b8cff2ef5c8ce36f16afbd2b5e433a97796651c77f",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/kanban-switch.html",
+      "recordId": "b90554f68f27f2faa93251693fc4805b62b7f4e0601b6042e07871074391430e",
+      "contentSha256": "8fc4875ce17fa072ee591d3a6f845e4050182b14d8d3c722594f7423ed79a436",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/kanban.html",
+      "recordId": "afcf2cac9f11642fc396acc32e9faa9787db549d8a7a4eb601256a62b4be924a",
+      "contentSha256": "878273e040a8df9717b267eea3267953a547923b24f378e7a0ca06caa8a7d6c8",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/kanban[search].html",
+      "recordId": "52001ccfd285f4f645c8f00ee1b1c87e1f20e48806fdff57d37fc1788699c89f",
+      "contentSha256": "6b0d81d63bf25dc44fc7d3234da6c10ac6d147ac9ac500806eec1001982dd847",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/modal-cards.html",
+      "recordId": "a061373b7a971399263e0dade47e8522501fcffecd9355dc84bdbbc7696409bc",
+      "contentSha256": "35cf5187b7492ce6ddf2789c9de6c7eb6a91e18f6ea740d1275c34b1433a92d1",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/personal.html",
+      "recordId": "c42970ad30cd65cd758bbeef43fc250cba00fb09b330d1960a2bef04981f70dd",
+      "contentSha256": "682c423371615b99a9986bfc25c5500d98e4309144267f4ce947c13aab60ae1b",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/register.html",
+      "recordId": "ec6a748bd690001627627e74a5993fa394dd7522a52749021215de4072746e83",
+      "contentSha256": "c9a793a3535b6813f64580d1a173e80730fa4dea80662947b55236ca92bd22bf",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/search.html",
+      "recordId": "5bfe3dd57e1f13e1a068296b189c072c9a9ab94c832806c4d68c070e163f4a1d",
+      "contentSha256": "8b48020fd1991dc57788f069246aa9556b0126b67dfcb6b47190c4bf909b6c8a",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/showcase.html",
+      "recordId": "ce41fd5f6449ec2071ecf8df47f8d68c523ce6ce4097dea72a8a9e955cb4e0fb",
+      "contentSha256": "5f3ae8df5e61901c2afa4e2cfd13f9ec90845d754582ec1211750846293c386f",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    },
+    {
+      "corpus": "p2-26-web-batch-2-v2",
+      "split": "validation",
+      "sourceId": "bulma-templates",
+      "path": "templates/tabs.html",
+      "recordId": "3e7aee0ca585c49b21f84015bf9e86ea5d4f9d0f73d9e8012c03ec3de60e3818",
+      "contentSha256": "848296f7fddd9b5e58dc4ceb9fdc3c4ad5157b74671631d0c2c88b8964eb8c85",
+      "groupId": "github-bulmatemplates-bulma-templates"
+    }
+  ],
+  "noticeTriageMeaning": "Review markers only; includes placeholder text and references to external assets. Not an automatic exclusion or legal classification.",
+  "originalArtifactsChanged": false,
+  "dataPreparationAuthorized": false,
+  "rightsDeterminationMade": false
+}
