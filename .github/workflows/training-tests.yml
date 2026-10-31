@@ -101,6 +101,7 @@ jobs:
           training/tests/test_plex600_setup.py
           training/tests/test_plex600_feasibility.py
           training/tests/test_plex600_m3_scope.py
+          training/tests/test_plex600_m3_rights_audit.py
           training/tests/test_plex600_m4.py
           training/tests/test_plex600_optimizer_feasibility.py
           training/tests/test_plex600_m5.py

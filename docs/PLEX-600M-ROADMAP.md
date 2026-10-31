@@ -26,7 +26,7 @@ autonomous workflows are not product milestones.
 | Area | Evidence today | Still to establish |
 |---|---|---|
 | Architecture | A 600,372,480-parameter decoder is implemented with random initialization, a 1,024-token context and 32,768 vocabulary slots. | Whether trained weights learn useful language and coding behavior. |
-| GPU feasibility | One full-size, synthetic 1,024-token forward/backward check passed on the RTX 4080 SUPER. | Optimizer-state memory, an update, sustained training and throughput. |
+| GPU feasibility | One owner-reported full-size synthetic AdamW update passed on the RTX 4080 SUPER with 10.04 GiB peak reserved. | Sustained training throughput, reproducible loss curves and actual learning remain unmeasured. |
 | Input integrity | Index hashes, bounded immutable token snapshots and an explicit source-binding check are implemented and tested. | A reviewed scalable input design if a selected packed split exceeds 256 MiB; independent source and manifest identities. |
 | Data and tokenizer | Preparation tools exist. The historical P2-26 corpus is documented as a limited candidate. | A reviewed 600M corpus and split; a dedicated fitted 600M tokenizer. |
 | Model capability | No trained 600M checkpoint or coding evaluation exists. | Instruction following, syntax, requested behavior and preservation on supplied code. |
@@ -121,6 +121,16 @@ not a fresh benchmark. Its previous approvals do not by themselves approve a
 evaluation decisions. Missing rights evidence, unclear source scope or
 unresolved split independence leaves the gate open. The final project holdout
 stays closed.
+
+**Six-source audit (October 31, 2026):** [Evidence-based pinned-license and
+file-level rights review](PLEX-600M-SIX-SOURCE-RIGHTS-AUDIT-2026-10-31.md)
+checked all six repository root licenses at exact historical Git revisions,
+reviewed confirmed third-party license headers, and reconciled the 123
+quarantined historical train records. **No new training source was approved**:
+all six remain on HOLD pending file-level provenance and scope review. This
+read-only evidence receipt is not an M4 rights-decision file. The 2,982
+conditional historical candidates remain unprepared; M3 and the independent
+evaluation design are still open.
 
 ### M4 · Reproducible corpus preparation
 

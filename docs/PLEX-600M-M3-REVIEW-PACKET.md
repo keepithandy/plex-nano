@@ -150,3 +150,12 @@ limits. Next, decide the narrower candidate scope and classify the remaining
 notice queue before source selection. M3 remains open.
 
 **Latest bounded M3 candidate scope:** The [read-only candidate scope and verifier](PLEX-600M-M3-CANDIDATE-SCOPE.md) conservatively quarantine all proposed omissions and notice flags, leaving 2,982 historically trained-split records as *review candidates only*. Source rights, fresh independent evaluation and M4 data preparation approval remain open.
+
+
+**October 31 six-source rights audit:** [Pinned upstream license and
+file-level evidence report](PLEX-600M-SIX-SOURCE-RIGHTS-AUDIT-2026-10-31.md)
+reconciles six candidate train sources, 69 vendor omissions, 79 training
+notice flags (25 overlapping) and 123 quarantined training records. The
+remaining 2,982 records are conditional review candidates only. All six
+sources remain on HOLD; no new rights, data-preparation or training approval
+was granted. Historical validation and final holdout stay separate.
