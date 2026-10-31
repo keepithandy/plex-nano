@@ -115,3 +115,7 @@ training/phase2/drafts/p2-02-request-following-v2/candidate.jsonl text eol=lf
 training/phase2/data/authored/p2-02-code-pairs-v2/approval.json text eol=lf
 training/phase2/data/authored/p2-02-request-following-v2/approval.json text eol=lf
 training/pretraining/plex600-owner-authored-pilot-v1/** text eol=lf
+
+# Future M7 runner is pinned to LF for execution-source identities on Windows.
+training/src/plex_training/plex600_m7.py text eol=lf
+training/tests/test_plex600_m7.py text eol=lf

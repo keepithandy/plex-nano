@@ -88,4 +88,5 @@ jobs:
           training/tests/test_plex600_optimizer_feasibility.py
           training/tests/test_plex600_m5.py
           training/tests/test_plex600_owner_pilot.py
+          training/tests/test_plex600_m7.py
           -q
