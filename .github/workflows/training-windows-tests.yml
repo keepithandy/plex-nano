@@ -81,4 +81,5 @@ jobs:
           training/tests/test_file_edit_replacements_diagnostic.py::test_from_file_uses_saved_evidence_and_does_not_write_over_it
           training/tests/test_plex600.py
           training/tests/test_plex600_setup.py
+          training/tests/test_plex600_feasibility.py
           -q

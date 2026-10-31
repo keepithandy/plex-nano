@@ -70,6 +70,8 @@ configuration, memory considerations, and lightweight tests. **This is untrained
 source code only**, not a new Plex Nano checkpoint, approved experiment, or change
 to the 27M model. A **scratch tokenizer preparation and validation path** is now available, along with record-bounded next-token example sampling. See [the live Plex 600M development record](docs/PLEX-600M-DEVELOPMENT.md) and [the safe setup CLI](training/src/plex_training/plex600_setup.py). A full 600M tokenizer has **not yet been fitted**, and no 600M optimizer runner or model checkpoint exists.
 
+A [guarded CUDA feasibility check](docs/PLEX-600M-CUDA-FEASIBILITY-PROPOSAL.md) completed one fixed synthetic full-size forward/backward pass. Optimizer memory and sustained training remain unmeasured; the default command prints the plan only.
+
 ## What Plex is being trained to do
 
 Plex should learn to:

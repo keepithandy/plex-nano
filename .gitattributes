@@ -96,3 +96,7 @@ training/phase3/copy-fidelity-v1/sb03-namespace-diversity-proposal-v1.json text 
 
 # R3 design-review artifacts retain their published SHA-256 identities on Windows.
 training/pretraining/p3-sb03-r3-*.json text eol=lf
+
+# CUDA feasibility refuses a changed model hash; keep its source bytes portable.
+training/src/plex_training/plex600.py text eol=lf
+training/src/plex_training/plex600_feasibility.py text eol=lf

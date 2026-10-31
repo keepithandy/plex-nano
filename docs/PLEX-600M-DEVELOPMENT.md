@@ -15,7 +15,7 @@ Build **Plex 600M** as a general language + practical coding model that can rece
 
 ## Hardware and target
 
-RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. A full-size CUDA forward/backward/optimizer fit is **not yet measured**. No guarantee that 600M training fits before a bounded hardware test.
+RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. One fixed full-size forward/backward check passed; optimizer allocation, an update and sustained training remain unmeasured.
 
 | Setting | Initial scratch-model target |
 |---|---:|
@@ -38,7 +38,8 @@ RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. A full-si
 | Dedicated 600M tokenizer preparation | **Implemented; Linux and Windows CI passed** | [600M setup CLI](../training/src/plex_training/plex600_setup.py), [guard tests](../training/tests/test_plex600_setup.py) |
 | Input data and independent split/provenance verification | **Bundle verification implemented; large-scale dataset absent** | Requires reviewed rights, disjoint splits, and SHA-pinned data |
 | Record-bounded next-token batches | **Implemented; Linux and Windows CI passed** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |
-| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
+| Full 600M forward/backward feasibility | **One fixed check passed** | [Result and limits](PLEX-600M-CUDA-FEASIBILITY-PROPOSAL.md#authorized-cuda-result--october-31-2026); optimizer and sustained-training fit remain unknown |
+| Bounded CUDA-check runner | **Implemented; local guard tests passed; one check executed** | [Fixed check and commands](PLEX-600M-CUDA-FEASIBILITY-PROPOSAL.md), [runner](../training/src/plex_training/plex600_feasibility.py); default prints the plan without importing PyTorch |
 | Full 600M optimizer updates | **Not authorized / not run** | No 600M trained weights exist |
 | Real-world coding ability | **Not measured** | Random weights are not a working assistant |
 | Regression status for current foundation | **Green** | Linux 678 passed / 9 skipped; Windows 329 passed (see links below) |
@@ -59,6 +60,8 @@ A safely testable, isolated foundation on `master`: exact architecture, simple r
 ## Log
 
 - **2026-10-22:** Confirmed the scratch-model goal and RTX 4080 SUPER hardware; merged architecture PR #197 after green Linux/Windows checks. Continued work directly on `master`, without new pull requests.
+- **2026-10-31:** Prepared a guarded one-pass CUDA feasibility runner and fixed proposal. Local Windows guard and CI-inventory verification: **22 passed**, using mocks and short test processes, without full-model construction or CUDA model execution. Added the guard tests to both CI workflows; remote verification and the actual GPU check were pending at that point.
+- **2026-10-31:** Following separate owner authorization, executed the fixed CUDA check once. It passed with 600,372,480 parameters, a 1,024-token synthetic sequence, finite loss and 218/218 finite gradients. Peak allocated/reserved: 4,947.25/6,140 MiB; worker time 8.37 s. [Full result and limitations](PLEX-600M-CUDA-FEASIBILITY-PROPOSAL.md#authorized-cuda-result--october-31-2026). No optimizer or checkpoint was created; remote CI verification remains pending.
 
 ## Safe local inspection commands
 
@@ -86,4 +89,4 @@ A tiny training dataset may yield **fewer** than 32,768 learned tokens; that doe
 - **Tested code:** 600M architecture shape and causal/gradient behavior using small configurations; fresh scratch tokenizer identity and approved-data fit; SHA and split corruption refusal; token/window sampling that stays inside individual records; small-model next-token backward pass.
 - **Evidence limit:** CI did **not** instantiate or train all 600M parameters, run on the owner's GPU, acquire substantial training data, or certify language skill. No 600M model checkpoint or weights exist.
 
-**First milestone outcome: PASS for repository-side foundation, NOT YET VERIFIED for full-size GPU training.** The next independent gate is a reviewed, bounded 600M CUDA memory/forward/backward check, followed by dataset/tokenizer source review and separately authorized optimizer execution.
+**First milestone outcome:** repository-side foundation passed its recorded checks. One fixed 600M CUDA forward/backward check subsequently passed; full-size optimizer and training fit remain unverified. Dataset/tokenizer source review and separately authorized optimizer execution remain future work.

@@ -85,3 +85,12 @@ The manual suite exists so those frozen research contracts can still be checked 
 - Manual experiment-contract: `.github/workflows/training-experiment-tests.yml`
 
 Changes to either workflow trigger the portable required suite on pull requests and on relevant pushes to `master`, which also validates the inventory partition.
+
+## Plex 600M feasibility guards
+
+`test_plex600_feasibility.py` belongs to the portable required suite and the
+Windows subset. It checks the plan-only default, explicit execution opt-in,
+source/device/memory refusals, mocked finite-loss/gradient behavior, OOM and
+malformed-result reporting, and worker termination on timeout/interruption.
+These tests never allocate the 600M model or access real CUDA. The older
+inventory counts above describe the G03 snapshot, not today's module count.
