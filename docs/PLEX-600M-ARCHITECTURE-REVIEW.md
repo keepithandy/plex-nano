@@ -2,6 +2,8 @@
 
 **Review state:** Architecture code + lightweight tests only. **No training performed, no trained weights, no tokenizer fitted, no benchmark pass, no model checkpoint.** This is **not** a roadmap or an experiment authorization.
 
+**Later development:** A dedicated tokenizer preparation and validation path was subsequently implemented; a full 600M tokenizer has not been fitted. See the [development record](PLEX-600M-DEVELOPMENT.md) for current status. The architecture review below describes its original review state.
+
 ## Purpose and isolation
 
 The owner chose a **scratch-trained** ~600M-parameter coding/language model to develop independently of Plex Nano's 27,566,080-parameter research baseline. The new implementation is deliberately isolated:

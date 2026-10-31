@@ -37,9 +37,11 @@ RTX 4080 SUPER with **16,376 MiB** reported video RAM; CUDA available. A full-si
 | PR #197 | **Merged to master** | [Merge](https://github.com/keepithandy/plex-nano/pull/197), commit `156ef1de959e7c991d16e28a7a8caf80ac17fa20` |
 | Dedicated 600M tokenizer preparation | **Implemented; Linux and Windows CI passed** | [600M setup CLI](../training/src/plex_training/plex600_setup.py), [guard tests](../training/tests/test_plex600_setup.py) |
 | Input data and independent split/provenance verification | **Bundle verification implemented; large-scale dataset absent** | Requires reviewed rights, disjoint splits, and SHA-pinned data |
-| Record-bounded next-token batches | **Implemented; Linux and Windows CI passed** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |\n| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
+| Record-bounded next-token batches | **Implemented; Linux and Windows CI passed** | [packed sampler](../training/src/plex_training/plex600_batches.py) and tests (no optimizer) |
+| Full 600M GPU feasibility | **Not run** | Memory and throughput unknown |
 | Full 600M optimizer updates | **Not authorized / not run** | No 600M trained weights exist |
-| Real-world coding ability | **Not measured** | Random weights are not a working assistant |\n| Regression status for current foundation | **Green** | Linux 678 passed / 9 skipped; Windows 329 passed (see links below) |
+| Real-world coding ability | **Not measured** | Random weights are not a working assistant |
+| Regression status for current foundation | **Green** | Linux 678 passed / 9 skipped; Windows 329 passed (see links below) |
 
 ## First engineering deliverable
 
