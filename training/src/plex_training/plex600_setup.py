@@ -207,13 +207,18 @@ def check_source_binding(directory: Path, dataset_dir: Path, *,
     report, indices = _check_tokenizer_bundle(root)
     if report["sourceDatasetManifestSha256"] != source_manifest_sha256:
         raise ValueError("Source manifest identity differs from bundle")
-    if source.get("schemaVersion") != 1 or source.get("pipelineVersion") not in ("p1-14.2", "p2-02.0", "plex600-m5.0"):
+    if source.get("schemaVersion") != 1 or source.get("pipelineVersion") not in (
+            "p1-14.2", "p2-02.0", "plex600-m5.0", "plex600-owner-authored-pilot-v1"):
         raise ValueError("Unsupported source dataset manifest")
     if source.get("pipelineVersion") == "plex600-m5.0" and (
             source.get("modelFamily") != MODEL_FAMILY
             or source.get("status") != "tokenizer-input-only-not-training-authorization"
             or source.get("trainingAuthorized") is not False):
         raise ValueError("M5 source is not an approved tokenizer-input receipt")
+    if source.get("pipelineVersion") == "plex600-owner-authored-pilot-v1":
+        from .plex600_owner_pilot import verify as verify_owner_pilot
+        if verify_owner_pilot(dataset)["status"] != "verified-owner-authored-tokenizer-ready":
+            raise ValueError("Owner-authored source dataset failed independent verification")
     sources = {row["id"]: row for row in source["sources"]}
     tokenizer_raw = _snapshot(root / "tokenizer.json", manifest["tokenizerSha256"], MAX_SNAPSHOT_BYTES)
     tokenizer = PlexTokenizer(Tokenizer.from_str(tokenizer_raw.decode("utf-8")))
@@ -228,7 +233,7 @@ def check_source_binding(directory: Path, dataset_dir: Path, *,
         records = _records(_local_file(dataset, split + ".jsonl"),
                            source["summary"][split + "JsonlSha256"],
                            source["summary"][split + "Records"], sources,
-                           family_stratified=source["pipelineVersion"] in ("p2-02.0", "plex600-m5.0"))
+                           family_stratified=source["pipelineVersion"] in ("p2-02.0", "plex600-m5.0", "plex600-owner-authored-pilot-v1"))
         for record, index in zip_longest(records, indices[split]):
             if record is None or index is None or record["recordId"] != index["recordId"]:
                 raise ValueError("Packed record identity/order differs from source")

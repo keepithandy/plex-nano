@@ -28,7 +28,7 @@ autonomous workflows are not product milestones.
 | Architecture | A 600,372,480-parameter decoder is implemented with random initialization, a 1,024-token context and 32,768 vocabulary slots. | Whether trained weights learn useful language and coding behavior. |
 | GPU feasibility | One owner-reported full-size synthetic AdamW update passed on the RTX 4080 SUPER with 10.04 GiB peak reserved. | Sustained training throughput, reproducible loss curves and actual learning remain unmeasured. |
 | Input integrity | Index hashes, bounded immutable token snapshots and an explicit source-binding check are implemented and tested. | A reviewed scalable input design if a selected packed split exceeds 256 MiB; independent source and manifest identities. |
-| Data and tokenizer | Preparation tools exist. The historical P2-26 corpus is documented as a limited candidate. | A reviewed 600M corpus and split; a dedicated fitted 600M tokenizer. |
+| Data and tokenizer | A first owner-authored, preparation-approved local pilot (120 train / 24 internal validation records) is committed, with six external candidate repositories still on hold. | Real pilot tokenizer fit, source-binding evidence, independent coding development evaluation, and larger rights-reviewed data. |
 | Model capability | No trained 600M checkpoint or coding evaluation exists. | Instruction following, syntax, requested behavior and preservation on supplied code. |
 
 The GPU result is evidence for **one fixed workload**, not a claim that a
@@ -185,6 +185,8 @@ configuration; it does not establish sustained training stability or coding
 ability.
 
 **M6 one-step report protocol:** [First optimizer-feasibility report](PLEX-600M-FIRST-OPTIMIZER-REPORT.md) fixes a single synthetic FP32 AdamW update with BF16 autocast, 14,000 MiB minimum free VRAM, at most 600 seconds, create-only local JSON reporting, and no dataset/model checkpoint access. The user approved pursuing this experiment on October 31; standard GitHub CI does not provide the owner's GPU. No new optimizer measurement should be reported until the local run actually completes.
+
+**First source-limited dataset (October 31):** [Owner-authored pilot dataset](PLEX-600M-OWNER-AUTHORED-PILOT.md) uses exactly 144 previously train-designated authored examples, with 120 local pilot training rows and 24 newly grouped internal validation rows. It excludes all 72 prior P2 validation examples and all six unresolved web sources. This creates a narrowly scoped preparation-approved input, not an M4 six-source rights decision or an approval to train. Actual 600M tokenizer token counts and sustained training measurements are still pending.
 
 ### M7 · First bounded training pilot
 

@@ -87,3 +87,7 @@ The wider historical receipts contain 123 more records formerly used as validati
 5. Only then propose a signed-off M4 materialization and M5 tokenizer run, plus a separately designed independent coding development evaluation. Training needs another fixed run contract and authorization.
 
 **Conclusion:** root-level MIT/CC0 evidence exists, but file-level rights and training-use scope are not yet adequately established for any of the six sources. **No new authorization is granted.**
+
+## Scoped first-pilot exclusion (October 31)
+
+The six external repositories **remain on HOLD**, and no M3 or M4 rights flag is changed. The separate [owner-authored local pilot](PLEX-600M-OWNER-AUTHORED-PILOT.md) deliberately uses zero external historical records, with restricted original owner-authored P2-train input and no prior P2 validation reuse. This is a practical *exclusion* of unresolved rights questions for the first small data-preparation pilot; it does not resolve those sources' future rights or authorize training execution.
