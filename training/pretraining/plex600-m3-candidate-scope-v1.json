@@ -1,0 +1,27 @@
+{
+  "kind": "plex600-m3-candidate-scope-v1",
+  "status": "review-only",
+  "rightsApproved": false,
+  "preparationAuthorized": false,
+  "trainingAuthorized": false,
+  "holdoutOpened": false,
+  "quarantine": "all-proposed-omissions-and-all-notice-flags",
+  "sourceRoles": {
+    "microsoft-web-dev": "candidate-train",
+    "mdn-css-examples": "candidate-train",
+    "mdn-dom-examples": "candidate-train",
+    "mdn-interactive-examples": "candidate-train",
+    "mdn-learning-area": "candidate-train",
+    "soyaine-javascript30": "candidate-train",
+    "traversy-web-projects": "historical-regression-only",
+    "bulma-templates": "historical-regression-only"
+  },
+  "maxCandidateRecords": 3000,
+  "maxOutputBytes": 16777216,
+  "notes": [
+    "Metadata-only pilot preparation target; no new dataset has been created.",
+    "No historical validation source is a fresh development benchmark.",
+    "All flagged notice records are conservatively quarantined pending separate review.",
+    "A new independent development evaluation and rights approval are still required."
+  ]
+}

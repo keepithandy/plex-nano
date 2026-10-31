@@ -82,4 +82,5 @@ jobs:
           training/tests/test_plex600.py
           training/tests/test_plex600_setup.py
           training/tests/test_plex600_feasibility.py
+          training/tests/test_plex600_m3_scope.py
           -q

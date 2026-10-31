@@ -148,3 +148,5 @@ subsequently found embedded third-party scopes and proposes 69 omissions;
 the bounded cross-family similarity check flagged no pairs, within its stated
 limits. Next, decide the narrower candidate scope and classify the remaining
 notice queue before source selection. M3 remains open.
+
+**Latest bounded M3 candidate scope:** The [read-only candidate scope and verifier](PLEX-600M-M3-CANDIDATE-SCOPE.md) conservatively quarantine all proposed omissions and notice flags, leaving 2,982 historically trained-split records as *review candidates only*. Source rights, fresh independent evaluation and M4 data preparation approval remain open.
