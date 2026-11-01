@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - master
+      - plex600-m8-research-validation-20261031
     paths:
       - "training/**"
       - ".gitattributes"
@@ -107,5 +108,7 @@ jobs:
           training/tests/test_plex600_m5.py
           training/tests/test_plex600_owner_pilot.py
           training/tests/test_plex600_m7.py
+          training/tests/test_plex600_research.py
+          training/tests/test_plex600_m8_eval.py
           training/tests/test_ci_test_inventory.py
           -q

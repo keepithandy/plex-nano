@@ -119,3 +119,10 @@ training/pretraining/plex600-owner-authored-pilot-v1/** text eol=lf
 # Future M7 runner is pinned to LF for execution-source identities on Windows.
 training/src/plex_training/plex600_m7.py text eol=lf
 training/tests/test_plex600_m7.py text eol=lf
+
+# New M8 provenance and evaluation records are byte-stable across OS.
+training/phase3/evaluation/plex600-m8-independent-v1.jsonl text eol=lf
+training/phase3/candidates/plex600-r2-synthetic-edit-v1.jsonl text eol=lf
+training/pretraining/plex600-m7-owner-reported-result-2026-10-31.json text eol=lf
+training/src/plex_training/plex600_research.py text eol=lf
+training/src/plex_training/plex600_m8_eval.py text eol=lf

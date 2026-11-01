@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "kind": "plex600-m7-owner-reported-training-evidence-v1",
+  "date": "2026-10-31",
+  "status": "owner-reported-pass",
+  "localExecutionAuthorized": true,
+  "executionCount": "one-owner-authorized-local-four-step-experiment",
+  "sourceEvidence": "Owner pasted four-step loss table, selected report fields, and reported successful local weights SHA-256 comparison. Full report and weights are not available to the GitHub authoring session.",
+  "protocol": "plex600-m7-four-update-v1",
+  "sourceManifestSha256": "4bb5742df59f0c56aaac34fc3129012b4617acf7d86a1804e47c5aa69e541a07",
+  "bundleManifestSha256": "14b5465ae03550f1757dd82c7df1f35710db4173d6b70e5585624b1585a4ad55",
+  "tokenizerSha256": "9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2",
+  "trainRecordsAvailable": 120,
+  "validationRecords": 24,
+  "validationTargetTokens": 1744,
+  "optimizerUpdatesCompleted": 4,
+  "steps": [
+    {
+      "step": 1,
+      "lossBeforeUpdate": 10.591265678405762,
+      "supervisedTokens": 55
+    },
+    {
+      "step": 2,
+      "lossBeforeUpdate": 9.79226303100586,
+      "supervisedTokens": 41
+    },
+    {
+      "step": 3,
+      "lossBeforeUpdate": 8.087221145629883,
+      "supervisedTokens": 70
+    },
+    {
+      "step": 4,
+      "lossBeforeUpdate": 7.351552486419678,
+      "supervisedTokens": 54
+    }
+  ],
+  "supervisedPositionsAcrossUpdates": 220,
+  "validationBefore": {
+    "loss": 10.59880861667318,
+    "records": 24,
+    "targetTokens": 1744
+  },
+  "validationAfter": {
+    "loss": 8.972932472688342,
+    "records": 24,
+    "targetTokens": 1744
+  },
+  "validationLossDecrease": 1.6258761439848382,
+  "validationLossDecreaseFraction": 0.15340178342565244,
+  "postTrainingSelectedTrainLoss": 6.830017410625111,
+  "peakReservedBytes": 11253317632,
+  "peakReservedGiB": 10.48046875,
+  "updatePhaseTokensPerSecond": 210.32593252614265,
+  "checkpoint": {
+    "ownerReportedSha256Comparison": "passed",
+    "sha256": null,
+    "bytes": null,
+    "reportFileSha256": null,
+    "independentlyVerified": false,
+    "optimizerStateSaved": false,
+    "exactResumePossible": false
+  },
+  "assurance": {
+    "reportAndCheckpointNotUploaded": true,
+    "fullReportSchemaNotIndependentlyVerified": true,
+    "codingCapabilityMeasured": false,
+    "independentHoldoutOpened": false,
+    "externalSixSourceCandidateUsed": false,
+    "earlierP2ValidationReused": false,
+    "newTrainingAuthorizationGranted": false
+  },
+  "interpretation": "Validation loss fell on the fixed 24-record internal validation split, evidence of changed predictions but not a proof of independent code-edit competence. These four updates consumed 220 supervised token positions on four distinct training records. Future optimizer updates require fresh authorization."
+}

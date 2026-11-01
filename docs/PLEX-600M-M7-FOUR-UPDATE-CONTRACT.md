@@ -101,3 +101,7 @@ Once an independently authorized local run is eventually performed, its
 actual four-step loss curve, before/after internal validation, throughput,
 VRAM peaks, checksum and training report must be inspected. **The M6
 single-step hardware feasibility report is not an M7 training result.**
+
+## Later owner-reported outcome (October 31)
+
+The original status above describes this contract *before* execution. Subsequently the owner granted one local, four-update authorization and reported a passing M7 run. Preserve the original protocol contract unchanged for auditability. See [measured owner report](PLEX-600M-M7-OWNER-RESULT-2026-10-31.md); full local report/checkpoint SHA remain unverified here and a new training authorization is still required for any further optimizer updates.
