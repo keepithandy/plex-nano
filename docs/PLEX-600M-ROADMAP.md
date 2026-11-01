@@ -1,7 +1,7 @@
 # Plex 600M · Development Roadmap
 
-> **Current milestone:** M3 — source and evaluation-split planning<br>
-> **Model state:** scratch architecture implemented; no trained 600M checkpoint<br>
+> **Current milestone:** M8 — independently scored editing evaluation and rights-reviewed data expansion<br>
+> **Model state:** scratch M7 four-update checkpoint reported by owner; no independently verified raw checkpoint in GitHub<br>
 > **Last reviewed:** October 31, 2026
 
 Plex 600M is a separate scratch-model research track. Its coding goal is to
@@ -26,10 +26,10 @@ autonomous workflows are not product milestones.
 | Area | Evidence today | Still to establish |
 |---|---|---|
 | Architecture | A 600,372,480-parameter decoder is implemented with random initialization, a 1,024-token context and 32,768 vocabulary slots. | Whether trained weights learn useful language and coding behavior. |
-| GPU feasibility | One owner-reported full-size synthetic AdamW update passed on the RTX 4080 SUPER with 10.04 GiB peak reserved. | Sustained training throughput, reproducible loss curves and actual learning remain unmeasured. |
+| GPU feasibility | One owner-reported full-size synthetic M6 update passed; a later owner-reported four-update real-data M7 experiment also passed with 10.48 GiB peak reserved. | Extended training remains unmeasured; M7 gave one fixed internal validation-loss decrease, but independent editing behavior remains unmeasured. |
 | Input integrity | Index hashes, bounded immutable token snapshots and an explicit source-binding check are implemented and tested. | A reviewed scalable input design if a selected packed split exceeds 256 MiB; independent source and manifest identities. |
-| Data and tokenizer | A first owner-authored, preparation-approved local pilot (120 train / 24 internal validation records) is committed, with six external candidate repositories still on hold. | Real pilot tokenizer fit, source-binding evidence, independent coding development evaluation, and larger rights-reviewed data. |
-| Model capability | No trained 600M checkpoint or coding evaluation exists. | Instruction following, syntax, requested behavior and preservation on supplied code. |
+| Data and tokenizer | A first owner-authored, preparation-approved local pilot (120 train / 24 internal validation records) is committed, with six external candidate repositories still on hold. | Real 1,191-tokenizer bundle fitted/source-bound; a separate 36-case development benchmark and 1,152 quarantined synthetic edit candidates are now prepared. Human approval, clean splits, broader data and actual model outputs remain pending. |
+| Model capability | Owner reports the first four-update model-only checkpoint; no raw checkpoint or measured coding responses were uploaded to GitHub. | Instruction following, syntax, requested behavior and preservation on supplied code. |
 
 The GPU result is evidence for **one fixed workload**, not a claim that a
 training configuration fits. Training loss, once available, will be reported
@@ -45,8 +45,8 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M4 · Reproducible corpus preparation](#m4--reproducible-corpus-preparation) | **Bounded builder + synthetic tests implemented; actual corpus blocked** | Offline historical input/hash verification, quarantine audit, create-only train candidates; fresh validation, source rights and actual materialization still pending. |
 | [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | **Rights-gated adapter implemented; real run pending** | M4 source-bound deterministic train/validation split and 600M-only tokenizer compatibility; measured token bundle pending. |
 | [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Owner-reported one-step RTX 4080 SUPER pass** | 600.37M parameters, one AdamW update, 10.04 GiB peak reserved VRAM; independently repeated/sustained throughput still pending. |
-| [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | **Four-update runner implemented; unexecuted** | Source-bound plan/preflight, approval-gated execution, validation and atomic checkpoint; no M7 optimizer updates yet. |
-| [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | Waiting for saved weights and evaluation decision | Predeclared task scores, raw outputs, failure analysis and a recorded next research decision. |
+| [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | **Owner-reported four-update real-data run passed** | Validation loss 10.5988 to 8.9729; 220 supervised update positions, 10.48 GiB peak reserved; original report/checkpoint bytes need independent local hash receipt. |
+| [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | **36-case benchmark, offline scorer, bounded read-only generation harness and 1,152 synthetic edit candidates implemented** | Local M7 model outputs, evidence-backed scores, stronger data QA and new owner-reviewed training authorization remain pending. |
 
 M3–M8 are a **proposed sequence**, not completed or approved experiments. No
 schedule, data volume or capability threshold has been fixed for them yet.
@@ -204,7 +204,7 @@ preserve its configuration, hashes, measurements and outcome, including an
 incomplete or failed run. Do not select a different endpoint after seeing
 results unless the contract allowed it in advance.
 
-**M7 implementation (October 31):** [Four-update pilot contract](PLEX-600M-M7-FOUR-UPDATE-CONTRACT.md) defines an execution-disabled-by-default, source-bound four-update CUDA runner, deterministic record sampling, before/after internal validation and create-only checkpoint/report validation. The owner's real 1,191-vocabulary tokenizer digest is pinned. **No M7 training authorization or optimizer updates have occurred.**
+**M7 implementation (October 31):** [Four-update pilot contract](PLEX-600M-M7-FOUR-UPDATE-CONTRACT.md) defines an execution-disabled-by-default, source-bound four-update CUDA runner, deterministic record sampling, before/after internal validation and create-only checkpoint/report validation. The owner's real 1,191-vocabulary tokenizer digest is pinned. **Since that implementation, the owner independently authorized and completed one four-update M7 run; see the measured owner-report document. No further optimizer updates are authorized.**
 
 ### M8 · Coding evaluation and next decision
 
@@ -220,6 +220,9 @@ Describe unscorable cases rather than converting missing evidence into a pass.
 **Exit gate:** review the actual outputs against the frozen criteria and record
 both the capability boundary and a next hypothesis. A lower loss or a small
 pilot result alone is not proof of general coding reliability.
+
+
+**October 31 observed M7 results and M8 research preparation:** [Owner-reported real-data four-step results](PLEX-600M-M7-OWNER-RESULT-2026-10-31.md) and [M8 readiness plan](PLEX-600M-M8-RESEARCH-READINESS.md). The 36 manually authored development cases are not a final untouched holdout; the 1,152 template-generated candidate rows are still quarantined, with zero approved for training. No new training authorization.
 
 ## Research boundaries
 

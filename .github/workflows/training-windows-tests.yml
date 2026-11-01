@@ -89,4 +89,6 @@ jobs:
           training/tests/test_plex600_m5.py
           training/tests/test_plex600_owner_pilot.py
           training/tests/test_plex600_m7.py
+          training/tests/test_plex600_research.py
+          training/tests/test_plex600_m8_eval.py
           -q
