@@ -39,6 +39,13 @@ class Plex600M8EvalTests(unittest.TestCase):
             self.assertTrue(prompt.endswith("\nEdited file:\n"))
             self.assertNotIn(case["expectedFile"] + "\nEdited file:\n", prompt)
 
+    def test_balanced_first_six_cases_include_all_languages(self):
+        cases = m8.choose_cases(6)
+        self.assertEqual(len(cases), 6)
+        self.assertEqual({case["language"] for case in cases}, {"html", "css", "javascript"})
+        self.assertEqual([case["language"] for case in cases],
+                         ["html", "css", "javascript", "html", "css", "javascript"])
+
     def test_execution_requires_explicit_inputs(self):
         with patch.object(m8, "evaluate", side_effect=AssertionError("GPU called")), \
              redirect_stderr(StringIO()) as err:
@@ -52,7 +59,7 @@ class Plex600M8EvalTests(unittest.TestCase):
                 m8.prerequisites(Path("unused"), Path("unused"), Path("unused"), research.BUNDLE_SHA)
 
     def test_source_bundle_mismatch_refuses_without_weights(self):
-        with patch.object(m8.research, "m7_local_receipt",
+        with patch.object(m8.r, "m7_local_receipt",
                           side_effect=AssertionError("weights touched")):
             with self.assertRaisesRegex(ValueError, "pinned"):
                 m8.prerequisites(Path("unused"), Path("unused"), Path("unused"), "0" * 64)

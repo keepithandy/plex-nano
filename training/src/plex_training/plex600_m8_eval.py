@@ -48,6 +48,18 @@ def plan(*, max_cases: int = DEFAULT_MAX_CASES,
     }
 
 
+def choose_cases(n: int) -> list[dict[str, Any]]:
+    """Round-robin sample languages, rather than taking only HTML by file order."""
+    if type(n) is not int or not 1 <= n <= 36:
+        raise Refusal("Expected 1..36 M8 development cases")
+    rows = r.benchmark()
+    groups = {language: [case for case in rows if case["language"] == language]
+              for language in r.LANGUAGES}
+    ordered = [groups[language][index] for index in range(12)
+               for language in r.LANGUAGES]
+    return ordered[:n]
+
+
 def prompt_for(task: dict[str, Any]) -> str:
     return ("Request: " + task["request"] + "\nSource file:\n"
             + task["inputFile"] + "\nEdited file:\n")
@@ -125,7 +137,7 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
     hardware._check_device(torch, 0)
     if not torch.cuda.is_bf16_supported(including_emulation=False):
         raise Refusal("Native BF16 GPU support is required")
-    tasks = r.benchmark()[:max_cases]
+    tasks = choose_cases(max_cases)
     tokenizer = PlexTokenizer.load(bundle)
     prepared = [(task, tokenizer.encode(prompt_for(task))) for task in tasks]
     if any(not ids or len(ids) + max_new_tokens > 1024 for _, ids in prepared):
