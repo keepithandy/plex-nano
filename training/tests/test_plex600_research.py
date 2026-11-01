@@ -51,7 +51,7 @@ class Plex600ResearchTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             r = research.benchmark()[0]
             path = Path(t) / "partial.jsonl"
-            path.write_text(json.dumps({"id": r["id"], "output": "wrong"}) + "\n", encoding="utf-8")
+            path.write_text(json.dumps({"id": r["id"], "output": "wrong"}) + "\n", encoding="utf-8", newline="\n")
             outcome = research.grade(path)
         self.assertEqual(outcome["metrics"]["scored"], 1)
         self.assertEqual(outcome["metrics"]["exactFile"], 0)
@@ -61,7 +61,7 @@ class Plex600ResearchTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             r = research.benchmark()[0]
             path = Path(t) / "partial.jsonl"
-            path.write_text(json.dumps({"id": r["id"], "output": r["newText"]}) + "\n", encoding="utf-8")
+            path.write_text(json.dumps({"id": r["id"], "output": r["newText"]}) + "\n", encoding="utf-8", newline="\n")
             result = research.grade(path)
         self.assertEqual(result["metrics"]["targetPresent"], 1)
         self.assertEqual(result["metrics"]["exactFile"], 0)
@@ -72,10 +72,10 @@ class Plex600ResearchTests(unittest.TestCase):
             r = research.benchmark()[0]
             path = Path(t) / "duplicate.jsonl"
             row = json.dumps({"id": r["id"], "output": r["expectedFile"]}) + "\n"
-            path.write_text(row + row, encoding="utf-8")
+            path.write_text(row + row, encoding="utf-8", newline="\n")
             with self.assertRaisesRegex(ValueError, "duplicate"):
                 research.grade(path)
-            path.write_text(json.dumps({"id": "unknown", "output": "anything"}) + "\n")
+            path.write_text(json.dumps({"id": "unknown", "output": "anything"}) + "\n", encoding="utf-8", newline="\n")
             with self.assertRaisesRegex(ValueError, "unknown"):
                 research.grade(path)
 
@@ -84,7 +84,7 @@ class Plex600ResearchTests(unittest.TestCase):
         bad = dict(candidates[0], rightsReviewStatus="approved", trainingAuthorized=True)
         with tempfile.TemporaryDirectory() as t:
             path = Path(t) / "bad.jsonl"
-            path.write_text(json.dumps(bad) + "\n")
+            path.write_text(json.dumps(bad) + "\n", encoding="utf-8", newline="\n")
             with patch.object(research, "CANDIDATES", path), \
                  self.assertRaisesRegex(ValueError, "1152|Unapproved"):
                 research.candidate_audit()
