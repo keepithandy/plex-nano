@@ -9,10 +9,30 @@ import unittest
 from unittest.mock import patch
 
 from plex_training import plex600_m8_eval as m8
+from plex_training import plex600_m8_reproduce as m8_reproduce
 from plex_training import plex600_research as research
 
 
 class Plex600M8EvalTests(unittest.TestCase):
+    def test_tokenizer_reconstruction_default_is_plan_only(self):
+        with patch.object(m8_reproduce, "reconstruct",
+                          side_effect=AssertionError("tokenizer fitted")), \
+             redirect_stdout(StringIO()) as stdout:
+            self.assertEqual(m8_reproduce.main([]), 0)
+        plan = json.loads(stdout.getvalue())
+        self.assertEqual(plan["status"], "plan-only")
+        self.assertFalse(plan["modelLoaded"])
+        self.assertFalse(plan["trainingAuthorized"])
+        self.assertFalse(plan["finalHoldoutUsed"])
+
+    def test_tokenizer_reconstruction_rejects_oversized_case_count(self):
+        with patch.object(m8_reproduce, "reconstruct",
+                          side_effect=AssertionError("tokenizer fitted")), \
+             redirect_stderr(StringIO()) as stderr:
+            self.assertEqual(m8_reproduce.main([
+                "--reconstruct-read-only", "--max-cases", "37"]), 2)
+        self.assertIn("1..36", stderr.getvalue())
+
     def test_default_is_true_no_load_no_dataset_touch(self):
         with patch.object(m8, "evaluate", side_effect=AssertionError("GPU eval called")), \
              patch.object(m8, "prerequisites", side_effect=AssertionError("checkpoint opened")), \
