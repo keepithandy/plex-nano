@@ -75,8 +75,10 @@ is not established**. This experiment does not change the controlled 27M Nano mo
 The [M8 development benchmark and read-only runner](docs/PLEX-600M-M8-RESEARCH-READINESS.md)
 are prepared, but model answers have not been collected. A
 [full-file output-budget gate](docs/PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
-checks whether valid outputs fit the existing 32/64-token generation budget
-*before* any GPU evaluation. Training-source rights, benchmark independence,
+now independently measures whether full files fit the historical 32/64-token
+budget, with exact frozen-tokenizer matches on both Linux and Windows. A
+[verified 96-token opt-in](docs/PLEX-600M-M8-INDEPENDENT-TOKENIZER-REPRODUCTION-2026-11-16.md)
+can fit all 36 reference files, without performing model inference. Training-source rights, benchmark independence,
 and new optimizer authorization remain separate gates. A separate
 [read-only R2 generalization-risk audit](docs/PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
 found 4 of 36 M8 development cases with exact edit-operation overlaps in the
