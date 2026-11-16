@@ -113,8 +113,9 @@ class R3FileEditingCurriculumTests(unittest.TestCase):
         examples[0]["trainingAuthorized"] = True
         with tempfile.TemporaryDirectory() as temp:
             malicious = Path(temp) / "candidate.jsonl"
-            malicious.write_text(
-                "".join(json.dumps(item) + "\n" for item in examples))
+            malicious.write_bytes(
+                "".join(json.dumps(item) + "\n" for item in examples)
+                .encode("utf-8"))
             with patch.object(r3, "CANDIDATE", malicious):
                 with self.assertRaisesRegex(ValueError, "provenance"):
                     r3.rows()
