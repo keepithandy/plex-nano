@@ -145,7 +145,8 @@ def masked_record(prompt_ids: list[int], answer_ids: list[int], *,
             or len(prompt_ids) + len(answer_ids) - 1 > 1024
             or any(type(token) is not int or token < 0
                    or token >= fitted_vocab_size
-                   for token in prompt_ids + answer_ids)):
+                   for token in prompt_ids + answer_ids)
+            or any(token < 4 for token in answer_ids[:-1])):
         raise Refusal("R3 masked record is malformed or exceeds context")
     # Predictions at position prompt[-1] are trained on answer[0];
     # the EOS target is scored at the end. No BOS/PAD or prompt loss.
