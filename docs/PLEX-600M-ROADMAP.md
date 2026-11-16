@@ -46,7 +46,7 @@ alongside coding evaluations rather than treated as proof of coding ability.
 | [M5 · Dedicated tokenizer and packed inputs](#m5--dedicated-tokenizer-and-packed-inputs) | **Rights-gated adapter implemented; real run pending** | M4 source-bound deterministic train/validation split and 600M-only tokenizer compatibility; measured token bundle pending. |
 | [M6 · Optimizer feasibility](#m6--optimizer-feasibility) | **Owner-reported one-step RTX 4080 SUPER pass** | 600.37M parameters, one AdamW update, 10.04 GiB peak reserved VRAM; independently repeated/sustained throughput still pending. |
 | [M7 · First bounded training pilot](#m7--first-bounded-training-pilot) | **Owner-reported four-update real-data run passed** | Validation loss 10.5988 to 8.9729; 220 supervised update positions, 10.48 GiB peak reserved; original report/checkpoint bytes need independent local hash receipt. |
-| [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | **36-case benchmark, offline scorer, bounded read-only generation harness and 1,152 synthetic edit candidates implemented** | Local M7 model outputs, evidence-backed scores, stronger data QA and new owner-reviewed training authorization remain pending. |
+| [M8 · Coding evaluation and next decision](#m8--coding-evaluation-and-next-decision) | **36-case benchmark, offline scorer, read-only generation and token-budget preflight prepared; 1,152 synthetic candidates quarantined** | Owner-local real-tokenizer budget receipt, M7 model outputs, stronger data QA and new owner-reviewed training authorization remain pending. |
 
 M3–M8 are a **proposed sequence**, not completed or approved experiments. No
 schedule, data volume or capability threshold has been fixed for them yet.
@@ -221,6 +221,8 @@ Describe unscorable cases rather than converting missing evidence into a pass.
 both the capability boundary and a next hypothesis. A lower loss or a small
 pilot result alone is not proof of general coding reliability.
 
+
+**November 16 feasibility follow-up:** [M8 full-file token-budget decision](PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md) introduces an offline, source-bound tokenizer audit before GPU generation; no actual owner-local token counts or model evaluations have been reported. The existing 32-token default and 64-token maximum are not assumed sufficient for complete files. An under-budget M8 generation is refused rather than interpreted as a failed coding response.
 
 **October 31 observed M7 results and M8 research preparation:** [Owner-reported real-data four-step results](PLEX-600M-M7-OWNER-RESULT-2026-10-31.md) and [M8 readiness plan](PLEX-600M-M8-RESEARCH-READINESS.md). The 36 manually authored development cases are not a final untouched holdout; the 1,152 template-generated candidate rows are still quarantined, with zero approved for training. No new training authorization.
 
