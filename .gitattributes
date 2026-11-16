@@ -126,3 +126,6 @@ training/phase3/candidates/plex600-r2-synthetic-edit-v1.jsonl text eol=lf
 training/pretraining/plex600-m7-owner-reported-result-2026-10-31.json text eol=lf
 training/src/plex_training/plex600_research.py text eol=lf
 training/src/plex_training/plex600_m8_eval.py text eol=lf
+
+# R3 candidate SHA-256 and source-bound masks must use original LF bytes on Windows.
+training/phase3/candidates/plex600-r3-source-conditioned-v1.jsonl text eol=lf

@@ -10,7 +10,40 @@
 | Larger R2 synthetic curriculum | [1,152 candidate code-edit examples](../training/phase3/candidates/plex600-r2-synthetic-edit-v1.jsonl), 384 per language, 18 template families | **Quarantined pending owner approval and deeper QA; 0 newly approved rows** |
 | External sources | Original six-source M3 rights holds | No external-source rights approval, downloads or training expansion |
 
-**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
+**November 16 follow-up — token-budget feasibility (independently verified):** A new
+[read-only M8 capacity audit](PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
+tests the original source-bound BPE lengths of the 36 frozen *expected complete files*,
+including an EOS step and the 1,024-position context limit, without model
+loading. Independent [Linux and Windows M7-tokenizer reproductions](PLEX-600M-M8-INDEPENDENT-TOKENIZER-REPRODUCTION-2026-11-16.md)
+matched the exact historical tokenizer and bundle hashes: only **1/36** full
+files fit the 32-token default and **26/36** fit 64 tokens, while all require
+at most **90** tokens including EOS. The branch now permits an explicit
+**96-token** ceiling while preserving the 32-token default and the pre-GPU
+capacity refusal. This proposal neither approves training nor changes
+historical M8 or M7 evidence.
+
+**November 16 read-only diagnostic expansion:** The
+[teacher-forced reference-likelihood diagnostic](PLEX-600M-M8-TEACHER-FORCED-REFERENCE-DIAGNOSTIC-2026-11-16.md)
+is independent of the greedy generation score: it measures unmasked next-token
+likelihood, top-1 reference-token matches, untrained-token-ID behavior and
+premature EOS when gold answers are supplied as context. Synthetic CPU PyTorch
+tests validate the instrumentation, but **no original M7 weights were loaded
+or scored**. The owner-authorized 120-row training split also has an exact
+**120/120 Request/Answer format versus 0/120 explicit Source file/Edited
+file format**, compared with **36/36 source-conditioned M8 prompts**. This
+literal structure mismatch is reproducible in the source-bound tokenizer
+reconstruction report; it is not proof of model incapacity or a new data
+authorization.
+
+**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. The generation report now records EOS, invalid-control-token, out-of-fitted-tokenizer, and max-token-cap termination counts without changing the greedy decoding or output correctness rules. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–96 generated tokens per task, with 96 requiring explicit opt-in; the default plan still covers six tasks and 32 generated tokens. Actual generation speed and correctness remain unmeasured.
+
+**November 16 R2 generalization audit:** The
+[read-only operation-overlap review](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
+identified **4/36 M8 cases** sharing exact old/new operations with **256/1,152**
+quarantined candidate rows from four template families. This is prospective
+overlap risk if the candidates are ever approved, **not evidence of M7 training
+contamination**. Run `python -m plex_training.plex600_research candidate-risk-audit`
+for the frozen case/family breakdown. No R2 rows were approved.
 
 The R2 rows originate from **18 project-authored edit templates**, 64 synthetic variations per family. These are not 1,152 independent source projects. The increase in record count is meaningful for pipeline testing, but does NOT supply a realistic 600M scratch-model pretraining corpus. Template redundancy, shortcuts and overfitting remain risks. The auditor checks uniqueness, exact replacement integrity, flags, distributions, and exact text overlap with M8 development cases; it **does not prove semantic non-contamination or legal clearance**.
 
@@ -50,12 +83,12 @@ Only when choosing to evaluate the saved checkpoint locally, use the explicit re
 $bundle = "training/artifacts/plex600-owner-authored-pilot-tokenizer-v1"
 $bundleSha = "14b5465ae03550f1757dd82c7df1f35710db4173d6b70e5585624b1585a4ad55"
 
-uv run --project training --no-sync python -m plex_training.plex600_m8_eval --run-read-only-eval --bundle-dir $bundle --bundle-manifest-sha256 $bundleSha --m7-report training/artifacts/plex600-m7-first-four-update/report.json --m7-weights training/artifacts/plex600-m7-first-four-update/weights.pt --output-dir training/artifacts/m8-read-only-six-case-run --max-cases 6 --max-new-tokens 32
+uv run --project training --no-sync python -m plex_training.plex600_m8_eval --run-read-only-eval --bundle-dir $bundle --bundle-manifest-sha256 $bundleSha --m7-report training/artifacts/plex600-m7-first-four-update/report.json --m7-weights training/artifacts/plex600-m7-first-four-update/weights.pt --output-dir training/artifacts/m8-read-only-six-case-run --max-cases 6 --max-new-tokens 96
 
 uv run --project training --no-sync python -m plex_training.plex600_research score --responses training/artifacts/m8-read-only-six-case-run/responses.jsonl
 ~~~
 
-The example output directory must not exist. This examination can be slow because the 600M model recomputes context without a KV cache; it is not a performance benchmark and no successful output is claimed here. The full 36-case development evaluation can be chosen separately, with the same checkpoint and explicit invocation, after reviewing this bounded six-case result. The generation transcript is kept separate from the scored report. No new optimizer training authorization is implied.
+The example output directory must not exist. **First run the token-budget audit:** this exact command may refuse execution if the selected full files cannot fit the requested 32-token output budget. Do not interpret a budget refusal as model failure. This examination can be slow because the 600M model recomputes context without a KV cache; it is not a performance benchmark and no successful output is claimed here. The full 36-case development evaluation can be chosen separately, with the same checkpoint and explicit invocation, after reviewing this bounded six-case result. The generation transcript is kept separate from the scored report. No new optimizer training authorization is implied.
 
 ## Milestones remaining before more training
 
