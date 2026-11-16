@@ -45,7 +45,7 @@ def score_logits(logits: Any, targets: list[int], *,
     Conditional-on-fitted-vocab likelihood is a diagnostic ablation ONLY.
     Predictions are never masked or edited in this scoring path.
     """
-    if (not targets or targets[-1] != 3
+    if (len(targets) < 2 or targets[-1] != 3
             or any(type(t) is not int or t < 4 or t >= fitted_vocab_size
                    for t in targets[:-1])
             or type(fitted_vocab_size) is not int or fitted_vocab_size < 5
@@ -75,6 +75,8 @@ def score_logits(logits: Any, targets: list[int], *,
             (greedy_ids >= fitted_vocab_size).sum().item()),
         "unmaskedGreedyInvalidControl": int(
             ((greedy_ids < 4) & (greedy_ids != 3)).sum().item()),
+        "unmaskedGreedyPrematureEos": int(
+            ((greedy_ids == 3) & (reference != 3)).sum().item()),
         "goldConditionedNotGenerated": True,
     }
 
@@ -101,6 +103,8 @@ def summarize(cases: list[dict[str, Any]]) -> dict[str, Any]:
             case["unmaskedGreedyOutsideFittedVocab"] for case in cases) / total,
         "unmaskedGreedyInvalidControlRate": sum(
             case["unmaskedGreedyInvalidControl"] for case in cases) / total,
+        "unmaskedGreedyPrematureEosRate": sum(
+            case["unmaskedGreedyPrematureEos"] for case in cases) / total,
     }
     if not all(math.isfinite(x) for x in result.values() if type(x) is float):
         raise m8.Refusal("Non-finite teacher-forced summary")
