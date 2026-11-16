@@ -107,6 +107,16 @@ def summarize(cases: list[dict[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def reference_alignment(prompt_ids: list[int],
+                        reference_ids: list[int]) -> tuple[list[int], int]:
+    """Build causal inputs without feeding EOS; first answer scored after prompt."""
+    if (not prompt_ids or not reference_ids or reference_ids[-1] != 3
+            or len(reference_ids) > 96
+            or len(prompt_ids) + len(reference_ids) - 1 > 1024):
+        raise m8.Refusal("M8 teacher-forced prompt/reference exceeds context")
+    return prompt_ids + reference_ids[:-1], len(prompt_ids) - 1
+
+
 def run(bundle: Path, report: Path, weights: Path, output: Path, *,
         bundle_sha: str, max_cases: int) -> dict[str, Any]:
     proposal = plan(max_cases=max_cases)
@@ -124,10 +134,9 @@ def run(bundle: Path, report: Path, weights: Path, output: Path, *,
         reference_ids = tokenizer.encode(case["expectedFile"]) + [3]
         # Only diagnostic gold tokens are appended to the model input;
         # the first scored logit is conditioned on the final prompt token.
-        if (not prompt_ids or len(reference_ids) > 96
-                or len(prompt_ids) + len(reference_ids) - 1 > 1024):
-            raise m8.Refusal("M8 teacher-forced prompt/reference exceeds context")
-        prepared.append((case, prompt_ids, reference_ids))
+        input_ids, first_answer_logit = reference_alignment(
+            prompt_ids, reference_ids)
+        prepared.append((case, input_ids, first_answer_logit, reference_ids))
 
     # Everything above is CPU-side; the expensive model is never initialized
     # for invalid source/benchmark/context/output requests.
@@ -156,21 +165,20 @@ def run(bundle: Path, report: Path, weights: Path, output: Path, *,
 
         observations: list[dict[str, Any]] = []
         with torch.inference_mode():
-            for case, prompt_ids, reference_ids in prepared:
+            for case, input_ids, first_answer_logit, reference_ids in prepared:
                 inputs = torch.tensor(
-                    [prompt_ids + reference_ids[:-1]],
-                    dtype=torch.long, device=device)
+                    [input_ids], dtype=torch.long, device=device)
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     raw_logits, _ = model(inputs)
                 # Align the logit after the last prompt token with the first
                 # expected-file token, and the last logit with EOS.
-                answer_logits = raw_logits[0, len(prompt_ids) - 1:, :]
+                answer_logits = raw_logits[0, first_answer_logit:, :]
                 metric = score_logits(
                     answer_logits, reference_ids,
                     fitted_vocab_size=tokenizer.vocabulary_size, torch=torch)
                 observations.append({
                     "id": case["id"], "language": case["language"],
-                    "promptTokens": len(prompt_ids),
+                    "promptTokens": first_answer_logit + 1,
                     **metric,
                 })
                 del raw_logits, answer_logits, inputs
