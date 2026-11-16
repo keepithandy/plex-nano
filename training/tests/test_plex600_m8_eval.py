@@ -185,6 +185,50 @@ class Plex600M8EvalTests(unittest.TestCase):
                     device="not-gpu", max_new_tokens=budget)
                 self.assertEqual(result, expected)
 
+    def test_fitted_vocab_decoding_is_explicit_and_does_not_modify_logits(self):
+        import torch
+
+        scores = torch.tensor([-100.0, -100.0, -100.0, 2.0, 6.0, 8.0,
+                               40.0, -4.0])
+        frozen = scores.clone()
+        # Original unmasked decoder chooses an unavailable ID (6).
+        self.assertEqual(m8.select_next_id(
+            scores, torch, 6, "unmasked-v1"), 6)
+        # Guarded decoding chooses the best *real* code-token ID (5).
+        self.assertEqual(m8.select_next_id(
+            scores, torch, 6, "fitted-vocab-v1"), 5)
+        self.assertTrue(torch.equal(scores, frozen))
+        scores[3] = 100.0
+        # EOS remains available as a legitimate stop.
+        self.assertEqual(m8.select_next_id(
+            scores, torch, 6, "fitted-vocab-v1"), 3)
+        self.assertEqual(m8.classify_next_token(3, 6), "eos")
+        with self.assertRaisesRegex(ValueError, "output head"):
+            m8.select_next_id(scores, torch, 10, "fitted-vocab-v1")
+        with self.assertRaisesRegex(ValueError, "Unknown"):
+            m8.select_next_id(scores, torch, 6, "unrecognized")
+        with self.assertRaisesRegex(ValueError, "Unknown"):
+            m8.plan(decoding_policy="unrecognized")
+
+    def test_versioned_decoding_policy_stays_off_by_default(self):
+        baseline = m8.plan(max_cases=6, max_new_tokens=96)
+        candidate = m8.plan(
+            max_cases=6, max_new_tokens=96,
+            decoding_policy="fitted-vocab-v1")
+        self.assertEqual(baseline["decodingPolicy"], "unmasked-v1")
+        self.assertTrue(baseline["historicalUnmaskedPolicy"])
+        self.assertEqual(candidate["decodingPolicy"], "fitted-vocab-v1")
+        self.assertFalse(candidate["historicalUnmaskedPolicy"])
+        self.assertFalse(candidate["trainingAuthorized"])
+        with patch.object(m8, "evaluate",
+                          side_effect=AssertionError("weights loaded")), \
+             redirect_stdout(StringIO()) as out:
+            self.assertEqual(m8.main([
+                "--decoding-policy", "fitted-vocab-v1"]), 0)
+        self.assertEqual(
+            json.loads(out.getvalue())["decodingPolicy"],
+            "fitted-vocab-v1")
+
     def test_evidence_backed_96_token_budget_requires_explicit_opt_in(self):
         proposal = m8.plan(max_cases=6, max_new_tokens=96)
         self.assertEqual(proposal["maxNewTokensPerCase"], 96)
