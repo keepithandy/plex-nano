@@ -77,7 +77,11 @@ are prepared, but model answers have not been collected. A
 [full-file output-budget gate](docs/PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
 checks whether valid outputs fit the existing 32/64-token generation budget
 *before* any GPU evaluation. Training-source rights, benchmark independence,
-and new optimizer authorization remain separate gates.
+and new optimizer authorization remain separate gates. A separate
+[read-only R2 generalization-risk audit](docs/PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
+found 4 of 36 M8 development cases with exact edit-operation overlaps in the
+*unapproved* 1,152-row synthetic candidate pool; no actual M7 contamination
+or training is claimed.
 See the [live 600M roadmap](docs/PLEX-600M-ROADMAP.md) for current evidence and open decisions.
 
 ## What Plex is being trained to do
