@@ -65,6 +65,85 @@ def prompt_for(task: dict[str, Any]) -> str:
             + task["inputFile"] + "\nEdited file:\n")
 
 
+def token_budget(tasks: list[dict[str, Any]], tokenizer: Any, *,
+                 max_new_tokens: int) -> dict[str, Any]:
+    """Measure complete gold-file generation capacity; never pass gold text to a model.
+
+    One extra generation step is reserved for EOS. This is a feasibility
+    diagnostic, not evidence that a model can produce any expected edit.
+    """
+    if type(max_new_tokens) is not int or not 1 <= max_new_tokens <= 64:
+        raise Refusal("M8 token budget must be 1..64")
+    cases: list[dict[str, Any]] = []
+    by_language: dict[str, dict[str, int]] = {
+        name: {"selected": 0, "completeWithinBudget": 0}
+        for name in r.LANGUAGES
+    }
+    for task in tasks:
+        prompt_count = len(tokenizer.encode(prompt_for(task)))
+        gold_count = len(tokenizer.encode(task["expectedFile"]))
+        required = gold_count + 1  # Account for the terminal EOS step.
+        context_room = 1024 - prompt_count
+        fits = required <= max_new_tokens and required <= context_room
+        cases.append({
+            "id": task["id"], "language": task["language"],
+            "promptTokens": prompt_count, "goldFileTokens": gold_count,
+            "requiredTokensIncludingEos": required,
+            "modelContextRoom": context_room,
+            "completeWithinBudget": fits,
+        })
+        by_language[task["language"]]["selected"] += 1
+        by_language[task["language"]]["completeWithinBudget"] += int(fits)
+    covered = sum(int(case["completeWithinBudget"]) for case in cases)
+    return {
+        "protocol": "plex600-m8-token-budget-audit-v1",
+        "status": "complete-file-budget-audited",
+        "maxNewTokensPerCase": max_new_tokens,
+        "selectedCases": len(cases),
+        "completeWithinBudget": covered,
+        "blockedByBudget": len(cases) - covered,
+        "requiredMaxNewTokensIncludingEos": max(
+            (case["requiredTokensIncludingEos"] for case in cases), default=0),
+        "requiredMaxTotalContext": max(
+            (case["promptTokens"] + case["requiredTokensIncludingEos"]
+             for case in cases), default=0),
+        "byLanguage": by_language, "cases": cases,
+        "modelLoaded": False, "optimizerUpdates": 0,
+        "trainingAuthorized": False, "finalHoldoutUsed": False,
+    }
+
+
+def verified_bundle(bundle: Path, bundle_sha: str) -> dict[str, Any]:
+    """Verify the same frozen M7 tokenizer and source without opening weights."""
+    if bundle_sha != r.BUNDLE_SHA:
+        raise Refusal("M8 requires separately pinned M7 bundle manifest SHA-256")
+    bound = setup.check_source_binding(
+        bundle, r.ROOT / "training/pretraining/plex600-owner-authored-pilot-v1",
+        bundle_manifest_sha256=bundle_sha, source_manifest_sha256=r.SOURCE_SHA)
+    checked = setup.check_tokenizer_bundle(bundle)
+    if (bound["sourceBindingVerified"] is not True
+            or checked["actualVocabularySize"] != 1191
+            or checked["tokenizerSha256"] !=
+               "9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2"):
+        raise Refusal("M8 tokenizer/source identity mismatch")
+    return {"sourceBinding": bound, "tokenizerSha256": checked["tokenizerSha256"],
+            "benchmarkSha256": r.digest_file(r.BENCHMARK)}
+
+
+def audit_local_budget(bundle: Path, bundle_sha: str, *,
+                       max_cases: int, max_new_tokens: int) -> dict[str, Any]:
+    """CPU-only audit: no checkpoint, CUDA, model initialization or optimizer."""
+    plan(max_cases=max_cases, max_new_tokens=max_new_tokens)
+    proof = verified_bundle(bundle, bundle_sha)
+    from .tokenizer import PlexTokenizer
+    result = token_budget(choose_cases(max_cases), PlexTokenizer.load(bundle),
+                          max_new_tokens=max_new_tokens)
+    return {**result, "bundleManifestSha256": bundle_sha,
+            "tokenizerSha256": proof["tokenizerSha256"],
+            "benchmarkSha256": proof["benchmarkSha256"],
+            "sourceBindingVerified": True}
+
+
 def require_output(path: Path, *, bundle: Path, checkpoint: Path) -> Path:
     root = OUTPUT_ROOT.resolve(strict=True)
     dest = path.resolve(strict=False)
@@ -86,18 +165,7 @@ def prerequisites(bundle: Path, report: Path, weights: Path,
     receipt = r.m7_local_receipt(report, weights)
     if receipt["checkpointReadAndHashVerified"] is not True:
         raise Refusal("Checkpoint hash not verified")
-    bound = setup.check_source_binding(bundle, r.ROOT / "training/pretraining/plex600-owner-authored-pilot-v1",
-                                       bundle_manifest_sha256=bundle_sha,
-                                       source_manifest_sha256=r.SOURCE_SHA)
-    checked = setup.check_tokenizer_bundle(bundle)
-    if (bound["sourceBindingVerified"] is not True
-            or checked["actualVocabularySize"] != 1191
-            or checked["tokenizerSha256"] !=
-               "9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2"):
-        raise Refusal("M8 tokenizer/source identity mismatch")
-    return {"m7Receipt": receipt, "sourceBinding": bound,
-            "tokenizerSha256": checked["tokenizerSha256"],
-            "benchmarkSha256": r.digest_file(r.BENCHMARK)}
+    return {"m7Receipt": receipt, **verified_bundle(bundle, bundle_sha)}
 
 
 def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
@@ -129,19 +197,27 @@ def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
 def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
              bundle_sha: str, max_cases: int, max_new_tokens: int) -> dict[str, Any]:
     proposal = plan(max_cases=max_cases, max_new_tokens=max_new_tokens)
-    import torch  # GPU/model imported ONLY inside the explicit evaluation branch.
-    from .plex600 import Plex600Model, Plex600Config, parameter_count
-    from .tokenizer import PlexTokenizer
     target = require_output(output, bundle=bundle, checkpoint=weights)
     proof = prerequisites(bundle, report, weights, bundle_sha)
-    hardware._check_device(torch, 0)
-    if not torch.cuda.is_bf16_supported(including_emulation=False):
-        raise Refusal("Native BF16 GPU support is required")
+    from .tokenizer import PlexTokenizer
     tasks = choose_cases(max_cases)
     tokenizer = PlexTokenizer.load(bundle)
+    budget = token_budget(tasks, tokenizer, max_new_tokens=max_new_tokens)
+    if budget["blockedByBudget"]:
+        raise Refusal(
+            f"M8 complete-file evaluation is under-budget for "
+            f"{budget['blockedByBudget']}/{budget['selectedCases']} cases. "
+            "Run --audit-token-budget with the same bundle and token limit "
+            "before requesting GPU generation.")
     prepared = [(task, tokenizer.encode(prompt_for(task))) for task in tasks]
     if any(not ids or len(ids) + max_new_tokens > 1024 for _, ids in prepared):
         raise Refusal("Input + expected generated tokens exceeds context")
+    # GPU/model imports happen only after the full-file feasibility gate.
+    import torch
+    from .plex600 import Plex600Model, Plex600Config, parameter_count
+    hardware._check_device(torch, 0)
+    if not torch.cuda.is_bf16_supported(including_emulation=False):
+        raise Refusal("Native BF16 GPU support is required")
     stage = Path(tempfile.mkdtemp(prefix=f".{target.name}.staging-", dir=target.parent))
     try:
         device = torch.device("cuda:0")
@@ -180,6 +256,7 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
                   "originalReportSha256": proof["m7Receipt"]["localReportSha256"],
                   "bundleManifestSha256": bundle_sha,
                   "benchmarkSha256": proof["benchmarkSha256"],
+                  "tokenBudgetAudit": budget,
                   "responseSha256": hashlib.sha256(raw).hexdigest(),
                   "generatedCases": len(responses),
                   "cases": responses,
@@ -200,6 +277,8 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-read-only-eval", action="store_true")
+    parser.add_argument("--audit-token-budget", action="store_true",
+                        help="Verify complete-file token capacity using frozen local tokenizer; no GPU")
     parser.add_argument("--bundle-dir", type=Path)
     parser.add_argument("--bundle-manifest-sha256")
     parser.add_argument("--m7-report", type=Path)
@@ -210,15 +289,23 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         proposed = plan(max_cases=args.max_cases, max_new_tokens=args.max_new_tokens)
-        if not args.run_read_only_eval:
-            result = proposed
-        else:
+        if args.run_read_only_eval and args.audit_token_budget:
+            raise Refusal("Choose either token-budget audit or read-only generation")
+        if args.audit_token_budget:
+            if not args.bundle_dir or not args.bundle_manifest_sha256:
+                raise Refusal("Token-budget audit requires pinned local tokenizer bundle")
+            result = audit_local_budget(
+                args.bundle_dir, args.bundle_manifest_sha256,
+                max_cases=args.max_cases, max_new_tokens=args.max_new_tokens)
+        elif args.run_read_only_eval:
             if not all([args.bundle_dir, args.bundle_manifest_sha256, args.m7_report,
                         args.m7_weights, args.output_dir]):
                 raise Refusal("Explicit evaluation requires all pinned local inputs and a new output directory")
             result = evaluate(args.bundle_dir, args.m7_report, args.m7_weights,
                               args.output_dir, bundle_sha=args.bundle_manifest_sha256,
                               max_cases=args.max_cases, max_new_tokens=args.max_new_tokens)
+        else:
+            result = proposed
     except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
         print("Plex 600M read-only evaluation refused: " + str(exc), file=sys.stderr)
         return 2
