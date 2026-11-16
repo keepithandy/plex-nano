@@ -8,6 +8,10 @@ The original M7 checkpoint was built after four short-answer updates. Its owner-
 
 **The M7 checkpoint is model-only:** it contains no optimizer state. M9 therefore initializes a *new* AdamW optimizer at a lower `5e-5` learning rate. This is **not** an exact optimizer-state resume from M7, and results must not be presented as uninterrupted M7 training.
 
+## Independently measured candidate selection
+
+The same **original M7 BPE** was reconstructed and checked by both [Linux CI](https://github.com/keepithandy/plex-nano/actions/runs/43900944907) and [Windows CI](https://github.com/keepithandy/plex-nano/actions/runs/43900944479). Both selected **23 eligible training-base families and 7 validation-base families** under the 224-position limit, then the exact same **eight training cases and three disjoint validation cases**. The selected training examples reach at most **217 positions** and supervise **553 edited-file/EOS tokens**. The selected validation examples reach at most **189 positions**. No candidate was truncated and **zero optimizer updates** occurred in either CI run. CPU tests are not an RTX 4080 SUPER VRAM feasibility measurement.
+
 ## Strict pilot contract
 
 The new [M9 runner](../training/src/plex_training/plex600_m9.py) is disabled unless *all* conditions hold:
