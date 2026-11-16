@@ -25,6 +25,8 @@ OUTPUT_ROOT = r.ROOT / "training" / "artifacts"
 DEFAULT_MAX_CASES = 6
 DEFAULT_MAX_NEW = 32
 MAX_NEW = 96  # Empirically covers frozen M8 reference files (max gold+EOS: 90).
+DEFAULT_DECODE = "unmasked-v1"
+DECODE_POLICIES = ("unmasked-v1", "fitted-vocab-v1")
 
 
 class Refusal(ValueError):
@@ -32,15 +34,20 @@ class Refusal(ValueError):
 
 
 def plan(*, max_cases: int = DEFAULT_MAX_CASES,
-         max_new_tokens: int = DEFAULT_MAX_NEW) -> dict[str, Any]:
+         max_new_tokens: int = DEFAULT_MAX_NEW,
+         decoding_policy: str = DEFAULT_DECODE) -> dict[str, Any]:
     if (type(max_cases) is not int or not 1 <= max_cases <= 36
             or type(max_new_tokens) is not int or not 1 <= max_new_tokens <= MAX_NEW):
         raise Refusal(f"Read-only evaluation is bounded to 1..36 cases and 1..{MAX_NEW} new tokens")
+    if type(decoding_policy) is not str or decoding_policy not in DECODE_POLICIES:
+        raise Refusal("Unknown M8 decoding policy; explicit versioned policy required")
     return {
         "protocol": PROTOCOL, "status": "plan",
         "modelFamily": "plex-600m-v1", "modelParameterCount": 600372480,
         "mode": "read-only-greedy-generation-no-grad",
         "maxCases": max_cases, "maxNewTokensPerCase": max_new_tokens,
+        "decodingPolicy": decoding_policy,
+        "historicalUnmaskedPolicy": decoding_policy == DEFAULT_DECODE,
         "benchmarkCasesTotal": 36, "promptFormat": "request-source-file-edited-file",
         "modelLoaded": False, "trainingAuthorized": False, "optimizerUpdates": 0,
         "input": "sha-verified-owner-m7-checkpoint-and-source-bound-local-tokenizer",
@@ -182,9 +189,29 @@ def classify_next_token(token_id: int, vocabulary_size: int) -> str | None:
     return None
 
 
+def select_next_id(last_logits: Any, torch: Any, fitted_vocab: int,
+                   decoding_policy: str) -> int:
+    """Versioned choice: full 32K original or opt-in decodable IDs 3..V-1.
+
+    All modes retain EOS; neither mode mutates logits, model or token IDs.
+    """
+    if type(decoding_policy) is not str or decoding_policy not in DECODE_POLICIES:
+        raise Refusal("Unknown M8 decoding policy")
+    if decoding_policy == DEFAULT_DECODE:
+        return int(torch.argmax(last_logits).item())
+    if (type(fitted_vocab) is not int or fitted_vocab < 5
+            or getattr(last_logits, "ndim", None) != 1
+            or last_logits.shape[0] < fitted_vocab):
+        raise Refusal("Fitted-vocabulary decoding requires compatible output head")
+    return int(torch.argmax(last_logits[3:fitted_vocab]).item()) + 3
+
+
 def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
-                 *, device: Any, max_new_tokens: int) -> tuple[str, int, str]:
+                 *, device: Any, max_new_tokens: int,
+                 decoding_policy: str = DEFAULT_DECODE) -> tuple[str, int, str]:
     """Greedy decode with explicit stop reason; prediction policy is unchanged."""
+    if type(decoding_policy) is not str or decoding_policy not in DECODE_POLICIES:
+        raise Refusal("Unknown M8 decoding policy")
     generated: list[int] = []
     termination_reason = "max-new-tokens"
     model.eval()
@@ -196,7 +223,8 @@ def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
             inputs = torch.tensor([context], dtype=torch.long, device=device)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 logits, _ = model(inputs)
-            nxt = int(torch.argmax(logits[0, -1, :]).item())
+            nxt = select_next_id(logits[0, -1, :], torch,
+                                 tokenizer.vocabulary_size, decoding_policy)
             stop_reason = classify_next_token(nxt, tokenizer.vocabulary_size)
             if stop_reason is not None:
                 # Preserve the historical greedy policy: never turn an invalid
@@ -208,8 +236,10 @@ def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
 
 
 def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
-             bundle_sha: str, max_cases: int, max_new_tokens: int) -> dict[str, Any]:
-    proposal = plan(max_cases=max_cases, max_new_tokens=max_new_tokens)
+             bundle_sha: str, max_cases: int, max_new_tokens: int,
+             decoding_policy: str = DEFAULT_DECODE) -> dict[str, Any]:
+    proposal = plan(max_cases=max_cases, max_new_tokens=max_new_tokens,
+                    decoding_policy=decoding_policy)
     target = require_output(output, bundle=bundle, checkpoint=weights)
     proof = prerequisites(bundle, report, weights, bundle_sha)
     from .tokenizer import PlexTokenizer
@@ -255,7 +285,7 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
         for task, ids in prepared:
             generated, count, termination = generate_one(
                 model, torch, tokenizer, ids, device=device,
-                max_new_tokens=max_new_tokens)
+                max_new_tokens=max_new_tokens, decoding_policy=decoding_policy)
             response = {"id": task["id"], "output": generated}
             outputs.append(json.dumps(response, ensure_ascii=False, sort_keys=True))
             responses.append({"id": task["id"], "promptTokens": len(ids),
@@ -307,9 +337,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--max-cases", type=int, default=DEFAULT_MAX_CASES)
     parser.add_argument("--max-new-tokens", type=int, default=DEFAULT_MAX_NEW)
+    parser.add_argument("--decoding-policy", choices=DECODE_POLICIES,
+                        default=DEFAULT_DECODE,
+                        help="Original unmasked or explicitly experimental fitted-vocab top-1")
     args = parser.parse_args(argv)
     try:
-        proposed = plan(max_cases=args.max_cases, max_new_tokens=args.max_new_tokens)
+        proposed = plan(max_cases=args.max_cases, max_new_tokens=args.max_new_tokens,
+                        decoding_policy=args.decoding_policy)
         if args.run_read_only_eval and args.audit_token_budget:
             raise Refusal("Choose either token-budget audit or read-only generation")
         if args.audit_token_budget:
@@ -324,7 +358,8 @@ def main(argv: list[str] | None = None) -> int:
                 raise Refusal("Explicit evaluation requires all pinned local inputs and a new output directory")
             result = evaluate(args.bundle_dir, args.m7_report, args.m7_weights,
                               args.output_dir, bundle_sha=args.bundle_manifest_sha256,
-                              max_cases=args.max_cases, max_new_tokens=args.max_new_tokens)
+                              max_cases=args.max_cases, max_new_tokens=args.max_new_tokens,
+                              decoding_policy=args.decoding_policy)
         else:
             result = proposed
     except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
