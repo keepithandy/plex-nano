@@ -14,6 +14,28 @@ from plex_training import plex600_research as research
 
 
 class Plex600M8EvalTests(unittest.TestCase):
+    def test_frozen_m7_training_has_no_m8_file_conditioning_format(self):
+        rows = research.read_jsonl(m8_reproduce.owner.DATASET / "train.jsonl")
+        report = m8_reproduce.curriculum_format_audit(
+            rows, m8.choose_cases(36))
+        self.assertEqual(report["m7TrainingRows"], 120)
+        self.assertEqual(report["m7RequestAnswerRows"], 120)
+        self.assertEqual(report["m7RowsWithSourceFileMarker"], 0)
+        self.assertEqual(report["m7RowsWithEditedFileMarker"], 0)
+        self.assertEqual(report["m7RowsWithBothFileMarkers"], 0)
+        self.assertEqual(report["m8CasesWithSourceAndEditedFilePromptMarkers"], 36)
+        self.assertTrue(report["literalPromptFormatMismatch"])
+        self.assertFalse(report["semanticModelIncapacityProven"])
+        self.assertFalse(report["trainingAuthorized"])
+        self.assertFalse(report["finalHoldoutUsed"])
+
+    def test_format_gap_rejects_empty_corpora(self):
+        with self.assertRaisesRegex(ValueError, "both frozen"):
+            m8_reproduce.curriculum_format_audit([], m8.choose_cases(3))
+        with self.assertRaisesRegex(ValueError, "both frozen"):
+            m8_reproduce.curriculum_format_audit(
+                [{"text": "Request: x\nAnswer:\ny"}], [])
+
     def test_tokenizer_reconstruction_default_is_plan_only(self):
         with patch.object(m8_reproduce, "reconstruct",
                           side_effect=AssertionError("tokenizer fitted")), \
