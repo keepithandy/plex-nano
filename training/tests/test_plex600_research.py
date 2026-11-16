@@ -24,6 +24,43 @@ class Plex600ResearchTests(unittest.TestCase):
         self.assertEqual(receipt["evaluationRows"], 36)
         self.assertEqual(len(receipt["candidateJsonlSha256"]), 64)
 
+    def test_r2_generalization_risk_is_diagnostic_not_approval(self):
+        result = research.candidate_generalization_risk()
+        self.assertEqual(result["candidateRows"], 1152)
+        self.assertEqual(result["candidateTemplateFamilies"], 18)
+        self.assertEqual(result["fixedEditTemplateFamilyCount"], 4)
+        self.assertEqual(result["fixedEditRows"], 256)
+        self.assertEqual(result["developmentCasesTotal"], 36)
+        self.assertEqual(result["developmentCaseOverlapCount"], 4)
+        self.assertEqual(result["candidateRowsWithDevelopmentOperationOverlap"], 256)
+        self.assertEqual(result["candidateFamilyOverlapCount"], 4)
+        self.assertEqual(result["candidateRowsOutsideOverlapFamilies"], 896)
+        self.assertEqual(result["overlapFamiliesByLanguage"],
+                         {"html": 1, "css": 0, "javascript": 3})
+        self.assertEqual(
+            result["developmentCasesWithExactEditOperationOverlap"],
+            ["m8-html-02", "m8-javascript-03",
+             "m8-javascript-05", "m8-javascript-08"])
+        self.assertEqual(
+            result["candidateFamiliesWithDevelopmentOperationOverlap"],
+            ["r2-html-button-pressed", "r2-javascript-array-operation",
+             "r2-javascript-feature-flag", "r2-javascript-limit-compare"])
+        self.assertEqual(result["knownExactWholeFileOverlapCount"], 0)
+        self.assertEqual(result["eligibleTrainingRows"], 0)
+        self.assertFalse(result["semanticIndependenceProven"])
+        self.assertFalse(result["trainingAuthorized"])
+        self.assertFalse(result["newEvaluationAuthorized"])
+        self.assertFalse(result["finalHoldoutOpened"])
+
+    def test_candidate_risk_cli_never_triggers_generation_or_training(self):
+        from plex_training import plex600_m8_eval as m8
+        with patch.object(m8, "evaluate", side_effect=AssertionError("GPU eval")), \
+             redirect_stdout(StringIO()) as stdout:
+            self.assertEqual(research.main(["candidate-risk-audit"]), 0)
+        audit = json.loads(stdout.getvalue())
+        self.assertEqual(audit["developmentCaseOverlapCount"], 4)
+        self.assertFalse(audit["trainingAuthorized"])
+
     def test_benchmark_is_36_hand_authored_distinct_dev_only_cases(self):
         rows = research.benchmark()
         self.assertEqual(len(rows), 36)
