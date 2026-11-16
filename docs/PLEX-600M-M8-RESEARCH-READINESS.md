@@ -21,7 +21,7 @@ scorable full files at 32/64 tokens is **unknown**. Run the CPU-only
 checkpoint evaluation. This proposal neither approves training nor changes
 historical M8 or M7 evidence.
 
-**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
+**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. The generation report now records EOS, invalid-control-token, out-of-fitted-tokenizer, and max-token-cap termination counts without changing the greedy decoding or output correctness rules. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
 
 **November 16 R2 generalization audit:** The
 [read-only operation-overlap review](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
