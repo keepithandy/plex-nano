@@ -10,18 +10,19 @@
 | Larger R2 synthetic curriculum | [1,152 candidate code-edit examples](../training/phase3/candidates/plex600-r2-synthetic-edit-v1.jsonl), 384 per language, 18 template families | **Quarantined pending owner approval and deeper QA; 0 newly approved rows** |
 | External sources | Original six-source M3 rights holds | No external-source rights approval, downloads or training expansion |
 
-**November 16 follow-up — token-budget feasibility (proposed):** A new
+**November 16 follow-up — token-budget feasibility (independently verified):** A new
 [read-only M8 capacity audit](PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
-tests the exact owner's BPE lengths of the 36 frozen *expected complete files*,
+tests the original source-bound BPE lengths of the 36 frozen *expected complete files*,
 including an EOS step and the 1,024-position context limit, without model
-loading. An under-budget full-file generation attempt now fails before GPU
-initialization. No owner-local audit result is reported yet, so the number of
-scorable full files at 32/64 tokens is **unknown**. Run the CPU-only
-`--audit-token-budget` command in that decision note before requesting any
-checkpoint evaluation. This proposal neither approves training nor changes
+loading. Independent [Linux and Windows M7-tokenizer reproductions](PLEX-600M-M8-INDEPENDENT-TOKENIZER-REPRODUCTION-2026-11-16.md)
+matched the exact historical tokenizer and bundle hashes: only **1/36** full
+files fit the 32-token default and **26/36** fit 64 tokens, while all require
+at most **90** tokens including EOS. The branch now permits an explicit
+**96-token** ceiling while preserving the 32-token default and the pre-GPU
+capacity refusal. This proposal neither approves training nor changes
 historical M8 or M7 evidence.
 
-**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. The generation report now records EOS, invalid-control-token, out-of-fitted-tokenizer, and max-token-cap termination counts without changing the greedy decoding or output correctness rules. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
+**Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. The generation report now records EOS, invalid-control-token, out-of-fitted-tokenizer, and max-token-cap termination counts without changing the greedy decoding or output correctness rules. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–96 generated tokens per task, with 96 requiring explicit opt-in; the default plan still covers six tasks and 32 generated tokens. Actual generation speed and correctness remain unmeasured.
 
 **November 16 R2 generalization audit:** The
 [read-only operation-overlap review](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
