@@ -65,6 +65,7 @@ class M8TeacherForcedDiagnosticTests(unittest.TestCase):
         self.assertEqual(report["unmaskedGreedyReferenceMatches"], 1)
         self.assertEqual(report["unmaskedGreedyOutsideFittedVocab"], 1)
         self.assertEqual(report["unmaskedGreedyInvalidControl"], 0)
+        self.assertEqual(report["unmaskedGreedyPrematureEos"], 0)
         self.assertLess(report["fittedVocabProbabilityMassSum"], 2)
         self.assertGreater(report["fittedVocabProbabilityMassSum"], 1)
         self.assertGreater(
@@ -90,6 +91,19 @@ class M8TeacherForcedDiagnosticTests(unittest.TestCase):
         self.assertEqual(combined["unmaskedGreedyReferenceTokenAccuracy"], 1)
         self.assertTrue(math.isfinite(combined["conditionalFittedVocabMeanNllNats"]))
 
+    def test_premature_eos_is_separate_from_control_token_rate(self):
+        logits = torch.zeros((2, 8))
+        logits[0, 3] = 10.0  # premature EOS instead of first gold token 4
+        logits[1, 1] = 10.0  # invalid control token instead of terminal EOS 3
+        case = diag.score_logits(
+            logits, [4, 3], fitted_vocab_size=5, torch=torch)
+        self.assertEqual(case["unmaskedGreedyPrematureEos"], 1)
+        self.assertEqual(case["unmaskedGreedyInvalidControl"], 1)
+        self.assertEqual(case["unmaskedGreedyReferenceMatches"], 0)
+        aggregate = diag.summarize([case])
+        self.assertEqual(aggregate["unmaskedGreedyPrematureEosRate"], 0.5)
+        self.assertEqual(aggregate["unmaskedGreedyInvalidControlRate"], 0.5)
+
     def test_invalid_reference_shape_and_nonfinite_logits_refuse(self):
         valid = torch.zeros((2, 8))
         invalid = (
@@ -99,6 +113,7 @@ class M8TeacherForcedDiagnosticTests(unittest.TestCase):
             ([4, 3], 3, valid),  # invalid fitted vocabulary
             ([4, 3], 9, valid),  # output vocab too small
             ([4, 3], 5, valid[:1]),  # shape disagreement
+            ([3], 5, valid[:1]),  # empty expected file is unsupported
         )
         for reference, vocab, logits in invalid:
             with self.subTest(reference=reference, vocab=vocab), \
