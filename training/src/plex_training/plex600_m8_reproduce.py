@@ -98,12 +98,22 @@ def reconstruct(*, max_cases: int = 36) -> dict[str, Any]:
         cases = m8.choose_cases(max_cases)
         budget32 = m8.token_budget(cases, tokenizer, max_new_tokens=32)
         budget64 = m8.token_budget(cases, tokenizer, max_new_tokens=64)
+        budget96 = m8.token_budget(cases, tokenizer, max_new_tokens=96)
+        # Explicit regression for the original frozen, exactly 36-case set.
+        # These limits apply only to complete target-file token capacity, not
+        # actual model behavior, correctness, or GPU inference timing.
+        if max_cases == 36 and (
+            budget96["completeWithinBudget"] != 36
+            or budget96["requiredMaxNewTokensIncludingEos"] != 90
+        ):
+            raise ValueError("Frozen M8 benchmark/token capacity changed")
         result.update({
             "comparableM8CapacityMeasured": True,
             "sourceBindingVerified": True,
             "benchmarkSha256": research.digest_file(research.BENCHMARK),
             "cap32": budget32,
             "cap64": budget64,
+            "cap96": budget96,
         })
         return result
 
