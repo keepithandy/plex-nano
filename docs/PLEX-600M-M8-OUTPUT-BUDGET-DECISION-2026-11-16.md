@@ -30,6 +30,21 @@ Review `completeWithinBudget`, `blockedByBudget`, `requiredMaxNewTokensIncluding
 
 The original default `--run-read-only-eval --max-cases 6 --max-new-tokens 32` remains guarded: it will be refused if any selected expected full file cannot fit. Do not bypass the guard and report truncated generations as failed full-file capability.
 
+## Additional M8 termination diagnostics
+
+The model's output head retains **32,768 vocabulary slots**, but the frozen M7
+tokenizer has **1,191 learned/defined tokens**. The original greedy decoder
+stopped if it selected an out-of-tokenizer ID or a non-EOS control token.
+That can look like an empty or short answer without revealing why. We now
+record `terminationReason` per task and aggregate `terminationCounts`:
+`eos`, `invalid-control-token`, `outside-fitted-tokenizer`, or
+`max-new-tokens`. The previous `reachedEos` field remains for compatibility.
+
+**This change only records what happened.** It does not mask logits,
+renormalize probabilities, suppress invalid IDs, change generation length,
+or assert that any current M7 output actually terminates this way. The
+owner-local M8 checkpoint evaluation remains unperformed.
+
 ## Decision after the real tokenizer audit
 
 1. **If the required cap fits the existing bounded runner and context:** choose explicit case count and budget, run the existing, separately opted-in read-only generation against the SHA-verified M7 checkpoint, preserve its raw response transcript, then score the unchanged benchmark. No optimizer training is needed for this first capability baseline.
