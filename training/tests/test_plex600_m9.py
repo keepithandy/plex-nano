@@ -111,6 +111,35 @@ class M9BoundedPilotTests(unittest.TestCase):
                         m9.check_approval(
                             path, selected, original_checkpoint_sha=original)
 
+    def test_source_identity_pins_model_and_m9_runner_before_cuda(self):
+        with patch.object(m9.hardware, "source_identity", return_value={
+                "gitCommit": "a" * 40,
+                "modelSourceClean": True,
+                "modelSha256": m9.hardware.MODEL_SHA256,
+                "runnerSha256": "b" * 64}), \
+             patch.object(m9.m7, "hash_file", return_value="c" * 64):
+            identity = m9.code_identity()
+        self.assertEqual(identity["modelSha256"], m9.hardware.MODEL_SHA256)
+        self.assertEqual(identity["m9RunnerSha256"], "c" * 64)
+        with patch.object(m9.hardware, "source_identity",
+                          side_effect=ValueError("Modified model source")):
+            with self.assertRaisesRegex(ValueError, "Modified model"):
+                m9.code_identity()
+
+    def test_impossible_date_is_not_accepted_as_owner_approval(self):
+        sample = m9.selected_records(CompactTokenizer())
+        document = m9.approval_draft(sample, checkpoint_sha="f" * 64)
+        document.update(approvedBy="keepithandy",
+                        approvedAt="2026-99-99",
+                        approvedForTraining=True,
+                        sourceReviewedByOwner=True)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "approval.json"
+            path.write_text(json.dumps(document))
+            with self.assertRaisesRegex(ValueError, "calendar date"):
+                m9.check_approval(
+                    path, sample, original_checkpoint_sha="f" * 64)
+
     def test_missing_approval_prevents_gpu_check_even_with_fake_m7_receipt(self):
         with tempfile.TemporaryDirectory() as folder:
             from plex_training.tokenizer import PlexTokenizer
