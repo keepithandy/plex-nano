@@ -61,16 +61,24 @@ The current model focuses on **HTML, CSS, and JavaScript**.
 
 No pretrained model weights are used for the current Plex Nano research line.
 
-### Separate Plex 600M architecture (review only)
+### Separate Plex 600M research track (M8 evaluation)
 
-A proposed **600,372,480-parameter from-scratch model** is implemented in
+A **600,372,480-parameter from-scratch model** is implemented in
 [`training/src/plex_training/plex600.py`](training/src/plex_training/plex600.py).
 Its [architecture review](docs/PLEX-600M-ARCHITECTURE-REVIEW.md) explains the model
-configuration, memory considerations, and lightweight tests. **This is untrained
-source code only**, not a new Plex Nano checkpoint, approved experiment, or change
-to the 27M model. A **scratch tokenizer preparation and validation path** is now available, along with record-bounded next-token example sampling. See [the live Plex 600M development record](docs/PLEX-600M-DEVELOPMENT.md) and [the safe setup CLI](training/src/plex_training/plex600_setup.py). A full 600M tokenizer has **not yet been fitted**, and no 600M optimizer runner or model checkpoint exists.
+configuration and memory requirements. The owner reports a successful **four-update M7 training pilot**
+on a locally fitted 1,191-token-vocabulary bundle, with internal validation
+loss **10.5988 → 8.9729**. The original checkpoint and its independently
+verified bytes have not been uploaded to GitHub; **independent coding-edit success
+is not established**. This experiment does not change the controlled 27M Nano model.
 
-A [guarded CUDA feasibility check](docs/PLEX-600M-CUDA-FEASIBILITY-PROPOSAL.md) completed one fixed synthetic full-size forward/backward pass. Optimizer memory and sustained training remain unmeasured; the default command prints the plan only.
+The [M8 development benchmark and read-only runner](docs/PLEX-600M-M8-RESEARCH-READINESS.md)
+are prepared, but model answers have not been collected. A
+[full-file output-budget gate](docs/PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
+checks whether valid outputs fit the existing 32/64-token generation budget
+*before* any GPU evaluation. Training-source rights, benchmark independence,
+and new optimizer authorization remain separate gates.
+See the [live 600M roadmap](docs/PLEX-600M-ROADMAP.md) for current evidence and open decisions.
 
 ## What Plex is being trained to do
 
