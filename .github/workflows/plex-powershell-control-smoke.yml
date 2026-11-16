@@ -1,0 +1,47 @@
+name: plex-powershell-control-smoke
+
+on:
+  pull_request:
+    paths:
+      - "scripts/Plex-Control.ps1"
+      - ".github/workflows/plex-powershell-control-smoke.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "scripts/Plex-Control.ps1"
+      - ".github/workflows/plex-powershell-control-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  launcher-parse-and-safety:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: PowerShell 7 help parses and runs without WSL
+        shell: pwsh
+        run: |
+          & ./scripts/Plex-Control.ps1 help
+          if ($LASTEXITCODE -ne 0) { throw "Help failed" }
+      - name: Windows PowerShell 5.1 help parses and runs without WSL
+        shell: powershell
+        run: |
+          & ./scripts/Plex-Control.ps1 help
+          if (-not $?) { throw "Windows PowerShell help failed" }
+      - name: Unsupported evaluation refuses without launching training
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          try {
+            & ./scripts/Plex-Control.ps1 evaluate m9
+            throw 'M9 evaluation should refuse.'
+          }
+          catch {
+            if ($_.Exception.Message -notmatch 'M9 evaluation needs a separate verified comparison runner') {
+              throw
+            }
+          }
