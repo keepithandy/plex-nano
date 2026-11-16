@@ -123,10 +123,10 @@ class Plex600M8EvalTests(unittest.TestCase):
         from plex_training.tokenizer import PlexTokenizer
         with patch.object(m8, "verified_bundle",
                           return_value={"tokenizerSha256": "test",
-                                        "benchmarkSha256": "benchmark"}), \\
-             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \\
-             patch.object(m8, "prerequisites", side_effect=AssertionError("weights opened")), \\
-             patch.object(m8, "evaluate", side_effect=AssertionError("GPU requested")), \\
+                                        "benchmarkSha256": "benchmark"}), \
+             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \
+             patch.object(m8, "prerequisites", side_effect=AssertionError("weights opened")), \
+             patch.object(m8, "evaluate", side_effect=AssertionError("GPU requested")), \
              redirect_stdout(StringIO()) as output:
             self.assertEqual(m8.main([
                 "--audit-token-budget", "--bundle-dir", "dummy",
@@ -144,9 +144,9 @@ class Plex600M8EvalTests(unittest.TestCase):
                 return list(value.encode("utf-8"))
 
         from plex_training.tokenizer import PlexTokenizer
-        with patch.object(m8, "require_output", return_value=Path("unused")), \\
-             patch.object(m8, "prerequisites", return_value={"benchmarkSha256": "test"}), \\
-             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \\
+        with patch.object(m8, "require_output", return_value=Path("unused")), \
+             patch.object(m8, "prerequisites", return_value={"benchmarkSha256": "test"}), \
+             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \
              patch.object(m8.hardware, "_check_device", side_effect=AssertionError("GPU accessed")):
             with self.assertRaisesRegex(ValueError, "under-budget"):
                 m8.evaluate(Path("bundle"), Path("report"), Path("weights"),
