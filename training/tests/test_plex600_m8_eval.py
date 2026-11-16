@@ -106,6 +106,7 @@ class Plex600M8EvalTests(unittest.TestCase):
 
         class FakeTorch:
             long = "long"
+            bfloat16 = "bfloat16"
 
             def __init__(self, ids):
                 self.tokens = iter(ids)
