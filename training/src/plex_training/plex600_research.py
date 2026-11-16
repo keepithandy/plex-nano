@@ -185,6 +185,9 @@ def candidate_generalization_risk() -> dict[str, Any]:
     fixed_edit_families = sorted(
         family for family, pairs in family_pairs.items() if len(pairs) == 1
     )
+    if (digest_file(CANDIDATES) != validated["candidateJsonlSha256"]
+            or digest_file(BENCHMARK) != validated["benchmarkJsonlSha256"]):
+        raise ResearchRefusal("Candidate or benchmark content changed mid-audit")
     if len(family_pairs) != validated["templateFamilies"]:
         raise ResearchRefusal("Candidate family inventory changed mid-audit")
     return {
@@ -214,7 +217,7 @@ def candidate_generalization_risk() -> dict[str, Any]:
             validated["recordCount"] -
             sum(64 for _ in affected_families)
         ),
-        "knownExactWholeFileOverlapCount": validated["exactBenchmarkStringOverlaps"],
+        "exactBenchmarkStringOverlapCount": validated["exactBenchmarkStringOverlaps"],
         "semanticIndependenceProven": False,
         "eligibleTrainingRows": 0,
         "trainingAuthorized": False,
