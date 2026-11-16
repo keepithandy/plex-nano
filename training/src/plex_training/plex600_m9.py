@@ -25,6 +25,7 @@ import sys
 import tempfile
 import time
 from typing import Any
+from datetime import date
 
 from . import plex600_feasibility as hardware
 from . import plex600_m7 as m7
@@ -183,7 +184,21 @@ def check_approval(path: Path, selection: dict[str, Any], *,
             or len(data["approvedAt"]) != 10
             or not data["approvedAt"].startswith("2026-")):
         raise Refusal("M9 requires separate exact source-scoped owner review and approval")
+    try:
+        approved_date = date.fromisoformat(data["approvedAt"])
+    except (ValueError, TypeError) as exc:
+        raise Refusal("M9 approval date must be a real ISO calendar date") from exc
+    if approved_date < date(2026, 11, 16):
+        raise Refusal("M9 approval predates the exact R3 experiment")
     return {"approved": True, "approvalSha256": m7.hash_file(path, maximum=16 * 1024)}
+
+
+def code_identity() -> dict[str, Any]:
+    """Pin committed model source and the exact M9 runner before CUDA."""
+    return {
+        **hardware.source_identity(),
+        "m9RunnerSha256": m7.hash_file(Path(__file__)),
+    }
 
 
 def measured_loss(model: Any, torch: Any,
@@ -216,6 +231,7 @@ def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
     authorization = check_approval(
         approval, selection,
         original_checkpoint_sha=proof["m7Receipt"]["localCheckpointSha256"])
+    identity = code_identity()
 
     import torch
     from .plex600 import Plex600Model, Plex600Config, parameter_count
@@ -291,6 +307,7 @@ def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
         "originalCheckpointSha256": proof["m7Receipt"]["localCheckpointSha256"],
         "originalReportSha256": proof["m7Receipt"]["localReportSha256"],
         "approval": authorization,
+        "codeIdentity": identity,
         "originalTokenizerSha256": proof["tokenizerSha256"],
         "benchmarkSha256": proof["benchmarkSha256"],
         "validationBefore": validation_before,
@@ -319,8 +336,9 @@ def execute(bundle: Path, report: Path, weights: Path, approval: Path,
     target = m8.require_output(output, bundle=bundle, checkpoint=weights)
     proof = m8.prerequisites(bundle, report, weights, bundle_sha)
     selection = selected_records(PlexTokenizer.load(bundle))
-    check_approval(approval, selection,
+    approval_proof = check_approval(approval, selection,
                    original_checkpoint_sha=proof["m7Receipt"]["localCheckpointSha256"])
+    identity = code_identity()
     stage: Path | None = Path(tempfile.mkdtemp(
         prefix=f".{target.name}.staging-", dir=target.parent))
     try:
@@ -351,6 +369,12 @@ def execute(bundle: Path, report: Path, weights: Path, approval: Path,
                     proof["m7Receipt"]["localCheckpointSha256"]
                 or outcome.get("r3CandidateSha256") != r3.source_sha256()
                 or outcome.get("trainRecordIds") != selection["trainRecordIds"]
+                or outcome.get("validationRecordIds") != selection["validationRecordIds"]
+                or outcome.get("approval") != approval_proof
+                or outcome.get("codeIdentity") != identity
+                or outcome.get("finalHoldoutUsed") is not False
+                or outcome.get("generatedCodeEvaluated") is not False
+                or outcome.get("codingImprovementProven") is not False
                 or type(checkpoint) is not dict
                 or checkpoint.get("file") != "weights.pt"
                 or checkpoint.get("weightsOnly") is not True
