@@ -10,6 +10,17 @@
 | Larger R2 synthetic curriculum | [1,152 candidate code-edit examples](../training/phase3/candidates/plex600-r2-synthetic-edit-v1.jsonl), 384 per language, 18 template families | **Quarantined pending owner approval and deeper QA; 0 newly approved rows** |
 | External sources | Original six-source M3 rights holds | No external-source rights approval, downloads or training expansion |
 
+**November 16 follow-up — token-budget feasibility (proposed):** A new
+[read-only M8 capacity audit](PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
+tests the exact owner's BPE lengths of the 36 frozen *expected complete files*,
+including an EOS step and the 1,024-position context limit, without model
+loading. An under-budget full-file generation attempt now fails before GPU
+initialization. No owner-local audit result is reported yet, so the number of
+scorable full files at 32/64 tokens is **unknown**. Run the CPU-only
+`--audit-token-budget` command in that decision note before requesting any
+checkpoint evaluation. This proposal neither approves training nor changes
+historical M8 or M7 evidence.
+
 **Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
 
 The R2 rows originate from **18 project-authored edit templates**, 64 synthetic variations per family. These are not 1,152 independent source projects. The increase in record count is meaningful for pipeline testing, but does NOT supply a realistic 600M scratch-model pretraining corpus. Template redundancy, shortcuts and overfitting remain risks. The auditor checks uniqueness, exact replacement integrity, flags, distributions, and exact text overlap with M8 development cases; it **does not prove semantic non-contamination or legal clearance**.
@@ -55,7 +66,7 @@ uv run --project training --no-sync python -m plex_training.plex600_m8_eval --ru
 uv run --project training --no-sync python -m plex_training.plex600_research score --responses training/artifacts/m8-read-only-six-case-run/responses.jsonl
 ~~~
 
-The example output directory must not exist. This examination can be slow because the 600M model recomputes context without a KV cache; it is not a performance benchmark and no successful output is claimed here. The full 36-case development evaluation can be chosen separately, with the same checkpoint and explicit invocation, after reviewing this bounded six-case result. The generation transcript is kept separate from the scored report. No new optimizer training authorization is implied.
+The example output directory must not exist. **First run the token-budget audit:** this exact command may refuse execution if the selected full files cannot fit the requested 32-token output budget. Do not interpret a budget refusal as model failure. This examination can be slow because the 600M model recomputes context without a KV cache; it is not a performance benchmark and no successful output is claimed here. The full 36-case development evaluation can be chosen separately, with the same checkpoint and explicit invocation, after reviewing this bounded six-case result. The generation transcript is kept separate from the scored report. No new optimizer training authorization is implied.
 
 ## Milestones remaining before more training
 
