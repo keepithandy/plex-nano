@@ -92,3 +92,6 @@ jobs:
           training/tests/test_plex600_research.py
           training/tests/test_plex600_m8_eval.py
           -q
+
+      - name: Independently reconstruct M7 tokenizer and audit M8 token capacity
+        run: uv run --project training --no-sync python -m plex_training.plex600_m8_reproduce --reconstruct-read-only --max-cases 36
