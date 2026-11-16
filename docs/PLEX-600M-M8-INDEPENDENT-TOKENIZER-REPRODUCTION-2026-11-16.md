@@ -29,6 +29,31 @@ Independent runs used `research/m8-output-budget-gate` commit `556f615dbacc7b037
 - [Linux GitHub Actions run 43878950348](https://github.com/keepithandy/plex-nano/actions/runs/43878950348) — 790 tests passed, 9 skipped; reconstruction verified
 - [Windows GitHub Actions run 43878950320](https://github.com/keepithandy/plex-nano/actions/runs/43878950320) — Windows portability tests and reconstruction verified
 
+## Original M7 vs. M8 literal prompt-format audit
+
+The same read-only reconstruction program now independently checks the
+**original 120-row M7 *training split*** against the frozen 36-case M8
+development prompt contract, without opening new sources or the final
+holdout. The original owner-authored rows are already source/hash-verified.
+
+| Literal prompt-form observation | Frozen source count |
+| --- | ---: |
+| M7 owner-authored training rows with `Request: … Answer:\\n` format | **120 / 120** |
+| M7 training rows containing `Source file:` marker | **0 / 120** |
+| M7 training rows containing `Edited file:` marker | **0 / 120** |
+| M7 training rows containing both file-edit prompt markers | **0 / 120** |
+| M8 development cases using source-file/edited-file prompt contract | **36 / 36** |
+
+This establishes a **literal prompt-format distribution shift**. It is
+*not* proof the existing model cannot generalize to file editing; the
+actual checkpoint hasn't been evaluated. It is nevertheless strong
+evidence to require source-conditioned, preservation-sensitive curriculum
+experiments and to measure gold-conditioned likelihood and generated-file
+success separately. The added
+[teacher-forced reference diagnostic](PLEX-600M-M8-TEACHER-FORCED-REFERENCE-DIAGNOSTIC-2026-11-16.md)
+provides the latter independent research pathway when original weights
+become available. All R2 synthetic candidates remain unapproved.
+
 ## Per-language limits using the frozen tokenizer
 
 | Language | 32-token complete-file capacity | 64-token complete-file capacity | Min–max reference output (including EOS) |
