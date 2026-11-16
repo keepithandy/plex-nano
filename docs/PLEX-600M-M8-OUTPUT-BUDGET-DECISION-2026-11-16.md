@@ -37,6 +37,13 @@ The original default `--run-read-only-eval --max-cases 6 --max-new-tokens 32` re
 3. **If full-file continuation is not viable on the current dataset/model:** explicitly version a small edit-span or structured-patch output contract and deterministic, source-preserving reconstruction, then establish a *new* evaluation baseline. Do not compare that new protocol's scores directly with historical full-file scores.
 4. **Only after valid baseline generations:** review error categories (wrong target, missing source identifiers, syntax, truncation, unrelated-code damage), then decide whether the next bounded, rights-approved experiment should target data diversity, copying/source binding, or output serialization. A lower teacher-forced loss alone is not a deployment gate.
 
+The separately implemented
+[R2 generalization audit](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
+checks every prospective synthetic edit operation against the frozen M8
+development cases without training or approval. It detects four shared
+development operations and 256 affected candidate rows, even though whole-file
+and request exact-string overlap checks remain zero.
+
 ## The actual data/compute bottleneck
 
 The **M7 four-update pilot** trained on 120 narrowly owner-authored records, totaling **6,970 training tokens** in its prepared token split, and sampled **220 supervised positions across four optimizer updates**. The reported internal validation loss moved **10.5988 → 8.9729**, but there are **no actual M8 development generations** in GitHub. Its weights-only local checkpoint does **not** preserve AdamW state for exact continuation.
