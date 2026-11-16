@@ -84,6 +84,75 @@ class Plex600M8EvalTests(unittest.TestCase):
                     m8.require_output(nested / "run", bundle=root / "bundle",
                                       checkpoint=root / "weights.pt")
 
+    def test_token_budget_counts_gold_file_and_eos_without_generation(self):
+        task = research.benchmark()[0]
+
+        class CharacterTokenizer:
+            def encode(self, value):
+                return list(value.encode("utf-8"))
+
+        result = m8.token_budget([task], CharacterTokenizer(), max_new_tokens=64)
+        item = result["cases"][0]
+        self.assertEqual(item["goldFileTokens"], len(task["expectedFile"].encode("utf-8")))
+        self.assertEqual(item["requiredTokensIncludingEos"], item["goldFileTokens"] + 1)
+        self.assertEqual(result["blockedByBudget"], 1)
+        self.assertEqual(result["completeWithinBudget"], 0)
+        self.assertEqual(result["byLanguage"]["html"]["selected"], 1)
+        self.assertFalse(result["modelLoaded"])
+        self.assertFalse(result["trainingAuthorized"])
+
+    def test_token_budget_positive_case_and_context_limit(self):
+        task = research.benchmark()[0]
+
+        class ShortTokenizer:
+            def encode(self, value):
+                return [5] * (4 if value == task["expectedFile"] else 10)
+
+        result = m8.token_budget([task], ShortTokenizer(), max_new_tokens=5)
+        self.assertEqual(result["completeWithinBudget"], 1)
+        self.assertEqual(result["requiredMaxNewTokensIncludingEos"], 5)
+        self.assertEqual(result["requiredMaxTotalContext"], 15)
+        with self.assertRaisesRegex(ValueError, "budget"):
+            m8.token_budget([task], ShortTokenizer(), max_new_tokens=65)
+
+    def test_budget_audit_uses_only_verified_bundle_not_weights_or_gpu(self):
+        class CharacterTokenizer:
+            def encode(self, value):
+                return list(value.encode("utf-8"))
+
+        from plex_training.tokenizer import PlexTokenizer
+        with patch.object(m8, "verified_bundle",
+                          return_value={"tokenizerSha256": "test",
+                                        "benchmarkSha256": "benchmark"}), \\
+             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \\
+             patch.object(m8, "prerequisites", side_effect=AssertionError("weights opened")), \\
+             patch.object(m8, "evaluate", side_effect=AssertionError("GPU requested")), \\
+             redirect_stdout(StringIO()) as output:
+            self.assertEqual(m8.main([
+                "--audit-token-budget", "--bundle-dir", "dummy",
+                "--bundle-manifest-sha256", research.BUNDLE_SHA,
+                "--max-cases", "3", "--max-new-tokens", "64"]), 0)
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["selectedCases"], 3)
+        self.assertEqual(report["bundleManifestSha256"], research.BUNDLE_SHA)
+        self.assertEqual(report["blockedByBudget"], 3)
+        self.assertFalse(report["modelLoaded"])
+
+    def test_undersized_budget_refuses_before_torch_model_or_cuda(self):
+        class CharacterTokenizer:
+            def encode(self, value):
+                return list(value.encode("utf-8"))
+
+        from plex_training.tokenizer import PlexTokenizer
+        with patch.object(m8, "require_output", return_value=Path("unused")), \\
+             patch.object(m8, "prerequisites", return_value={"benchmarkSha256": "test"}), \\
+             patch.object(PlexTokenizer, "load", return_value=CharacterTokenizer()), \\
+             patch.object(m8.hardware, "_check_device", side_effect=AssertionError("GPU accessed")):
+            with self.assertRaisesRegex(ValueError, "under-budget"):
+                m8.evaluate(Path("bundle"), Path("report"), Path("weights"),
+                            Path("output"), bundle_sha=research.BUNDLE_SHA,
+                            max_cases=3, max_new_tokens=64)
+
     def test_eval_is_not_implicitly_launched_from_scoring(self):
         with patch.object(m8, "evaluate", side_effect=AssertionError("GPU accessed")), \
              redirect_stdout(StringIO()) as output:
