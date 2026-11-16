@@ -328,6 +328,16 @@ def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
     return report
 
 
+def worker_failure_message(exit_code: int, stderr: str, timed_out: bool) -> str:
+    """Return a bounded local diagnostic; never reinterpret a failed worker as pass."""
+    if timed_out:
+        return f"M9 worker exceeded {TIMEOUT_SECONDS} second time budget"
+    detail = stderr.strip()[-2048:]
+    if not detail:
+        detail = "no stderr captured (possible OOM kill or external termination)"
+    return f"M9 worker exited with code {exit_code}: {detail}"
+
+
 def execute(bundle: Path, report: Path, weights: Path, approval: Path,
             output: Path, *, bundle_sha: str, execute_flag: bool) -> dict[str, Any]:
     if execute_flag is not True:
@@ -359,7 +369,7 @@ def execute(bundle: Path, report: Path, weights: Path, approval: Path,
         code, stdout, stderr, timed_out = hardware._supervise(
             command, payload, env, timeout=TIMEOUT_SECONDS)
         if timed_out or code != 0:
-            raise Refusal("M9 worker failed or exceeded 1200 second time budget")
+            raise Refusal(worker_failure_message(code, stderr, timed_out))
         outcome = json.loads(stdout)
         checkpoint = outcome.get("checkpoint")
         if (outcome.get("protocol") != PROTOCOL
