@@ -93,6 +93,7 @@ jobs:
           training/tests/test_plex600_m8_eval.py
           training/tests/test_plex600_m8_teacher_forced.py
           training/tests/test_plex600_r3_curriculum.py
+          training/tests/test_plex600_m9.py
           -q
 
       - name: Independently reconstruct M7 tokenizer and audit M8 token capacity
@@ -100,3 +101,6 @@ jobs:
 
       - name: Audit new 111-row source-conditioned R3 curriculum using frozen M7 tokenizer
         run: uv run --project training --no-sync python -m plex_training.plex600_r3_curriculum --measure-frozen-tokenizer
+
+      - name: Select bounded, unapproved M9 file-edit sample with frozen tokenizer
+        run: uv run --project training --no-sync python -m plex_training.plex600_m9 --audit-curriculum
