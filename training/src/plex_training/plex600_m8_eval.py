@@ -84,7 +84,9 @@ def token_budget(tasks: list[dict[str, Any]], tokenizer: Any, *,
         gold_count = len(tokenizer.encode(task["expectedFile"]))
         required = gold_count + 1  # Account for the terminal EOS step.
         context_room = 1024 - prompt_count
-        fits = required <= max_new_tokens and required <= context_room
+        # The existing runner reserves the entire requested generation cap in
+        # its context preflight, not just the gold-file token count.
+        fits = required <= max_new_tokens and max_new_tokens <= context_room
         cases.append({
             "id": task["id"], "language": task["language"],
             "promptTokens": prompt_count, "goldFileTokens": gold_count,
