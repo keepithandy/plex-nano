@@ -22,6 +22,19 @@ at most **90** tokens including EOS. The branch now permits an explicit
 capacity refusal. This proposal neither approves training nor changes
 historical M8 or M7 evidence.
 
+**November 16 read-only diagnostic expansion:** The
+[teacher-forced reference-likelihood diagnostic](PLEX-600M-M8-TEACHER-FORCED-REFERENCE-DIAGNOSTIC-2026-11-16.md)
+is independent of the greedy generation score: it measures unmasked next-token
+likelihood, top-1 reference-token matches, untrained-token-ID behavior and
+premature EOS when gold answers are supplied as context. Synthetic CPU PyTorch
+tests validate the instrumentation, but **no original M7 weights were loaded
+or scored**. The owner-authorized 120-row training split also has an exact
+**120/120 Request/Answer format versus 0/120 explicit Source file/Edited
+file format**, compared with **36/36 source-conditioned M8 prompts**. This
+literal structure mismatch is reproducible in the source-bound tokenizer
+reconstruction report; it is not proof of model incapacity or a new data
+authorization.
+
 **Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. The generation report now records EOS, invalid-control-token, out-of-fitted-tokenizer, and max-token-cap termination counts without changing the greedy decoding or output correctness rules. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–96 generated tokens per task, with 96 requiring explicit opt-in; the default plan still covers six tasks and 32 generated tokens. Actual generation speed and correctness remain unmeasured.
 
 **November 16 R2 generalization audit:** The
@@ -70,7 +83,7 @@ Only when choosing to evaluate the saved checkpoint locally, use the explicit re
 $bundle = "training/artifacts/plex600-owner-authored-pilot-tokenizer-v1"
 $bundleSha = "14b5465ae03550f1757dd82c7df1f35710db4173d6b70e5585624b1585a4ad55"
 
-uv run --project training --no-sync python -m plex_training.plex600_m8_eval --run-read-only-eval --bundle-dir $bundle --bundle-manifest-sha256 $bundleSha --m7-report training/artifacts/plex600-m7-first-four-update/report.json --m7-weights training/artifacts/plex600-m7-first-four-update/weights.pt --output-dir training/artifacts/m8-read-only-six-case-run --max-cases 6 --max-new-tokens 32
+uv run --project training --no-sync python -m plex_training.plex600_m8_eval --run-read-only-eval --bundle-dir $bundle --bundle-manifest-sha256 $bundleSha --m7-report training/artifacts/plex600-m7-first-four-update/report.json --m7-weights training/artifacts/plex600-m7-first-four-update/weights.pt --output-dir training/artifacts/m8-read-only-six-case-run --max-cases 6 --max-new-tokens 96
 
 uv run --project training --no-sync python -m plex_training.plex600_research score --responses training/artifacts/m8-read-only-six-case-run/responses.jsonl
 ~~~
