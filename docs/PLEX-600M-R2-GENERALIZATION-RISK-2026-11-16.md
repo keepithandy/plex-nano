@@ -40,7 +40,7 @@ From the repository root, using the already configured Python environment:
 uv run --project training --no-sync python -m plex_training.plex600_research candidate-risk-audit
 ```
 
-This validates all 1,152 records and the 36-case benchmark first, checks immutable source bytes after the audit, and reports the affected case and family IDs. It **does not** create a training split, write output files, start a model, touch the local checkpoint, read sealed final holdout, approve data, or authorize optimizer updates. The new unit tests lock the current metrics and fail if the input identities or expected warning counts change.
+This validates all 1,152 records and the 36-case benchmark first, checks immutable source bytes after the audit, and reports the affected case and family IDs. It **does not** create a training split, write output files, start a model, touch the local checkpoint, read sealed final holdout, approve data, or authorize optimizer updates. The new unit tests lock the current metrics and fail if the input identities or expected warning counts change. This is a diagnostic for prospective training design, not a claim that excluding four families would automatically create an independent corpus.
 
 ## Highest-value next experiment design
 
