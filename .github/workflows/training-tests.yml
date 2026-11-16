@@ -109,6 +109,7 @@ jobs:
           training/tests/test_plex600_m7.py
           training/tests/test_plex600_research.py
           training/tests/test_plex600_m8_eval.py
+          training/tests/test_plex600_m8_teacher_forced.py
           training/tests/test_ci_test_inventory.py
           -q
 
