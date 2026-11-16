@@ -23,6 +23,14 @@ historical M8 or M7 evidence.
 
 **Model inference is now implemented but not executed:** [M8 read-only generation runner](../training/src/plex_training/plex600_m8_eval.py) verifies the local checkpoint report and SHA-256 weights, the exact tokenizer bundle and source binding before any CUDA access. Its separate explicit read-only flag can produce a create-only raw JSONL response transcript plus provenance. It never updates weights, initializes an optimizer, opens the final holdout, or trains on evaluation records. It is deliberately limited to 1–36 tasks and 1–64 generated tokens per task; the default plan covers six tasks and 32 generated tokens.
 
+**November 16 R2 generalization audit:** The
+[read-only operation-overlap review](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
+identified **4/36 M8 cases** sharing exact old/new operations with **256/1,152**
+quarantined candidate rows from four template families. This is prospective
+overlap risk if the candidates are ever approved, **not evidence of M7 training
+contamination**. Run `python -m plex_training.plex600_research candidate-risk-audit`
+for the frozen case/family breakdown. No R2 rows were approved.
+
 The R2 rows originate from **18 project-authored edit templates**, 64 synthetic variations per family. These are not 1,152 independent source projects. The increase in record count is meaningful for pipeline testing, but does NOT supply a realistic 600M scratch-model pretraining corpus. Template redundancy, shortcuts and overfitting remain risks. The auditor checks uniqueness, exact replacement integrity, flags, distributions, and exact text overlap with M8 development cases; it **does not prove semantic non-contamination or legal clearance**.
 
 Use the read-only tools from the repository root:
