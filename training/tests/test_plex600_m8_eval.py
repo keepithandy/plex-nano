@@ -26,8 +26,8 @@ class Plex600M8EvalTests(unittest.TestCase):
         self.assertFalse(plan["finalHoldoutUsed"])
 
     def test_tokenizer_reconstruction_rejects_oversized_case_count(self):
-        with patch.object(m8_reproduce, "reconstruct",
-                          side_effect=AssertionError("tokenizer fitted")), \
+        with patch.object(m8_reproduce.owner, "verify",
+                          side_effect=AssertionError("dataset accessed")), \
              redirect_stderr(StringIO()) as stderr:
             self.assertEqual(m8_reproduce.main([
                 "--reconstruct-read-only", "--max-cases", "37"]), 2)
