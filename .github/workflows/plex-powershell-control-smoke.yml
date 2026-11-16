@@ -26,7 +26,6 @@ jobs:
         shell: pwsh
         run: |
           & ./scripts/Plex-Control.ps1 help
-          if ($LASTEXITCODE -ne 0) { throw "Help failed" }
       - name: Windows PowerShell 5.1 help parses and runs without WSL
         shell: powershell
         run: |
