@@ -84,6 +84,17 @@ and new optimizer authorization remain separate gates. A separate
 found 4 of 36 M8 development cases with exact edit-operation overlaps in the
 *unapproved* 1,152-row synthetic candidate pool; no actual M7 contamination
 or training is claimed.
+
+**Work to make Plex improve:** a new [R3 source-conditioned curriculum](docs/PLEX-600M-R3-SOURCE-CONDITIONED-CURRICULUM-2026-11-16.md)
+now includes **111 draft full-file editing examples across 37 distinct task families**
+and verified target-only loss masks. CI prepares a tokenized **unapproved**
+candidate bundle using the original M7 tokenizer. The M8 runner also supports
+a separately versioned **opt-in fitted-tokenizer decoding policy** so valid
+token predictions can be compared against the original unmasked 32K-output
+baseline without changing model weights or historical scores. **The original
+M7 checkpoint has not yet been retrained or shown to generate better code.**
+New data rights and bounded optimizer training still require separate approval.
+
 See the [live 600M roadmap](docs/PLEX-600M-ROADMAP.md) for current evidence and open decisions.
 
 ## What Plex is being trained to do
