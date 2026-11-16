@@ -222,6 +222,13 @@ both the capability boundary and a next hypothesis. A lower loss or a small
 pilot result alone is not proof of general coding reliability.
 
 
+**November 16 candidate generalization review:** The
+[R2 audit](PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md) found four M8 development
+cases sharing exact edit operations with 256 unapproved synthetic rows.
+These 1,152 candidate examples come from only 18 templates. No owner approval
+or model exposure occurred. Never randomly split variations from the same
+template family across training and validation.
+
 **November 16 feasibility follow-up:** [M8 full-file token-budget decision](PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md) introduces an offline, source-bound tokenizer audit before GPU generation; no actual owner-local token counts or model evaluations have been reported. The existing 32-token default and 64-token maximum are not assumed sufficient for complete files. An under-budget M8 generation is refused rather than interpreted as a failed coding response.
 
 **October 31 observed M7 results and M8 research preparation:** [Owner-reported real-data four-step results](PLEX-600M-M7-OWNER-RESULT-2026-10-31.md) and [M8 readiness plan](PLEX-600M-M8-RESEARCH-READINESS.md). The 36 manually authored development cases are not a final untouched holdout; the 1,152 template-generated candidate rows are still quarantined, with zero approved for training. No new training authorization.
