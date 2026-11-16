@@ -45,7 +45,7 @@ class Plex600ResearchTests(unittest.TestCase):
             result["candidateFamiliesWithDevelopmentOperationOverlap"],
             ["r2-html-button-pressed", "r2-javascript-array-operation",
              "r2-javascript-feature-flag", "r2-javascript-limit-compare"])
-        self.assertEqual(result["knownExactWholeFileOverlapCount"], 0)
+        self.assertEqual(result["exactBenchmarkStringOverlapCount"], 0)
         self.assertEqual(result["eligibleTrainingRows"], 0)
         self.assertFalse(result["semanticIndependenceProven"])
         self.assertFalse(result["trainingAuthorized"])
