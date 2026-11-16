@@ -119,3 +119,16 @@ jobs:
 
       - name: Audit new 111-row source-conditioned R3 curriculum using frozen M7 tokenizer
         run: uv run --project training --no-sync python -m plex_training.plex600_r3_curriculum --measure-frozen-tokenizer
+
+      - name: Pack quarantined R3 target-only candidate bundle
+        run: |
+          mkdir -p training/artifacts
+          uv run --project training --no-sync python -m plex_training.plex600_r3_curriculum --pack-quarantined-candidate training/artifacts/plex600-r3-ci-unapproved
+
+      - name: Publish review-only R3 bundle (NOT APPROVED FOR TRAINING)
+        uses: actions/upload-artifact@v4
+        with:
+          name: plex600-r3-review-only-UNAPPROVED
+          path: training/artifacts/plex600-r3-ci-unapproved/
+          if-no-files-found: error
+          retention-days: 7
