@@ -48,7 +48,7 @@ class Plex600M8EvalTests(unittest.TestCase):
 
     def test_unknown_greedy_bounds_refuse_before_model(self):
         for kw in ({"max_cases": 0}, {"max_cases": 37}, {"max_new_tokens": 0},
-                   {"max_new_tokens": 65}, {"max_cases": True}):
+                   {"max_new_tokens": 97}, {"max_cases": True}):
             with self.subTest(kw=kw), self.assertRaisesRegex(ValueError, "bounded"):
                 m8.plan(**kw)
 
@@ -163,6 +163,14 @@ class Plex600M8EvalTests(unittest.TestCase):
                     device="not-gpu", max_new_tokens=budget)
                 self.assertEqual(result, expected)
 
+    def test_evidence_backed_96_token_budget_requires_explicit_opt_in(self):
+        proposal = m8.plan(max_cases=6, max_new_tokens=96)
+        self.assertEqual(proposal["maxNewTokensPerCase"], 96)
+        self.assertFalse(proposal["modelLoaded"])
+        self.assertFalse(proposal["trainingAuthorized"])
+        with self.assertRaisesRegex(ValueError, "bounded"):
+            m8.plan(max_cases=6, max_new_tokens=97)
+
     def test_token_budget_counts_gold_file_and_eos_without_generation(self):
         task = research.benchmark()[0]
 
@@ -192,7 +200,7 @@ class Plex600M8EvalTests(unittest.TestCase):
         self.assertEqual(result["requiredMaxNewTokensIncludingEos"], 5)
         self.assertEqual(result["requiredMaxTotalContext"], 15)
         with self.assertRaisesRegex(ValueError, "budget"):
-            m8.token_budget([task], ShortTokenizer(), max_new_tokens=65)
+            m8.token_budget([task], ShortTokenizer(), max_new_tokens=97)
 
     def test_budget_audit_uses_only_verified_bundle_not_weights_or_gpu(self):
         class CharacterTokenizer:
