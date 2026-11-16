@@ -24,6 +24,7 @@ PROTOCOL = "plex600-m8-read-only-generation-v1"
 OUTPUT_ROOT = r.ROOT / "training" / "artifacts"
 DEFAULT_MAX_CASES = 6
 DEFAULT_MAX_NEW = 32
+MAX_NEW = 96  # Empirically covers frozen M8 reference files (max gold+EOS: 90).
 
 
 class Refusal(ValueError):
@@ -33,8 +34,8 @@ class Refusal(ValueError):
 def plan(*, max_cases: int = DEFAULT_MAX_CASES,
          max_new_tokens: int = DEFAULT_MAX_NEW) -> dict[str, Any]:
     if (type(max_cases) is not int or not 1 <= max_cases <= 36
-            or type(max_new_tokens) is not int or not 1 <= max_new_tokens <= 64):
-        raise Refusal("Read-only evaluation is bounded to 1..36 cases and 1..64 new tokens")
+            or type(max_new_tokens) is not int or not 1 <= max_new_tokens <= MAX_NEW):
+        raise Refusal(f"Read-only evaluation is bounded to 1..36 cases and 1..{MAX_NEW} new tokens")
     return {
         "protocol": PROTOCOL, "status": "plan",
         "modelFamily": "plex-600m-v1", "modelParameterCount": 600372480,
@@ -72,8 +73,8 @@ def token_budget(tasks: list[dict[str, Any]], tokenizer: Any, *,
     One extra generation step is reserved for EOS. This is a feasibility
     diagnostic, not evidence that a model can produce any expected edit.
     """
-    if type(max_new_tokens) is not int or not 1 <= max_new_tokens <= 64:
-        raise Refusal("M8 token budget must be 1..64")
+    if type(max_new_tokens) is not int or not 1 <= max_new_tokens <= MAX_NEW:
+        raise Refusal(f"M8 token budget must be 1..{MAX_NEW}")
     cases: list[dict[str, Any]] = []
     by_language: dict[str, dict[str, int]] = {
         name: {"selected": 0, "completeWithinBudget": 0}
