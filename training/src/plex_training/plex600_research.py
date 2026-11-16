@@ -4,7 +4,7 @@ and local M7 report/checkpoint audit. Never instantiates a model or trains.
 from __future__ import annotations
 
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 import json
 import math
@@ -148,6 +148,87 @@ def candidate_audit() -> dict[str, Any]:
     }
 
 
+def candidate_generalization_risk() -> dict[str, Any]:
+    """Read-only, fail-closed operation-overlap review for quarantined R2 rows.
+
+    Identical edit operations are a prospective benchmark-contamination risk,
+    NOT evidence that the M7 model learned these rows. Exact text deduplication
+    alone cannot establish semantic independence.
+    """
+    validated = candidate_audit()
+    dev = benchmark()
+    candidates = read_jsonl(CANDIDATES)
+    dev_pairs: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for task in dev:
+        dev_pairs[(task["oldText"], task["newText"])].add(task["id"])
+
+    family_pairs: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    family_language: dict[str, str] = {}
+    pair_counts: Counter[tuple[str, str]] = Counter()
+    matching_rows = 0
+    for row in candidates:
+        family = row["templateGroup"]
+        pair = (row["oldText"], row["newText"])
+        family_pairs[family].add(pair)
+        family_language[family] = row["language"]
+        pair_counts[pair] += 1
+        matching_rows += int(pair in dev_pairs)
+
+    affected_families = sorted(
+        family for family, pairs in family_pairs.items()
+        if pairs.intersection(dev_pairs)
+    )
+    affected_cases = sorted({
+        case_id for pairs in family_pairs.values() for pair in pairs
+        for case_id in dev_pairs.get(pair, ())
+    })
+    fixed_edit_families = sorted(
+        family for family, pairs in family_pairs.items() if len(pairs) == 1
+    )
+    if len(family_pairs) != validated["templateFamilies"]:
+        raise ResearchRefusal("Candidate family inventory changed mid-audit")
+    return {
+        "protocol": "plex600-r2-generalization-risk-audit-v1",
+        "status": "prospective-overlap-risk-quarantine-unchanged",
+        "candidateJsonlSha256": validated["candidateJsonlSha256"],
+        "benchmarkJsonlSha256": validated["benchmarkJsonlSha256"],
+        "candidateRows": validated["recordCount"],
+        "candidateTemplateFamilies": len(family_pairs),
+        "distinctExactEditOperations": len(pair_counts),
+        "fixedEditTemplateFamilies": fixed_edit_families,
+        "fixedEditTemplateFamilyCount": len(fixed_edit_families),
+        "fixedEditRows": sum(
+            64 for family in fixed_edit_families
+        ),
+        "developmentCasesTotal": len(dev),
+        "developmentCasesWithExactEditOperationOverlap": affected_cases,
+        "developmentCaseOverlapCount": len(affected_cases),
+        "candidateRowsWithDevelopmentOperationOverlap": matching_rows,
+        "candidateFamiliesWithDevelopmentOperationOverlap": affected_families,
+        "candidateFamilyOverlapCount": len(affected_families),
+        "overlapFamiliesByLanguage": {
+            language: sum(family_language[f] == language for f in affected_families)
+            for language in LANGUAGES
+        },
+        "candidateRowsOutsideOverlapFamilies": (
+            validated["recordCount"] -
+            sum(64 for _ in affected_families)
+        ),
+        "knownExactWholeFileOverlapCount": validated["exactBenchmarkStringOverlaps"],
+        "semanticIndependenceProven": False,
+        "eligibleTrainingRows": 0,
+        "trainingAuthorized": False,
+        "newEvaluationAuthorized": False,
+        "finalHoldoutOpened": False,
+        "recommendation": (
+            "Do not randomly split the 64 variants within a template family; "
+            "any future owner-approved curriculum needs family-grouped splits, "
+            "source/provenance and near-duplicate review, and an independent "
+            "benchmark not selected on these overlap findings."
+        ),
+    }
+
+
 def grade(responses: Path) -> dict[str, Any]:
     """Exact-file, minimal edit and preserved surrounding context; no code execution."""
     truth = benchmark()
@@ -265,6 +346,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     actions = parser.add_subparsers(dest="operation", required=True)
     actions.add_parser("candidate-audit")
+    actions.add_parser("candidate-risk-audit")
     actions.add_parser("benchmark-inspect")
     score = actions.add_parser("score")
     score.add_argument("--responses", type=Path, required=True)
@@ -275,6 +357,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.operation == "candidate-audit":
             result = candidate_audit()
+        elif args.operation == "candidate-risk-audit":
+            result = candidate_generalization_risk()
         elif args.operation == "benchmark-inspect":
             result = {"status": "development-benchmark-only", "rows": len(benchmark()),
                       "sha256": digest_file(BENCHMARK), "trainingAuthorized": False}
