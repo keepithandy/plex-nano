@@ -170,11 +170,22 @@ def prerequisites(bundle: Path, report: Path, weights: Path,
     return {"m7Receipt": receipt, **verified_bundle(bundle, bundle_sha)}
 
 
+def classify_next_token(token_id: int, vocabulary_size: int) -> str | None:
+    """Describe greedy token validity without repairing or masking predictions."""
+    if token_id == 3:
+        return "eos"
+    if token_id < 4:
+        return "invalid-control-token"
+    if token_id >= vocabulary_size:
+        return "outside-fitted-tokenizer"
+    return None
+
+
 def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
-                 *, device: Any, max_new_tokens: int) -> tuple[str, int, bool]:
-    """Greedy decode with full recomputation; no KV cache or sampled claims."""
+                 *, device: Any, max_new_tokens: int) -> tuple[str, int, str]:
+    """Greedy decode with explicit stop reason; prediction policy is unchanged."""
     generated: list[int] = []
-    reached_eos = False
+    termination_reason = "max-new-tokens"
     model.eval()
     with torch.inference_mode():
         for _ in range(max_new_tokens):
@@ -185,15 +196,14 @@ def generate_one(model: Any, torch: Any, tokenizer: Any, tokens: list[int],
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 logits, _ = model(inputs)
             nxt = int(torch.argmax(logits[0, -1, :]).item())
-            if nxt == 3:
-                reached_eos = True
-                break
-            if nxt < 4 or nxt >= 1191:
-                # Special control tokens are not valid generated text; stop without
-                # laundering them into a matching output.
+            stop_reason = classify_next_token(nxt, tokenizer.vocabulary_size)
+            if stop_reason is not None:
+                # Preserve the historical greedy policy: never turn an invalid
+                # token into valid text or silently mask model logits.
+                termination_reason = stop_reason
                 break
             generated.append(nxt)
-    return tokenizer.decode(generated), len(generated), reached_eos
+    return tokenizer.decode(generated), len(generated), termination_reason
 
 
 def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
@@ -242,12 +252,15 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
         responses = []
         outputs = []
         for task, ids in prepared:
-            generated, count, eos = generate_one(model, torch, tokenizer, ids, device=device,
-                                                 max_new_tokens=max_new_tokens)
+            generated, count, termination = generate_one(
+                model, torch, tokenizer, ids, device=device,
+                max_new_tokens=max_new_tokens)
             response = {"id": task["id"], "output": generated}
             outputs.append(json.dumps(response, ensure_ascii=False, sort_keys=True))
             responses.append({"id": task["id"], "promptTokens": len(ids),
-                              "generatedTokens": count, "reachedEos": eos})
+                              "generatedTokens": count,
+                              "terminationReason": termination,
+                              "reachedEos": termination == "eos"})
         raw = ("\n".join(outputs) + "\n").encode("utf-8")
         with (stage / "responses.jsonl").open("xb") as stream:
             stream.write(raw)
@@ -261,6 +274,11 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
                   "tokenBudgetAudit": budget,
                   "responseSha256": hashlib.sha256(raw).hexdigest(),
                   "generatedCases": len(responses),
+                  "terminationCounts": {
+                      reason: sum(row["terminationReason"] == reason for row in responses)
+                      for reason in ("eos", "invalid-control-token",
+                                     "outside-fitted-tokenizer", "max-new-tokens")
+                  },
                   "cases": responses,
                   "peakCudaReservedBytes": torch.cuda.max_memory_reserved(device)}
         with (stage / "generation-report.json").open("x", encoding="utf-8", newline="\n") as stream:
