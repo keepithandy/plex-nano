@@ -1,9 +1,10 @@
 """M8 read-only inference harness preflight tests. NO GPU or checkpoint model load."""
-from contextlib import redirect_stdout, redirect_stderr
+from contextlib import nullcontext, redirect_stdout, redirect_stderr
 from io import StringIO
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -83,6 +84,63 @@ class Plex600M8EvalTests(unittest.TestCase):
                     nested.mkdir()
                     m8.require_output(nested / "run", bundle=root / "bundle",
                                       checkpoint=root / "weights.pt")
+
+    def test_generation_stop_reasons_are_diagnostic_not_token_masking(self):
+        self.assertEqual(m8.classify_next_token(3, 1191), "eos")
+        self.assertEqual(m8.classify_next_token(1, 1191), "invalid-control-token")
+        self.assertEqual(m8.classify_next_token(-1, 1191), "invalid-control-token")
+        self.assertEqual(m8.classify_next_token(1191, 1191), "outside-fitted-tokenizer")
+        self.assertEqual(m8.classify_next_token(32767, 1191), "outside-fitted-tokenizer")
+        self.assertIsNone(m8.classify_next_token(1190, 1191))
+
+        class FakeLogits:
+            def __getitem__(self, key):
+                return self
+
+        class FakeModel:
+            def eval(self):
+                pass
+
+            def __call__(self, inputs):
+                return FakeLogits(), None
+
+        class FakeTorch:
+            long = "long"
+
+            def __init__(self, ids):
+                self.tokens = iter(ids)
+
+            def inference_mode(self):
+                return nullcontext()
+
+            def autocast(self, *args, **kwargs):
+                return nullcontext()
+
+            def tensor(self, *args, **kwargs):
+                return None
+
+            def argmax(self, unused):
+                return SimpleNamespace(item=lambda: next(self.tokens))
+
+        class FakeTokenizer:
+            vocabulary_size = 1191
+
+            def decode(self, ids):
+                return ",".join(map(str, ids))
+
+        checks = (
+            ([1191], 2, ("", 0, "outside-fitted-tokenizer")),
+            ([1], 2, ("", 0, "invalid-control-token")),
+            ([3], 2, ("", 0, "eos")),
+            ([1190, 3], 2, ("1190", 1, "eos")),
+            ([4, 5], 2, ("4,5", 2, "max-new-tokens")),
+        )
+        for predicted, budget, expected in checks:
+            with self.subTest(predicted=predicted):
+                result = m8.generate_one(
+                    FakeModel(), FakeTorch(predicted), FakeTokenizer(), [4, 5],
+                    device="not-gpu", max_new_tokens=budget)
+                self.assertEqual(result, expected)
 
     def test_token_budget_counts_gold_file_and_eos_without_generation(self):
         task = research.benchmark()[0]
