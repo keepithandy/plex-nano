@@ -54,18 +54,18 @@ def curriculum_format_audit(training_rows: list[dict[str, Any]],
     if any(type(text) is not str or not text for text in texts):
         raise ValueError("Invalid M7 training row for format audit")
     request_answer = sum(
-        text.startswith("Request: ") and text.count("\\nAnswer:\\n") == 1
+        text.startswith("Request: ") and text.count("\nAnswer:\n") == 1
         for text in texts
     )
-    source_marker = sum("\\nSource file:\\n" in text for text in texts)
-    edited_marker = sum("\\nEdited file:\\n" in text for text in texts)
+    source_marker = sum("\nSource file:\n" in text for text in texts)
+    edited_marker = sum("\nEdited file:\n" in text for text in texts)
     source_and_edit = sum(
-        "\\nSource file:\\n" in text and "\\nEdited file:\\n" in text
+        "\nSource file:\n" in text and "\nEdited file:\n" in text
         for text in texts
     )
     complete_prompt_count = sum(
-        "\\nSource file:\\n" in m8.prompt_for(row) and
-        m8.prompt_for(row).endswith("\\nEdited file:\\n")
+        "\nSource file:\n" in m8.prompt_for(row) and
+        m8.prompt_for(row).endswith("\nEdited file:\n")
         for row in m8_cases
     )
     return {
