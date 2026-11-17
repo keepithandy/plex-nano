@@ -157,6 +157,28 @@ class M9BoundedPilotTests(unittest.TestCase):
                         Path(folder) / "missing-approval.json",
                         stage=Path(folder), bundle_sha=m9.r3.research.BUNDLE_SHA)
 
+    def test_m7_state_dict_round_trip_loads_strictly_on_cpu(self):
+        import torch
+        from collections import OrderedDict
+        model = torch.nn.Linear(2, 1)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "weights.pt"
+            torch.save(model.state_dict(), path)
+            loaded = m9.load_m7_state(torch, path)
+            self.assertIs(type(loaded), OrderedDict)
+            target = torch.nn.Linear(2, 1)
+            target.load_state_dict(loaded, strict=True)
+            for key, value in model.state_dict().items():
+                self.assertTrue(torch.equal(value, target.state_dict()[key]))
+
+    def test_m7_checkpoint_rejects_non_dict_payload(self):
+        fake_torch = unittest.mock.Mock()
+        fake_torch.load.return_value = [1, 2]
+        with self.assertRaisesRegex(m9.Refusal, "model-only checkpoint"):
+            m9.load_m7_state(fake_torch, Path("unused"))
+        fake_torch.load.assert_called_once_with(
+            Path("unused"), map_location="cpu", weights_only=True, mmap=True)
+
     def test_cli_refuses_run_without_all_explicit_inputs(self):
         with patch.object(m9, "execute", side_effect=AssertionError("GPU invoked")), \
              redirect_stderr(StringIO()) as err:
