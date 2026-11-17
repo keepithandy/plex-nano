@@ -28,6 +28,15 @@ TRAIN_PER_LANGUAGE = 4
 HELDOUT_PER_LANGUAGE = 2
 EVALUATION_UPDATES = (10, 25, 50)
 MAX_UPDATES = 50
+WARMUP_RECORD_ID = "m10-js-counter"
+EXAMPLES_PER_UPDATE = 1
+GRADIENT_ACCUMULATION_STEPS = 1
+# Total optimizer steps, not epochs; no resetting between multi-example phases.
+PHASES = (
+    ("single-example-copy", 1, 10),
+    ("full-set-copy", 11, 25),
+    ("full-set-consolidation", 26, 50),
+)
 MAX_POSITIONS = 256
 MAX_GENERATION = 96
 TOKENIZER_VOCABULARY = 1191
@@ -50,6 +59,14 @@ def plan() -> dict[str, Any]:
         "optimizer": "proposed-new-AdamW-not-optimizer-resume",
         "optimizerUpdatesMaximum": MAX_UPDATES,
         "evaluationAtOptimizerUpdates": list(EVALUATION_UPDATES),
+        "warmupRecordId": WARMUP_RECORD_ID,
+        "trainingPhases": [
+            {"name": name, "firstUpdate": first, "lastUpdate": last}
+            for name, first, last in PHASES
+        ],
+        "examplesPerOptimizerUpdate": EXAMPLES_PER_UPDATE,
+        "gradientAccumulationSteps": GRADIENT_ACCUMULATION_STEPS,
+        "examplesPerUpdateDefined": True,
         "maxInputPositionsPerExample": MAX_POSITIONS,
         "maxGeneratedTokensPerExample": MAX_GENERATION,
         "seed": SEED,
@@ -228,6 +245,67 @@ def rows() -> list[dict[str, Any]]:
     return items
 
 
+def update_schedule(items: list[dict[str, Any]] | None = None) -> list[dict[str, Any]]:
+    """Pure 50-update *proposal*, never trains or mutates checkpoint.
+
+    Updates 1..10 replay the selected owner-review candidate exactly once
+    per optimizer update. Updates 11..50 round-robin all 12 train candidates
+    without resetting at update 26. Heldout IDs are never in this schedule.
+    """
+    proposed = rows() if items is None else items
+    train = [record["id"] for record in proposed if record["split"] == "train"]
+    heldout = {record["id"] for record in proposed if record["split"] == "heldout"}
+    if (len(train) != 12 or len(set(train)) != 12 or WARMUP_RECORD_ID not in train
+            or len(heldout) != 6 or set(train) & heldout):
+        raise Refusal("M10 schedule requires exact disjoint 12/6 proposal")
+    schedule: list[dict[str, Any]] = []
+    for step in range(1, MAX_UPDATES + 1):
+        phase = next(name for name, first, last in PHASES
+                     if first <= step <= last)
+        record_id = (WARMUP_RECORD_ID if step <= 10
+                     else train[(step - 11) % len(train)])
+        schedule.append({
+            "optimizerUpdate": step,
+            "phase": phase,
+            "recordIds": [record_id],
+            "examplesInOptimizerUpdate": EXAMPLES_PER_UPDATE,
+            "gradientAccumulationSteps": GRADIENT_ACCUMULATION_STEPS,
+        })
+    if (len(schedule) != MAX_UPDATES
+            or any(item["recordIds"][0] in heldout for item in schedule)
+            or len({item["recordIds"][0] for item in schedule[10:]}) != 12):
+        raise Refusal("M10 schedule violated its split or update limits")
+    return schedule
+
+
+def schedule_audit() -> dict[str, Any]:
+    schedule = update_schedule()
+    exposures = dict(sorted(Counter(
+        row["recordIds"][0] for row in schedule
+    ).items()))
+    return {
+        "protocol": PROTOCOL,
+        "status": "review-only-schedule-not-training",
+        "optimizerUpdatesMaximum": MAX_UPDATES,
+        "examplesPerOptimizerUpdate": EXAMPLES_PER_UPDATE,
+        "gradientAccumulationSteps": GRADIENT_ACCUMULATION_STEPS,
+        "warmupRecordId": WARMUP_RECORD_ID,
+        "candidateSha256": research.digest_file(CANDIDATE, MAX_SOURCE_BYTES),
+        "phaseUpdateCounts": {
+            phase: sum(s["phase"] == phase for s in schedule)
+            for phase, _, _ in PHASES
+        },
+        "trainRecordExposures": exposures,
+        "heldoutTrainingExposures": 0,
+        "schedule": schedule,
+        "trainingAuthorized": False,
+        "optimizerUpdatesCompleted": 0,
+        "modelLoaded": False,
+        "checkpointWrites": False,
+        "finalHoldoutUsed": False,
+    }
+
+
 def audit(tokenizer: Any | None = None) -> dict[str, Any]:
     items = rows()
     result = {
@@ -301,6 +379,10 @@ def proposal_approval_template() -> dict[str, Any]:
         "heldoutRecordIds": inspected["heldoutRecordIds"],
         "maxOptimizerUpdates": MAX_UPDATES,
         "evaluationUpdates": list(EVALUATION_UPDATES),
+        "warmupRecordId": WARMUP_RECORD_ID,
+        "phaseUpdateCounts": [10, 15, 25],
+        "examplesPerOptimizerUpdate": EXAMPLES_PER_UPDATE,
+        "gradientAccumulationSteps": GRADIENT_ACCUMULATION_STEPS,
         "maxInputPositions": MAX_POSITIONS,
         "maxNewTokens": MAX_GENERATION,
         "seed": SEED,
@@ -399,6 +481,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--audit-candidate", action="store_true")
+    mode.add_argument("--show-schedule", action="store_true")
     mode.add_argument("--show-candidate", action="store_true")
     mode.add_argument("--approval-template", action="store_true")
     mode.add_argument("--audit-tokenizer", action="store_true")
@@ -426,6 +509,8 @@ def main(argv: list[str] | None = None) -> int:
             raise Refusal("Bundle arguments require --audit-tokenizer")
         elif args.approval_template:
             result = proposal_approval_template()
+        elif args.show_schedule:
+            result = schedule_audit()
         elif args.show_candidate:
             result = {"plan": audit(), "rows": rows()}
         elif args.audit_candidate:
