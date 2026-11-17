@@ -14,6 +14,7 @@ pretraining from M8 development, no R2 candidate use or final holdout.
 from __future__ import annotations
 
 import argparse
+from collections import OrderedDict
 import hashlib
 import json
 import math
@@ -223,6 +224,14 @@ def measured_loss(model: Any, torch: Any,
             "validationCases": len(samples)}
 
 
+def load_m7_state(torch: Any, weights: Path) -> dict[str, Any]:
+    """Read the verified M7 model-only state in its native PyTorch format."""
+    state = torch.load(weights, map_location="cpu", weights_only=True, mmap=True)
+    if type(state) not in (dict, OrderedDict):
+        raise Refusal("Expected original M7 model-only checkpoint")
+    return state
+
+
 def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
                  *, stage: Path, bundle_sha: str) -> dict[str, Any]:
     proof = m8.prerequisites(bundle, m7_report, weights, bundle_sha)
@@ -247,9 +256,7 @@ def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
         model = Plex600Model(Plex600Config())
     if parameter_count(model) != hardware.PARAMETERS:
         raise Refusal("Frozen M7 architecture mismatch")
-    state = torch.load(weights, map_location="cpu", weights_only=True, mmap=True)
-    if type(state) is not dict:
-        raise Refusal("Expected original M7 model-only checkpoint")
+    state = load_m7_state(torch, weights)
     model.load_state_dict(state, strict=True)
     del state
     model.to(device=device, dtype=torch.float32)
