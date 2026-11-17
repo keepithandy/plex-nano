@@ -102,6 +102,34 @@ without training:
 wsl.exe -d Ubuntu --cd /home/quali/plex-nano -- /home/quali/.local/bin/uv run --project training --no-sync python -m plex_training.plex600_m10_copy_proposal --audit-tokenizer --bundle-dir training/artifacts/plex600-fresh-tokenizer --bundle-manifest-sha256 14b5465ae03550f1757dd82c7df1f35710db4173d6b70e5585624b1585a4ad55
 ~~~
 
+The M10 proposal now includes a **read-only M9 backup admission check**.
+It reads and hashes an independently copied M9 `report.json` and
+`weights.pt` (up to 3 GiB), confirms the eight-update protocol,
+approved-source/checkpoint provenance, and refuses a path inside the original
+M9 experiment output directory. The historical completed M9 report can
+incorrectly say `checkpointWrites: false`; admission checks the actual
+saved weight file byte count and SHA-256 instead. It does not unpickle or
+deserialize PyTorch weights.
+
+If an independent copy was made with the earlier `plex backup m9`
+command, its **example** location is:
+
+~~~powershell
+wsl.exe -d Ubuntu --cd /home/quali/plex-nano -- /home/quali/.local/bin/uv run --project training --no-sync python -m plex_training.plex600_m10_copy_proposal --audit-m9-backup --m9-report /mnt/c/Users/quali/Plex600M-Backups/m9/report.json --m9-weights /mnt/c/Users/quali/Plex600M-Backups/m9/weights.pt
+~~~
+
+Adjust those two paths only after confirming where the M9 backup actually
+exists. This check will **not** create a backup, authorize training, or
+modify model files. The M9 checkpoint SHA reported by this command becomes
+an exact input to the future separately approved M10 runner.
+
+To avoid a false early-stop claim, the scoring contract now requires
+complete train/heldout exact-copy **and EOS** evidence at two *distinct,
+consecutive* checkpoints (10→25 or 25→50), with the *same* decoder
+policy and candidate SHA. Caller-supplied predictions remain
+**unverified external claims** until a future evaluator binds generated
+outputs to a SHA-verified model and prompt run.
+
 The review module has *no* `--execute-approved-run` mode, no CUDA imports,
 no training updates and no ability to approve its own candidate.
 
