@@ -1,0 +1,319 @@
+"""M10 copy microprobe: REVIEW-ONLY proposal, no training or model loading.
+
+The assistant-proposed candidate rows are unapproved. This module can only
+audit and display proposed sources, check frozen-tokenizer coverage, and
+score externally produced read-only predictions. It has no optimizer,
+checkpoint-writing, approval-granting, or GPU execution entry point.
+"""
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+import json
+from pathlib import Path
+import sys
+from typing import Any
+
+from . import plex600_m8_eval as m8
+from . import plex600_research as research
+
+PROTOCOL = "plex600-m10-copy-microprobe-proposal-v1"
+CANDIDATE = research.ROOT / (
+    "training/phase3/candidates/plex600-m10-copy-proposal-v1.jsonl"
+)
+ORIGIN = "assistant-proposed-candidate-not-owner-approved"
+RIGHTS = "review-only-no-training"
+SPLITS = ("train", "heldout")
+TRAIN_PER_LANGUAGE = 4
+HELDOUT_PER_LANGUAGE = 2
+EVALUATION_UPDATES = (10, 25, 50)
+MAX_UPDATES = 50
+MAX_POSITIONS = 256
+MAX_GENERATION = 96
+TOKENIZER_VOCABULARY = 1191
+SEED = 41
+MAX_SOURCE_BYTES = 32 * 1024
+NO_TRAINING = "quarantined-candidate-awaiting-source-and-scope-approval"
+
+
+class Refusal(ValueError):
+    pass
+
+
+def plan() -> dict[str, Any]:
+    return {
+        "protocol": PROTOCOL,
+        "status": "proposal-only-no-training-execution",
+        "modelFamily": "plex-600m-v1",
+        "modelParameterCount": 600372480,
+        "startingCheckpoint": "separately-sha-verified-owner-backed-up-M9-weights",
+        "optimizer": "proposed-new-AdamW-not-optimizer-resume",
+        "optimizerUpdatesMaximum": MAX_UPDATES,
+        "evaluationAtOptimizerUpdates": list(EVALUATION_UPDATES),
+        "maxInputPositionsPerExample": MAX_POSITIONS,
+        "maxGeneratedTokensPerExample": MAX_GENERATION,
+        "seed": SEED,
+        "trainCandidateRecords": TRAIN_PER_LANGUAGE * 3,
+        "unseenHeldoutCandidateRecords": HELDOUT_PER_LANGUAGE * 3,
+        "task": "exact-reproduction-of-supplied-code-with-EOS",
+        "supervision": "copied-code-and-EOS-only-masked-prompt",
+        "earlyStop": "train-and-unseen-heldout-100pct-exact-plus-EOS-at-two-consecutive-evaluations",
+        "decodingPolicy": "compare-unmasked-v1-and-fitted-vocab-v1-without-changing-checkpoint",
+        "datasetOrigin": ORIGIN,
+        "sourceApprovedForTraining": False,
+        "ownerApprovalBundled": False,
+        "trainingAuthorized": False,
+        "runEntrypointImplemented": False,
+        "optimizerUpdatesCompleted": 0,
+        "modelLoaded": False,
+        "checkpointWrites": False,
+        "historicalCheckpointsModified": False,
+        "finalHoldoutUsed": False,
+        "m8DevelopmentUsedForTraining": False,
+    }
+
+
+def prompt_for(record: dict[str, Any]) -> str:
+    """Source-conditioned identity copy. Target is the *entire* code snippet."""
+    return (
+        "Copy this code exactly. Return only the copied code.\n"
+        "Code:\n" + record["snippet"] + "Copy:\n"
+    )
+
+
+def rows() -> list[dict[str, Any]]:
+    items = research.read_jsonl(CANDIDATE, limit=MAX_SOURCE_BYTES)
+    if len(items) != 18:
+        raise Refusal("M10 proposal must contain 12 train and 6 unseen heldout candidates")
+    required = {
+        "schemaVersion", "id", "language", "split", "family",
+        "snippet", "sourceOrigin", "trainingAuthorized", "rightsScope"
+    }
+    counts: Counter[tuple[str, str]] = Counter()
+    ids: set[str] = set()
+    families: set[str] = set()
+    snippets: set[str] = set()
+    for item in items:
+        if (
+            set(item) != required
+            or type(item["schemaVersion"]) is not int
+            or item["schemaVersion"] != 1
+            or type(item["id"]) is not str
+            or not item["id"].startswith("m10-")
+            or type(item["family"]) is not str
+            or not item["family"]
+            or item["language"] not in research.LANGUAGES
+            or item["split"] not in SPLITS
+            or item["sourceOrigin"] != ORIGIN
+            or item["rightsScope"] != RIGHTS
+            or item["trainingAuthorized"] is not False
+            or type(item["snippet"]) is not str
+        ):
+            raise Refusal("M10 candidate identity, provenance or permissions invalid")
+        snippet = item["snippet"]
+        if (
+            not snippet.isascii()
+            or not snippet.endswith("\n")
+            or snippet.count("\n") != 1
+            or not snippet.strip()
+            or len(snippet.encode("utf-8")) > 96
+            or "\r" in snippet
+            or item["id"] in ids
+            or item["family"] in families
+            or snippet in snippets
+        ):
+            raise Refusal("M10 candidate snippet not short, unique or canonical")
+        ids.add(item["id"])
+        families.add(item["family"])
+        snippets.add(snippet)
+        counts[(item["language"], item["split"])] += 1
+    for language in research.LANGUAGES:
+        if (counts[(language, "train")] != TRAIN_PER_LANGUAGE
+                or counts[(language, "heldout")] != HELDOUT_PER_LANGUAGE):
+            raise Refusal("M10 train/heldout language balance invalid")
+
+    # The independent M8 *development* benchmark is read-only here and never
+    # enters M10 training. Its own final holdout is not accessed.
+    development = research.benchmark()
+    reserved = {
+        row[key].strip() for row in development
+        for key in ("inputFile", "expectedFile")
+    }
+    if any(item["snippet"].strip() in reserved for item in items):
+        raise Refusal("M10 proposal duplicates an M8 development source or answer")
+    return items
+
+
+def audit(tokenizer: Any | None = None) -> dict[str, Any]:
+    items = rows()
+    result = {
+        **plan(),
+        "status": NO_TRAINING,
+        "candidateSha256": research.digest_file(CANDIDATE, MAX_SOURCE_BYTES),
+        "m8DevelopmentBenchmarkSha256": research.digest_file(research.BENCHMARK),
+        "trainRecordIds": [r["id"] for r in items if r["split"] == "train"],
+        "heldoutRecordIds": [r["id"] for r in items if r["split"] == "heldout"],
+        "sourceAndTargetUnique": True,
+        "trainHeldoutFamilyDisjoint": True,
+        "m8DevelopmentExactFileOverlap": 0,
+    }
+    if tokenizer is None:
+        return result
+
+    # This branch loads only a verified tokenizer; no PyTorch or GPU.
+    from . import plex600_r3_curriculum as r3
+    if tokenizer.vocabulary_size != TOKENIZER_VOCABULARY:
+        raise Refusal("M10 must use exactly the frozen 1191-token M7 fitted vocabulary")
+    total_train_labels = 0
+    max_input = 0
+    max_answer = 0
+    for record in items:
+        prompt, snippet = prompt_for(record), record["snippet"]
+        prefix = tokenizer.encode(prompt)
+        answer = tokenizer.encode(snippet)
+        if (
+            not prefix or not answer
+            or tokenizer.decode(prefix) != prompt
+            or tokenizer.decode(answer) != snippet
+            or len(answer) + 1 > MAX_GENERATION
+        ):
+            raise Refusal("M10 tokenizer failed exact copy round-trip or generation cap")
+        packed = r3.masked_record(
+            prefix, answer + [3],
+            fitted_vocab_size=tokenizer.vocabulary_size,
+        )
+        if len(packed["inputIds"]) > MAX_POSITIONS:
+            raise Refusal("M10 code-copy prompt exceeds proposed position cap")
+        if record["split"] == "train":
+            total_train_labels += packed["supervisedAnswerPositions"]
+        max_input = max(max_input, len(packed["inputIds"]))
+        max_answer = max(max_answer, len(answer) + 1)
+    result.update(
+        tokenizerSha256="9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2",
+        tokenizerVocabularySize=tokenizer.vocabulary_size,
+        maxObservedInputPositions=max_input,
+        maxObservedAnswerTokensIncludingEos=max_answer,
+        totalTrainCopyAndEosSupervisedPositions=total_train_labels,
+        tokenizerRoundTripVerified=True,
+        generatedCodeEvaluated=False,
+        optimizerUpdatesCompleted=0,
+    )
+    return result
+
+
+def proposal_approval_template() -> dict[str, Any]:
+    """Only prints an unapproved template. No approval file is ever created."""
+    inspected = audit()
+    return {
+        "kind": "plex600-m10-copy-owner-review-template-v1",
+        "approvedBy": None,
+        "approvedAt": None,
+        "approvedForTraining": False,
+        "sourceReviewedByOwner": False,
+        "candidateSha256": inspected["candidateSha256"],
+        "m9CheckpointSha256": "OWNER_M9_CHECKPOINT_SHA256_NOT_YET_PINNED",
+        "tokenizerBundleManifestSha256": research.BUNDLE_SHA,
+        "trainRecordIds": inspected["trainRecordIds"],
+        "heldoutRecordIds": inspected["heldoutRecordIds"],
+        "maxOptimizerUpdates": MAX_UPDATES,
+        "evaluationUpdates": list(EVALUATION_UPDATES),
+        "maxInputPositions": MAX_POSITIONS,
+        "maxNewTokens": MAX_GENERATION,
+        "seed": SEED,
+        "finalHoldoutAllowed": False,
+        "m8DevelopmentUsedForTraining": False,
+        "scope": PROTOCOL,
+    }
+
+
+def score_predictions(
+    expected: list[dict[str, Any]],
+    responses: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """CPU-only exact autonomous-copy scoring for later independent evaluation."""
+    ids = {row["id"] for row in expected}
+    if (
+        len(expected) != 18 or len(ids) != 18 or len(responses) != 18
+        or any(type(row) is not dict or set(row) != {"id", "output", "terminationReason"}
+               or type(row["id"]) is not str or type(row["output"]) is not str
+               or type(row["terminationReason"]) is not str
+               for row in responses)
+        or {row["id"] for row in responses} != ids
+    ):
+        raise Refusal("M10 score requires exactly 18 unique, complete generated responses")
+    answer_by_id = {row["id"]: row for row in responses}
+    if len(answer_by_id) != len(responses):
+        raise Refusal("M10 scoring rejects duplicate response IDs")
+    summary = {
+        split: {"total": 0, "exact": 0, "eos": 0, "exactWithEos": 0}
+        for split in SPLITS
+    }
+    for row in expected:
+        prediction = answer_by_id[row["id"]]
+        target = summary[row["split"]]
+        target["total"] += 1
+        exact = prediction["output"] == row["snippet"]
+        eos = prediction["terminationReason"] == "eos"
+        target["exact"] += int(exact)
+        target["eos"] += int(eos)
+        target["exactWithEos"] += int(exact and eos)
+    all_exact = (
+        summary["train"]["exactWithEos"] == 12
+        and summary["heldout"]["exactWithEos"] == 6
+    )
+    return {
+        "train": summary["train"],
+        "heldout": summary["heldout"],
+        "allExactAndEos": all_exact,
+        "generalizationClaimEstablished": False,
+        "finalHoldoutUsed": False,
+    }
+
+
+def eligible_to_stop_early(prior: dict[str, Any], current: dict[str, Any]) -> bool:
+    """Require two consecutive fully exact autonomous-copy observations."""
+    return (
+        prior.get("allExactAndEos") is True
+        and current.get("allExactAndEos") is True
+        and prior.get("finalHoldoutUsed") is False
+        and current.get("finalHoldoutUsed") is False
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--audit-candidate", action="store_true")
+    mode.add_argument("--show-candidate", action="store_true")
+    mode.add_argument("--approval-template", action="store_true")
+    mode.add_argument("--audit-tokenizer", action="store_true")
+    parser.add_argument("--bundle-dir", type=Path)
+    parser.add_argument("--bundle-manifest-sha256")
+    args = parser.parse_args(argv)
+    try:
+        if args.audit_tokenizer:
+            if args.bundle_dir is None or args.bundle_manifest_sha256 != research.BUNDLE_SHA:
+                raise Refusal("Tokenizer audit requires frozen M7 bundle and manifest SHA")
+            m8.verified_bundle(args.bundle_dir, args.bundle_manifest_sha256)
+            from .tokenizer import PlexTokenizer
+            result = audit(PlexTokenizer.load(args.bundle_dir))
+        elif args.bundle_dir is not None or args.bundle_manifest_sha256 is not None:
+            raise Refusal("Bundle arguments require --audit-tokenizer")
+        elif args.approval_template:
+            result = proposal_approval_template()
+        elif args.show_candidate:
+            result = {"plan": audit(), "rows": rows()}
+        elif args.audit_candidate:
+            result = audit()
+        else:
+            result = plan()
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError) as exc:
+        print("Plex M10 review-only proposal refused: " + str(exc), file=sys.stderr)
+        return 2
+    print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
