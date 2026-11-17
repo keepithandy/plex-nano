@@ -7,6 +7,7 @@ SHA-256-matching weights, source-bound tokenizer and explicit eval opt-in.
 from __future__ import annotations
 
 import argparse
+from collections import OrderedDict
 import hashlib
 import json
 import os
@@ -274,7 +275,7 @@ def evaluate(bundle: Path, report: Path, weights: Path, output: Path, *,
         if parameter_count(model) != hardware.PARAMETERS:
             raise Refusal("Checkpoint architecture mismatch")
         state = torch.load(weights, map_location="cpu", weights_only=True, mmap=True)
-        if type(state) is not dict:
+        if type(state) not in (dict, OrderedDict):
             raise Refusal("M7 checkpoint must be model-only parameter dictionary")
         model.load_state_dict(state, strict=True)
         del state
