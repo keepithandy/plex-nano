@@ -9,6 +9,7 @@ Default command prints a no-load plan. Execution is explicit and create-only.
 from __future__ import annotations
 
 import argparse
+from collections import OrderedDict
 import json
 import math
 import os
@@ -160,7 +161,7 @@ def run(bundle: Path, report: Path, weights: Path, output: Path, *,
         if parameter_count(model) != hardware.PARAMETERS:
             raise m8.Refusal("Frozen M7 checkpoint architecture mismatch")
         state = torch.load(weights, map_location="cpu", weights_only=True, mmap=True)
-        if type(state) is not dict:
+        if type(state) not in (dict, OrderedDict):
             raise m8.Refusal("M7 checkpoint must be a model-only state dictionary")
         model.load_state_dict(state, strict=True)
         del state
