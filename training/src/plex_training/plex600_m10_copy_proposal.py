@@ -392,28 +392,79 @@ def proposal_approval_template() -> dict[str, Any]:
     }
 
 
+MAX_RESPONSE_CHARACTERS = 4096
+
+
+def character_similarity(expected: str, produced: str) -> float:
+    """Normalized Levenshtein similarity, 0..1, including exact whitespace."""
+    if type(expected) is not str or type(produced) is not str:
+        raise Refusal("M10 character scoring requires text inputs")
+    if len(produced) > MAX_RESPONSE_CHARACTERS:
+        raise Refusal("M10 response exceeds bounded character budget")
+    previous = list(range(len(expected) + 1))
+    for position, character in enumerate(produced, 1):
+        current = [position]
+        for index, target in enumerate(expected, 1):
+            current.append(min(
+                current[index - 1] + 1,
+                previous[index] + 1,
+                previous[index - 1] + int(character != target),
+            ))
+        previous = current
+    return 1.0 - previous[-1] / max(len(expected), len(produced), 1)
+
+
+def repetition_diagnostics(output: str) -> dict[str, Any]:
+    if len(output) > MAX_RESPONSE_CHARACTERS:
+        raise Refusal("M10 repeated-character scoring input too large")
+    if not output:
+        return {"spaceOnly": False, "periodOnly": False,
+                "whitespaceOnly": False, "longestRepeatedRun": 0,
+                "dominantCharacterFraction": 0.0, "repetitionCollapse": False}
+    largest_run, current_run = 1, 1
+    for index in range(1, len(output)):
+        current_run = current_run + 1 if output[index] == output[index - 1] else 1
+        largest_run = max(largest_run, current_run)
+    dominant_fraction = max(Counter(output).values()) / len(output)
+    return {
+        "spaceOnly": all(char == " " for char in output),
+        "periodOnly": all(char == "." for char in output),
+        "whitespaceOnly": output.isspace(),
+        "longestRepeatedRun": largest_run,
+        "dominantCharacterFraction": round(dominant_fraction, 6),
+        # A long identical-character run is more diagnostic than a dominant
+        # token in a very short, valid source snippet.
+        "repetitionCollapse": largest_run >= 8 and
+            largest_run / len(output) >= 0.8,
+    }
+
+
 def score_predictions(
     expected: list[dict[str, Any]],
     responses: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """CPU-only exact autonomous-copy scoring for later independent evaluation."""
+    """CPU-only exact and partial autonomous-copy scoring of supplied outputs."""
     ids = {row["id"] for row in expected}
     if (
         len(expected) != 18 or len(ids) != 18 or len(responses) != 18
         or any(type(row) is not dict or set(row) != {"id", "output", "terminationReason"}
                or type(row["id"]) is not str or type(row["output"]) is not str
                or type(row["terminationReason"]) is not str
+               or len(row["output"]) > MAX_RESPONSE_CHARACTERS
                for row in responses)
         or {row["id"] for row in responses} != ids
     ):
-        raise Refusal("M10 score requires exactly 18 unique, complete generated responses")
+        raise Refusal("M10 score requires exactly 18 unique bounded generated responses")
     answer_by_id = {row["id"]: row for row in responses}
     if len(answer_by_id) != len(responses):
         raise Refusal("M10 scoring rejects duplicate response IDs")
     summary = {
-        split: {"total": 0, "exact": 0, "eos": 0, "exactWithEos": 0}
+        split: {"total": 0, "exact": 0, "eos": 0, "exactWithEos": 0,
+                "spacesOnly": 0, "periodsOnly": 0, "whitespaceOnly": 0,
+                "repetitionCollapse": 0}
         for split in SPLITS
     }
+    details: list[dict[str, Any]] = []
     for row in expected:
         prediction = answer_by_id[row["id"]]
         target = summary[row["split"]]
@@ -423,6 +474,37 @@ def score_predictions(
         target["exact"] += int(exact)
         target["eos"] += int(eos)
         target["exactWithEos"] += int(exact and eos)
+        generated = prediction["output"]
+        truth = row["snippet"]
+        prefix_length = next(
+            (index for index, (a, b) in enumerate(zip(truth, generated))
+             if a != b),
+            min(len(truth), len(generated)),
+        )
+        similarity = character_similarity(truth, generated)
+        repeat = repetition_diagnostics(generated)
+        for key, metric in (("spacesOnly", "spaceOnly"),
+                            ("periodsOnly", "periodOnly"),
+                            ("whitespaceOnly", "whitespaceOnly"),
+                            ("repetitionCollapse", "repetitionCollapse")):
+            target[key] += int(repeat[metric])
+        details.append({
+            "id": row["id"], "split": row["split"], "language": row["language"],
+            "exact": exact, "eos": eos, "terminationReason": prediction["terminationReason"],
+            "referenceCharacters": len(truth), "outputCharacters": len(generated),
+            "correctPrefixCharacters": prefix_length,
+            "correctPrefixFraction": round(prefix_length / max(len(truth), 1), 6),
+            "characterSimilarity": round(similarity, 6),
+            **repeat,
+        })
+    for split in SPLITS:
+        matching = [item for item in details if item["split"] == split]
+        summary[split]["meanCharacterSimilarity"] = round(
+            sum(item["characterSimilarity"] for item in matching) / len(matching), 6)
+        summary[split]["meanCorrectPrefixFraction"] = round(
+            sum(item["correctPrefixFraction"] for item in matching) / len(matching), 6)
+        summary[split]["meanDominantCharacterFraction"] = round(
+            sum(item["dominantCharacterFraction"] for item in matching) / len(matching), 6)
     all_exact = (
         summary["train"]["exactWithEos"] == 12
         and summary["heldout"]["exactWithEos"] == 6
@@ -430,6 +512,8 @@ def score_predictions(
     return {
         "train": summary["train"],
         "heldout": summary["heldout"],
+        "byExample": details,
+        "uniqueGeneratedOutputs": len({row["output"] for row in responses}),
         "allExactAndEos": all_exact,
         "generalizationClaimEstablished": False,
         "finalHoldoutUsed": False,
