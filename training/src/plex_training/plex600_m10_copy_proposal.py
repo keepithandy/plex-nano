@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import json
+import math
 from pathlib import Path
 import sys
 from typing import Any
@@ -67,6 +68,14 @@ def plan() -> dict[str, Any]:
         "examplesPerOptimizerUpdate": EXAMPLES_PER_UPDATE,
         "gradientAccumulationSteps": GRADIENT_ACCUMULATION_STEPS,
         "examplesPerUpdateDefined": True,
+        "readOnlyBaselineAtUpdateZero": True,
+        "mechanicalChecksRequired": [
+            "answer-only-supervision-including-eos",
+            "nonzero-finite-gradient",
+            "measurable-weight-update",
+            "checkpoint-sha-verified",
+            "reload-logit-and-token-parity",
+        ],
         "maxInputPositionsPerExample": MAX_POSITIONS,
         "maxGeneratedTokensPerExample": MAX_GENERATION,
         "seed": SEED,
@@ -346,6 +355,14 @@ def audit(tokenizer: Any | None = None) -> dict[str, Any]:
         )
         if len(packed["inputIds"]) > MAX_POSITIONS:
             raise Refusal("M10 code-copy prompt exceeds proposed position cap")
+        # Supervise exactly the answer (and terminal EOS). The prediction at
+        # prompt[-1] targets answer[0], so only prompt[:-1] is masked.
+        expected_targets = ([-100] * (len(prefix) - 1)) + answer + [3]
+        if (packed["targetIds"] != expected_targets
+                or packed["inputIds"] != prefix + answer
+                or packed["supervisedAnswerPositions"] != len(answer) + 1
+                or expected_targets[-1] != 3):
+            raise Refusal("M10 copy training target mask is misaligned")
         if record["split"] == "train":
             total_train_labels += packed["supervisedAnswerPositions"]
         max_input = max(max_input, len(packed["inputIds"]))
@@ -528,8 +545,8 @@ def milestone_score(
     This records only caller-provided outputs, not proof that inference ran.
     A future authorized worker must bind the checkpoint SHA to the inference.
     """
-    if type(updates) is not int or updates not in EVALUATION_UPDATES:
-        raise Refusal("M10 evaluation update must be exactly 10, 25 or 50")
+    if type(updates) is not int or updates not in (0,) + EVALUATION_UPDATES:
+        raise Refusal("M10 evaluation update must be exactly 0, 10, 25 or 50")
     if decoding_policy not in m8.DECODE_POLICIES:
         raise Refusal("M10 evaluation must use a declared versioned decoding policy")
     return {
@@ -538,6 +555,72 @@ def milestone_score(
         "decodingPolicy": decoding_policy,
         "candidateSha256": research.digest_file(CANDIDATE, MAX_SOURCE_BYTES),
         "source": "caller-provided-responses-not-verified-generation",
+    }
+
+
+def classify_mechanical_evidence(evidence: dict[str, Any]) -> dict[str, Any]:
+    """Validate the proposed evidence *shape*, not an actual GPU training run.
+
+    Future workers must generate and bind these measurements to the genuine
+    checkpoint, optimizer step and prompt run. Caller claims are NOT proof.
+    """
+    required = {
+        "optimizerUpdatesCompleted", "examplesPerOptimizerUpdate",
+        "promptPositionsIncorrectlySupervised", "answerAndEosPositionsSupervised",
+        "eosTargetSupervised", "gradientL2Norm", "weightDeltaL2Norm",
+        "originalCheckpointSha256", "newCheckpointSha256",
+        "newCheckpointHashVerified", "reloadedCheckpointSha256",
+        "reloadedGreedyTokensMatch", "maxReloadLogitAbsoluteDifference",
+    }
+    if type(evidence) is not dict or set(evidence) != required:
+        raise Refusal("M10 mechanical evidence has missing or extra fields")
+    updates = evidence["optimizerUpdatesCompleted"]
+    if type(updates) is not int or updates not in EVALUATION_UPDATES:
+        raise Refusal("M10 mechanical evidence must be at update 10, 25 or 50")
+    if (type(evidence["examplesPerOptimizerUpdate"]) is not int
+            or type(evidence["promptPositionsIncorrectlySupervised"]) is not int
+            or type(evidence["answerAndEosPositionsSupervised"]) is not int
+            or any(type(evidence[key]) is not bool for key in (
+                "eosTargetSupervised", "newCheckpointHashVerified",
+                "reloadedGreedyTokensMatch",
+            ))):
+        raise Refusal("M10 mechanical count/boolean values are malformed")
+    for key in ("gradientL2Norm", "weightDeltaL2Norm",
+                "maxReloadLogitAbsoluteDifference"):
+        value = evidence[key]
+        if type(value) not in (float, int) or not math.isfinite(value) or value < 0:
+            raise Refusal("M10 mechanical norm must be finite and nonnegative")
+    for key in ("originalCheckpointSha256", "newCheckpointSha256",
+                "reloadedCheckpointSha256"):
+        value = evidence[key]
+        if (type(value) is not str or len(value) != 64
+                or any(char not in "0123456789abcdef" for char in value)):
+            raise Refusal("M10 mechanical checkpoint digest is malformed")
+    checks = {
+        "oneExamplePerUpdate": evidence["examplesPerOptimizerUpdate"] == EXAMPLES_PER_UPDATE,
+        "promptMaskCorrect": evidence["promptPositionsIncorrectlySupervised"] == 0,
+        "answerLossPresent": evidence["answerAndEosPositionsSupervised"] > 0,
+        "eosTargetPresent": evidence["eosTargetSupervised"],
+        "gradientNonzero": evidence["gradientL2Norm"] > 0,
+        "weightsChanged": (evidence["weightDeltaL2Norm"] > 0
+                           and evidence["newCheckpointSha256"] != evidence["originalCheckpointSha256"]),
+        "checkpointBytesVerified": evidence["newCheckpointHashVerified"],
+        "reloadCheckpointHashMatches":
+            evidence["reloadedCheckpointSha256"] == evidence["newCheckpointSha256"],
+        "reloadGenerationTokensMatch": evidence["reloadedGreedyTokensMatch"],
+        "reloadLogitsWithinTolerance":
+            evidence["maxReloadLogitAbsoluteDifference"] <= 0.0001,
+    }
+    return {
+        "protocol": PROTOCOL,
+        "optimizerUpdatesCompleted": updates,
+        "status": ("mechanically-consistent-caller-claims" if all(checks.values())
+                   else "mechanical-defect-indicated-by-caller-claims"),
+        "checks": checks,
+        "failedChecks": [name for name, passed in checks.items() if not passed],
+        "evidenceVerifiedByThisModule": False,
+        "trainingAuthorized": False,
+        "finalHoldoutUsed": False,
     }
 
 
