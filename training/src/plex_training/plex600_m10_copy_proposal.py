@@ -73,6 +73,90 @@ def plan() -> dict[str, Any]:
     }
 
 
+def audit_m9_backup(report_path: Path, weights_path: Path) -> dict[str, Any]:
+    """Stream-check an independent M9 backup; never load weights into PyTorch.
+
+    The original completed M9 report has a known checkpointWrites metadata
+    inconsistency; use actual checkpoint metadata and bytes as evidence.
+    """
+    from . import plex600_m7 as m7
+    from . import plex600_r3_curriculum as r3
+
+    original = research.ROOT / "training/artifacts/plex600-m9-r3-first-eight"
+    if (
+        report_path.is_symlink() or weights_path.is_symlink()
+        or report_path.parent.resolve(strict=False)
+        != weights_path.parent.resolve(strict=False)
+        or weights_path.parent.resolve(strict=False)
+        == original.resolve(strict=False)
+        or report_path.name != "report.json"
+        or weights_path.name != "weights.pt"
+    ):
+        raise Refusal("M10 admission requires separate M9 backup report and weights")
+    report_sha = research.digest_file(report_path, 512 * 1024)
+    data = json.loads(report_path.read_text(encoding="utf-8"))
+    if type(data) is not dict:
+        raise Refusal("M9 backup report is not an object")
+    checkpoint = data.get("checkpoint")
+    approval = data.get("approval")
+    steps = data.get("steps")
+    if (
+        data.get("protocol") != "plex600-m9-r3-eight-update-pilot-v1"
+        or data.get("status") != "eight-updates-complete-unreviewed-improvement"
+        or data.get("optimizerUpdatesCompleted") != 8
+        or data.get("trainingAuthorized") is not True
+        or data.get("modelLoaded") is not True
+        or data.get("finalHoldoutUsed") is not False
+        or data.get("m8DevelopmentUsedForTraining") is not False
+        or data.get("codingImprovementProven") is not False
+        or data.get("generatedCodeEvaluated") is not False
+        or data.get("originalCheckpointSha256") !=
+            "69a31b4e710b284581a0b74c9e2661cc27bf134d24b8b1fe7a906f6efc004224"
+        or data.get("originalTokenizerSha256") != m7.TOKENIZER_SHA
+        or data.get("bundleManifestSha256") != research.BUNDLE_SHA
+        or data.get("r3CandidateSha256") != r3.source_sha256()
+        or type(approval) is not dict
+        or approval.get("approved") is not True
+        or type(approval.get("approvalSha256")) is not str
+        or len(approval["approvalSha256"]) != 64
+        or type(steps) is not list
+        or len(steps) != 8
+        or any(
+            type(step) is not dict or step.get("step") != i
+            for i, step in enumerate(steps, 1)
+        )
+        or type(checkpoint) is not dict
+        or checkpoint.get("file") != "weights.pt"
+        or checkpoint.get("weightsOnly") is not True
+        or checkpoint.get("optimizerStateSaved") is not False
+        or type(checkpoint.get("bytes")) is not int
+        or not 0 < checkpoint["bytes"] <= 3 * 1024**3
+        or type(checkpoint.get("sha256")) is not str
+        or len(checkpoint["sha256"]) != 64
+    ):
+        raise Refusal("M9 backup report provenance, approval or scope invalid")
+    if weights_path.stat().st_size != checkpoint["bytes"]:
+        raise Refusal("M9 backup checkpoint byte size differs from report")
+    weight_sha = m7.hash_file(weights_path, maximum=3 * 1024**3)
+    if weight_sha != checkpoint["sha256"]:
+        raise Refusal("M9 backup checkpoint SHA-256 differs from report")
+    return {
+        "protocol": PROTOCOL,
+        "status": "read-only-m9-backup-verified-not-training-authorized",
+        "m9ReportSha256": report_sha,
+        "m9WeightsSha256": weight_sha,
+        "weightsBytes": checkpoint["bytes"],
+        "optimizerUpdatesVerified": 8,
+        "checkpointWritesReportMetadata": data.get("checkpointWrites"),
+        "checkpointBytesAndHashVerified": True,
+        "noCheckpointDeserialization": True,
+        "trainingAuthorized": False,
+        "optimizerUpdatesCompleted": 0,
+        "checkpointWrites": False,
+        "finalHoldoutUsed": False,
+    }
+
+
 def prompt_for(record: dict[str, Any]) -> str:
     """Source-conditioned identity copy. Target is the *entire* code snippet."""
     return (
@@ -270,13 +354,44 @@ def score_predictions(
     }
 
 
+def milestone_score(
+    updates: int, decoding_policy: str, responses: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Score supplied responses for a declared milestone, no model execution.
+
+    This records only caller-provided outputs, not proof that inference ran.
+    A future authorized worker must bind the checkpoint SHA to the inference.
+    """
+    if type(updates) is not int or updates not in EVALUATION_UPDATES:
+        raise Refusal("M10 evaluation update must be exactly 10, 25 or 50")
+    if decoding_policy not in m8.DECODE_POLICIES:
+        raise Refusal("M10 evaluation must use a declared versioned decoding policy")
+    return {
+        **score_predictions(rows(), responses),
+        "optimizerUpdatesCompleted": updates,
+        "decodingPolicy": decoding_policy,
+        "candidateSha256": research.digest_file(CANDIDATE, MAX_SOURCE_BYTES),
+        "source": "caller-provided-responses-not-verified-generation",
+    }
+
+
 def eligible_to_stop_early(prior: dict[str, Any], current: dict[str, Any]) -> bool:
-    """Require two consecutive fully exact autonomous-copy observations."""
+    """Never allow a single, repeated or cross-policy milestone to stop."""
+    steps = (prior.get("optimizerUpdatesCompleted"),
+             current.get("optimizerUpdatesCompleted"))
+    sha = research.digest_file(CANDIDATE, MAX_SOURCE_BYTES)
     return (
-        prior.get("allExactAndEos") is True
+        steps in ((10, 25), (25, 50))
+        and prior.get("allExactAndEos") is True
         and current.get("allExactAndEos") is True
         and prior.get("finalHoldoutUsed") is False
         and current.get("finalHoldoutUsed") is False
+        and prior.get("candidateSha256") == sha
+        and current.get("candidateSha256") == sha
+        and prior.get("decodingPolicy") in m8.DECODE_POLICIES
+        and current.get("decodingPolicy") == prior.get("decodingPolicy")
+        and prior.get("source") == "caller-provided-responses-not-verified-generation"
+        and current.get("source") == "caller-provided-responses-not-verified-generation"
     )
 
 
@@ -287,11 +402,21 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--show-candidate", action="store_true")
     mode.add_argument("--approval-template", action="store_true")
     mode.add_argument("--audit-tokenizer", action="store_true")
+    mode.add_argument("--audit-m9-backup", action="store_true")
+    parser.add_argument("--m9-report", type=Path)
+    parser.add_argument("--m9-weights", type=Path)
     parser.add_argument("--bundle-dir", type=Path)
     parser.add_argument("--bundle-manifest-sha256")
     args = parser.parse_args(argv)
     try:
-        if args.audit_tokenizer:
+        if args.audit_m9_backup:
+            if (args.m9_report is None or args.m9_weights is None
+                    or args.bundle_dir is not None or args.bundle_manifest_sha256 is not None):
+                raise Refusal("Backup audit needs only --m9-report and --m9-weights")
+            result = audit_m9_backup(args.m9_report, args.m9_weights)
+        elif args.m9_report is not None or args.m9_weights is not None:
+            raise Refusal("M9 paths require --audit-m9-backup")
+        elif args.audit_tokenizer:
             if args.bundle_dir is None or args.bundle_manifest_sha256 != research.BUNDLE_SHA:
                 raise Refusal("Tokenizer audit requires frozen M7 bundle and manifest SHA")
             m8.verified_bundle(args.bundle_dir, args.bundle_manifest_sha256)
