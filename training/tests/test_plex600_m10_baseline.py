@@ -147,6 +147,22 @@ class ReadOnlyBaselineTests(unittest.TestCase):
                 baseline.main(["--run-read-only-baseline", "--audit-inputs"])
         self.assertEqual(refusal.exception.code, 2)
 
+    def test_windows_one_command_helper_is_opt_in_and_never_trains(self):
+        script = (Path(baseline.__file__).resolve().parents[3]
+                  / "scripts/Invoke-PlexM10Baseline.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$Run", script)
+        self.assertIn("if (-not $Run)", script)
+        self.assertIn("'--audit-inputs'", script)
+        self.assertIn("'--run-read-only-baseline'", script)
+        self.assertIn("plex_training.plex600_m10_baseline", script)
+        self.assertIn("Plex600M-Backups/m9", script)
+        self.assertIn("yyyyMMdd-HHmmss-fffffff", script)
+        for forbidden in (
+            "'--execute-approved-run'", "plex_training.plex600_m9",
+            "torch.save", "Remove-Item", "git checkout", "git switch",
+        ):
+            self.assertNotIn(forbidden, script)
+
     def test_module_has_no_optimizer_backward_train_or_checkpoint_save_calls(self):
         source = Path(baseline.__file__).read_text(encoding="utf-8")
         tree = ast.parse(source)
