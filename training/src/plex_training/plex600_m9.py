@@ -66,6 +66,11 @@ def plan() -> dict[str, Any]:
     }
 
 
+def completed_plan() -> dict[str, Any]:
+    """Mark the checkpoint created by a completed worker, without changing the plan."""
+    return {**plan(), "checkpointWrites": True}
+
+
 def selected_records(tokenizer: Any) -> dict[str, Any]:
     """One non-truncated original source-conditioned candidate per family."""
     rows = r3.rows()  # Source status, integrity, and M8 exact-operation checks
@@ -306,7 +311,7 @@ def train_worker(bundle: Path, m7_report: Path, weights: Path, approval: Path,
     if not 0 < output.stat().st_size <= MAX_NEW_CHECKPOINT_BYTES:
         raise Refusal("M9 weights exceed bounded new checkpoint storage")
     report = {
-        **plan(),
+        **completed_plan(),
         **public_selection(selection),
         "status": "eight-updates-complete-unreviewed-improvement",
         "trainingAuthorized": True, "modelLoaded": True,
