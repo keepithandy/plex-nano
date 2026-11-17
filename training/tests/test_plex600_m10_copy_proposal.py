@@ -187,8 +187,8 @@ class CopyProposalTests(unittest.TestCase):
         self.assertEqual(len(json.loads(output.getvalue())["schedule"]), 50)
 
     def test_partial_copy_metrics_handle_repeated_spaces_periods_and_shift(self):
-        self.assertEqual(m10.character_similarity("abc\\n", "abc\\n"), 1)
-        self.assertEqual(m10.character_similarity("abc\\n", "abc"), 0.75)
+        self.assertEqual(m10.character_similarity("abc" + chr(10), "abc" + chr(10)), 1)
+        self.assertEqual(m10.character_similarity("abc" + chr(10), "abc"), 0.75)
         self.assertEqual(m10.character_similarity("abc", ""), 0)
         self.assertGreater(m10.character_similarity("abc", "xbc"), 0.6)
         spaces = m10.repetition_diagnostics(" " * 96)
