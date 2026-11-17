@@ -33,6 +33,10 @@ class CopyProposalTests(unittest.TestCase):
         self.assertEqual(data["optimizerUpdatesCompleted"], 0)
         self.assertEqual(data["optimizerUpdatesMaximum"], 50)
         self.assertEqual(data["evaluationAtOptimizerUpdates"], [10, 25, 50])
+        self.assertEqual(data["examplesPerOptimizerUpdate"], 1)
+        self.assertEqual(data["gradientAccumulationSteps"], 1)
+        self.assertEqual(data["warmupRecordId"], "m10-js-counter")
+        self.assertTrue(data["readOnlyBaselineAtUpdateZero"])
         self.assertFalse(data["finalHoldoutUsed"])
         self.assertFalse(data["checkpointWrites"])
 
@@ -90,6 +94,9 @@ class CopyProposalTests(unittest.TestCase):
         self.assertFalse(proposal["sourceReviewedByOwner"])
         self.assertEqual(proposal["evaluationUpdates"], [10, 25, 50])
         self.assertEqual(proposal["maxOptimizerUpdates"], 50)
+        self.assertEqual(proposal["examplesPerOptimizerUpdate"], 1)
+        self.assertEqual(proposal["phaseUpdateCounts"], [10, 15, 25])
+        self.assertEqual(proposal["warmupRecordId"], "m10-js-counter")
         self.assertEqual(proposal["maxNewTokens"], 96)
         self.assertEqual(proposal["maxInputPositions"], 256)
         self.assertTrue(proposal["m9CheckpointSha256"].startswith("OWNER_"))
@@ -106,11 +113,18 @@ class CopyProposalTests(unittest.TestCase):
         self.assertEqual(result["train"]["exactWithEos"], 12)
         self.assertEqual(result["heldout"]["exactWithEos"], 6)
         self.assertFalse(result["generalizationClaimEstablished"])
+        self.assertEqual(result["train"]["meanCharacterSimilarity"], 1)
+        self.assertEqual(result["heldout"]["meanCorrectPrefixFraction"], 1)
+        self.assertEqual(result["train"]["repetitionCollapse"], 0)
+        self.assertEqual(result["uniqueGeneratedOutputs"], 18)
         incorrect = deepcopy(perfect)
         incorrect[-1]["output"] = " " * 96
         result = m10.score_predictions(examples, incorrect)
         self.assertFalse(result["allExactAndEos"])
         self.assertEqual(result["heldout"]["exactWithEos"], 5)
+        self.assertEqual(result["heldout"]["spacesOnly"], 1)
+        self.assertEqual(result["heldout"]["repetitionCollapse"], 1)
+        self.assertLess(result["heldout"]["meanCharacterSimilarity"], 1)
         incorrect = deepcopy(perfect)
         incorrect[0]["terminationReason"] = "max-new-tokens"
         self.assertFalse(m10.score_predictions(examples, incorrect)["allExactAndEos"])
@@ -125,12 +139,15 @@ class CopyProposalTests(unittest.TestCase):
             {"id": row["id"], "output": row["snippet"], "terminationReason": "eos"}
             for row in examples
         ]
+        baseline = m10.milestone_score(0, "unmasked-v1", perfect)
+        self.assertEqual(baseline["optimizerUpdatesCompleted"], 0)
         previous = m10.milestone_score(10, "unmasked-v1", perfect)
         current = m10.milestone_score(25, "unmasked-v1", perfect)
         final = m10.milestone_score(50, "unmasked-v1", perfect)
         fitted = m10.milestone_score(25, "fitted-vocab-v1", perfect)
         self.assertTrue(m10.eligible_to_stop_early(previous, current))
         self.assertTrue(m10.eligible_to_stop_early(current, final))
+        self.assertFalse(m10.eligible_to_stop_early(baseline, previous))
         self.assertFalse(m10.eligible_to_stop_early(previous, previous))
         self.assertFalse(m10.eligible_to_stop_early(previous, final))
         self.assertFalse(m10.eligible_to_stop_early(previous, fitted))
@@ -146,6 +163,100 @@ class CopyProposalTests(unittest.TestCase):
             m10.milestone_score(11, "unmasked-v1", perfect)
         with self.assertRaises(m10.Refusal):
             m10.milestone_score(25, "other-decoder", perfect)
+
+    def test_explicit_schedule_has_single_example_warmup_and_40_full_set_steps(self):
+        schedule = m10.update_schedule()
+        self.assertEqual(len(schedule), 50)
+        self.assertEqual([s["optimizerUpdate"] for s in schedule], list(range(1, 51)))
+        self.assertTrue(all(s["examplesInOptimizerUpdate"] == 1 for s in schedule))
+        self.assertTrue(all(s["gradientAccumulationSteps"] == 1 for s in schedule))
+        self.assertEqual({s["recordIds"][0] for s in schedule[:10]}, {"m10-js-counter"})
+        self.assertEqual({s["recordIds"][0] for s in schedule[10:]},
+                         {r["id"] for r in m10.rows() if r["split"] == "train"})
+        self.assertFalse({s["recordIds"][0] for s in schedule}
+                         & {r["id"] for r in m10.rows() if r["split"] == "heldout"})
+        self.assertEqual([s["phase"] for s in schedule].count("single-example-copy"), 10)
+        self.assertEqual([s["phase"] for s in schedule].count("full-set-copy"), 15)
+        self.assertEqual([s["phase"] for s in schedule].count("full-set-consolidation"), 25)
+        counts = m10.schedule_audit()["trainRecordExposures"]
+        self.assertEqual(sum(counts.values()), 50)
+        self.assertEqual(counts["m10-js-counter"], 13)
+        self.assertEqual(len(counts), 12)
+        with redirect_stdout(StringIO()) as output:
+            self.assertEqual(m10.main(["--show-schedule"]), 0)
+        self.assertEqual(len(json.loads(output.getvalue())["schedule"]), 50)
+
+    def test_partial_copy_metrics_handle_repeated_spaces_periods_and_shift(self):
+        self.assertEqual(m10.character_similarity("abc\\n", "abc\\n"), 1)
+        self.assertEqual(m10.character_similarity("abc\\n", "abc"), 0.75)
+        self.assertEqual(m10.character_similarity("abc", ""), 0)
+        self.assertGreater(m10.character_similarity("abc", "xbc"), 0.6)
+        spaces = m10.repetition_diagnostics(" " * 96)
+        self.assertTrue(spaces["spaceOnly"])
+        self.assertTrue(spaces["whitespaceOnly"])
+        self.assertTrue(spaces["repetitionCollapse"])
+        periods = m10.repetition_diagnostics("." * 96)
+        self.assertTrue(periods["periodOnly"])
+        self.assertTrue(periods["repetitionCollapse"])
+        self.assertFalse(m10.repetition_diagnostics("abc abc")["repetitionCollapse"])
+        with self.assertRaises(m10.Refusal):
+            m10.character_similarity("valid", " " * 4097)
+        with self.assertRaises(m10.Refusal):
+            m10.repetition_diagnostics("." * 4097)
+
+    def test_mechanical_evidence_is_a_diagnostic_not_training_proof(self):
+        evidence = {
+            "optimizerUpdatesCompleted": 10,
+            "examplesPerOptimizerUpdate": 1,
+            "promptPositionsIncorrectlySupervised": 0,
+            "answerAndEosPositionsSupervised": 100,
+            "eosTargetSupervised": True,
+            "gradientL2Norm": 0.25,
+            "weightDeltaL2Norm": 0.005,
+            "originalCheckpointSha256": "a" * 64,
+            "newCheckpointSha256": "b" * 64,
+            "newCheckpointHashVerified": True,
+            "reloadedCheckpointSha256": "b" * 64,
+            "reloadedGreedyTokensMatch": True,
+            "maxReloadLogitAbsoluteDifference": 0.0,
+        }
+        proof = m10.classify_mechanical_evidence(evidence)
+        self.assertEqual(proof["status"], "mechanically-consistent-caller-claims")
+        self.assertFalse(proof["evidenceVerifiedByThisModule"])
+        self.assertFalse(proof["trainingAuthorized"])
+        self.assertEqual(proof["failedChecks"], [])
+        for key, value, expected in (
+            ("promptPositionsIncorrectlySupervised", 1, "promptMaskCorrect"),
+            ("gradientL2Norm", 0, "gradientNonzero"),
+            ("weightDeltaL2Norm", 0, "weightsChanged"),
+            ("reloadedGreedyTokensMatch", False, "reloadGenerationTokensMatch"),
+            ("maxReloadLogitAbsoluteDifference", 0.1, "reloadLogitsWithinTolerance"),
+            ("newCheckpointHashVerified", False, "checkpointBytesVerified"),
+        ):
+            with self.subTest(key=key):
+                broken = m10.classify_mechanical_evidence({**evidence, key: value})
+                self.assertIn(expected, broken["failedChecks"])
+                self.assertFalse(broken["evidenceVerifiedByThisModule"])
+        for broken in ({**evidence, "optimizerUpdatesCompleted": 60},
+                       {**evidence, "gradientL2Norm": float("nan")},
+                       {**evidence, "extraClaim": True}):
+            with self.assertRaises(m10.Refusal):
+                m10.classify_mechanical_evidence(broken)
+
+    def test_copy_mask_positions_match_answer_and_eos(self):
+        from plex_training import plex600_r3_curriculum as r3
+        tokenizer = FakeTokenizer()
+        exemplar = next(r for r in m10.rows() if r["id"] == m10.WARMUP_RECORD_ID)
+        prompt_ids = tokenizer.encode(m10.prompt_for(exemplar))
+        answer_ids = tokenizer.encode(exemplar["snippet"]) + [3]
+        packed = r3.masked_record(
+            prompt_ids, answer_ids, fitted_vocab_size=tokenizer.vocabulary_size)
+        self.assertEqual(packed["targetIds"][:len(prompt_ids) - 1],
+                         [-100] * (len(prompt_ids) - 1))
+        self.assertEqual(packed["targetIds"][len(prompt_ids) - 1:], answer_ids)
+        self.assertEqual(packed["inputIds"], prompt_ids + answer_ids[:-1])
+        self.assertEqual(packed["targetIds"][-1], 3)
+        self.assertEqual(packed["supervisedAnswerPositions"], len(answer_ids))
 
     def test_read_only_m9_backup_verifies_bytes_and_preserves_history(self):
         from plex_training import plex600_r3_curriculum as r3
