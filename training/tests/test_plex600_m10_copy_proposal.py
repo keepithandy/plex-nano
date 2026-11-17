@@ -3,6 +3,9 @@ from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
 from io import StringIO
 import json
+import hashlib
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -116,14 +119,104 @@ class CopyProposalTests(unittest.TestCase):
         with self.assertRaises(m10.Refusal):
             m10.score_predictions(examples, incorrect)
 
-    def test_early_stop_requires_two_consecutive_complete_evaluations(self):
-        success = {"allExactAndEos": True, "finalHoldoutUsed": False}
-        failure = {"allExactAndEos": False, "finalHoldoutUsed": False}
-        self.assertFalse(m10.eligible_to_stop_early(success, failure))
-        self.assertFalse(m10.eligible_to_stop_early(failure, success))
-        self.assertTrue(m10.eligible_to_stop_early(success, success))
-        self.assertFalse(m10.eligible_to_stop_early(
-            success, {"allExactAndEos": True, "finalHoldoutUsed": True}))
+    def test_milestone_scoring_disallows_duplicate_or_cross_policy_early_stop(self):
+        examples = m10.rows()
+        perfect = [
+            {"id": row["id"], "output": row["snippet"], "terminationReason": "eos"}
+            for row in examples
+        ]
+        previous = m10.milestone_score(10, "unmasked-v1", perfect)
+        current = m10.milestone_score(25, "unmasked-v1", perfect)
+        final = m10.milestone_score(50, "unmasked-v1", perfect)
+        fitted = m10.milestone_score(25, "fitted-vocab-v1", perfect)
+        self.assertTrue(m10.eligible_to_stop_early(previous, current))
+        self.assertTrue(m10.eligible_to_stop_early(current, final))
+        self.assertFalse(m10.eligible_to_stop_early(previous, previous))
+        self.assertFalse(m10.eligible_to_stop_early(previous, final))
+        self.assertFalse(m10.eligible_to_stop_early(previous, fitted))
+        mutated = {**current, "candidateSha256": "0" * 64}
+        self.assertFalse(m10.eligible_to_stop_early(previous, mutated))
+        mutated = {**current, "allExactAndEos": False}
+        self.assertFalse(m10.eligible_to_stop_early(previous, mutated))
+        mutated = {**current, "finalHoldoutUsed": True}
+        self.assertFalse(m10.eligible_to_stop_early(previous, mutated))
+        mutated = {**current, "source": "unverified-manual-result"}
+        self.assertFalse(m10.eligible_to_stop_early(previous, mutated))
+        with self.assertRaises(m10.Refusal):
+            m10.milestone_score(11, "unmasked-v1", perfect)
+        with self.assertRaises(m10.Refusal):
+            m10.milestone_score(25, "other-decoder", perfect)
+
+    def test_read_only_m9_backup_verifies_bytes_and_preserves_history(self):
+        from plex_training import plex600_r3_curriculum as r3
+        from plex_training import plex600_m7 as m7
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            weights = folder / "weights.pt"
+            report = folder / "report.json"
+            weights.write_bytes(b"small-synthetic-test-only-not-a-real-checkpoint")
+            digest = hashlib.sha256(weights.read_bytes()).hexdigest()
+            data = {
+                "protocol": "plex600-m9-r3-eight-update-pilot-v1",
+                "status": "eight-updates-complete-unreviewed-improvement",
+                "optimizerUpdatesCompleted": 8,
+                "trainingAuthorized": True,
+                "modelLoaded": True,
+                "finalHoldoutUsed": False,
+                "m8DevelopmentUsedForTraining": False,
+                "codingImprovementProven": False,
+                "generatedCodeEvaluated": False,
+                "originalCheckpointSha256":
+                    "69a31b4e710b284581a0b74c9e2661cc27bf134d24b8b1fe7a906f6efc004224",
+                "originalTokenizerSha256": m7.TOKENIZER_SHA,
+                "bundleManifestSha256": m10.research.BUNDLE_SHA,
+                "r3CandidateSha256": r3.source_sha256(),
+                "approval": {"approved": True, "approvalSha256": "a" * 64},
+                "steps": [{"step": i} for i in range(1, 9)],
+                "checkpoint": {
+                    "file": "weights.pt", "bytes": weights.stat().st_size,
+                    "sha256": digest, "weightsOnly": True,
+                    "optimizerStateSaved": False,
+                },
+                # The historical report has this known misleading metadata.
+                "checkpointWrites": False,
+            }
+            report.write_text(json.dumps(data), encoding="utf-8")
+            proof = m10.audit_m9_backup(report, weights)
+            self.assertEqual(proof["m9WeightsSha256"], digest)
+            self.assertTrue(proof["checkpointBytesAndHashVerified"])
+            self.assertFalse(proof["checkpointWritesReportMetadata"])
+            self.assertFalse(proof["trainingAuthorized"])
+            self.assertFalse(proof["checkpointWrites"])
+
+            weights.write_bytes(weights.read_bytes() + b"tampered")
+            with self.assertRaisesRegex(m10.Refusal, "byte size"):
+                m10.audit_m9_backup(report, weights)
+            weights.write_bytes(b"small-synthetic-test-only-not-a-real-checkpoint")
+            bad = {**data, "optimizerUpdatesCompleted": 9}
+            report.write_text(json.dumps(bad), encoding="utf-8")
+            with self.assertRaisesRegex(m10.Refusal, "scope invalid"):
+                m10.audit_m9_backup(report, weights)
+            report.write_text(json.dumps(data), encoding="utf-8")
+            with patch.object(m10.research, "ROOT", folder):
+                # A source directory for an original M9 experiment cannot
+                # substitute for the independent backed-up checkpoint.
+                original = folder / "training/artifacts/plex600-m9-r3-first-eight"
+                original.mkdir(parents=True)
+                original_weights = original / "weights.pt"
+                original_report = original / "report.json"
+                original_weights.write_bytes(weights.read_bytes())
+                original_report.write_bytes(report.read_bytes())
+                with self.assertRaisesRegex(m10.Refusal, "separate M9 backup"):
+                    m10.audit_m9_backup(original_report, original_weights)
+
+    def test_cli_m9_backup_mode_requires_both_paths_and_never_trains(self):
+        with redirect_stderr(StringIO()) as err:
+            self.assertEqual(m10.main(["--audit-m9-backup"]), 2)
+        self.assertIn("needs only", err.getvalue())
+        with redirect_stderr(StringIO()) as err:
+            self.assertEqual(m10.main(["--m9-report", "report.json"]), 2)
+        self.assertIn("require --audit-m9-backup", err.getvalue())
 
     def test_cli_does_not_offer_a_training_entrypoint(self):
         with redirect_stderr(StringIO()):
