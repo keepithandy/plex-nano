@@ -43,8 +43,12 @@ loss is not the same as unconditioned/causal generation quality.
 | New optimizer | Fresh AdamW state; not an optimizer-state resume |
 | Optimizer hyperparameters | Proposed: lr 5e-5, weight decay 0, eps 1e-8, no fused/foreach optimizers |
 | Seed | 41; deterministic round-robin over approved training IDs |
-| Maximum optimizer updates | **50** — hard upper bound, not a success guarantee |
-| Evaluation snapshots | **10, 25, 50** optimizer updates |
+| Maximum optimizer updates | **50 total**, including the tiny-example phase — hard upper bound, not a success guarantee |
+| Examples per optimizer update | **1 source-conditioned example**; one forward/backward pass, gradient accumulation **1**; exactly one optimizer step |
+| Phase A: one-example copy | **Updates 1–10** repeat `m10-js-counter`, a single proposed JS snippet, 10 times |
+| Phase B: full-set learning | **Updates 11–25** round-robin through all 12 training examples (15 updates) |
+| Phase C: full-set consolidation | **Updates 26–50** continue the same round-robin (25 updates) |
+| Evaluation snapshots | Read-only M9 **baseline at update 0**, then **10, 25, 50** optimizer updates |
 | Evaluation data | All 12 train IDs plus 6 disjoint heldout IDs |
 | Prompt/answer positions | At most 256 / 96 tokens including EOS |
 | Selection / loss | Source-conditioned exact copy, answer-and-EOS-only mask |
@@ -53,19 +57,38 @@ loss is not the same as unconditioned/causal generation quality.
 | Checkpoints | New create-only directories with hashes and reports; M7/M9 immutable |
 | Training authorization | **Not granted** by this plan, candidates, or previous M9 approval |
 
-The experimental worker, reproducible milestone sampler, CUDA memory budget,
-checkpoint save rules, exact M9 source hash binding, and GPU execution gates
-must be implemented and reviewed **after** explicit owner approval of the
-candidate texts and experiment limits. Until then, these are design
-constraints, not claims of an existing runnable trainer.
+The deterministic, **CPU-only schedule** is now implemented for review:
+updates 1–10 show one ID, and updates 11–50 cycle through the 12 train IDs
+without resetting at update 26. Total proposed exposures are 50, and all six
+heldout IDs have **zero training exposures**. The full-set segment contains
+40 training examples across 40 optimizer steps: three complete cycles of
+12 plus four additional exposures. The warmup snippet receives 13 total
+exposures (10 warmup + 3 full-set); no individual update processes more than
+one example. These counts are proposals, **not completed training**.
+
+The executable trainer, CUDA memory budget, checkpoint save rules, exact
+M9 source hash binding, and GPU execution/approval gates still require a
+separate implementation and review. The proposed schedule does not grant
+training authorization. All planned optimizer updates are within the 50-step
+ceiling even if any evaluation milestone fails.
 
 ## Scoring and stopping
 
 At each milestone, run an **autonomous** generation test with identical
 prompts and decoding settings, separate from any teacher-forced loss report.
-Compare generated raw text byte-for-byte with the reference; report exact
-match **and EOS** for each case, plus whether output collapses to repeated
-whitespace/punctuation. Save the decoder policy and token budget.
+Score all **12 training and 6 heldout** examples even at the 10-update
+warmup milestone, so the measurements have a comparable denominator.
+The update-zero M9 checkpoint establishes a read-only baseline.
+
+Report per-example byte-for-byte exactness, EOS termination, normalized
+character edit similarity (Levenshtein), correct prefix fraction, number of
+whitespace-only / spaces-only / periods-only responses, longest repeated
+character run, and fraction of output dominated by one character. Report
+train and heldout means separately and the number of distinct generated
+outputs. Keep decoder policy, reference IDs, token budget, checkpoint SHA,
+and output bytes bound to every result. The current CPU-only scorer accepts
+**caller-supplied responses** and marks its results unverified; it does not
+claim an M9/M10 inference evaluation has occurred.
 
 A single perfect training set is not enough. Early-stop only when **both
 training (12/12) and heldout (6/6)** copies are exactly correct and end in
@@ -73,6 +96,46 @@ EOS at **two consecutive evaluation milestones** (earliest stop: update 25).
 Otherwise continue only within the approved 50-update budget. A 6-case
 heldout microprobe is too small to establish broad generalization, even if
 perfect.
+
+### Mechanical integrity and bounded decisions
+
+Before interpreting a loss decrease as learning, the future authorized
+training worker must independently measure and record, at each milestone:
+
+1. **Supervision:** exactly `prompt[:-1]` has ignore targets (`-100`);
+   targets from the last prompt position through code answer and terminal
+   EOS are the only supervised positions. Record the non-ignored prompt
+   count (must be zero), supervised answer positions, EOS target presence,
+   and one input example per optimizer step. The existing CPU-only audit
+   now checks this exact causal alignment.
+2. **Gradient and weights:** record nonzero finite gradient L2 norm and
+   nonzero model weight delta after the optimizer step. Compare the new
+   checkpoint SHA against the starting M9 SHA, with no optimizer-state
+   resume. A changing SHA by itself does not prove meaningful learning.
+3. **Save/reload reproducibility:** hash the newly written create-only
+   checkpoint, load it strictly into the identical model architecture,
+   and verify that deterministic greedy token IDs match before and after
+   reload. Require max absolute float-logit difference <= `1e-4` under
+   the same inference environment and decoding settings. Record all checks
+   and fail the milestone if save/reload is inconsistent.
+
+The CPU-only `classify_mechanical_evidence` function provides a strict
+schema and fault labels for externally supplied evidence; its
+`evidenceVerifiedByThisModule: false` flag must **not** be upgraded to proof
+of an actual M10 training run. The future GPU worker has to collect and bind
+the measurements to weights, record IDs and optimizer updates itself.
+
+**Decision rules:** If mask/gradient/weight/reload checks fail, stop and
+diagnose the mechanism before spending further GPU time. If mechanics pass
+but the update-10 exemplar remains poor, record exact, partial-copy and
+repetition changes against M9 and continue only within the original cap;
+do not label the model unable to copy after ten steps. If training copies
+improve but the six heldout cases do not, label likely memorization rather
+than generalization. If neither exactness nor partial-copy metrics improve
+through update 50 despite demonstrable weight updates, diagnose training
+signal, decoding and prompt conditioning before proposing more training.
+A failed 50-update attempt is a valid research result, not authorization
+to extend the budget.
 
 Before approving this stage, verify the separate backup contains M9 report
 and weights with matching hashes. M9's source checkpoint remains immutable;
@@ -88,7 +151,14 @@ wsl.exe -d Ubuntu --cd /home/quali/plex-nano -- /home/quali/.local/bin/uv run --
 ~~~
 
 This displays every proposed candidate, split, and the immutable candidate
-digest. The separate `--approval-template` option prints an **unapproved**
+digest. The `--show-schedule` option lists all **50 proposed single-example
+optimizer updates** (review only; none are executed):
+
+~~~powershell
+wsl.exe -d Ubuntu --cd /home/quali/plex-nano -- /home/quali/.local/bin/uv run --project training --no-sync python -m plex_training.plex600_m10_copy_proposal --show-schedule
+~~~
+
+The separate `--approval-template` option prints an **unapproved**
 template without writing an approval file:
 
 ~~~powershell
@@ -137,8 +207,10 @@ no training updates and no ability to approve its own candidate.
 
 Request separate, explicit user approval of: the **exact candidate SHA and
 all 18 snippets**, source rights, train/heldout split, verified **M9 backup
-weight SHA**, 50-update maximum, 10/25/50 checkpoints, optimizer parameters,
-time/storage envelope, and exact-copy stopping gate. Do not borrow an M7/M9
+weight SHA**, **one example per update**, exact **10+15+25 phase schedule**,
+50-update maximum, update-zero baseline, 10/25/50 checkpoints, optimizer
+parameters, time/storage envelope, mechanical acceptance criteria, and
+exact-copy stopping gate. Do not borrow an M7/M9
 approval.
 
 Once authorized, design and test the *new* bounded runner in its own PR.
