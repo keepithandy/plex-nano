@@ -36,6 +36,12 @@ class M9BoundedPilotTests(unittest.TestCase):
         self.assertFalse(data["finalHoldoutUsed"])
         self.assertFalse(data["ownerApprovalBundled"])
 
+    def test_completed_plan_reports_checkpoint_write(self):
+        self.assertFalse(m9.plan()["checkpointWrites"])
+        self.assertTrue(m9.completed_plan()["checkpointWrites"])
+        self.assertFalse(m9.completed_plan()["finalHoldoutUsed"])
+        self.assertEqual(m9.completed_plan()["optimizerUpdatesMaximum"], 8)
+
     def test_source_grouped_no_truncation_three_languages(self):
         sample = m9.selected_records(CompactTokenizer())
         self.assertEqual(len(sample["trainRecordIds"]), 8)
