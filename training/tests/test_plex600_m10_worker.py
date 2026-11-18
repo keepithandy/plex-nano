@@ -263,6 +263,9 @@ class M10WorkerTests(unittest.TestCase):
             }
             (first / "report.json").write_text(
                 json.dumps(report), encoding="utf-8")
+            torn = stage / "step-25"
+            torn.mkdir()
+            (torn / "weights.pt").write_bytes(b"incomplete-copy")
             self.assertTrue(worker.preserve_verified_partial(
                 stage, target, proof, failure_reason="hard-timeout"))
             interruption = json.loads((target / "interruption.json").read_text())
@@ -271,6 +274,7 @@ class M10WorkerTests(unittest.TestCase):
             self.assertFalse(interruption["resumeAuthorized"])
             self.assertIn("not-training-success", interruption["status"])
             self.assertFalse(stage.exists())
+            self.assertFalse((target / "step-25").exists())
             with self.assertRaisesRegex(worker.Refusal, "occupied"):
                 worker.preserve_verified_partial(
                     target, target, proof, failure_reason="hard-timeout")
