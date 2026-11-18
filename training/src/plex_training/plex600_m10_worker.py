@@ -629,12 +629,32 @@ def run_approved(paths: dict[str, Path], *, bundle_sha: str,
                 or [s["optimizerUpdatesCompleted"] for s in snapshots]
                    != expected_steps):
             raise Refusal("M10 failed exact checkpoint progression")
+        schedule = exact_schedule()
+        steps = outcome.get("steps")
+        if (type(steps) is not list
+                or len(steps) != outcome["optimizerUpdatesCompleted"]
+                or any(type(row) is not dict
+                       or row.get("step") != expected["optimizerUpdate"]
+                       or row.get("recordId") != expected["recordIds"][0]
+                       or row.get("eosTargetSupervised") is not True
+                       or row.get("promptPositionsIncorrectlySupervised") != 0
+                       for row, expected in zip(steps, schedule))):
+            raise Refusal("M10 child update ledger diverged from exact approved schedule")
         for item in snapshots:
-            checkpoint = stage / f"step-{item['optimizerUpdatesCompleted']}" / "weights.pt"
-            if (_sha(checkpoint) != item["checkpointSha256"]
+            folder = stage / f"step-{item['optimizerUpdatesCompleted']}"
+            checkpoint = folder / "weights.pt"
+            responses = folder / "responses.jsonl"
+            checkpoint_sha = _sha(checkpoint)
+            response_sha = research.digest_file(
+                responses, limit=gate.RESPONSES_MAX_BYTES)
+            with (folder / "report.json").open("r", encoding="utf-8") as stream:
+                snapshot_record = json.load(stream)
+            if (checkpoint_sha != item["checkpointSha256"]
                     or checkpoint.stat().st_size != item["checkpoint"]["bytes"]
-                    or _sha(checkpoint) != item["checkpoint"]["sha256"]):
-                raise Refusal("M10 saved checkpoint did not verify on parent")
+                    or checkpoint_sha != item["checkpoint"]["sha256"]
+                    or response_sha != item["responsesSha256"]
+                    or snapshot_record != item):
+                raise Refusal("M10 saved checkpoint/response/scores differ from child receipts")
         with (stage / "report.json").open("x", encoding="utf-8") as stream:
             json.dump(outcome, stream, indent=2, sort_keys=True, allow_nan=False)
             stream.write("\n")
