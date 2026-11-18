@@ -21,6 +21,7 @@ import os
 from pathlib import Path
 import secrets
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -140,6 +141,17 @@ def _sha(path: Path) -> str:
 
 
 def _source_identity() -> dict[str, Any]:
+    protected = (
+        Path(__file__), Path(gate.__file__), Path(copy.__file__),
+    )
+    names = [path.relative_to(research.ROOT).as_posix() for path in protected]
+    state = subprocess.run(
+        ["git", "status", "--porcelain", "--", *names],
+        cwd=research.ROOT, capture_output=True, text=True,
+        check=True, timeout=8,
+    )
+    if state.stdout.strip():
+        raise Refusal("M10 worker/admission/proposal source is locally modified")
     return {
         **hw.source_identity(),
         "m10WorkerSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
