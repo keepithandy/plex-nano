@@ -37,6 +37,7 @@ SNAPSHOTS = 3
 # plus 1 GiB safety margin before any authorized worker creates its output.
 MIN_OUTPUT_FREE_BYTES = (SNAPSHOTS + 1) * CHECKPOINT_MAX_BYTES + 1024**3
 DECODERS = ("unmasked-v1", "fitted-vocab-v1")
+TOKENIZER_SHA256 = "9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2"
 
 
 class Refusal(ValueError):
@@ -109,7 +110,7 @@ def read_baseline_receipt(
             or report.get("m9ReportSha256") != m9_report_sha
             or report.get("candidateSha256") != candidate_sha
             or report.get("bundleManifestSha256") != research.BUNDLE_SHA
-            or report.get("tokenizerSha256") != m10.audit_tokenizer_sha()
+            or report.get("tokenizerSha256") != TOKENIZER_SHA256
             or report.get("responsesSha256") != raw_response_sha
             or report.get("selectedCases") != 18
             or report.get("decodingPolicies") != list(DECODERS)
@@ -165,10 +166,14 @@ def read_baseline_receipt(
             stored = reference["bySplit"].get(split)
             if type(stored) is not dict:
                 raise Refusal("M9 baseline split summary is invalid")
-            for name in ("total", "exact", "eos", "exactWithEos",
-                         "meanCharacterSimilarity"):
+            for name in ("total", "exact", "eos", "exactWithEos"):
                 if stored.get(name) != actual[name]:
                     raise Refusal("M9 baseline score differs from raw responses")
+            similarity = stored.get("meanCharacterSimilarity")
+            if (type(similarity) not in (int, float)
+                    or not math.isfinite(similarity)
+                    or abs(similarity - actual["meanCharacterSimilarity"]) > 0.000002):
+                raise Refusal("M9 baseline character score differs from raw responses")
         if reference.get("complete18CaseComparison") is not True:
             raise Refusal("M9 baseline comparison is incomplete")
     return {
@@ -238,6 +243,34 @@ def approval_template(
     }
 
 
+def inspect_sources(
+    bundle: Path, bundle_sha: str, m9_report: Path, m9_weights: Path,
+    baseline_report: Path, baseline_responses: Path,
+) -> dict[str, Any]:
+    """Pure admission inputs, no external owner permission and no GPU."""
+    if bundle_sha != research.BUNDLE_SHA:
+        raise Refusal("M10 frozen M7 bundle SHA mismatch")
+    backup = m10.audit_m9_backup(m9_report, m9_weights)
+    m8.verified_bundle(bundle, bundle_sha)
+    from .tokenizer import PlexTokenizer
+    tokenizer = PlexTokenizer.load(bundle)
+    token_audit = m10.audit(tokenizer)
+    baseline = read_baseline_receipt(
+        baseline_report, baseline_responses,
+        m9_weights_sha=backup["m9WeightsSha256"],
+        m9_report_sha=backup["m9ReportSha256"],
+        candidate_sha=token_audit["candidateSha256"],
+    )
+    if token_audit["tokenizerSha256"] != TOKENIZER_SHA256:
+        raise Refusal("M10 frozen tokenizer SHA drifted")
+    return {
+        "backup": backup,
+        "baseline": baseline,
+        "tokenAudit": token_audit,
+        "unapprovedTemplate": approval_template(backup, baseline),
+    }
+
+
 def check_approval(path: Path, proposed: dict[str, Any]) -> dict[str, Any]:
     """Require exact, external owner signoff; prior M9 consent is never reused."""
     if (path.is_symlink() or not path.is_file()
@@ -286,19 +319,14 @@ def admission(
     # Output must not overwrite any existing result. Reject it BEFORE
     # hashing multi-GB weights or reading any owner-consent file.
     output_path = m8.require_output(output, bundle=bundle, checkpoint=m9_weights)
-    backup = m10.audit_m9_backup(m9_report, m9_weights)
-    m8.verified_bundle(bundle, bundle_sha)
-    from .tokenizer import PlexTokenizer
-    tokenizer = PlexTokenizer.load(bundle)
-    token_audit = m10.audit(tokenizer)
-    baseline = read_baseline_receipt(
+    inspected = inspect_sources(
+        bundle, bundle_sha, m9_report, m9_weights,
         baseline_report, baseline_responses,
-        m9_weights_sha=backup["m9WeightsSha256"],
-        m9_report_sha=backup["m9ReportSha256"],
-        candidate_sha=token_audit["candidateSha256"],
     )
-    template = approval_template(backup, baseline)
-    consent = check_approval(approval, template)
+    backup = inspected["backup"]
+    token_audit = inspected["tokenAudit"]
+    baseline = inspected["baseline"]
+    consent = check_approval(approval, inspected["unapprovedTemplate"])
     free_bytes = shutil.disk_usage(output_path.parent).free if check_free_space else None
     if check_free_space and free_bytes < MIN_OUTPUT_FREE_BYTES:
         raise Refusal("M10 output filesystem lacks room for bounded checkpoint snapshots")
@@ -339,7 +367,9 @@ def admission(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--audit-admission", action="store_true")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--audit-admission", action="store_true")
+    modes.add_argument("--show-approval-template", action="store_true")
     parser.add_argument("--bundle-dir", type=Path)
     parser.add_argument("--bundle-manifest-sha256")
     parser.add_argument("--m9-report", type=Path)
@@ -350,27 +380,42 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args(argv)
     try:
-        if args.audit_admission:
+        if args.audit_admission or args.show_approval_template:
             required = [
                 args.bundle_dir, args.bundle_manifest_sha256,
                 args.m9_report, args.m9_weights,
                 args.baseline_report, args.baseline_responses,
-                args.approval_file, args.output_dir,
             ]
             if not all(required):
-                raise Refusal("M10 admission requires every explicit source, approval, and output")
-            result = admission(
-                args.bundle_dir, args.bundle_manifest_sha256,
-                args.m9_report, args.m9_weights,
-                args.baseline_report, args.baseline_responses,
-                args.approval_file, args.output_dir,
-            )
+                raise Refusal("M10 admission requires frozen tokenizer, backup, baseline")
+            if args.show_approval_template:
+                if args.approval_file is not None or args.output_dir is not None:
+                    raise Refusal("Unapproved template cannot accept approval or output paths")
+                inspected = inspect_sources(
+                    args.bundle_dir, args.bundle_manifest_sha256,
+                    args.m9_report, args.m9_weights,
+                    args.baseline_report, args.baseline_responses,
+                )
+                result = {
+                    **plan(),
+                    "status": "exact-scope-template-unapproved",
+                    "approvalTemplate": inspected["unapprovedTemplate"],
+                }
+            else:
+                if args.approval_file is None or args.output_dir is None:
+                    raise Refusal("M10 admission additionally requires owner approval and new output")
+                result = admission(
+                    args.bundle_dir, args.bundle_manifest_sha256,
+                    args.m9_report, args.m9_weights,
+                    args.baseline_report, args.baseline_responses,
+                    args.approval_file, args.output_dir,
+                )
         elif any(value is not None for value in (
             args.bundle_dir, args.bundle_manifest_sha256, args.m9_report,
             args.m9_weights, args.baseline_report, args.baseline_responses,
             args.approval_file, args.output_dir,
         )):
-            raise Refusal("M10 file paths require --audit-admission")
+            raise Refusal("M10 file paths require explicit CPU-only admission/template flag")
         else:
             result = plan()
     except (OSError, ValueError, TypeError, KeyError, RuntimeError) as exc:
