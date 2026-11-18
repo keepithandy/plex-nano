@@ -78,7 +78,9 @@ At each milestone, run an **autonomous** generation test with identical
 prompts and decoding settings, separate from any teacher-forced loss report.
 Score all **12 training and 6 heldout** examples even at the 10-update
 warmup milestone, so the measurements have a comparable denominator.
-The update-zero M9 checkpoint establishes a read-only baseline.
+Use the completed M9 baseline report and responses as the update-zero measurements. Record their paths and hashes and match checkpoint, case IDs, prompts, decoder policies and generation cap before comparing milestones. If a field differs, flag that comparison for review. Preparation requires no repeat inference.
+
+The single-example CPU regression exercises the shared causal loss and model on synthetic token IDs. It checks that the prompt logits receive zero loss gradient, each answer position including EOS receives a gradient, the embedding weights change after one optimizer step, and a fresh model loaded from disk reproduces the logits and token choices. Actual M10 measurements belong to the future approved run.
 
 Report per-example byte-for-byte exactness, EOS termination, normalized
 character edit similarity (Levenshtein), correct prefix fraction, number of
