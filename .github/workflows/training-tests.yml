@@ -116,6 +116,7 @@ jobs:
           training/tests/test_plex600_m10_copy_proposal.py
           training/tests/test_plex600_m10_admission.py
           training/tests/test_plex600_m10_worker.py
+          training/tests/test_plex600_m10_owner_approval.py
           training/tests/test_ci_test_inventory.py
           -q
 
