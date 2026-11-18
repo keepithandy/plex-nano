@@ -259,6 +259,64 @@ def _measure_generation(model: Any, torch: Any, tokenizer: Any,
     return scores, raw
 
 
+def warmup_comparison(
+    baseline_responses: list[dict[str, Any]], scores: dict[str, Any],
+) -> dict[str, Any]:
+    """Check the *same* one-line prompt before/after actual inference."""
+    candidate = next(row for row in copy.rows() if row["id"] == PROBE_ID)
+    output = {}
+    for decoder in DECODERS:
+        prior = [x for x in baseline_responses
+                 if x.get("id") == PROBE_ID and x.get("decodingPolicy") == decoder]
+        now = [x for x in scores[decoder]["byExample"] if x["id"] == PROBE_ID]
+        if len(prior) != 1 or len(now) != 1:
+            raise Refusal("M10 must compare the same exact warmup case under both decoders")
+        before = prior[0]
+        after = now[0]
+        expected = candidate["snippet"]
+        before_similarity = copy.character_similarity(expected, before["output"])
+        output[decoder] = {
+            "beforeExactAndEos": (before["output"] == expected
+                                 and before["terminationReason"] == "eos"),
+            "afterExactAndEos": after["exact"] and after["eos"],
+            "beforeCharacterSimilarity": round(before_similarity, 6),
+            "afterCharacterSimilarity": after["characterSimilarity"],
+            "characterSimilarityDelta": round(
+                after["characterSimilarity"] - before_similarity, 6),
+            "beforeTerminationReason": before["terminationReason"],
+            "afterTerminationReason": after["terminationReason"],
+        }
+    return output
+
+
+def teacher_forced_probe(
+    model: Any, torch: Any, packed: dict[str, Any],
+    device: Any,
+) -> dict[str, Any]:
+    """Report EOS and first-answer ranks without confusing NLL with generation."""
+    model.eval()
+    x = torch.tensor([packed["inputIds"]], dtype=torch.long, device=device)
+    y = torch.tensor([packed["targetIds"]], dtype=torch.long, device=device)
+    first_index = packed["lossMaskPromptPositions"]
+    eos_index = len(packed["targetIds"]) - 1
+    with torch.inference_mode(), torch.autocast("cuda", dtype=torch.bfloat16):
+        logits, loss = model(x, y)
+    if loss is None or not bool(torch.isfinite(loss)):
+        raise Refusal("M10 teacher-forced warmup loss invalid")
+    first_logits = logits[0, first_index].float()
+    eos_logits = logits[0, eos_index].float()
+    first_token = y[0, first_index]
+    eos_logit = eos_logits[3]
+    return {
+        "teacherForcedAnswerAndEosNll": float(loss.item()),
+        "firstAnswerTokenRank": int((first_logits > first_logits[first_token]).sum().item()) + 1,
+        "eosTokenRank": int((eos_logits > eos_logit).sum().item()) + 1,
+        "eosTokenProbability": float(eos_logits.softmax(-1)[3].item()),
+        "supervisedAnswerPositions": packed["supervisedAnswerPositions"],
+        "notAutonomousGeneration": True,
+    }
+
+
 def _train_worker(paths: dict[str, Path], bundle_sha: str,
                   stage: Path) -> dict[str, Any]:
     # The child independently revalidates every owner consent/checkpoint.
@@ -269,6 +327,10 @@ def _train_worker(paths: dict[str, Path], bundle_sha: str,
     packed = packaged_samples(tokenizer)
     schedule = exact_schedule()
     all_rows = copy.rows()
+    # Admission independently verified all 36 raw baseline responses and
+    # their SHA; only copy them for source-bound before/after comparisons.
+    baseline_responses = research.read_jsonl(
+        paths["baseline_responses"], limit=gate.RESPONSES_MAX_BYTES)
     probe_ids = tokenizer.encode(copy.prompt_for(
         next(row for row in all_rows if row["id"] == PROBE_ID)))
 
@@ -357,6 +419,9 @@ def _train_worker(paths: dict[str, Path], bundle_sha: str,
         model.eval()
         scores, response_raw = _measure_generation(
             model, torch, tokenizer, all_rows, device, evidence["sha256"])
+        diagnostics = teacher_forced_probe(
+            model, torch, packed[PROBE_ID], device)
+        warmup_delta = warmup_comparison(baseline_responses, scores)
         with (snapshot / "responses.jsonl").open("xb") as stream:
             stream.write(response_raw)
         score_proof = {
@@ -370,6 +435,8 @@ def _train_worker(paths: dict[str, Path], bundle_sha: str,
         record = {
             **score_proof,
             "checkpoint": evidence,
+            "warmupBeforeAfter": warmup_delta,
+            "warmupTeacherForcedDiagnostics": diagnostics,
             "responsesSha256": hashlib.sha256(response_raw).hexdigest(),
             "latestGradientL2Norm": gradient_norm,
             "latestEmbeddingRowDeltaL2": delta,
