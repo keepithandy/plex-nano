@@ -206,6 +206,61 @@ class M10WorkerTests(unittest.TestCase):
                 self.assertEqual(supervise.call_args.kwargs["timeout"], 3600)
             self.assertEqual(list(root.glob(".output_dir.staging-*")), [])
 
+    def test_timeout_preserves_only_verified_partial_and_never_labels_success(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage = root / "stage"
+            stage.mkdir()
+            target = root / "output"
+            first = stage / "step-10"
+            first.mkdir()
+            payload = first / "weights.pt"
+            payload.write_bytes(b"cpu-test-only-not-a-model")
+            digest = worker._sha(payload)
+            responses = first / "responses.jsonl"
+            responses.write_text('{"id":"synthetic"}\n', encoding="utf-8")
+            response_sha = research.digest_file(
+                responses, limit=gate.RESPONSES_MAX_BYTES)
+            proof = {"candidateSha256": "a"*64,
+                     "m9WeightsSha256": "b"*64,
+                     "externalApprovalSha256": "c"*64}
+            report = {
+                "optimizerUpdatesCompleted": 10,
+                "checkpointSha256": digest,
+                "candidateSha256": proof["candidateSha256"],
+                "checkpoint": {"sha256": digest,
+                               "bytes": payload.stat().st_size},
+                "verifiedGeneration": True,
+                "decodingPolicies": list(worker.DECODERS),
+                "responsesSha256": response_sha,
+            }
+            (first / "report.json").write_text(
+                json.dumps(report), encoding="utf-8")
+            self.assertTrue(worker.preserve_verified_partial(
+                stage, target, proof, failure_reason="hard-timeout"))
+            interruption = json.loads((target / "interruption.json").read_text())
+            self.assertEqual(interruption["lastVerifiedMilestone"], 10)
+            self.assertFalse(interruption["trainingCompleted"])
+            self.assertFalse(interruption["resumeAuthorized"])
+            self.assertIn("not-training-success", interruption["status"])
+            self.assertFalse(stage.exists())
+            with self.assertRaisesRegex(worker.Refusal, "occupied"):
+                worker.preserve_verified_partial(
+                    target, target, proof, failure_reason="hard-timeout")
+
+    def test_incomplete_partial_checkpoint_is_not_published_as_success(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage = root / "stage"
+            (stage / "step-10").mkdir(parents=True)
+            (stage / "step-10" / "weights.pt").write_bytes(b"incomplete")
+            proof = {"candidateSha256": "a"*64,
+                     "m9WeightsSha256": "b"*64,
+                     "externalApprovalSha256": "c"*64}
+            self.assertFalse(worker.preserve_verified_partial(
+                stage, root / "output", proof, failure_reason="worker-error"))
+            self.assertFalse((root / "output").exists())
+
     def test_only_explicitly_admitted_child_imports_training_backend(self):
         source = Path(worker.__file__).read_text(encoding="utf-8")
         module = ast.parse(source)
