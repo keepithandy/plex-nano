@@ -226,6 +226,31 @@ class M10WorkerTests(unittest.TestCase):
         self.assertNotIn("training/artifacts/plex600-m9-r3-first-eight/weights.pt",
                          source)
 
+    def test_warmup_comparison_tracks_actual_copy_progress_without_claiming_code_editing(self):
+        rows = copy.rows()
+        target = next(x for x in rows if x["id"] == worker.PROBE_ID)["snippet"]
+        before = []
+        after_scores = {}
+        for policy in worker.DECODERS:
+            before.append({"id": worker.PROBE_ID, "decodingPolicy": policy,
+                           "output": " " * 96, "terminationReason": "max-new-tokens"})
+            predictions = [
+                {"id": r["id"], "output": r["snippet"],
+                 "terminationReason": "eos"}
+                for r in rows
+            ]
+            after_scores[policy] = copy.score_predictions(rows, predictions)
+        result = worker.warmup_comparison(before, after_scores)
+        self.assertEqual(set(result), set(worker.DECODERS))
+        for val in result.values():
+            self.assertFalse(val["beforeExactAndEos"])
+            self.assertTrue(val["afterExactAndEos"])
+            self.assertEqual(val["afterCharacterSimilarity"], 1.0)
+            self.assertGreater(val["characterSimilarityDelta"], 0)
+        bad = before[:-1]
+        with self.assertRaisesRegex(worker.Refusal, "same exact warmup"):
+            worker.warmup_comparison(bad, after_scores)
+
     def test_generation_helper_is_source_bound_not_early_stop_claim(self):
         self.assertEqual(worker.DECODERS, gate.DECODERS)
         self.assertEqual(worker.PROBE_ID, copy.WARMUP_RECORD_ID)
