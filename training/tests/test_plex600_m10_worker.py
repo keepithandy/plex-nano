@@ -313,6 +313,63 @@ class M10WorkerTests(unittest.TestCase):
         with self.assertRaisesRegex(worker.Refusal, "same exact warmup"):
             worker.warmup_comparison(bad, after_scores)
 
+    def test_snapshot_reload_preserves_live_parameter_and_optimizer_continuity(self):
+        import torch
+        from plex_training.plex600 import Plex600Config, Plex600Model
+
+        config = Plex600Config(
+            vocab_size=260, context_length=12, width=16, layers=1,
+            attention_heads=2, key_value_heads=1, feed_forward_width=32)
+        with torch.random.fork_rng(devices=[]):
+            torch.random.default_generator.manual_seed(41)
+            model = Plex600Model(config)
+            optimizer = torch.optim.AdamW(
+                model.parameters(), lr=5e-5, eps=1e-8,
+                weight_decay=0, foreach=False, fused=False)
+            ids = torch.tensor([[4, 7, 8, 9, 4]], dtype=torch.long)
+            targets = torch.tensor([[-100, -100, 7, 8, 3]], dtype=torch.long)
+            model.train()
+            _, loss = model(ids, targets)
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
+
+            original_params = tuple(model.parameters())
+            original_param_ids = tuple(id(p) for p in original_params)
+            original_values = [p.detach().clone() for p in original_params]
+            embedding = model.token_embedding.weight
+            initial_adam_step = optimizer.state[embedding]["step"].item()
+            with tempfile.TemporaryDirectory() as temp:
+                checkpoint = Path(temp) / "weights.pt"
+                with patch.object(model, "to",
+                                  side_effect=AssertionError("live model moved")):
+                    receipt = worker._reload_parity(
+                        model, torch, checkpoint, [4, 7, 8], config)
+                self.assertTrue(checkpoint.is_file())
+                self.assertEqual(receipt["sha256"], worker._sha(checkpoint))
+                self.assertTrue(receipt["reloadedGreedyTokensMatch"])
+                self.assertLessEqual(
+                    receipt["maxReloadLogitAbsoluteDifference"], 0.0001)
+                self.assertTrue(receipt["liveModelParameterDevicePreserved"])
+                self.assertTrue(receipt["liveModelParameterIdentityPreserved"])
+                self.assertEqual(
+                    tuple(id(p) for p in model.parameters()), original_param_ids)
+                self.assertTrue(all(torch.equal(p, previous)
+                                    for p, previous in zip(model.parameters(),
+                                                          original_values)))
+                with self.assertRaisesRegex(worker.Refusal, "create-only"):
+                    worker._reload_parity(
+                        model, torch, checkpoint, [4, 7, 8], config)
+
+            model.train()
+            _, next_loss = model(ids, targets)
+            next_loss.backward()
+            optimizer.step()
+            self.assertEqual(
+                optimizer.state[embedding]["step"].item(), initial_adam_step + 1)
+            self.assertFalse(torch.equal(
+                embedding, original_values[0]))
+
     def test_generation_helper_is_source_bound_not_early_stop_claim(self):
         self.assertEqual(worker.DECODERS, gate.DECODERS)
         self.assertEqual(worker.PROBE_ID, copy.WARMUP_RECORD_ID)
