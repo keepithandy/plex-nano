@@ -148,6 +148,9 @@ class M10WorkerTests(unittest.TestCase):
                 "approval_file": root / "owner",
                 "output_dir": root / "destination",
             }
+            for path_name, location in paths.items():
+                if path_name not in ("bundle_dir", "output_dir"):
+                    location.write_text("synthetic-path-only", encoding="utf-8")
             proof = {
                 "m9WeightsSha256": "a"*64,
                 "candidateSha256": "b"*64,
@@ -187,6 +190,9 @@ class M10WorkerTests(unittest.TestCase):
                 "baseline_report", "baseline_responses",
                 "approval_file", "output_dir",
             )}
+            for path_name, location in paths.items():
+                if path_name not in ("bundle_dir", "output_dir"):
+                    location.write_text("synthetic-path-only", encoding="utf-8")
             with patch.object(worker, "_admit", return_value={}), \
                  patch.object(worker, "_source_identity", return_value={}), \
                  patch.object(worker.m8, "require_output",
