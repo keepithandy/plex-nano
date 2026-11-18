@@ -25,6 +25,13 @@ have zero training exposure.
 At updates 10, 25 and 50, the worker writes model-only, SHA-256 verified,
 create-only checkpoint snapshots. Each is loaded strictly into a fresh
 CPU model for greedy-token and maximum 1e-4 logit-parity checks.
+The live model and its AdamW Parameter identities remain on the original
+training device: a separate CPU model receives a tensor-by-tensor snapshot,
+then a new CPU model reloads the saved weights for FP32 parity. A
+regression test checks that optimizer state can advance after snapshotting.
+The parent independently re-scores every recorded 18-case × 2-policy
+prediction from the raw checkpoint-bound responses, rather than merely
+trusting the scores reported by the child.
 
 After every milestone it generates on all 18 candidates under both
 existing decoding policies. It stores raw prediction text, EOS/stop
@@ -53,9 +60,11 @@ under **both** decoding policies. No skipped evaluation is permitted.
   cap is distinct from cooperative checks between updates.
 - New checkpoint snapshots are model-only; optimizer state is never
   written or resumed.
-- On interruption, only complete and SHA-verified partial milestones
-  may be preserved. They are explicitly marked incomplete, not a
-  successful training result or an authorization to resume.
+- On interruption, only complete, SHA-verified and independently
+  re-scored partial milestones may be preserved. Any unfinished future
+  snapshot is discarded before publishing the clearly labeled partial
+  artifact. It is not a successful training result or authorization
+  to resume.
 - No final project holdout, automatic retraining, extra steps or
   self-created approval files are allowed.
 
