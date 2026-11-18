@@ -244,7 +244,7 @@ class M10WorkerTests(unittest.TestCase):
             digest = worker._sha(payload)
             responses = first / "responses.jsonl"
             response_text, scoring = synthetic_checkpoint_responses(digest)
-            responses.write_text(response_text, encoding="utf-8")
+            responses.write_bytes(response_text.encode("utf-8"))
             response_sha = research.digest_file(
                 responses, limit=gate.RESPONSES_MAX_BYTES)
             proof = {"candidateSha256": "a"*64,
@@ -297,7 +297,7 @@ class M10WorkerTests(unittest.TestCase):
             responses = Path(temp) / "responses.jsonl"
             sha = "a" * 64
             response_text, scoring = synthetic_checkpoint_responses(sha)
-            responses.write_text(response_text, encoding="utf-8")
+            responses.write_bytes(response_text.encode("utf-8"))
             evidence = worker.verify_checkpoint_responses(responses, sha, scoring)
             self.assertEqual(evidence["responseCountVerified"], 36)
             self.assertEqual(evidence["sourceCheckpointSha256"], sha)
@@ -307,14 +307,14 @@ class M10WorkerTests(unittest.TestCase):
                 worker.verify_checkpoint_responses(responses, sha, broken_scores)
             lines = [json.loads(row) for row in response_text.splitlines()]
             lines[0]["checkpointSha256"] = "b" * 64
-            responses.write_text("".join(
-                json.dumps(row) + "\n" for row in lines), encoding="utf-8")
+            responses.write_bytes(("".join(
+                json.dumps(row) + "\n" for row in lines)).encode("utf-8"))
             with self.assertRaisesRegex(worker.Refusal, "mismatched"):
                 worker.verify_checkpoint_responses(responses, sha, scoring)
             lines[0]["checkpointSha256"] = sha
             lines[-1]["id"] = lines[0]["id"]
-            responses.write_text("".join(
-                json.dumps(row) + "\n" for row in lines), encoding="utf-8")
+            responses.write_bytes(("".join(
+                json.dumps(row) + "\n" for row in lines)).encode("utf-8"))
             with self.assertRaises(worker.Refusal):
                 worker.verify_checkpoint_responses(responses, sha, scoring)
 
