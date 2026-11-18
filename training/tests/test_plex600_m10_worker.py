@@ -185,6 +185,7 @@ class M10WorkerTests(unittest.TestCase):
     def test_parent_enforces_child_hard_timeout(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            (root / "bundle_dir").mkdir()
             paths = {name: root / name for name in (
                 "bundle_dir", "m9_report", "m9_weights",
                 "baseline_report", "baseline_responses",
