@@ -261,6 +261,13 @@ class M10WorkerTests(unittest.TestCase):
                 stage, root / "output", proof, failure_reason="worker-error"))
             self.assertFalse((root / "output").exists())
 
+    def test_uncommitted_training_worker_code_is_rejected(self):
+        from types import SimpleNamespace
+        with patch.object(worker.subprocess, "run",
+                          return_value=SimpleNamespace(stdout=" M training/src/plex_training/plex600_m10_worker.py\n")):
+            with self.assertRaisesRegex(worker.Refusal, "locally modified"):
+                worker._source_identity()
+
     def test_only_explicitly_admitted_child_imports_training_backend(self):
         source = Path(worker.__file__).read_text(encoding="utf-8")
         module = ast.parse(source)
