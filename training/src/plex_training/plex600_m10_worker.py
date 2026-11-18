@@ -483,6 +483,81 @@ def _train_worker(paths: dict[str, Path], bundle_sha: str,
     return result
 
 
+def preserve_verified_partial(
+    stage: Path, target: Path, proof: dict[str, Any], *,
+    failure_reason: str,
+) -> bool:
+    """On failure, preserve only complete SHA-checked milestones as INCOMPLETE.
+
+    A hard-killed run cannot claim the final optimizer update count or
+    completion. This protects the scientifically useful step-10 diagnostic
+    without accepting a half-written weight file as a valid checkpoint.
+    """
+    if failure_reason not in {"hard-timeout", "worker-error"}:
+        raise Refusal("M10 unknown failure classification")
+    if target.exists() or target.is_symlink():
+        raise Refusal("M10 cannot overwrite an occupied partial-output path")
+    checks: list[dict[str, Any]] = []
+    for step in SNAPSHOTS:
+        folder = stage / f"step-{step}"
+        weights = folder / "weights.pt"
+        response = folder / "responses.jsonl"
+        report_path = folder / "report.json"
+        if not all(path.is_file() and not path.is_symlink()
+                   for path in (weights, response, report_path)):
+            break
+        if (report_path.stat().st_size > 1024**2
+                or response.stat().st_size > gate.RESPONSES_MAX_BYTES):
+            break
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            checkpoint = report.get("checkpoint")
+            digest = _sha(weights)
+            if (report.get("optimizerUpdatesCompleted") != step
+                    or report.get("candidateSha256") != proof["candidateSha256"]
+                    or type(checkpoint) is not dict
+                    or checkpoint.get("sha256") != digest
+                    or checkpoint.get("bytes") != weights.stat().st_size
+                    or report.get("checkpointSha256") != digest
+                    or report.get("verifiedGeneration") is not True
+                    or report.get("decodingPolicies") != list(DECODERS)
+                    or report.get("responsesSha256") != research.digest_file(
+                        response, limit=gate.RESPONSES_MAX_BYTES)):
+                break
+        except (OSError, ValueError, TypeError, KeyError, RuntimeError):
+            break
+        checks.append({
+            "optimizerUpdatesCompletedThroughThisMilestone": step,
+            "checkpointSha256": digest,
+            "responseSha256": report["responsesSha256"],
+        })
+    if not checks:
+        return False
+    interrupted = {
+        "protocol": PROTOCOL,
+        "status": "interrupted-partial-unreviewed-not-training-success",
+        "failureReason": failure_reason,
+        "trainingMayHaveContinuedBeyondLastVerifiedMilestone": True,
+        "lastVerifiedMilestone": checks[-1]["optimizerUpdatesCompletedThroughThisMilestone"],
+        "verifiedPartialSnapshots": checks,
+        "originalM9WeightsSha256": proof["m9WeightsSha256"],
+        "candidateSha256": proof["candidateSha256"],
+        "approvalSha256": proof["externalApprovalSha256"],
+        "trainingCompleted": False,
+        "resumeAuthorized": False,
+        "optimizerStateSaved": False,
+        "finalHoldoutUsed": False,
+        "historicalCheckpointWrites": False,
+    }
+    with (stage / "interruption.json").open("x", encoding="utf-8") as stream:
+        json.dump(interrupted, stream, indent=2, sort_keys=True, allow_nan=False)
+        stream.write("\n")
+    if target.exists():
+        raise Refusal("M10 output appeared during interrupted evidence publication")
+    os.rename(stage, target)
+    return True
+
+
 def run_approved(paths: dict[str, Path], *, bundle_sha: str,
                  explicit_flag: bool) -> dict[str, Any]:
     if explicit_flag is not True:
@@ -510,7 +585,15 @@ def run_approved(paths: dict[str, Path], *, bundle_sha: str,
              "--_worker"],
             payload, env, timeout=HARD_TIMEOUT)
         if timed_out or rc != 0:
-            raise Refusal("M10 hard-timeout or worker failure; no approved result published")
+            reason = "hard-timeout" if timed_out else "worker-error"
+            preserved = preserve_verified_partial(
+                stage, target, proof, failure_reason=reason)
+            if preserved:
+                stage = None
+                raise Refusal(
+                    f"M10 {reason}: verified PARTIAL evidence stored at {target}; "
+                    "training NOT complete, no optimizer-state resume")
+            raise Refusal("M10 hard-timeout or worker failure; no completed result published")
         outcome = json.loads(out)
         if (outcome.get("protocol") != PROTOCOL
                 or outcome.get("identity") != identity
