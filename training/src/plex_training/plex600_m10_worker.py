@@ -299,6 +299,71 @@ def _measure_generation(model: Any, torch: Any, tokenizer: Any,
     return scores, raw
 
 
+def verify_checkpoint_responses(
+    response_path: Path, checkpoint_sha: str,
+    recorded_scores: dict[str, Any],
+) -> dict[str, Any]:
+    """Independently re-score all 36 checkpoint-bound predictions on CPU.
+
+    Matching a file hash alone cannot prove that the recorded exact/EOS
+    outcomes agree with the serialized outputs. This checker is shared by
+    normal publication and interrupted milestone salvage.
+    """
+    if type(recorded_scores) is not dict or set(recorded_scores) != set(DECODERS):
+        raise Refusal("M10 checkpoint scores require both decoding policies")
+    expected = copy.rows()
+    cases = {case["id"]: case for case in expected}
+    response_rows = research.read_jsonl(
+        response_path, limit=gate.RESPONSES_MAX_BYTES)
+    if len(response_rows) != len(cases) * len(DECODERS):
+        raise Refusal("M10 checkpoint must have exactly 18 responses per decoder")
+    required = {
+        "id", "output", "terminationReason", "generatedTokens",
+        "language", "split", "decodingPolicy",
+        "promptSha256", "checkpointSha256",
+    }
+    seen: set[tuple[str, str]] = set()
+    predictions: dict[str, list[dict[str, Any]]] = {p: [] for p in DECODERS}
+    for row in response_rows:
+        if type(row) is not dict or set(row) != required:
+            raise Refusal("M10 checkpoint response has missing or extra fields")
+        policy = row["decodingPolicy"]
+        candidate = cases.get(row["id"])
+        identity = (policy, row["id"])
+        if (policy not in DECODERS or candidate is None or identity in seen
+                or row["checkpointSha256"] != checkpoint_sha
+                or row["language"] != candidate["language"]
+                or row["split"] != candidate["split"]
+                or row["promptSha256"] != hashlib.sha256(
+                    copy.prompt_for(candidate).encode("utf-8")).hexdigest()
+                or type(row["output"]) is not str
+                or len(row["output"]) > copy.MAX_RESPONSE_CHARACTERS
+                or type(row["generatedTokens"]) is not int
+                or not 0 <= row["generatedTokens"] <= copy.MAX_GENERATION
+                or row["terminationReason"] not in (
+                    "eos", "max-new-tokens", "invalid-control-token",
+                    "outside-fitted-tokenizer",
+                )):
+            raise Refusal("M10 checkpoint response source/checkpoint/policy mismatched")
+        seen.add(identity)
+        predictions[policy].append({
+            "id": row["id"], "output": row["output"],
+            "terminationReason": row["terminationReason"],
+        })
+    for policy in DECODERS:
+        try:
+            computed = copy.score_predictions(expected, predictions[policy])
+        except copy.Refusal as exc:
+            raise Refusal("M10 checkpoint responses incomplete or duplicated") from exc
+        if recorded_scores[policy] != computed:
+            raise Refusal("M10 checkpoint scores diverge from raw generated responses")
+    return {
+        "responseCountVerified": len(response_rows),
+        "decodingPoliciesVerified": list(DECODERS),
+        "sourceCheckpointSha256": checkpoint_sha,
+    }
+
+
 def warmup_comparison(
     baseline_responses: list[dict[str, Any]], scores: dict[str, Any],
 ) -> dict[str, Any]:
@@ -564,6 +629,7 @@ def preserve_verified_partial(
                     or report.get("responsesSha256") != research.digest_file(
                         response, limit=gate.RESPONSES_MAX_BYTES)):
                 break
+            verify_checkpoint_responses(response, digest, report["scores"])
         except (OSError, ValueError, TypeError, KeyError, RuntimeError):
             break
         checks.append({
@@ -573,6 +639,19 @@ def preserve_verified_partial(
         })
     if not checks:
         return False
+    # This staging directory belongs exclusively to the failed worker. Do
+    # not publish any unfinished future snapshot or unverified extra files.
+    verified_names = {
+        f"step-{item['optimizerUpdatesCompletedThroughThisMilestone']}"
+        for item in checks
+    }
+    for item in stage.iterdir():
+        if item.name in verified_names:
+            continue
+        if item.is_dir() and not item.is_symlink():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
     interrupted = {
         "protocol": PROTOCOL,
         "status": "interrupted-partial-unreviewed-not-training-success",
@@ -683,6 +762,7 @@ def run_approved(paths: dict[str, Path], *, bundle_sha: str,
                     or response_sha != item["responsesSha256"]
                     or snapshot_record != item):
                 raise Refusal("M10 saved checkpoint/response/scores differ from child receipts")
+            verify_checkpoint_responses(responses, checkpoint_sha, item["scores"])
         with (stage / "report.json").open("x", encoding="utf-8") as stream:
             json.dump(outcome, stream, indent=2, sort_keys=True, allow_nan=False)
             stream.write("\n")
