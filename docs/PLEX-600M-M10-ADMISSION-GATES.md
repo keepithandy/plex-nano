@@ -34,7 +34,8 @@ strict read-only admission proof that binds:
 - **Independent consent:** one *external*, small, explicit owner
   approval file with the exact proposed source, split IDs,
   checkpoint and baseline hashes, assistant-origin acknowledgment,
-  10+15+25 schedule, one sample per optimizer step, 50-step total,
+  SHA-256 of the ordered 10+15+25 schedule, one sample per optimizer
+  step, 50-step total,
   decoding policies, seed, AdamW parameters and time/storage limits.
   Existing M9 approval, PR merge, a passing CI build, and the unapproved
   JSONL do **not** count as owner consent.

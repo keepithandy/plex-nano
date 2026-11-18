@@ -205,6 +205,24 @@ class M10AdmissionTests(unittest.TestCase):
                     with self.assertRaises(admission.Refusal):
                         admission.check_approval(owner, template)
 
+    def test_approval_rejects_a_schedule_with_two_examples_swapped(self):
+        source = {"m9WeightsSha256": "a" * 64, "m9ReportSha256": "b" * 64}
+        baseline = {"baselineReportSha256": "c" * 64,
+                    "baselineResponsesSha256": "d" * 64}
+        original = admission.approval_template(source, baseline)
+        schedule = m10.update_schedule()
+        schedule[10]["recordIds"], schedule[11]["recordIds"] = (
+            schedule[11]["recordIds"], schedule[10]["recordIds"],
+        )
+        with patch.object(m10, "update_schedule", return_value=schedule):
+            changed = admission.approval_template(source, baseline)
+        self.assertNotEqual(original["scheduleSha256"], changed["scheduleSha256"])
+        with tempfile.TemporaryDirectory() as temp:
+            owner = Path(temp) / "owner.json"
+            owner.write_text(json.dumps(owner_document(original)), encoding="utf-8")
+            with self.assertRaisesRegex(admission.Refusal, "does not bind"):
+                admission.check_approval(owner, changed)
+
     def test_cpu_admission_checks_destination_before_sources_or_disk(self):
         with patch.object(admission.m8, "require_output",
                           side_effect=admission.Refusal("already exists")), \

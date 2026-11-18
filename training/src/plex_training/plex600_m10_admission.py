@@ -190,6 +190,12 @@ def read_baseline_receipt(
     }
 
 
+def schedule_sha256(schedule: list[dict[str, Any]]) -> str:
+    """Hash the ordered updates with stable JSON encoding across platforms."""
+    canonical = json.dumps(schedule, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def approval_template(
     source: dict[str, Any], baseline: dict[str, Any],
 ) -> dict[str, Any]:
@@ -220,6 +226,7 @@ def approval_template(
         "examplesPerOptimizerUpdate": m10.EXAMPLES_PER_UPDATE,
         "gradientAccumulationSteps": m10.GRADIENT_ACCUMULATION_STEPS,
         "phaseUpdateCounts": [10, 15, 25],
+        "scheduleSha256": schedule_sha256(m10.update_schedule()),
         "warmupRecordId": m10.WARMUP_RECORD_ID,
         "maxInputPositions": m10.MAX_POSITIONS,
         "maxNewTokens": m10.MAX_GENERATION,
@@ -331,7 +338,8 @@ def admission(
     if check_free_space and free_bytes < MIN_OUTPUT_FREE_BYTES:
         raise Refusal("M10 output filesystem lacks room for bounded checkpoint snapshots")
     schedule = m10.update_schedule()
-    if (len(schedule) != m10.MAX_UPDATES
+    if (schedule_sha256(schedule) != inspected["unapprovedTemplate"]["scheduleSha256"]
+            or len(schedule) != m10.MAX_UPDATES
             or any(s["examplesInOptimizerUpdate"] != 1 for s in schedule)
             or {s["recordIds"][0] for s in schedule[:10]}
                != {m10.WARMUP_RECORD_ID}
@@ -349,6 +357,7 @@ def admission(
         "sourceBindingVerified": True,
         "trainingAuthorized": consent["externalApprovalValidated"],
         "externalApprovalSha256": consent["approvalFileSha256"],
+        "scheduleSha256": inspected["unapprovedTemplate"]["scheduleSha256"],
         "outputReservationCheck": {
             "destination": str(output_path),
             "mustBeNew": True,
