@@ -44,6 +44,31 @@ def checkpoint_receipt(step: int, perfect: bool, digest: str) -> dict:
     }
 
 
+def synthetic_checkpoint_responses(checkpoint_sha: str) -> tuple[str, dict]:
+    """Test-only responses; no model generation and no training."""
+    cases = copy.rows()
+    result = []
+    scored = {}
+    for policy in worker.DECODERS:
+        predictions = []
+        for row in cases:
+            predictions.append({
+                "id": row["id"], "output": row["snippet"],
+                "terminationReason": "eos",
+            })
+            result.append({
+                "id": row["id"], "output": row["snippet"],
+                "terminationReason": "eos", "generatedTokens": 1,
+                "language": row["language"], "split": row["split"],
+                "decodingPolicy": policy, "checkpointSha256": checkpoint_sha,
+                "promptSha256": __import__("hashlib").sha256(
+                    copy.prompt_for(row).encode("utf-8")).hexdigest(),
+            })
+        scored[policy] = copy.score_predictions(cases, predictions)
+    return "".join(
+        json.dumps(row, sort_keys=True) + "\n" for row in result), scored
+
+
 class M10WorkerTests(unittest.TestCase):
     def test_default_only_prints_plan_and_has_no_training_authorization(self):
         with patch.object(worker, "_admit",
@@ -218,7 +243,8 @@ class M10WorkerTests(unittest.TestCase):
             payload.write_bytes(b"cpu-test-only-not-a-model")
             digest = worker._sha(payload)
             responses = first / "responses.jsonl"
-            responses.write_text('{"id":"synthetic"}\n', encoding="utf-8")
+            response_text, scoring = synthetic_checkpoint_responses(digest)
+            responses.write_text(response_text, encoding="utf-8")
             response_sha = research.digest_file(
                 responses, limit=gate.RESPONSES_MAX_BYTES)
             proof = {"candidateSha256": "a"*64,
@@ -232,6 +258,7 @@ class M10WorkerTests(unittest.TestCase):
                                "bytes": payload.stat().st_size},
                 "verifiedGeneration": True,
                 "decodingPolicies": list(worker.DECODERS),
+                "scores": scoring,
                 "responsesSha256": response_sha,
             }
             (first / "report.json").write_text(
@@ -260,6 +287,32 @@ class M10WorkerTests(unittest.TestCase):
             self.assertFalse(worker.preserve_verified_partial(
                 stage, root / "output", proof, failure_reason="worker-error"))
             self.assertFalse((root / "output").exists())
+
+    def test_checkpoint_scores_are_recomputed_from_all_serialized_responses(self):
+        with tempfile.TemporaryDirectory() as temp:
+            responses = Path(temp) / "responses.jsonl"
+            sha = "a" * 64
+            response_text, scoring = synthetic_checkpoint_responses(sha)
+            responses.write_text(response_text, encoding="utf-8")
+            evidence = worker.verify_checkpoint_responses(responses, sha, scoring)
+            self.assertEqual(evidence["responseCountVerified"], 36)
+            self.assertEqual(evidence["sourceCheckpointSha256"], sha)
+            broken_scores = json.loads(json.dumps(scoring))
+            broken_scores["unmasked-v1"]["train"]["exact"] = 0
+            with self.assertRaisesRegex(worker.Refusal, "diverge"):
+                worker.verify_checkpoint_responses(responses, sha, broken_scores)
+            lines = [json.loads(row) for row in response_text.splitlines()]
+            lines[0]["checkpointSha256"] = "b" * 64
+            responses.write_text("".join(
+                json.dumps(row) + "\n" for row in lines), encoding="utf-8")
+            with self.assertRaisesRegex(worker.Refusal, "mismatched"):
+                worker.verify_checkpoint_responses(responses, sha, scoring)
+            lines[0]["checkpointSha256"] = sha
+            lines[-1]["id"] = lines[0]["id"]
+            responses.write_text("".join(
+                json.dumps(row) + "\n" for row in lines), encoding="utf-8")
+            with self.assertRaises(worker.Refusal):
+                worker.verify_checkpoint_responses(responses, sha, scoring)
 
     def test_uncommitted_training_worker_code_is_rejected(self):
         from types import SimpleNamespace
