@@ -1,4 +1,4 @@
-"""CPU-only M10 review contract; no model creation, optimizer or GPU."""
+"""CPU tests for the M10 proposal and a tiny synthetic copying fixture."""
 from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
 from io import StringIO
@@ -242,6 +242,51 @@ class CopyProposalTests(unittest.TestCase):
                        {**evidence, "extraClaim": True}):
             with self.assertRaises(m10.Refusal):
                 m10.classify_mechanical_evidence(broken)
+
+    def test_single_copy_update_and_reload_on_cpu(self):
+        import torch
+        from torch.nn import functional as F
+        from plex_training.plex600 import Plex600Config, Plex600Model
+        from plex_training.plex600_r3_curriculum import masked_record
+
+        # Synthetic IDs only. Exercise the Plex600 forward path on a tiny CPU model.
+        prompt, answer = [4, 7, 8, 9], [7, 8, 3]
+        config = Plex600Config(vocab_size=16, context_length=12, width=16,
+                               layers=1, attention_heads=2, key_value_heads=1,
+                               feed_forward_width=32)
+        packed = masked_record(prompt, answer, fitted_vocab_size=config.vocab_size)
+        inputs = torch.tensor([packed["inputIds"]])
+        targets = torch.tensor([packed["targetIds"]])
+        start = len(prompt) - 1
+        with torch.random.fork_rng(devices=[]):
+            torch.random.default_generator.manual_seed(41)
+            model = Plex600Model(config)
+            optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5, weight_decay=0)
+            logits, loss = model(inputs, targets)
+            expected_loss = F.cross_entropy(logits[0, start:], torch.tensor(answer))
+            torch.testing.assert_close(loss, expected_loss)
+            logits.retain_grad()
+            loss.backward()
+            self.assertEqual(logits.grad[0, :start].count_nonzero().item(), 0)
+            self.assertTrue(bool((logits.grad[0, start:].abs().sum(-1) > 0).all()))
+            weight = model.token_embedding.weight
+            self.assertTrue(bool(torch.isfinite(weight.grad).all()))
+            self.assertGreater(weight.grad.norm().item(), 0)
+            before = weight.detach().clone()
+            optimizer.step()
+            self.assertTrue(bool(torch.isfinite(weight).all()))
+            self.assertFalse(torch.equal(before, weight))
+
+            with tempfile.TemporaryDirectory() as folder, torch.no_grad():
+                checkpoint = Path(folder) / "fixture.pt"
+                model.eval()
+                expected, _ = model(inputs)
+                torch.save(model.state_dict(), checkpoint)
+                restored = Plex600Model(config).eval()
+                restored.load_state_dict(torch.load(checkpoint, weights_only=True, map_location="cpu"))
+                actual, _ = restored(inputs)
+                torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+                self.assertTrue(torch.equal(actual.argmax(-1), expected.argmax(-1)))
 
     def test_copy_mask_positions_match_answer_and_eos(self):
         from plex_training import plex600_r3_curriculum as r3
