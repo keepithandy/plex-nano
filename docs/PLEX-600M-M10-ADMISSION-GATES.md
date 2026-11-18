@@ -39,13 +39,13 @@ strict read-only admission proof that binds:
   Existing M9 approval, PR merge, a passing CI build, and the unapproved
   JSONL do **not** count as owner consent.
 - **No overwrite and storage:** a direct new output folder under
-  \`training/artifacts\`, checked *before* reading source/approval, and
+  `training/artifacts`, checked *before* reading source/approval, and
   at least 13 GiB of unallocated disk free (3 bounded snapshots,
   1 bounded in-flight checkpoint, 1 GiB margin). Insufficient storage
   refuses admission rather than risking a partial run.
 - **No heldout training:** only the proposed 12 training IDs may
   appear in the 50-update schedule, and the single JS line
-  \`let score = 0;\\n\` is the only example used during updates 1–10.
+  `let score = 0;\\n` is the only example used during updates 1–10.
   The six heldout cases are evaluated only.
 
 ## CPU-only commands (no .ps1 execution-policy changes)
@@ -64,14 +64,14 @@ JSON. Use the exact local paths after checking them:
 wsl.exe -d Ubuntu --cd /home/quali/plex-nano -- /home/quali/.local/bin/uv run --project training --no-sync python -m plex_training.plex600_m10_admission --show-approval-template --bundle-dir training/artifacts/plex600-fresh-tokenizer --bundle-manifest-sha256 14b5465ae03550f1757dd82c7df1f35710db4173d6b70e5585624b1585a4ad55 --m9-report /mnt/c/Users/quali/Plex600M-Backups/m9/report.json --m9-weights /mnt/c/Users/quali/Plex600M-Backups/m9/weights.pt --baseline-report /exact/path/to/completed-full-baseline/report.json --baseline-responses /exact/path/to/completed-full-baseline/responses.jsonl
 ~~~
 
-The template prints with **\`approvedForTraining: false\`**, no
+The template prints with **`approvedForTraining: false`**, no
 signature/date and no file creation. It is not authorization.
 
-The distinct \`--audit-admission\` mode additionally requires
-\`--approval-file\` and \`--output-dir\`. It remains CPU-only even
+The distinct `--audit-admission` mode additionally requires
+`--approval-file` and `--output-dir`. It remains CPU-only even
 after authentic local consent, and reports
-\`runEntrypointImplemented: false\`,
-\`optimizerUpdatesCompleted: 0\` and \`checkpointWrites: false\`.
+`runEntrypointImplemented: false`,
+`optimizerUpdatesCompleted: 0` and `checkpointWrites: false`.
 The admission check does not write a training approval file or
 checkpoint.
 
