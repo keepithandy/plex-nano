@@ -190,25 +190,49 @@ def _fit_check(path: Path) -> None:
 
 def _reload_parity(model: Any, torch: Any, weights: Path, probe_ids: list[int],
                    config: Any) -> dict[str, Any]:
-    """Compare saved/reloaded model on CPU in identical FP32 conditions.
+    """Save a detached CPU copy, compare before/after reload in CPU FP32.
 
-    Returning the *same* model to CUDA preserves Parameter identities and
-    existing optimizer state (which remains resident on CUDA).
+    NEVER move the live training model off its current device. In particular,
+    moving a live CUDA module to CPU/back while AdamW retains references and
+    momentum buffers can silently break optimizer continuity.
     """
     from .plex600 import Plex600Model
-    model.eval()
-    model.to(device="cpu", dtype=torch.float32)
-    inputs = torch.tensor([probe_ids], dtype=torch.long)
-    with torch.inference_mode():
-        original_logits, _ = model(inputs)
-        original_greedy = original_logits[0, -1].argmax().item()
-        original_logits = original_logits[0, -1].detach().clone()
-    if weights.exists():
+
+    if weights.exists() or weights.is_symlink():
         raise Refusal("M10 checkpoint save must be create-only")
-    torch.save(model.state_dict(), weights)
+    model.eval()
+    live_parameters = tuple(model.parameters())
+    live_devices = tuple(parameter.device for parameter in live_parameters)
+    live_ids = tuple(id(parameter) for parameter in live_parameters)
+    with torch.device("cpu"):
+        reference = Plex600Model(config)
+    source = model.state_dict()
+    destination = reference.state_dict()
+    if source.keys() != destination.keys():
+        raise Refusal("M10 CPU checkpoint copy differs from source architecture")
+    # Copy only one tensor at a time: do not allocate a second complete 600M
+    # state dictionary or any additional CUDA model.
+    with torch.no_grad():
+        for name, target in destination.items():
+            original = source[name].detach()
+            if original.shape != target.shape or original.dtype != target.dtype:
+                raise Refusal("M10 CPU snapshot tensor differs from live model")
+            target.copy_(original.to(device="cpu"))
+    del source, destination
+    reference.eval()
+    inputs = torch.tensor([probe_ids], dtype=torch.long, device="cpu")
+    with torch.inference_mode():
+        before_logits, _ = reference(inputs)
+        before = before_logits[0, -1].float().detach().clone()
+        before_greedy = int(before.argmax().item())
+    with weights.open("xb") as stream:
+        torch.save(reference.state_dict(), stream)
     if not 0 < weights.stat().st_size <= MAX_WEIGHTS:
         raise Refusal("M10 model-only snapshot exceeds 3 GiB")
     digest = _sha(weights)
+    del reference, before_logits
+    gc.collect()
+
     state = torch.load(weights, map_location="cpu", weights_only=True, mmap=True)
     if type(state) not in (dict, OrderedDict):
         raise Refusal("M10 saved checkpoint must be a native model-only state dictionary")
@@ -218,15 +242,17 @@ def _reload_parity(model: Any, torch: Any, weights: Path, probe_ids: list[int],
     del state
     restored.eval()
     with torch.inference_mode():
-        recovered, _ = restored(inputs)
-        recovered = recovered[0, -1]
-        difference = (recovered - original_logits).abs().max().item()
-        same_tokens = int(recovered.argmax().item()) == int(original_greedy)
-    del recovered, restored, original_logits
+        after_logits, _ = restored(inputs)
+        after = after_logits[0, -1].float()
+        difference = float((after - before).abs().max().item())
+        same_tokens = int(after.argmax().item()) == before_greedy
+    del after_logits, restored, before
     gc.collect()
-    if (not same_tokens or not math.isfinite(difference) or difference > 0.0001):
+    if not same_tokens or not math.isfinite(difference) or difference > 0.0001:
         raise Refusal("M10 saved checkpoint fails greedy/logit reload parity")
-    model.to(device="cuda:0", dtype=torch.float32)
+    if (tuple(id(p) for p in model.parameters()) != live_ids
+            or tuple(p.device for p in model.parameters()) != live_devices):
+        raise Refusal("M10 snapshot changed live model parameter identity/device")
     return {
         "file": "weights.pt", "sha256": digest,
         "bytes": weights.stat().st_size,
@@ -234,6 +260,8 @@ def _reload_parity(model: Any, torch: Any, weights: Path, probe_ids: list[int],
         "reloadedCheckpointSha256": _sha(weights),
         "reloadedGreedyTokensMatch": same_tokens,
         "maxReloadLogitAbsoluteDifference": difference,
+        "liveModelParameterDevicePreserved": True,
+        "liveModelParameterIdentityPreserved": True,
     }
 
 
