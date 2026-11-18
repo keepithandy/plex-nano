@@ -251,7 +251,7 @@ class CopyProposalTests(unittest.TestCase):
 
         # Synthetic IDs only. Exercise the Plex600 forward path on a tiny CPU model.
         prompt, answer = [4, 7, 8, 9], [7, 8, 3]
-        config = Plex600Config(vocab_size=16, context_length=12, width=16,
+        config = Plex600Config(vocab_size=260, context_length=12, width=16,
                                layers=1, attention_heads=2, key_value_heads=1,
                                feed_forward_width=32)
         packed = masked_record(prompt, answer, fitted_vocab_size=config.vocab_size)
