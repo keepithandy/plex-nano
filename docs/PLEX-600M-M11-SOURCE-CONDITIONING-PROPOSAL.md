@@ -8,27 +8,27 @@ included. The M7/M9/M10 artifacts and the final project holdout remain unchanged
 ## Reason for the experiment
 
 M10 PR #209 established that a final space instead of newline can prevent
-premature EOS, but at update 10 the space-trained model emitted \`= 0;\n\`
+premature EOS, but at update 10 the space-trained model emitted `= 0;\n`
 on all 18 prompts and produced 0/18 exact copies. Terminal EOS after a
 teacher-forced correct answer improved to 18/18. Neither metric proves that
 the model actually reads the source. The M10 substitution probe also found
 0/18 instances of bidirectionally correct changed-token preference.
 
 The next test should ask a single, falsifiable question: **if the input
-changes from \`let score = 0;\n\` to \`let score = 1;\n\`, does the output
+changes from `let score = 0;\n` to `let score = 1;\n`, does the output
 change correctly as well, including its exact final newline and EOS?**
 
 ## Proposed data and boundary
 
 Two assistant-proposed *training candidates*, not yet approved:
 
-- \`let score = 0;\n\`
-- \`let score = 1;\n\`
+- `let score = 0;\n`
+- `let score = 1;\n`
 
 Two separate *development probes*, explicitly excluded from training:
 
-- \`let value = 0;\n\`
-- \`let value = 1;\n\`
+- `let value = 0;\n`
+- `let value = 1;\n`
 
 This is a small, visible development test, **not an untouched generalization
 holdout**. Do not use M10's six evaluation-only cases or the project's final
@@ -54,7 +54,7 @@ auditor checks these properties and token budgets before any proposed run.
 4. Measure training-pair and development-probe-pair performance separately.
    Perfect training memorization without probe improvement is limited progress.
 
-The pure helper \`score_caller_supplied\` deliberately labels scores
+The pure helper `score_caller_supplied` deliberately labels scores
 unverified. It does not assert model generation, provenance, or checkpoint
 identity. A future evaluator must bind actual inference receipts to hashes
 and score them independently before any results can claim model behavior.
@@ -78,14 +78,14 @@ stop incorrectly, or merely achieve teacher-forced terminal EOS.
 
 ## Read-only commands
 
-\`\`\`bash
+```bash
 PYTHONPATH=training/src python -m plex_training.plex600_m11_source_conditioning
 PYTHONPATH=training/src python -m plex_training.plex600_m11_source_conditioning \
   --audit-frozen-tokenizer --bundle training/artifacts/plex600-fresh-tokenizer
-\`\`\`
+```
 
 The default command prints a no-training plan without loading any model
 or examining external data. The explicit audit verifies the frozen bundle
 and candidate tokenization but performs no training. There is intentionally
-no \`--train\` or \`--execute-approved-run\` option. Never treat this PR as
+no `--train` or `--execute-approved-run` option. Never treat this PR as
 consent for M11 training or as a replacement for the M10 experiment record.
