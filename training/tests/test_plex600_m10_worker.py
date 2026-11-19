@@ -292,6 +292,31 @@ class M10WorkerTests(unittest.TestCase):
                 stage, root / "output", proof, failure_reason="worker-error"))
             self.assertFalse((root / "output").exists())
 
+    def test_probe_separates_prompt_boundary_from_completed_answer(self):
+        import torch
+        from unittest.mock import Mock
+
+        # One masked position, two content tokens, then EOS.
+        packed = {"inputIds": [1, 2, 4, 5], "targetIds": [-100, 4, 5, 3],
+                  "lossMaskPromptPositions": 1, "supervisedAnswerPositions": 3}
+        logits = torch.zeros(1, 4, 6)
+        logits[0, 1, 4] = 2
+        logits[0, 1, 3] = 1
+        logits[0, 3, 3] = 8
+        model = Mock(return_value=(logits, torch.tensor(2.0)))
+        with patch.object(torch, "autocast", return_value=torch.inference_mode()):
+            result = worker.teacher_forced_probe(model, torch, packed, "cpu")
+            self.assertEqual(result["firstPositionEosRank"], 2)
+            self.assertEqual(result["eosTokenRank"], 1)
+            self.assertFalse(result["firstPositionGreedyTokenIsEos"])
+            self.assertLess(result["firstPositionEosProbability"], result["eosTokenProbability"])
+            expected = -(logits[0, 1, :].log_softmax(0)[4]
+                         + logits[0, 2, :].log_softmax(0)[5]) / 2
+            self.assertAlmostEqual(result["teacherForcedAnswerOnlyNll"], expected.item())
+            logits[0, 1, 3] = 3
+            self.assertTrue(worker.teacher_forced_probe(
+                model, torch, packed, "cpu")["firstPositionGreedyTokenIsEos"])
+
     def test_checkpoint_scores_are_recomputed_from_all_serialized_responses(self):
         with tempfile.TemporaryDirectory() as temp:
             responses = Path(temp) / "responses.jsonl"

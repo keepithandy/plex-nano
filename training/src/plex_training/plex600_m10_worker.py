@@ -412,8 +412,16 @@ def teacher_forced_probe(
     eos_logits = logits[0, eos_index].float()
     first_token = y[0, first_index]
     eos_logit = eos_logits[3]
+    # At the prompt boundary EOS competes with the first content token.
+    # The historical EOS fields use the distinct, gold-completed context.
+    content_nll = torch.nn.functional.cross_entropy(
+        logits[0, first_index:eos_index].float(), y[0, first_index:eos_index])
     return {
         "teacherForcedAnswerAndEosNll": float(loss.item()),
+        "teacherForcedAnswerOnlyNll": float(content_nll.item()),
+        "firstPositionEosRank": int((first_logits > first_logits[3]).sum().item()) + 1,
+        "firstPositionEosProbability": float(first_logits.softmax(-1)[3].item()),
+        "firstPositionGreedyTokenIsEos": int(first_logits.argmax().item()) == 3,
         "firstAnswerTokenRank": int((first_logits > first_logits[first_token]).sum().item()) + 1,
         "eosTokenRank": int((eos_logits > eos_logit).sum().item()) + 1,
         "eosTokenProbability": float(eos_logits.softmax(-1)[3].item()),
