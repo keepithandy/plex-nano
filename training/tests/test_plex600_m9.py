@@ -185,6 +185,43 @@ class M9BoundedPilotTests(unittest.TestCase):
         fake_torch.load.assert_called_once_with(
             Path("unused"), map_location="cpu", weights_only=True, mmap=True)
 
+    def test_worker_failure_reports_bounded_diagnostic_without_training(self):
+        self.assertIn("CUDA out of memory", m9.worker_failure_message(
+            1, "Traceback:\\nRuntimeError: CUDA out of memory", False))
+        self.assertIn("code -9", m9.worker_failure_message(-9, "", False))
+        self.assertIn("no stderr captured", m9.worker_failure_message(-9, "", False))
+        self.assertIn("exceeded", m9.worker_failure_message(-9, "untrusted", True))
+        long_message = m9.worker_failure_message(1, "x" * 10000, False)
+        self.assertLess(len(long_message), 2150)
+
+        # Simulate a failed subprocess, never spawn a real GPU worker.
+        from plex_training.tokenizer import PlexTokenizer
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            bundle = base / "bundle"
+            bundle.mkdir()
+            report = base / "report.json"
+            weights = base / "weights.pt"
+            approval = base / "approval.json"
+            for path in (report, weights, approval):
+                path.write_text("fixture")
+            output = base / "new-m9-output"
+            with patch.object(m9.m8, "require_output", return_value=output), \
+                 patch.object(m9.m8, "prerequisites", return_value={
+                     "m7Receipt": {"localCheckpointSha256": "a" * 64}}), \
+                 patch.object(PlexTokenizer, "load", return_value=CompactTokenizer()), \
+                 patch.object(m9, "selected_records", return_value={}), \
+                 patch.object(m9, "check_approval", return_value={"approved": True}), \
+                 patch.object(m9, "code_identity", return_value={}), \
+                 patch.object(m9.hardware, "_supervise", return_value=(
+                     1, "", "RuntimeError: CUDA out of memory", False)):
+                with self.assertRaisesRegex(m9.Refusal, "CUDA out of memory"):
+                    m9.execute(bundle, report, weights, approval, output,
+                               bundle_sha=m9.r3.research.BUNDLE_SHA,
+                               execute_flag=True)
+            self.assertFalse(output.exists())
+            self.assertFalse(list(base.glob(".new-m9-output.staging-*")))
+
     def test_cli_refuses_run_without_all_explicit_inputs(self):
         with patch.object(m9, "execute", side_effect=AssertionError("GPU invoked")), \
              redirect_stderr(StringIO()) as err:
