@@ -79,7 +79,10 @@ The worker refuses execution until all of these pass:
 3. The distinct, M11 space-delimited four-case/two-decoder read-only
    baseline report and raw responses.
 4. Owner-created, external M11 consent, bound to the exact model, data,
-   source, arm, baseline hashes and update budget. M10 consent is refused.
+   source, arm, baseline hashes and update budget. It also binds SHA-256
+   of the exact M11 worker, M10 checkpoint parity helper, and M8 generation
+   decoder: changing any of these invalidates a previously reviewed consent.
+   M10 consent is refused.
 5. An unused output folder under gitignored training/artifacts, with
    the full predeclared free-space budget.
 6. Clean and SHA-verified model, gate, curriculum and executable source.
