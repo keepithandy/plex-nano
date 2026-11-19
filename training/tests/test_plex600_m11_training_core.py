@@ -157,7 +157,7 @@ class M11TrainingCoreTests(unittest.TestCase):
         with self.assertRaisesRegex(core.Refusal, "SHA"):
             core.score_unverified_generations(rows, sha)
         rows = make_rows()
-        rows[0]["id"] = rows[1]["id"]
+        rows[0] = dict(rows[1])  # Preserve matching prompt SHA, isolate duplicate ID.
         with self.assertRaisesRegex(core.Refusal, "duplicate"):
             core.score_unverified_generations(rows, sha)
 
