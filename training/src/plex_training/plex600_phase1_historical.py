@@ -92,6 +92,8 @@ def _snapshot_checks(
             raise Refusal("M10 optimizer ledger differs from exact frozen schedule")
     snapshots = []
     comparisons = []
+    previous_entry = "m9-original"
+    previous_sha = source["m9WeightsSha256"]
     for step, recorded in zip(milestones, saved):
         if type(recorded) is not dict or recorded.get("optimizerUpdatesCompleted") != step:
             raise Refusal("M10 milestone order differs from the training contract")
@@ -124,9 +126,11 @@ def _snapshot_checks(
             "optimizerUpdatesDeclared": step,
             "checkpoint": checkpoint, "report": saved_report,
             "responses": raw, "scoreVerification": "recomputed-from-raw-responses",
-            "parentEntryId": "m9-original",
-            "parentCheckpointSha256": source["m9WeightsSha256"],
+            "parentEntryId": previous_entry,
+            "parentCheckpointSha256": previous_sha,
         })
+        previous_entry = f"m10-step-{step}"
+        previous_sha = checkpoint["sha256"]
     return snapshots, comparisons
 
 
