@@ -110,7 +110,7 @@ def _admit(paths: dict[str, Path], bundle_sha: str,
 def _source_identity() -> dict[str, Any]:
     """Verify executable and evaluation sources are clean and hash-bound."""
     files = (Path(__file__), Path(gate.__file__), Path(core.__file__),
-             Path(m11.__file__), Path(m10.__file__))
+             Path(m11.__file__), Path(m10.__file__), Path(m8.__file__))
     names = [file.relative_to(research.ROOT).as_posix() for file in files]
     result = subprocess.run(
         ["git", "status", "--porcelain", "--", *names],
@@ -125,6 +125,7 @@ def _source_identity() -> dict[str, Any]:
         "m11TrainingCoreSha256": hashlib.sha256(Path(core.__file__).read_bytes()).hexdigest(),
         "m11CandidatesSha256": hashlib.sha256(Path(m11.__file__).read_bytes()).hexdigest(),
         "m10SnapshotHelperSha256": hashlib.sha256(Path(m10.__file__).read_bytes()).hexdigest(),
+        "m8DecoderSha256": hashlib.sha256(Path(m8.__file__).read_bytes()).hexdigest(),
     }
 
 
