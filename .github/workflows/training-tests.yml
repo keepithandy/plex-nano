@@ -123,6 +123,7 @@ jobs:
           training/tests/test_plex600_m11_training_core.py
           training/tests/test_plex600_m11_admission.py
           training/tests/test_plex600_phase1_registry.py
+          training/tests/test_plex600_phase1_historical.py
           training/tests/test_ci_test_inventory.py
           -q
 
