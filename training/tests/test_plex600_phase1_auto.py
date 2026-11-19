@@ -124,7 +124,8 @@ class AutoRegistrationTests(unittest.TestCase):
                 auto.discover(self.fixtures["backup"])
             selected = auto.discover(self.fixtures["backup"],
                                      run_dir=self.fixtures["run"])
-        self.assertEqual(selected["m10RunDir"], str(self.fixtures["run"]))
+        self.assertEqual(Path(selected["m10RunDir"]).resolve(),
+                         self.fixtures["run"].resolve())
 
     def test_external_run_directory_rejected(self):
         remote = self.root / "other-run"
