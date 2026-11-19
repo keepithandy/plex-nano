@@ -4,6 +4,7 @@ Synthetic dictionaries are deliberately NOT purported GPU or coding results.
 No approved GPU run, optimizer or torch model is instantiated here.
 """
 from contextlib import redirect_stdout, redirect_stderr
+from datetime import date
 import hashlib
 from io import StringIO
 import json
@@ -167,6 +168,53 @@ class M11WorkerTests(unittest.TestCase):
                           side_effect=AssertionError("opened sources")):
             with self.assertRaisesRegex(worker.Refusal, "original pinned"):
                 worker._admit(paths, "bad-manifest", 1.0)
+
+    def test_owner_consent_is_bound_to_exact_worker_snapshot_decoder_bytes(self):
+        source = {
+            "candidateSha256": core.candidate_sha256(),
+            "scheduleSha256": core.schedule_sha256(),
+            "bundleManifestSha256": research.BUNDLE_SHA,
+            "m9WeightsSha256": "a" * 64,
+            "m9ReportSha256": "b" * 64,
+            "tokenizerSha256": "c" * 64,
+            "sourceHashes": {"modelSourceSha256": "d" * 64},
+            "trainingIds": [x["id"] for x in m11.cases() if x["split"] == "train"],
+            "developmentOnlyIds": [
+                x["id"] for x in m11.cases() if x["split"] == "probe-only"],
+        }
+        baseline = {
+            "baselineReportSha256": "e" * 64,
+            "baselineResponsesSha256": "f" * 64,
+        }
+        template = admission.approval_template(source, baseline, 1.0)
+        expected = {
+            "m11WorkerSourceSha256": worker.__file__,
+            "m10SnapshotHelperSourceSha256": worker.m10.__file__,
+            "m8DecoderSourceSha256": worker.m8.__file__,
+        }
+        for field, filename in expected.items():
+            self.assertEqual(
+                template[field], hashlib.sha256(Path(filename).read_bytes()).hexdigest())
+        self.assertEqual(template["approvedForTraining"], False)
+        with TemporaryDirectory() as temp:
+            # Synthetic, throwaway fixture only. Never create owner consent.
+            approval = Path(temp) / "synthetic-test-fixture.json"
+            content = {**template,
+                "approvedBy": "keepithandy",
+                "approvedAt": date.today().isoformat(),
+                "approvedForTraining": True,
+                "sourceReviewedByOwner": True,
+                "reviewedBothTrainingExamples": True,
+                "reviewedDevelopmentOnlyExamples": True,
+                "m11ProposalScopeAccepted": True,
+            }
+            approval.write_text(json.dumps(content), encoding="utf-8")
+            self.assertEqual(len(admission.check_approval(approval, template)), 64)
+            for field in expected:
+                tampered_expected = {**template, field: "0" * 64}
+                with self.subTest(field=field), self.assertRaisesRegex(
+                        admission.Refusal, "scope"):
+                    admission.check_approval(approval, tampered_expected)
 
     def test_exact_outputs_are_recomputed_and_are_not_report_only(self):
         checkpoint = "a" * 64
