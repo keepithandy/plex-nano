@@ -292,9 +292,7 @@ class M11WorkerTests(unittest.TestCase):
             weights.write_bytes(b"SYNTHETIC CHECKPOINT TEST - NO MODEL")
             checkpoint_sha = hashlib.sha256(weights.read_bytes()).hexdigest()
             rows = observations(checkpoint_sha)
-            raw = "".join(json.dumps(row, sort_keys=True) + "\\n" for row in rows)
-            # Use a genuine newline-delimited JSONL synthetic fixture.
-            raw = raw.replace("\\n", "\n")
+            raw = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
             response_path = folder / "responses.jsonl"
             response_path.write_text(raw, encoding="utf-8")
             score = core.score_unverified_generations([
