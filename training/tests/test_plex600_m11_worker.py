@@ -283,6 +283,57 @@ class M11WorkerTests(unittest.TestCase):
             with self.subTest(alteration=alteration), self.assertRaises(worker.Refusal):
                 worker._validate_preferences(p)
 
+    def test_real_filesystem_snapshot_receipts_and_corruption_rejected(self):
+        p = proof()
+        with TemporaryDirectory() as temp:
+            folder = Path(temp) / "step-25"
+            folder.mkdir()
+            weights = folder / "weights.pt"
+            weights.write_bytes(b"SYNTHETIC CHECKPOINT TEST - NO MODEL")
+            checkpoint_sha = hashlib.sha256(weights.read_bytes()).hexdigest()
+            rows = observations(checkpoint_sha)
+            raw = "".join(json.dumps(row, sort_keys=True) + "\\n" for row in rows)
+            # Use a genuine newline-delimited JSONL synthetic fixture.
+            raw = raw.replace("\\n", "\n")
+            response_path = folder / "responses.jsonl"
+            response_path.write_text(raw, encoding="utf-8")
+            score = core.score_unverified_generations([
+                {key: row[key] for key in (
+                    "id", "decodingPolicy", "output", "terminationReason",
+                    "promptSha256", "checkpointSha256")}
+                for row in rows], checkpoint_sha)["scores"]
+            record = {
+                "optimizerUpdatesCompleted": 25,
+                "checkpointSha256": checkpoint_sha,
+                "checkpoint": {"sha256": checkpoint_sha,
+                               "bytes": weights.stat().st_size},
+                "responsesSha256": hashlib.sha256(
+                    response_path.read_bytes()).hexdigest(),
+                "candidateSha256": p["candidateSha256"],
+                "scheduleSha256": p["scheduleSha256"],
+                "baselineResponsesSha256": p["baselineResponsesSha256"],
+                "ownerApprovalSha256": p["ownerApprovalSha256"],
+                "chosenEosLossWeight": 1.0,
+                "decodingPolicies": list(core.DECODERS),
+                "verifiedGeneration": True,
+                "optimizerStateSaved": False,
+                "finalHoldoutUsed": False,
+                "scores": score,
+                "sourcePreferences": preferences(),
+            }
+            report_path = folder / "report.json"
+            report_path.write_text(json.dumps(record), encoding="utf-8")
+            self.assertEqual(worker._verify_snapshot(folder, 25, p, 1.0), record)
+            response_path.write_text(raw + "{}\n", encoding="utf-8")
+            with self.assertRaises(worker.Refusal):
+                worker._verify_snapshot(folder, 25, p, 1.0)
+            response_path.write_text(raw, encoding="utf-8")
+            for field in ("checkpoint", "scores", "sourcePreferences"):
+                bad = {**record, field: "invalid"}
+                report_path.write_text(json.dumps(bad), encoding="utf-8")
+                with self.subTest(field=field), self.assertRaises(worker.Refusal):
+                    worker._verify_snapshot(folder, 25, p, 1.0)
+
     def test_decision_does_not_claim_general_coding_from_two_examples(self):
         record = worker._decision([milestone(25), milestone(50)])
         self.assertTrue(record["lastTwoMilestonesMeetNarrowM11Gate"])
