@@ -368,6 +368,8 @@ def _receipt(directory: Path, baseline: bool) -> dict[tuple[str, str], dict[str,
                 and row["terminationReason"] == "eos",
                 "eos": row["terminationReason"] == "eos",
                 "checkpointSha256": checkpoint, "promptSha256": row["promptSha256"],
+                "output": row["output"],
+                "terminationReason": row["terminationReason"],
             }
     if len(observed) != 18 * len(DECODERS):
         raise Refusal("Comparison requires all 18 cases under both decoders")
@@ -396,7 +398,20 @@ def compare_m10(baseline: Path, candidate: Path) -> dict[str, Any]:
         "status": "file-hashes-and-cases-checked-inference-origin-not-proven",
         "baselineCheckpointSha256": next(iter(left.values()))["checkpointSha256"],
         "candidateCheckpointSha256": next(iter(right.values()))["checkpointSha256"],
-        "scores": scores, "comparable": True, "trainingAuthorized": False,
+        "scores": scores,
+        "caseComparisons": [
+            {
+                "id": key[0], "split": left[key]["split"], "decoder": key[1],
+                "baselineOutput": left[key]["output"],
+                "candidateOutput": right[key]["output"],
+                "baselineTerminationReason": left[key]["terminationReason"],
+                "candidateTerminationReason": right[key]["terminationReason"],
+                "baselineExactAndEos": left[key]["exactAndEos"],
+                "candidateExactAndEos": right[key]["exactAndEos"],
+            }
+            for key in sorted(left)
+        ],
+        "comparable": True, "trainingAuthorized": False,
         "inferenceIndependentlyProven": False, "finalHoldoutUsed": False,
     }
 
