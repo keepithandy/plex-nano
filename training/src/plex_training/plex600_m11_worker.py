@@ -217,6 +217,9 @@ def _verify_snapshot(folder: Path, step: int,
         responses, limit=gate.RESPONSES_MAX_BYTES)
     data = json.loads(report.read_text(encoding="utf-8"))
     if (type(data) is not dict
+            or type(data.get("checkpoint")) is not dict
+            or type(data.get("scores")) is not dict
+            or type(data.get("sourcePreferences")) is not dict
             or data.get("optimizerUpdatesCompleted") != step
             or data.get("checkpointSha256") != checkpoint_sha
             or data.get("checkpoint", {}).get("sha256") != checkpoint_sha
