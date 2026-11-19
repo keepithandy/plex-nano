@@ -83,6 +83,8 @@ The warmup study records 432 context measurements, 1,332 activation exchanges, 1
 
 ## Decision before another training run
 
+The owner subsequently authorized the two-arm replay described below. The reference run reproduced every saved update-10 weight. [Matched replay results](PLEX-600M-M10-MATCHED-REPLAY.md).
+
 The endpoint evidence supports testing a shared newline cue and terminal EOS supervision. It also gives a way to reject an apparent improvement that merely makes the model emit a nonempty string. A proposed separately authorized replay would start both arms from the same verified M9 weights and fresh optimizer. One arm would reproduce the original ten updates on the counter. The other would zero only the terminal EOS loss term, retaining the original denominator of eleven supervised positions, optimizer, precision, seed, example order and prompt format.
 
 Record step zero and every subsequent update. Compare the paired prompt EOS-minus-correct-token margin, original newline versus space probability, terminal EOS after the complete answer, and source-pair margins. Retain exact copies, correct content tokens and the 96-token cap counts alongside stopping metrics. Check the reference arm against the historical loss ledger and the saved update-10 boundary results before interpreting differences between arms. If a terminal-loss ablation reduces early stopping while the source preference and copying failures persist, it explains part of the stopping behavior while leaving the content-learning question open.
