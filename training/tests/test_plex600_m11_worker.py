@@ -294,7 +294,7 @@ class M11WorkerTests(unittest.TestCase):
             rows = observations(checkpoint_sha)
             raw = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
             response_path = folder / "responses.jsonl"
-            response_path.write_text(raw, encoding="utf-8")
+            response_path.write_bytes(raw.encode("utf-8"))
             score = core.score_unverified_generations([
                 {key: row[key] for key in (
                     "id", "decodingPolicy", "output", "terminationReason",
@@ -322,10 +322,10 @@ class M11WorkerTests(unittest.TestCase):
             report_path = folder / "report.json"
             report_path.write_text(json.dumps(record), encoding="utf-8")
             self.assertEqual(worker._verify_snapshot(folder, 25, p, 1.0), record)
-            response_path.write_text(raw + "{}\n", encoding="utf-8")
+            response_path.write_bytes((raw + "{}\n").encode("utf-8"))
             with self.assertRaises(worker.Refusal):
                 worker._verify_snapshot(folder, 25, p, 1.0)
-            response_path.write_text(raw, encoding="utf-8")
+            response_path.write_bytes(raw.encode("utf-8"))
             for field in ("checkpoint", "scores", "sourcePreferences"):
                 bad = {**record, field: "invalid"}
                 report_path.write_text(json.dumps(bad), encoding="utf-8")
