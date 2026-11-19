@@ -140,7 +140,7 @@ class M11AdmissionTests(unittest.TestCase):
             report_path.write_text(json.dumps(report), encoding="utf-8")
             rows[0]["promptSha256"] = "0" * 64
             raw = "".join(json.dumps(row) + "\n" for row in rows)
-            responses_path.write_text(raw, encoding="utf-8")
+            responses_path.write_bytes(raw.encode("utf-8"))
             report["responsesSha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
             report_path.write_text(json.dumps(report), encoding="utf-8")
             with self.assertRaisesRegex(core.Refusal, "SHA"):
@@ -153,7 +153,7 @@ class M11AdmissionTests(unittest.TestCase):
                 Path(temp) / "m11-baseline", source)
             rows[0]["output"] = "let score = 1;\n"
             raw = "".join(json.dumps(row) + "\n" for row in rows)
-            responses_path.write_text(raw, encoding="utf-8")
+            responses_path.write_bytes(raw.encode("utf-8"))
             report["responsesSha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
             report_path.write_text(json.dumps(report), encoding="utf-8")
             with self.assertRaisesRegex(admission.Refusal, "scores"):
