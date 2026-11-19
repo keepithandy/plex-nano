@@ -430,7 +430,9 @@ def main(argv: list[str] | None = None) -> int:
                 raise Refusal("Compare requires both read-only receipt directories")
             result = compare_m10(Path(args.baseline_dir), Path(args.candidate_dir))
         else:
-            if any(v is not None for v in vars(args).values()):
+            if any(getattr(args, name) is not None for name in (
+                    "root", "spec", "output", "manifest", "registry_dir",
+                    "baseline_dir", "candidate_dir")):
                 raise Refusal("Default mode cannot receive file arguments")
             result = plan()
         print(json.dumps(result, indent=2, sort_keys=True))
