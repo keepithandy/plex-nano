@@ -129,3 +129,7 @@ training/src/plex_training/plex600_m8_eval.py text eol=lf
 
 # R3 candidate SHA-256 and source-bound masks must use original LF bytes on Windows.
 training/phase3/candidates/plex600-r3-source-conditioned-v1.jsonl text eol=lf
+
+# M10 exact-copy review candidates and source retain canonical LF on Windows.
+training/phase3/candidates/plex600-m10-copy-proposal-v1.jsonl text eol=lf
+training/src/plex_training/plex600_m10_copy_proposal.py text eol=lf

@@ -113,6 +113,7 @@ jobs:
           training/tests/test_evaluator_checkpoint_guards.py
           training/tests/test_plex600_r3_curriculum.py
           training/tests/test_plex600_m9.py
+          training/tests/test_plex600_m10_copy_proposal.py
           training/tests/test_ci_test_inventory.py
           -q
 
