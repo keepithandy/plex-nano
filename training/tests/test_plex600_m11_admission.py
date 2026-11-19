@@ -108,8 +108,9 @@ class M11AdmissionTests(unittest.TestCase):
             self.assertEqual(admission.main([
                 "--show-unapproved-template", "--eos-weight", "0.25"]), 2)
             self.assertEqual(admission.main(["--bundle-dir", "placeholder"]), 2)
-            self.assertEqual(admission.main([
-                "--audit-admission", "--execute-approved-run"]), 2)
+        with redirect_stderr(StringIO()), self.assertRaises(SystemExit) as rejected:
+            admission.main(["--audit-admission", "--execute-approved-run"])
+        self.assertEqual(rejected.exception.code, 2)
 
     def test_distinct_m11_baseline_scores_every_case_two_decoders(self):
         source = synthetic_source()
