@@ -148,7 +148,7 @@ def weighted_copy_loss(torch: Any, logits: Any, target_ids: Any,
         logits.float().reshape(-1, logits.shape[-1]),
         target_ids.reshape(-1), ignore_index=IGNORE, reduction="none",
     ).reshape(target_ids.shape)
-    weights = torch.where(is_eos, eos_weight, 1.0)
+    weights = torch.ones_like(ce).masked_fill(is_eos, float(eos_weight))
     # Deliberately NOT weights.sum(): no hidden content gradient rescaling.
     loss = (ce * valid * weights).sum() / valid.sum()
     if not bool(torch.isfinite(loss).item()):
