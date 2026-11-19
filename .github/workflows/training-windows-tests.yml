@@ -101,6 +101,8 @@ jobs:
           training/tests/test_plex600_m10_warmup_probes.py
           training/tests/test_plex600_m10_owner_approval.py
           training/tests/test_plex600_m11_source_conditioning.py
+          training/tests/test_plex600_m11_training_core.py
+          training/tests/test_plex600_m11_admission.py
           -q
 
       - name: Independently reconstruct M7 tokenizer and audit M8 token capacity
