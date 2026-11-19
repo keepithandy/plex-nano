@@ -84,8 +84,10 @@ class AutoRegistrationTests(unittest.TestCase):
     def test_discover_matches_exact_report_and_response_hashes(self):
         with patch.object(auto.research, "ROOT", self.root):
             selected = auto.discover(self.fixtures["backup"])
-        self.assertEqual(selected["baselineDir"], str(self.fixtures["baseline"]))
-        self.assertEqual(selected["m10RunDir"], str(self.fixtures["run"]))
+        self.assertEqual(Path(selected["baselineDir"]).resolve(),
+                         self.fixtures["baseline"].resolve())
+        self.assertEqual(Path(selected["m10RunDir"]).resolve(),
+                         self.fixtures["run"].resolve())
         self.assertEqual(
             selected["matchedBaselineResponsesSha256"],
             digest(self.fixtures["baseline"] / "responses.jsonl"))
