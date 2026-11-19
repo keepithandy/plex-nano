@@ -178,6 +178,11 @@ class HistoricalTests(unittest.TestCase):
         self.assertEqual(len(record["comparisons"]), 2)
         self.assertEqual(record["entries"][0]["entryId"], "m9-original")
         self.assertEqual(record["entries"][2]["entryId"], "m10-step-25")
+        self.assertEqual(record["entries"][1]["parentEntryId"], "m9-original")
+        self.assertEqual(record["entries"][2]["parentEntryId"], "m10-step-10")
+        self.assertEqual(record["entries"][2]["parentCheckpointSha256"],
+                         record["entries"][1]["checkpoint"]["sha256"])
+        self.assertEqual(len(record["comparisons"][0]["caseComparisons"]), 36)
         self.assertEqual(record["decisionLedger"][-1]["decision"], "not-evaluated")
         self.assertFalse(record["trainingExecutedByThisTool"])
         self.assertEqual(record["sourceApprovalStatus"],
