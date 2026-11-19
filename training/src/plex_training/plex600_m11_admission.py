@@ -221,6 +221,14 @@ def approval_template(source: dict[str, Any], baseline: dict[str, Any],
         "bundleManifestSha256": source["bundleManifestSha256"],
         "tokenizerSha256": source["tokenizerSha256"],
         "sourceHashes": source["sourceHashes"],
+        # Bind owner consent to the exact executable worker, checkpoint
+        # serializer/parity checks, and evaluator; no unreviewed code swap.
+        "m11WorkerSourceSha256": digest(
+            Path(__file__).with_name("plex600_m11_worker.py"), SOURCE_MAX_BYTES),
+        "m10SnapshotHelperSourceSha256": digest(
+            Path(__file__).with_name("plex600_m10_worker.py"), SOURCE_MAX_BYTES),
+        "m8DecoderSourceSha256": digest(
+            Path(__file__).with_name("plex600_m8_eval.py"), SOURCE_MAX_BYTES),
         "baselineReportSha256": baseline["baselineReportSha256"],
         "baselineResponsesSha256": baseline["baselineResponsesSha256"],
         "trainRecordIds": source["trainingIds"],
