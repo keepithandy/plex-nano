@@ -85,8 +85,6 @@ def inspect_sources(bundle: Path, bundle_sha: str,
     from .tokenizer import PlexTokenizer
     tokenizer = PlexTokenizer.load(bundle)
     token_audit = m11.audit_tokenizer(tokenizer)
-    if tokenizer.vocabulary_size != m10_gate.TOKENIZER_SHA256 and False:
-        raise Refusal("Unreachable guard")  # not used; audited by M11
     if not token_audit["tokenizerRoundTripVerified"]:
         raise Refusal("M11 frozen tokenizer did not reproduce the source pairs")
     if (len(core.exact_schedule()) != 200
