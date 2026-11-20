@@ -75,9 +75,17 @@ def rename_variable(source, old, new, expected_value):
     return source
 
 
+COPY_REQUEST = re.compile(
+    r"(?:return|copy) (?:the supplied|this) (?:javascript line|code|line) exactly as written\.?",
+    re.IGNORECASE,
+)
+
+
 def verified_edit(source, request):
     command = request.strip()
     if command.lower() in {"copy", "copy exactly", "copy this code", "show"}:
+        return source
+    if COPY_REQUEST.fullmatch(" ".join(command.split())):
         return source
     rename = re.fullmatch(
         rf"(?i:rename)\s+({IDENTIFIER})\s+(?i:to)\s+({IDENTIFIER})"
@@ -104,16 +112,10 @@ def verified_edit(source, request):
     return None
 
 
-def generate(source, request):
+def load_model():
     import torch
     from plex_training.plex600 import Plex600Config, Plex600Model
-    from plex_training.plex600_m8_eval import generate_one, prompt_for
-    from plex_training.tokenizer import PlexTokenizer
 
-    tokenizer = PlexTokenizer.load(ARTIFACTS / "plex600-fresh-tokenizer")
-    tokens = tokenizer.encode(prompt_for({"request": request, "inputFile": source}))
-    if len(tokens) > 1024 - 96:
-        raise ValueError("The supplied code and request exceed the model context. Use a smaller snippet.")
     with WEIGHTS.open("rb") as stream:
         if hashlib.file_digest(stream, "sha256").hexdigest() != DIGEST:
             raise ValueError("The weights differ from your measured step-200 checkpoint.")
@@ -121,21 +123,65 @@ def generate(source, request):
     state = torch.load(WEIGHTS, mmap=True, map_location="cpu", weights_only=True)
     model.load_state_dict(state)
     del state
-    model.to("cuda")
-    output, _, reason = generate_one(model, torch, tokenizer, tokens, device=torch.device("cuda"),
-                                     max_new_tokens=96, decoding_policy="fitted-vocab-v1")
-    return {"text": output, "stop": reason}
+    return model.to("cuda")
+
+
+def decode(model, tokenizer, tokens):
+    import torch
+    from plex_training.plex600_m8_eval import generate_one
+
+    output, count, reason = generate_one(
+        model, torch, tokenizer, tokens, device=torch.device("cuda"),
+        max_new_tokens=96, decoding_policy="fitted-vocab-v1",
+    )
+    return {"text": output, "stop": reason, "generatedTokens": count, "checkpointSha256": DIGEST}
+
+
+def generate(source, request):
+    from plex_training.plex600_m8_eval import prompt_for
+    from plex_training.tokenizer import PlexTokenizer
+
+    tokenizer = PlexTokenizer.load(ARTIFACTS / "plex600-fresh-tokenizer")
+    tokens = tokenizer.encode(prompt_for({"request": request, "inputFile": source}))
+    if len(tokens) > 1024 - 96:
+        raise ValueError("The supplied code and request exceed the model context. Use a smaller snippet.")
+    return decode(load_model(), tokenizer, tokens)
+
+
+def compare_copy_prompts():
+    from plex_training import plex600_m11_source_conditioning as m11
+    from plex_training import plex600_m8_eval as console
+    from plex_training.tokenizer import PlexTokenizer
+
+    request = "Return the supplied JavaScript line exactly as written."
+    tokenizer = PlexTokenizer.load(ARTIFACTS / "plex600-fresh-tokenizer")
+    model = load_model()
+    for case in m11.cases():
+        source = case["snippet"]
+        prompts = {
+            "console": console.prompt_for({"request": request, "inputFile": source}),
+            "m11": m11.prompt_for(case),
+        }
+        for name, prompt in prompts.items():
+            answer = decode(model, tokenizer, tokenizer.encode(prompt))
+            print(json.dumps({
+                "case": case["id"], "prompt": name, "expected": source, **answer,
+                "exactWithEos": answer["text"] == source and answer["stop"] == "eos",
+            }), flush=True)
+
+
+def wsl_command(option):
+    script = Path(__file__).resolve()
+    linux_path = "/mnt/" + script.drive[0].lower() + script.as_posix()[2:]
+    return ["wsl.exe", "-d", "Ubuntu", "--cd", REPO, "--",
+           "/home/quali/.local/bin/uv", "run", "--project", "training", "--no-sync",
+           "python", linux_path, option]
 
 
 def suggest(source, request):
     if sys.platform != "win32":
         return generate(source, request)
-    script = Path(__file__).resolve()
-    linux_path = "/mnt/" + script.drive[0].lower() + script.as_posix()[2:]
-    cmd = ["wsl.exe", "-d", "Ubuntu", "--cd", REPO, "--",
-           "/home/quali/.local/bin/uv", "run", "--project", "training", "--no-sync",
-           "python", linux_path, "--infer"]
-    run = subprocess.run(cmd, input=json.dumps([source, request]).encode(), capture_output=True)
+    run = subprocess.run(wsl_command("--infer"), input=json.dumps([source, request]).encode(), capture_output=True)
     if run.returncode:
         detail = (run.stderr or run.stdout).replace(b"\0", b"").decode("utf-8", "replace").strip()
         raise RuntimeError(detail.splitlines()[-1] if detail else "WSL inference failed.")
@@ -231,6 +277,7 @@ def main():
                         raise ValueError("Paste a code snippet first.")
                     print("Generating locally with Plex 600M M11 step 200...", flush=True)
                     answer = suggest(source, request)
+                    print(f'Checkpoint SHA-256: {answer["checkpointSha256"]}')
                     if not answer["text"].strip():
                         print(f'Plex 600M returned no code (stop: {answer["stop"]}).')
                         continue
@@ -254,6 +301,10 @@ def main():
 if __name__ == "__main__":
     if sys.argv[1:] == ["--infer"]:
         print(json.dumps(generate(*json.load(sys.stdin))))
+    elif sys.argv[1:] == ["--compare-copy-prompts"]:
+        if sys.platform == "win32":
+            sys.exit(subprocess.run(wsl_command("--compare-copy-prompts")).returncode)
+        compare_copy_prompts()
     else:
         try:
             main()

@@ -18,7 +18,7 @@ Both decoders agreed. The checkpoint copied the two training lines exactly. Both
 
 At steps 100 and 200, both decoders passed the training pair, and the digit preference test passed on both splits with a gold answer prefix. The development pair failed autonomous exact copying at both milestones. The local run completed 200 updates in 88.051 seconds with 10,708,058,112 CUDA reserved bytes at peak. Evidence comes from the owner's worker summary and eight step-200 generations. The repaired worker ran from commit `89998f5f`. [Worker repair](https://github.com/keepithandy/plex-nano/pull/218)
 
-The console already supports paste, opening a supplied file, bounded rename and text replacement, undo, diff, and saving a new copy. You verified the two-line rename and diff. An earlier console version sent a free-form rename to the checkpoint and received empty text at EOS. The current console labels built-in edits and identifies the checkpoint when it generates a suggestion. [Local console](https://chatgpt.com/library?file_id=libfile_27db36ce5ff881918197a4d38e485c98&account_id=personal)
+The console already supports paste, opening a supplied file, bounded rename and text replacement, undo, diff, and saving a new copy. You verified the two-line rename and diff. An earlier console version sent a free-form rename to the checkpoint and received empty text at EOS. The current console labels built-in edits and identifies the checkpoint when it generates a suggestion. [Local console](scripts/PlexLocal.py)
 
 ```mermaid
 flowchart LR
@@ -28,13 +28,15 @@ flowchart LR
     D --> E["Save a new copy"]
 ```
 
-## Phase 0 · Consolidate the baseline · current
+## Phase 0 · Consolidate the baseline · complete
 
 - Record the checkpoint digest, tokenizer identity, worker commit, four milestone decisions, and eight final generations in the experiment evidence.
 - Reconcile the repaired worker with the repository release process. Tie the tested console revision to reproducible installation instructions.
 - Freeze a small development smoke test with the existing M11 pairs and demonstrated console edit. Record assistant and raw checkpoint results separately.
 
 **Exit gate.** A clean installation reproduces the documented console example and identifies the checkpoint used for any model suggestion.
+
+The clean Windows installation passed all five editor cases. The owner verified the WSL checkpoint path, and the repaired worker is on master. [Phase 0 evidence and reproduction steps](docs/PLEX_PHASE_0_BASELINE.md)
 
 ## Phase 1 · Make supplied-file editing dependable
 
