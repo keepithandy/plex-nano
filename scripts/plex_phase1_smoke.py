@@ -77,12 +77,14 @@ class FileEditingTests(unittest.TestCase):
         before = codecs.BOM_UTF8 + b"const value = 1;\r\n"
         original.write_bytes(before)
         transcript = self.run_console(
-            "/open opened.js", "set value to 2", "/paste", "const fresh = 3;", ".end",
+            "/open opened.js", "set value to 2", "/save as draft.js",
+            "/paste", "const fresh = 3;", ".end",
             "/undo", "/diff", "/status", "/save as pasted.js",
         )
         self.assertIn("No edits to show.", transcript)
         self.assertIn("Source      pasted code", transcript)
         self.assertEqual(original.read_bytes(), before)
+        self.assertEqual((self.folder / "draft.js").read_bytes(), codecs.BOM_UTF8 + b"const value = 2;\r\n")
         self.assertEqual((self.folder / "pasted.js").read_bytes(), b"const fresh = 3;\n")
 
     def test_invalid_utf8_open_preserves_the_active_session(self):
