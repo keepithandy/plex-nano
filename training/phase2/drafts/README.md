@@ -1,4 +1,18 @@
-# P2-02 authored example draft
+# Phase 2 candidate bundles
+
+These drafts preserve proposed Phase 2 examples and their preparation history. Phase 2 closed with 0/18 semantic passes on its final frozen evaluation. [Master roadmap](../../../PLEX-MASTER-ROADMAP.md)
+
+## Final semantic gate
+
+```mermaid
+xychart-beta
+    title "Final Phase 2 semantic evaluation"
+    x-axis ["Passed", "Did not pass"]
+    y-axis "Cases" 0 --> 18
+    bar [0, 18]
+```
+
+## Historical procedures and evidence
 
 The owner approved the exact [24-example binding-diversity candidate](p2-03-binding-diversity-v1/REVIEW.md), with six originals and eighteen new variations, for local P2-03 diagnostic training. [Separate approval evidence](../approvals/p2-03-binding-diversity-v1.json) pins its reviewed hash; the draft retains its original pending labels and bytes. Twelve additional records remain evaluation-only. See the [plain-language review](../../../docs/PHASE-2-BINDING-CANDIDATE-REVIEW.md) and [completed two-arm result](../../../docs/PHASE-2-BINDING-DIVERSITY-RESULT.md). Earlier approved candidates below retain their original scope.
 

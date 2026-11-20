@@ -1,8 +1,22 @@
-# Phase 3 — Copy-fidelity recovery curriculum v1
+# Phase 3 copy fidelity
+
+This runbook preserves the frozen 27M evaluation and replay procedure. The report scored 0/138 exact files. [Master roadmap](../../../PLEX-MASTER-ROADMAP.md)
+
+## Frozen generated-file evaluation
+
+```mermaid
+xychart-beta
+    title "27M Phase 3 copy fidelity"
+    x-axis ["Exact files", "Missing supplied namespace"]
+    y-axis "Cases" 0 --> 138
+    bar [0, 138]
+```
+
+## Historical procedures and evidence
 
 **Current SB-02/SB-03 preparation:** Owner selected source-identifier diversity for model-free candidate preparation only. The new [SB-03 288/96 frozen proposal](sb03-namespace-diversity-proposal-v1.json), [deterministic generator](prepare_namespace_diversity_candidate.py) and [read-only frozen-tokenizer parity auditor](audit_namespace_diversity_token_parity.py) add 48 SHA-derived train-only names while preserving exact validation/source-offset/task topology. [Preparation gates and blockers](../../../docs/PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md). **No matched arm is authorized to train or generate responses; no new stage/bundle exists; final holdout remains closed.**
 
-**Current research closeout (2026-10-17):** one authorized 100-step run completed and independently checksum-verified; loss fell **7.1167 → 2.7984**, but frozen generated exact-file evaluation **FAILED all gates (0/24 validation copies, 0/72 edits, 0/6 developer copies, 0/36 developer edits; 138/138 reached EOS/full prompt visibility)**. The historical preparation/authorization sections below describe earlier phases and must not be interpreted as new permission. Preserve the original artifacts, no further training and no final holdout. [Completed research issue #181](https://github.com/keepithandy/plex-nano/issues/181) → [P3-SB source-binding recovery roadmap](../../../docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) / [issue #189](https://github.com/keepithandy/plex-nano/issues/189).
+**Current research closeout (2026-10-17):** one authorized 100-step run completed and independently checksum-verified; loss fell **7.1167 → 2.7984**, but frozen generated exact-file evaluation **FAILED all gates (0/24 validation copies, 0/72 edits, 0/6 developer copies, 0/36 developer edits; 138/138 reached EOS/full prompt visibility)**. The historical preparation/authorization sections below describe earlier phases and must not be interpreted as new permission. Preserve the original artifacts, no further training and no final holdout. [Completed research issue #181](https://github.com/keepithandy/plex-nano/issues/181) → [P3-SB source-binding recovery roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) / [issue #189](https://github.com/keepithandy/plex-nano/issues/189).
 
 **New read-only diagnostic:** `diagnose_saved_outputs.py` checks the owner's existing `evaluation-result.json` against the frozen candidate/control manifests without importing PyTorch, running inference, writing files, or changing the checkpoint. It emits the source report SHA and explicitly labels namespace/literal occurrence as heuristics, not exact copied-file success.
 

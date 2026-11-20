@@ -6,7 +6,7 @@
 
 | What you want to find | Open this |
 |---|---|
-| **Current research status and what comes next** | [Plex-ROADMAP.md](Plex-ROADMAP.md) and [P3-02 experiment report](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
+| **Current research status and what comes next** | [PLEX-MASTER-ROADMAP.md](PLEX-MASTER-ROADMAP.md) and [P3-02 experiment report](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
 | **The model (Transformer weights, forward pass)** | [training/src/plex_training/model.py](training/src/plex_training/model.py) and [config.py](training/src/plex_training/config.py) |
 | **How training and evaluation are invoked** | [training/src/plex_training/cli.py](training/src/plex_training/cli.py) and [training/README.md](training/README.md) |
 | **Current HTML/CSS/JS editing experiment** | [file_edit_replacements.py](training/src/plex_training/file_edit_replacements.py), [file_edit_replacements_run.py](training/src/plex_training/file_edit_replacements_run.py), and [file_edit_replacements_development.py](training/src/plex_training/file_edit_replacements_development.py) |
@@ -19,7 +19,7 @@
 plex-nano/
 ├── README.md                       Project overview and current status
 ├── PROJECT-MAP.md                  YOU ARE HERE — where to find things
-├── Plex-ROADMAP.md                 Roadmap and milestone history
+├── PLEX-MASTER-ROADMAP.md                 Current development roadmap
 ├── CHANGELOG.md                    Historical changes
 ├── AGENTS.md                       Project scope and editing guardrails
 ├── .vscode/                        VS Code navigation, extensions and safe tasks

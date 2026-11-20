@@ -85,4 +85,4 @@ The command prints a JSON report. **No model is loaded, no GPU is used, no optim
 
 ## 6. Review discipline
 
-The [original P3 source-binding roadmap](PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) remains the active research sequence. Keep independent checkpoints, candidate hashes, optimizer authorization, model inference authorization and final holdout access as distinct gates. The readiness of code and tests does **not** establish improvement in the model's coding capability.
+The [original P3 source-binding roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) remains the active research sequence. Keep independent checkpoints, candidate hashes, optimizer authorization, model inference authorization and final holdout access as distinct gates. The readiness of code and tests does **not** establish improvement in the model's coding capability.

@@ -1,4 +1,20 @@
-# Local Plex training workspace
+# Training workspace
+
+Reproducible research commands and recorded milestones for the 27M and 600M tracks. Current application development uses the existing checkpoint. [Master roadmap](../PLEX-MASTER-ROADMAP.md)
+
+## 600M measured starting point
+
+```mermaid
+xychart-beta
+    title "M11 step 200 · four distinct prompts"
+    x-axis ["Exact lines", "Correct digits", "Correct stops"]
+    y-axis "Prompts passed" 0 --> 4
+    bar [2, 4, 4]
+```
+
+Both decoders agreed. The checkpoint copied the two training lines exactly. Both development prompts used the correct digit and ended cleanly, but generated `score` in place of `value`.
+
+## Historical procedures and evidence
 
 This workspace adds a separate Python runner alongside the existing Node.js CLI. It trains only Plex-owned weights initialized from random values. The `byte-v1` codec remains a bootstrap format for runner checks. P1-14 built reviewed train/validation text splits, and P1-15 fitted Plex's own byte-level BPE tokenizer on the training split only. The BPE path now supports a bounded real-data pilot, checked checkpoint resumption, held-out evaluation, and independent completion from saved weights and a matching tokenizer bundle.
 

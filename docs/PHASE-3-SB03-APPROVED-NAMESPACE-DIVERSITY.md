@@ -8,7 +8,7 @@
 
 **Research decision:** Hypothesis **A — train-namespace diversity** is selected for technical development following owner approval. This document green-lights *model-free candidate preparation, frozen comparison and read-only parity checks*. It does **not** authorize a training run, checkpoint stage, model generation, new final holdout access, or a matched comparator run.
 
-**Repository tracking:** [source-binding issue #189](https://github.com/keepithandy/plex-nano/issues/189) · [technical failure review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) · [six-stage roadmap](PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md).
+**Repository tracking:** [source-binding issue #189](https://github.com/keepithandy/plex-nano/issues/189) · [technical failure review](PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) · [six-stage roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md).
 
 ## 1. Why this intervention
 

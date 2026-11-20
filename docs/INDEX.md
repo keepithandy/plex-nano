@@ -1,12 +1,12 @@
 # Plex Nano documentation index
 
-[Back to the VS Code project map](../PROJECT-MAP.md) · [Project README](../README.md) · [Roadmap](../Plex-ROADMAP.md)
+[Back to the VS Code project map](../PROJECT-MAP.md) · [Project README](../README.md) · [Roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/Plex-ROADMAP.md)
 
 This folder contains the **historical research record**, not a list of current product features. Its many `PHASE-2-...` files are retained intentionally so experimental contracts, failed evaluations, and results remain traceable. The current research target is a **27,566,080-parameter scratch-trained model** for edits to user-supplied HTML, CSS, and JavaScript.
 
 ## Read these first
 
-For the separate 600M track, use the [600M roadmap](PLEX-600M-ROADMAP.md) for
+For the separate 600M track, use the [600M roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PLEX-600M-ROADMAP.md) for
 ordered milestones and the current source/split planning gate.
 
 The [M3 preparation packet](PLEX-600M-M3-REVIEW-PACKET.md) provides the concrete
@@ -15,7 +15,7 @@ inventory, split discussion and proposed evaluation design for that gate.
 | Question | Document |
 |---|---|
 | What remains after auditing the October 17 merges? | [October 18 audit recovery roadmap](PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md): all 17 merges, verified failures, local reporting fixes and ordered research gates |
-| What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](../Plex-ROADMAP.md) |
+| What is Plex trying to accomplish? | [Main README](../README.md) and [roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/Plex-ROADMAP.md) |
 | What is the separate 600M research track? | [600M development record](PLEX-600M-DEVELOPMENT.md): untrained scratch architecture and preparation tools; one full-size forward/backward check passed, while optimizer and sustained-training fit remain unmeasured. The 27M Nano baseline remains separate. |
 | What source evidence exists for 600M? | [Data readiness review](PLEX-600M-DATA-READINESS-REVIEW.md): historical corpus scope, previously used validation, and evidence needed before a 600M data decision. |
 | How do I diagnose P3-02 failures without training? | [P3-02-D1 read-only diagnostic](PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
@@ -23,7 +23,7 @@ inventory, split discussion and proposed evaluation design for that gate.
 | What did the saved failed responses show? | [October 17 response review](PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md): source-name loss and repeated outputs |
 | What did the 42-task copy/edit probe show? | [Completed diagnostic issue #177](https://github.com/keepithandy/plex-nano/issues/177): owner-reported **0/42 exact, 0/6 copies**, source-name loss; owner retains raw responses locally |
 | What happened in the completed P3 copy-fidelity experiment? | [Closed evidence record #181](https://github.com/keepithandy/plex-nano/issues/181): **100-step training complete, teacher-forced loss 7.1167 → 2.7984; generation 0/138 exact**, final holdout closed |
-| How do I review all green-lit source-binding issue work in Codex? | [Codex Review Roadmap](PHASE-3-SOURCE-BINDING-CODEX-REVIEW-ROADMAP.md): issue #189 SB-00–SB-05 matrix, gated permissions, checks and review prompt |
+| How do I review all green-lit source-binding issue work in Codex? | [Codex Review Roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PHASE-3-SOURCE-BINDING-CODEX-REVIEW-ROADMAP.md): issue #189 SB-00–SB-05 matrix, gated permissions, checks and review prompt |
 | What did historical training-ancestor screening find? | [Inventory coverage review](PHASE-3-R2-TRAINING-INVENTORY-COVERAGE-REVIEW-2026-10-18.md) and [collision results](PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md): ten recorded training texts screened, with eight proposed V2 names found in ancestor text; the original V2 fails its exclusion gate. Coverage is limited to the recorded history. |
 | What is ready in source-binding recovery? | [R3 comparison design review](PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md): a distinct six-versus-48 screened-name witness matched all 384 paired token lengths. Protocol adoption, independent review, arm manifests and scoring provenance remain pending; no new model execution is authorized. The original V1 tokenizer audit failed and V2 remains blocked. |
 | What did the 72-task source/value diagnostic show? | [Replacement-failure decision](PHASE-3-REPLACEMENT-FAILURE-DECISION.md): frozen both-fail decision, with 68/72 target boundaries unscorable; next controlled proposal |
@@ -37,7 +37,7 @@ inventory, split discussion and proposed evaluation design for that gate.
 | Section | Entry points | What you find |
 |---|---|---|
 | **Phase 1 — foundations** | [First experiment](FIRST-EXPERIMENT.md), [hardware profile](HARDWARE-AND-TRAINING-PROFILE.md) | Scratch model, training environment, first pilot setup |
-| **Phase 2 — early binding and code tasks** | [Roadmap](../Plex-ROADMAP.md) | Request following, compositional binding, instruction format |
+| **Phase 2 — early binding and code tasks** | [Roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/Plex-ROADMAP.md) | Request following, compositional binding, instruction format |
 | **Phase 2 — model and data preparation** | [Plex Web data collection](PHASE-2-P2-24-WEB-PRETRAINING-SPEC.md), [dataset pipeline](DATASET-PIPELINE.md) | Data sourcing, tokenizer, provenance, scratch pilot |
 | **Phase 2 — later transfer** | [P2-44 evidence-first work](PHASE-2-P2-44-EVIDENCE-FIRST-SEMANTIC-COMPOSITION.md), [P2-48 final run](PHASE-2-P2-48-FINAL-TRANSFER-RUN.md), [P2-49 bridge reevaluation](PHASE-2-P2-49-UNCHANGED-BRIDGE-REEVALUATION.md) | Frozen bounded runs and their limitations |
 | **Phase 2 — completed** | [P2-50 closeout](PHASE-2-P2-50-CLOSEOUT.md) | Final Phase 2 capability boundary |

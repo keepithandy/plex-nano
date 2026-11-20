@@ -1,4 +1,17 @@
-# Plex Web pretraining workspace
+# Pretraining research workspace
+
+The historical commands and corpus milestones below document the experiments that produced the existing research checkpoints. The current development focus is local inference and editing. [Master roadmap](../../PLEX-MASTER-ROADMAP.md)
+
+## Research workflow
+
+```mermaid
+flowchart LR
+    A["Reviewed corpus"] --> B["Tokenizer and packed inputs"]
+    B --> C["Bounded run"]
+    C --> D["Frozen evaluation"]
+```
+
+## Historical procedures and evidence
 
 This directory is the control surface for Plex's HTML/CSS/JavaScript domain-pretraining program.
 
