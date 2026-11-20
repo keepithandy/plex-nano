@@ -1,4 +1,5 @@
 """Phase 2 development smoke: fixed-case scoring and real console entry points."""
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -135,6 +136,93 @@ class Phase2Tests(unittest.TestCase):
         self.assertIn("Instruction: Rename value to count", prompt)
         self.assertIn("REFUSE:", prompt)
 
+
+
+    def make_provenance_run(self):
+        cases, suite_hash = phase2.load_cases()
+        dest = self.folder / "raw-m11"
+        dest.mkdir()
+        digests = {}
+        for name in ("baseline", "alternative"):
+            rows = [{
+                "id": case["id"], "text": "", "stop": "eos",
+                "elapsedMs": 12.5, "generatedTokens": 0,
+                "checkpointSha256": phase2.CHECKPOINT_SHA256,
+            } for case in cases]
+            raw = "".join(json.dumps(row) + "\n" for row in rows).encode("utf-8")
+            (dest / f"{name}.jsonl").write_bytes(raw)
+            digests[name] = hashlib.sha256(raw).hexdigest()
+        receipt = {
+            "protocol": phase2.RUN_PROTOCOL, "suiteSha256": suite_hash,
+            "checkpointSha256": phase2.CHECKPOINT_SHA256,
+            "tokenizerSha256": phase2.TOKENIZER_SHA256,
+            "policy": "fitted-vocab-v1", "maxNewTokens": 96,
+            "trainingPerformed": False, "prompts": ["baseline", "alternative"],
+            "casesPerPrompt": len(cases), "responseSha256": digests,
+        }
+        (dest / "identity.json").write_text(json.dumps(receipt), encoding="utf-8")
+        return cases, suite_hash, dest, receipt
+
+    def test_signed_by_content_receipt_accepts_complete_synthetic_pair(self):
+        cases, suite_hash, dest, _ = self.make_provenance_run()
+        phase2.validate_raw_pair(
+            cases, suite_hash, dest / "baseline.jsonl", dest / "alternative.jsonl"
+        )
+        score = phase2.score_model(cases, dest / "baseline.jsonl")
+        self.assertEqual(score["emptyEos"], len(cases))
+        self.assertEqual(score["edits"], [0, 20])
+        self.assertEqual(score["refusals"], [0, 13])
+
+    def test_raw_pair_refuses_mismatched_receipt_and_modified_responses(self):
+        cases, suite_hash, dest, receipt = self.make_provenance_run()
+        receipt["suiteSha256"] = "0" * 64
+        (dest / "identity.json").write_text(json.dumps(receipt), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "does not match"):
+            phase2.validate_raw_pair(
+                cases, suite_hash, dest / "baseline.jsonl", dest / "alternative.jsonl"
+            )
+        receipt["suiteSha256"] = suite_hash
+        (dest / "identity.json").write_text(json.dumps(receipt), encoding="utf-8")
+        with (dest / "alternative.jsonl").open("ab") as stream:
+            stream.write(b"\n")
+        with self.assertRaisesRegex(ValueError, "differ from the saved receipt"):
+            phase2.validate_raw_pair(
+                cases, suite_hash, dest / "baseline.jsonl", dest / "alternative.jsonl"
+            )
+
+    def test_raw_pair_refuses_wrong_checkpoint_even_with_updated_response_digest(self):
+        cases, suite_hash, dest, receipt = self.make_provenance_run()
+        path = dest / "baseline.jsonl"
+        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+        rows[0]["checkpointSha256"] = "0" * 64
+        raw = "".join(json.dumps(row) + "\n" for row in rows).encode("utf-8")
+        path.write_bytes(raw)
+        receipt["responseSha256"]["baseline"] = hashlib.sha256(raw).hexdigest()
+        (dest / "identity.json").write_text(json.dumps(receipt), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "invalid or unverified"):
+            phase2.validate_raw_pair(
+                cases, suite_hash, dest / "baseline.jsonl", dest / "alternative.jsonl"
+            )
+
+    def test_cli_requires_both_models_or_neither(self):
+        run = subprocess.run([
+            sys.executable, "-I", "-S", str(PHASE2_PATH),
+            "--baseline-model-jsonl", str(self.folder / "incomplete.jsonl"),
+        ], capture_output=True, text=True, timeout=20)
+        self.assertNotEqual(run.returncode, 0)
+        self.assertIn("Provide both raw model files", run.stderr)
+
+    def test_inference_refuses_output_outside_artifacts_before_model_load(self):
+        script = PHASE2_PATH.with_name("plex_phase2_infer.py")
+        destination = self.folder / "outside-artifacts"
+        run = subprocess.run([
+            sys.executable, "-I", "-S", str(script),
+            "--execute-read-only", "--output-dir", str(destination),
+        ], capture_output=True, text=True, timeout=20)
+        self.assertNotEqual(run.returncode, 0)
+        self.assertIn("NEW direct child of training/artifacts", run.stderr)
+        self.assertNotIn("No module named", run.stderr)
+        self.assertFalse(destination.exists())
 
 
 if __name__ == "__main__":
