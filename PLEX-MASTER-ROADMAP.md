@@ -38,7 +38,7 @@ flowchart LR
 
 The clean Windows installation passed all five editor cases. The owner verified the WSL checkpoint path, and the repaired worker is on master. [Phase 0 evidence and reproduction steps](docs/PLEX_PHASE_0_BASELINE.md)
 
-## Phase 1 · Make supplied-file editing dependable
+## Phase 1 · Make supplied-file editing dependable · complete
 
 - Exercise paste, UTF-8 file open, exact copy, simple edits, undo, diff, and exclusive save with real JavaScript snippets. Cover CRLF, a trailing newline, quoted text, ambiguous references, conflicts, and unsupported syntax.
 - Keep explicit file selection and review. Display the changed spans and any reason an edit cannot be verified.
@@ -47,6 +47,8 @@ The clean Windows installation passed all five editor cases. The owner verified 
 **Exit gate.** End-to-end tests demonstrate original-file preservation and correct edits across supported inputs, including deliberate refusal cases.
 
 Run the [Phase 1 console smoke test](scripts/plex_phase1_smoke.py) with `python -I -S scripts/plex_phase1_smoke.py -v`. The suite checks saved bytes and the original file alongside console output. It runs on Windows and Linux in CI.
+
+**Closure evidence:** The editor audit passed nine end-to-end cases on Windows and Ubuntu, the frozen Phase 0 smoke, and the installed `plex` dashboard package smoke. The tests cover malformed requests, non-UTF-8-surrogate replacements, and protection against switching away from unsaved edits, in addition to the cases above. These are **built-in editor** outcomes; the M11 checkpoint has not demonstrated dependable autonomous edits. [Phase 1 audit and limitations](docs/PLEX_PHASE_1_AUDIT.md) · [Audit changes](https://github.com/keepithandy/plex-nano/pull/227)
 
 ## Phase 2 · Turn ordinary language into verified edits
 
