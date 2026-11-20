@@ -45,7 +45,7 @@
 
 ## 💻 Try the local console
 
-With the standalone [PlexLocal.py](https://chatgpt.com/library?file_id=libfile_27db36ce5ff881918197a4d38e485c98&account_id=personal) in your working folder, launch `python PlexLocal.py`. The download points to the owner’s ChatGPT file and may require access to that account. The optional model path also uses the owner’s WSL environment and saved M11 weights.
+From the repository root, launch `python scripts/PlexLocal.py`. Built-in edits use Python's standard library. Model suggestions use the owner's WSL environment and saved M11 weights. [Console source](scripts/PlexLocal.py) · [Pinned installation and smoke test](docs/PLEX_PHASE_0_BASELINE.md)
 
 Enter these lines at the Plex prompt. The line containing only `.end` finishes the paste.
 
