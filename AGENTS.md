@@ -39,12 +39,11 @@ Plex does not need to discover files or projects. The caller supplies the code c
 
 ## Roadmap discipline
 
-- Phase 1: model foundation.
-- Phase 2: coding understanding and semantic transfer.
-- Phase 3: file-conditioned coding using **provided** file/code context.
-- Later phases: harder coding, conversational iteration, and a local app around the model.
+The historical 27M research sequence was Phase 1 model foundation, Phase 2 coding understanding and semantic transfer, and Phase 3 file-conditioned coding using **provided** file/code context. Those labels remain valid when reading the older experiment reports.
 
-Do not skip an unfinished Phase 2 milestone merely to make the roadmap look more advanced. Phase 2 can close with documented limitations after its predeclared closeout work is complete.
+The **active local assistant roadmap** is [PLEX-MASTER-ROADMAP.md](PLEX-MASTER-ROADMAP.md): Phase 0 consolidates the M11 baseline, Phase 1 makes supplied-file editing dependable, and Phase 2 measures ordinary-language verified edits. Follow its explicit exit gates and keep the 27M research history distinct.
+
+Do not skip or rewrite an unfinished historical milestone merely to make the roadmap look more advanced. A research phase may close with documented limitations after its predeclared closeout work is complete.
 
 ## Change discipline
 
