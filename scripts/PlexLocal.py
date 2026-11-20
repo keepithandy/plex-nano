@@ -132,11 +132,9 @@ def phase2_plan(source, request):
     command = " ".join(request.strip().split())
     if not source:
         raise ValueError("Paste a code snippet first.")
-    changes = verified_changes(source, request)
-    if changes is not None:
-        return ({"operation": "verified-command", "request": request}, changes)
-
     full = lambda pattern: re.fullmatch(pattern, command, flags=re.IGNORECASE)
+    if full(rf"rename\s+(?:it|this|that)\s+to\s+{IDENTIFIER}\\.?"):
+        raise ValueError("I can't verify that edit. Name the exact variable instead of it, this, or that.")
     rename = (
         full(rf"(?:please\s+)?(?:change|rename)\s+(?:the\s+)?(?:variable|identifier)\s+({IDENTIFIER})\s+(?:to|into)\s+({IDENTIFIER})(?:\s+instead)?\.?")
         or full(rf"(?:please\s+)?(?:change|update)\s+(?:the\s+)?variable\s+name\s+({IDENTIFIER})\s+to\s+({IDENTIFIER})\.?")
@@ -173,6 +171,13 @@ def phase2_plan(source, request):
 
     if full(r"(?:please\s+)?copy\s+this\s+code\s+as\s+is\.?"):
         return {"operation": "copy"}, verified_changes(source, "copy exactly")
+
+    # Only after trying bounded paraphrases should strict Phase 1 syntax
+    # report its own errors. Otherwise "rename the variable X to Y" would
+    # be mistaken for an invalid strict command before it could be parsed.
+    changes = verified_changes(source, request)
+    if changes is not None:
+        return ({"operation": "verified-command", "request": request}, changes)
 
     # Explicit edit verbs must not silently become a model completion when
     # their targets or scopes cannot be verified.
