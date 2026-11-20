@@ -1,6 +1,5 @@
 """Phase 2 development smoke: fixed-case scoring and real console entry points."""
-import contextlib
-import io
+import importlib.util
 import json
 from pathlib import Path
 import subprocess
@@ -8,7 +7,10 @@ import sys
 import tempfile
 import unittest
 
-import plex_phase2_eval as phase2
+PHASE2_PATH = Path(__file__).resolve().with_name("plex_phase2_eval.py")
+_spec = importlib.util.spec_from_file_location("plex_phase2_eval", PHASE2_PATH)
+phase2 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(phase2)
 
 CONSOLE = Path(__file__).with_name("PlexLocal.py").resolve()
 
