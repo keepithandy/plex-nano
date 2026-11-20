@@ -126,6 +126,64 @@ def verified_changes(source, request):
     return None
 
 
+# Phase 2 is a bounded, deterministic request interpreter, NOT a model result.
+# Each inferred operation is rechecked by the existing Phase 1 verifier.
+def phase2_plan(source, request):
+    command = " ".join(request.strip().split())
+    if not source:
+        raise ValueError("Paste a code snippet first.")
+    changes = verified_changes(source, request)
+    if changes is not None:
+        return ({"operation": "verified-command", "request": request}, changes)
+
+    full = lambda pattern: re.fullmatch(pattern, command, flags=re.IGNORECASE)
+    rename = (
+        full(rf"(?:please\s+)?(?:change|rename)\s+(?:the\s+)?(?:variable|identifier)\s+({IDENTIFIER})\s+(?:to|into)\s+({IDENTIFIER})(?:\s+instead)?\.?")
+        or full(rf"(?:please\s+)?(?:change|update)\s+(?:the\s+)?variable\s+name\s+({IDENTIFIER})\s+to\s+({IDENTIFIER})\.?")
+        or full(rf"(?:please\s+)?rename\s+({IDENTIFIER})\s+as\s+({IDENTIFIER})\.?")
+        or full(rf"(?:please\s+)?call\s+(?:the\s+)?variable\s+({IDENTIFIER})\s+({IDENTIFIER})\s+instead\.?")
+    )
+    if rename:
+        old, new = rename.groups()
+        plan = {"operation": "rename", "old": old, "new": new}
+        return plan, verified_changes(source, f"rename {old} to {new}")
+
+    implicit = full(rf"(?:please\s+)?call\s+this\s+variable\s+({IDENTIFIER})\s+instead\.?")
+    if implicit:
+        names = []
+        for line in source.splitlines():
+            line = line.partition("//")[0]
+            match = DECL.fullmatch(line)
+            if match:
+                names.append(match[2])
+        if len(names) != 1:
+            raise ValueError("Name the variable to rename; this source does not have exactly one supported declaration.")
+        old, new = names[0], implicit[1]
+        plan = {"operation": "rename", "old": old, "new": new}
+        return plan, verified_changes(source, f"rename {old} to {new}")
+
+    integer = (
+        full(rf"(?:please\s+)?(?:make|set)\s+({IDENTIFIER})\s+(?:equal\s+to|to\s+be)\s+(-?(?:0|[1-9][0-9]*))\.?")
+        or full(rf"(?:please\s+)?change\s+(?:the\s+)?integer\s+({IDENTIFIER})\s+to\s+(-?(?:0|[1-9][0-9]*))\.?")
+    )
+    if integer:
+        name, value = integer.groups()
+        plan = {"operation": "set-integer", "name": name, "value": value}
+        return plan, verified_changes(source, f"set {name} to {value}")
+
+    if full(r"(?:please\s+)?copy\s+this\s+code\s+as\s+is\.?"):
+        return {"operation": "copy"}, verified_changes(source, "copy exactly")
+
+    # Explicit edit verbs must not silently become a model completion when
+    # their targets or scopes cannot be verified.
+    if re.match(r"(?i)^(?:please\s+)?(?:rename|change|update|call|set|make|replace)\b", command):
+        raise ValueError(
+            "I can't verify that edit. Name one variable and its new name, "
+            "or use a supported set/replace command."
+        )
+    return None
+
+
 def apply_changes(source, changes):
     parts = []
     offset = 0
@@ -453,7 +511,9 @@ def main():
                       '  /accept               Apply a complete model suggestion\n'
                       '  /status               Inspect the active session\n'
                       '  /clear  /exit         Redraw the dashboard or end the session\n\n'
-                      '  Try: rename value to count, set count to 3, or replace "old" with "new".\n'
+                      '  Try: rename value to count, change the variable value to count,\n'
+                      '       call this variable count instead, or make value equal to 3.\n'
+                      '  Also: set count to 3, or replace "old" with "new".\n'
                       '  Verified rename supports flat integer declarations and simple console.log calls.\n'
                       '  Other edit requests use your local Plex 600M model.')
                 continue
@@ -487,8 +547,8 @@ def main():
             else:
                 if original is None:
                     raise ValueError("Paste a code snippet first.")
-                changes = verified_changes(source, request)
-                if changes is None:
+                interpreted = phase2_plan(source, request)
+                if interpreted is None:
                     pending = None
                     if not source:
                         raise ValueError("Paste a code snippet first.")
@@ -500,9 +560,31 @@ def main():
                         continue
                     print(f'Plex 600M model suggestion ({answer["stop"]}):\n{answer["text"]}')
                     if answer["stop"] == "eos":
+                        if answer["text"] == source:
+                            print("Model proposed no changes; nothing to accept.")
+                            continue
+                        print("Proposed diff (unverified model output):")
+                        for line in difflib.unified_diff(
+                            source.splitlines(keepends=True),
+                            answer["text"].splitlines(keepends=True),
+                            fromfile=label, tofile="Plex 600M suggestion",
+                        ):
+                            print(view.diff_line(line.rstrip("\r\n")))
+                            if not line.endswith(("\r", "\n")):
+                                print(r"\ No newline at end of file")
                         pending = answer["text"]
-                        print("Type accept to use this suggestion.")
+                        print("Review the diff. Type accept to use this unverified suggestion.")
+                    else:
+                        print("Incomplete model output; not available for acceptance.")
                     continue
+                plan, changes = interpreted
+                if plan["operation"] != "verified-command":
+                    if plan["operation"] == "rename":
+                        print(f'Understood (built-in): rename {plan["old"]} to {plan["new"]}.')
+                    elif plan["operation"] == "set-integer":
+                        print(f'Understood (built-in): set {plan["name"]} to {plan["value"]}.')
+                    else:
+                        print("Understood (built-in): copy unchanged.")
                 result = apply_changes(source, changes)
                 if result != source:
                     print("Built-in Python edit applied.")
