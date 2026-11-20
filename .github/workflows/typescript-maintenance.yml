@@ -71,7 +71,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Run Phase 0 and Phase 1 console smoke tests
+      - name: Run Phase 0, Phase 1 and Phase 2 console checks
         run: |
           python -I -S scripts/plex_phase0_smoke.py
           python -I -S scripts/plex_phase1_smoke.py -v
+          python -I -S scripts/plex_phase2_eval.py
+          python -I -S scripts/plex_phase2_smoke.py -v

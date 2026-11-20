@@ -50,7 +50,7 @@ Run the [Phase 1 console smoke test](scripts/plex_phase1_smoke.py) with `python 
 
 **Closure evidence:** The editor audit passed nine end-to-end cases on Windows and Ubuntu, the frozen Phase 0 smoke, and the installed `plex` dashboard package smoke. The tests cover malformed requests, non-UTF-8-surrogate replacements, and protection against switching away from unsaved edits, in addition to the cases above. These are **built-in editor** outcomes; the M11 checkpoint has not demonstrated dependable autonomous edits. [Phase 1 audit and limitations](docs/PLEX_PHASE_1_AUDIT.md) · [Audit changes](https://github.com/keepithandy/plex-nano/pull/227)
 
-## Phase 2 · Turn ordinary language into verified edits
+## Phase 2 · Turn ordinary language into verified edits · in progress
 
 - Freeze a development set of user requests and expected changes, including paraphrases, ambiguous targets, and requests outside the editor's supported operations.
 - Compare the existing checkpoint prompt against inference-only alternatives. Measure empty EOS, exact edits, collateral changes, correct refusal, and latency. Attribute each outcome to the checkpoint or built-in editor.
@@ -58,6 +58,8 @@ Run the [Phase 1 console smoke test](scripts/plex_phase1_smoke.py) with `python 
 - Keep model suggestions reviewable. Handle empty or incomplete outputs explicitly.
 
 **Exit gate.** A fixed, independently scored set demonstrates correct reviewable edits from paraphrased requests. Publish the sample count and raw-model and end-to-end scores.
+
+**Progress:** The first development set contains 33 supplied-JavaScript cases (20 edits/copies and 13 deliberate refusals). A bounded built-in interpreter routes paraphrases through the existing verifier; the read-only scorecard keeps editor and raw-model results separate and reports **not run** without real model output. Windows and Linux CI exercise the console and scorecard. [Plain-language Phase 2 status](docs/PLEX_PHASE_2_START.md) · [Development scorer](scripts/plex_phase2_eval.py) · [Opt-in raw checkpoint comparison](scripts/plex_phase2_infer.py). The exit gate remains open pending actual M11 measurements and independently reviewed final scores.
 
 ## Phase 3 · Stabilize local inference and review
 
