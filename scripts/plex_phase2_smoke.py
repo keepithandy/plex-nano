@@ -114,5 +114,28 @@ class Phase2Tests(unittest.TestCase):
         self.assertIn("Raw 600M alternative: not run", completed.stdout)
 
 
+    def test_m11_comparison_requires_explicit_read_only_flag(self):
+        script = Path(phase2.__file__).resolve().with_name("plex_phase2_infer.py")
+        destination = self.folder / "raw-model-output"
+        run = subprocess.run(
+            [sys.executable, "-I", "-S", str(script), "--output-dir", str(destination)],
+            capture_output=True, text=True, timeout=20,
+        )
+        self.assertNotEqual(run.returncode, 0)
+        self.assertIn("Add --execute-read-only", run.stderr)
+        self.assertFalse(destination.exists())
+
+    def test_m11_alternative_prompt_keeps_supplied_file_explicit(self):
+        script = Path(phase2.__file__).resolve().with_name("plex_phase2_infer.py")
+        spec = importlib.util.spec_from_file_location("plex_phase2_infer", script)
+        compare = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(compare)
+        prompt = compare.alternative_prompt("let value = 1;\n", "Rename value to count")
+        self.assertIn("Source JavaScript:\nlet value = 1;\n", prompt)
+        self.assertIn("Instruction: Rename value to count", prompt)
+        self.assertIn("REFUSE:", prompt)
+
+
+
 if __name__ == "__main__":
     unittest.main()
