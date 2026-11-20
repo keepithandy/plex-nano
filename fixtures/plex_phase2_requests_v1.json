@@ -1,0 +1,237 @@
+{
+  "title": "Plex Phase 2 fixed development cases v1",
+  "purpose": "Supplied JavaScript; exact edits or explicit refusal; never model-training data.",
+  "cases": [
+    {
+      "id": "e01",
+      "group": "strict",
+      "request": "Rename value to count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e02",
+      "group": "paraphrase",
+      "request": "Change the variable value to count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e03",
+      "group": "paraphrase",
+      "request": "Please rename the variable value to count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e04",
+      "group": "paraphrase",
+      "request": "Change variable value into count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e05",
+      "group": "paraphrase",
+      "request": "Rename value as count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e06",
+      "group": "paraphrase",
+      "request": "Rename the identifier value to count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e07",
+      "group": "paraphrase",
+      "request": "Update the variable name value to count",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e08",
+      "group": "paraphrase",
+      "request": "Call variable value count instead",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e09",
+      "group": "paraphrase",
+      "request": "Call this variable count instead",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e10",
+      "group": "paraphrase",
+      "request": "Please call this variable count instead.",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let count = 1;\nconsole.log(\"value\", count);\n"
+    },
+    {
+      "id": "e11",
+      "group": "paraphrase",
+      "request": "Change the variable total into sum",
+      "source": "const total = 4;\nconsole.log(total);\n",
+      "expected": "const sum = 4;\nconsole.log(sum);\n"
+    },
+    {
+      "id": "e12",
+      "group": "paraphrase",
+      "request": "Change the variable value to count",
+      "source": "const value = 1;\r\nconsole.log(value);\r\n",
+      "expected": "const count = 1;\r\nconsole.log(count);\r\n"
+    },
+    {
+      "id": "e13",
+      "group": "paraphrase",
+      "request": "Make value equal to 3",
+      "source": "let value = 1;\n",
+      "expected": "let value = 3;\n"
+    },
+    {
+      "id": "e14",
+      "group": "paraphrase",
+      "request": "Set value to be 3",
+      "source": "let value = 1;\n",
+      "expected": "let value = 3;\n"
+    },
+    {
+      "id": "e15",
+      "group": "paraphrase",
+      "request": "Change the integer value to 3",
+      "source": "let value = 1;\n",
+      "expected": "let value = 3;\n"
+    },
+    {
+      "id": "e16",
+      "group": "strict",
+      "request": "Set value to 3",
+      "source": "let value = 1;\n",
+      "expected": "let value = 3;\n"
+    },
+    {
+      "id": "e17",
+      "group": "strict",
+      "request": "Replace \"value\" with \"count\"",
+      "source": "let value = 1;\n",
+      "expected": "let count = 1;\n"
+    },
+    {
+      "id": "e18",
+      "group": "strict",
+      "request": "Copy exactly",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let value = 1;\nconsole.log(\"value\", value);\n"
+    },
+    {
+      "id": "e19",
+      "group": "paraphrase",
+      "request": "Copy this code as is",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "expected": "let value = 1;\nconsole.log(\"value\", value);\n"
+    },
+    {
+      "id": "e20",
+      "group": "paraphrase",
+      "request": "Make value equal to -2",
+      "source": "let value = 1;\n",
+      "expected": "let value = -2;\n"
+    },
+    {
+      "id": "r01",
+      "group": "refusal",
+      "request": "Call this variable count instead",
+      "source": "let value = 1;\nlet score = 2;\n",
+      "refusalContains": "Name the variable to rename"
+    },
+    {
+      "id": "r02",
+      "group": "refusal",
+      "request": "Change the variable value to count",
+      "source": "let value = 1;\nfunction f() { return value; }\n",
+      "refusalContains": "Rename cannot verify syntax on line 2"
+    },
+    {
+      "id": "r03",
+      "group": "refusal",
+      "request": "Rename the variable value to count",
+      "source": "let value = 1;\nlet count = 2;\n",
+      "refusalContains": "Choose an unused JavaScript variable name"
+    },
+    {
+      "id": "r04",
+      "group": "refusal",
+      "request": "Rename the variable value to return",
+      "source": "let value = 1;\n",
+      "refusalContains": "Choose an unused JavaScript variable name"
+    },
+    {
+      "id": "r05",
+      "group": "refusal",
+      "request": "Change the variable missing to total",
+      "source": "let value = 1;\n",
+      "refusalContains": "No integer declaration named missing"
+    },
+    {
+      "id": "r06",
+      "group": "refusal",
+      "request": "Rename it to count",
+      "source": "let value = 1;\n",
+      "refusalContains": "I can't verify that edit"
+    },
+    {
+      "id": "r07",
+      "group": "refusal",
+      "request": "Update the variable name",
+      "source": "let value = 1;\n",
+      "refusalContains": "I can't verify that edit"
+    },
+    {
+      "id": "r08",
+      "group": "refusal",
+      "request": "Make value equal to many",
+      "source": "let value = 1;\n",
+      "refusalContains": "I can't verify that edit"
+    },
+    {
+      "id": "r09",
+      "group": "refusal",
+      "request": "Change function run to async",
+      "source": "function run() {} \n",
+      "refusalContains": "I can't verify that edit"
+    },
+    {
+      "id": "r10",
+      "group": "refusal",
+      "request": "Change the number to 7",
+      "source": "let value = 1;\n",
+      "refusalContains": "I can't verify that edit"
+    },
+    {
+      "id": "r11",
+      "group": "refusal",
+      "request": "Set value to be 3",
+      "source": "let value = 1;\nconsole.log(\"value\", value);\n",
+      "refusalContains": "Set needs one integer declaration"
+    },
+    {
+      "id": "r12",
+      "group": "refusal",
+      "request": "Rename the variable value to count",
+      "source": "let value = 1;\nlet value = 2;\n",
+      "refusalContains": "Rename cannot verify multiple declarations"
+    },
+    {
+      "id": "r13",
+      "group": "refusal",
+      "request": "Replace \"value\" with \"count\"",
+      "source": "console.log(\"value\", \"value\");\n",
+      "refusalContains": "The original text must occur exactly once."
+    }
+  ]
+}
