@@ -5,6 +5,9 @@ on:
     paths:
       - "scripts/PlexLocal.py"
       - "scripts/plex_phase*_smoke.py"
+      - "scripts/plex_phase2_eval.py"
+      - "scripts/plex_phase2_infer.py"
+      - "scripts/Invoke-PlexPhase2.ps1"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -19,6 +22,9 @@ on:
     paths:
       - "scripts/PlexLocal.py"
       - "scripts/plex_phase*_smoke.py"
+      - "scripts/plex_phase2_eval.py"
+      - "scripts/plex_phase2_infer.py"
+      - "scripts/Invoke-PlexPhase2.ps1"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -71,6 +77,12 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Verify Phase 2 PowerShell launcher does not execute without -Run
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & ./scripts/Invoke-PlexPhase2.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Read-only Phase 2 launcher help failed' }
       - name: Run Phase 0, Phase 1 and Phase 2 console checks
         run: |
           python -I -S scripts/plex_phase0_smoke.py
