@@ -75,4 +75,5 @@ jobs:
         run: |
           python -I -S scripts/plex_phase0_smoke.py
           python -I -S scripts/plex_phase1_smoke.py -v
+          python -I -S scripts/plex_phase2_eval.py
           python -I -S scripts/plex_phase2_smoke.py -v
