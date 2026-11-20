@@ -28,12 +28,13 @@ Implementation requests are not available in this legacy CLI.
 function openDashboard(): number {
   const script = fileURLToPath(new URL('../../scripts/PlexLocal.py', import.meta.url));
   const launchers: [string, ...string[]][] = process.platform === 'win32'
-    ? [['py', '-3'], ['python']]
+    ? [['python'], ['py', '-3']]
     : [['python3'], ['python']];
 
   for (const [program, ...args] of launchers) {
     const result = spawnSync(program, [...args, script], { stdio: 'inherit' });
     if ((result.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT') continue;
+    if (process.platform === 'win32' && program === 'python' && result.status === 9009) continue;
     if (result.error) console.error(`Plex: ${result.error.message}`);
     return result.status ?? 1;
   }
