@@ -131,5 +131,61 @@ class FileEditingTests(unittest.TestCase):
                 self.assertEqual(target.read_bytes(), original.read_bytes())
 
 
+    def test_malformed_builtin_edits_refuse_without_model_fallback(self):
+        before = b"let value = 1;\n"
+        (self.folder / "source.js").write_bytes(before)
+        transcript = self.run_console(
+            "copy exactly",
+            "/open source.js",
+            "rename value to",
+            "set value to many",
+            "replace value with count",
+            "/diff",
+            "/save as unchanged.js",
+        )
+        self.assertIn("Paste a code snippet first.", transcript)
+        self.assertEqual(transcript.count("Unsupported built-in edit syntax."), 3)
+        self.assertNotIn("Generating locally", transcript)
+        self.assertIn("No edits to show.", transcript)
+        self.assertEqual((self.folder / "source.js").read_bytes(), before)
+        self.assertEqual((self.folder / "unchanged.js").read_bytes(), before)
+
+    def test_unicode_surrogate_replacement_refuses_and_console_stays_usable(self):
+        before = b"let value = 1;\n"
+        (self.folder / "source.js").write_bytes(before)
+        transcript = self.run_console(
+            "/open source.js",
+            r'replace "value" with "\ud800"',
+            "set value to 2",
+            "/save as edited.js",
+        )
+        self.assertIn("Replacement contains an invalid Unicode surrogate.", transcript)
+        self.assertIn("Built-in Python edit applied.", transcript)
+        self.assertNotIn("Generating locally", transcript)
+        self.assertEqual((self.folder / "source.js").read_bytes(), before)
+        self.assertEqual((self.folder / "edited.js").read_bytes(), b"let value = 2;\n")
+
+    def test_unsaved_edits_block_source_switch_until_save_or_discard(self):
+        original = self.folder / "original.js"
+        other = self.folder / "other.js"
+        original.write_bytes(b"let value = 1;\n")
+        other.write_bytes(b"let other = 9;\n")
+        transcript = self.run_console(
+            "/open original.js", "set value to 2", "/open other.js", "/diff",
+            "/save as preserved.js", "/open other.js", "/status",
+            "/open original.js", "set value to 3", "/paste",
+            "/discard", "/paste", "let pasted = 4;", ".end",
+            "/save as pasted.js",
+        )
+        self.assertEqual(transcript.count("Unsaved edits:"), 2)
+        self.assertIn("Discarded in-memory edits.", transcript)
+        self.assertIn("Source      other.js", transcript)
+        self.assertEqual(original.read_bytes(), b"let value = 1;\n")
+        self.assertEqual(other.read_bytes(), b"let other = 9;\n")
+        self.assertEqual((self.folder / "preserved.js").read_bytes(), b"let value = 2;\n")
+        self.assertEqual((self.folder / "pasted.js").read_bytes(), b"let pasted = 4;\n")
+
+
+
 if __name__ == "__main__":
     unittest.main()
