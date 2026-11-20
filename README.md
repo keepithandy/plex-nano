@@ -73,7 +73,9 @@ The owner’s session produced this diff. The identifier changes at its declarat
 | `rename value to count` | Apply the built-in identifier rename to a supported snippet. |
 | `replace "value" with "count"` | Request a literal text replacement. Use `rename` when a quoted label should survive. |
 | `show` · `diff` · `undo` | Inspect the buffer, compare it with the supplied code, or reverse an edit. |
-| `save as "plex-demo.js"` | Write the edited buffer to a new copy. |
+| `save as "plex-demo.js"` | Create a new copy at an unused path. |
+
+Each open or paste starts a new editing session. Verified edits show their changed ranges in the pre-edit buffer. The built-in rename checks flat integer declarations and simple `console.log` calls. It explains refusals for cases such as duplicate declarations, conflicting names, or nested syntax. Use `diff` to review and `undo` to restore the previous buffer before saving a copy. Opened UTF-8 files retain their BOM and line endings in saved copies unless the requested edit changes that text. [File editing smoke test](scripts/plex_phase1_smoke.py)
 
 In an earlier console version, “Rename value to count and keep its value at 1.” reached the checkpoint and returned EOS (end of sequence) with an empty suggestion. The current console recognizes that wording for supported snippets and prints `Built-in Python edit applied.` Requests routed to inference display `Generating locally with Plex 600M M11 step 200...`. Empty responses are reported explicitly.
 
