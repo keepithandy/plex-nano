@@ -7,7 +7,7 @@ From PowerShell with Git and Python 3.12, use a fresh directory. The pinned revi
 ```powershell
 git clone https://github.com/keepithandy/plex-nano.git plex-phase0
 cd plex-phase0
-git switch --detach b685937f87770ba4cb051b8f3de6502af28c8f61
+git switch --detach 74628dbf70f78ababc6b4af6cfa33682f9ae7ae6
 py -3.12 -I -S scripts/plex_phase0_smoke.py
 py -3.12 scripts/PlexLocal.py
 ```
@@ -24,7 +24,7 @@ diff
 quit
 ```
 
-The built-in editor changes the declaration and the reference in the log call, preserving the string `"value"`. The smoke test drives the console through standard input, checks the unified diff and compares the saved copy byte for byte. It passed on Windows with isolated Python 3.12.10. This case scores the Python editor.
+The built-in editor changes the declaration and the reference in the log call, preserving the string `"value"`. The smoke test drives the console through standard input, checks the unified diff and compares the saved copy byte for byte. It passed on Windows with isolated Python 3.12.10. The final smoke also enters `Return the supplied JavaScript line exactly as written.` for each of the four M11 lines and checks the displayed result, built-in attribution, and saved bytes. All five editor cases passed from a clean installation of the two committed scripts under isolated Windows Python 3.12.10.
 
 ## Raw checkpoint evidence
 
@@ -54,7 +54,7 @@ The two decoder columns freeze eight final generations. Each code cell represent
 
 ## Windows console inference
 
-The owner ran the console from Windows PowerShell with Ubuntu WSL and supplied the following transcript.
+Before the exact-copy routing fix, the owner ran the console from Windows PowerShell with Ubuntu WSL and supplied the following transcript.
 
 ```text
 plex> paste
@@ -75,4 +75,10 @@ The console sent the request through the general `Request:` / `Source file:` / `
 
 On the owner's Windows setup, a request outside the built-in editor invokes the Ubuntu WSL checkout at `/home/quali/plex-nano` through its existing uv training environment. It requires CUDA, the tokenizer in `training/artifacts/plex600-fresh-tokenizer` and the existing weights in `training/artifacts/plex600-m11-eos1-f68483d42b-repair1/step-200/weights.pt`. The console names M11 step 200 and checks the weights digest before loading. Its active decoder is `fitted-vocab-v1` with a 96-token limit.
 
-The repaired worker remains in [draft PR #218](https://github.com/keepithandy/plex-nano/pull/218). Its Git blob differs from the worker on master at the time of this check. Refer to the pinned worker commit for historical reproduction. The console's WSL inference path has now run. Release integration of the repaired worker remains open.
+Worker repair [PR #218](https://github.com/keepithandy/plex-nano/pull/218) passed the Linux and Windows training test workflows and merged to master. The recorded worker commit identifies the implementation used for the original measurements.
+
+## Phase 0 closeout
+
+The clean-install smoke reproduced the documented edit. The owner's Windows-to-WSL transcript identifies M11 step 200 and records the model's EOS response. The pinned console also prints the verified weights SHA-256 when inference returns. These checks satisfy the roadmap's Phase 0 exit gate.
+
+For an inference-only comparison on the owner's installation, run `py -3.12 scripts/PlexLocal.py --compare-copy-prompts` from the pinned checkout. This loads the checkpoint once and runs each frozen source line with both prompt formats using the fitted-vocabulary decoder. Each JSON line includes the decoded text, generated token count, stop reason, checkpoint digest, and exact-copy result. The historical generations and console transcript above are the measured GPU evidence. A fresh paired GPU run is still outstanding.
