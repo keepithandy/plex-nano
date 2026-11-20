@@ -27,8 +27,7 @@ def proof() -> dict:
         "optimizerUpdatesCompleted": 0,
         "chosenEosLossWeight": 1.0,
         "checkpointWrites": False,
-        "candidateSha256": core.candidate_sha256(),
-        "scheduleSha256": core.schedule_sha256(),
+        **{key: admission.plan()[key] for key in ("scopeSha256", "scheduleSha256")},
         "m9WeightsSha256": "a" * 64,
         "baselineReportSha256": "b" * 64,
         "baselineResponsesSha256": "c" * 64,
@@ -91,7 +90,7 @@ def synthetic_child(p: dict, identity: dict, *, weight=1.0) -> dict:
         "originalM9WeightsSha256": p["m9WeightsSha256"],
         "baselineReportSha256": p["baselineReportSha256"],
         "baselineResponsesSha256": p["baselineResponsesSha256"],
-        "candidateSha256": p["candidateSha256"],
+        "candidateSha256": p["scopeSha256"],
         "scheduleSha256": p["scheduleSha256"],
         "ownerApprovalSha256": p["ownerApprovalSha256"],
         "chosenEosLossWeight": weight,
@@ -158,6 +157,8 @@ class M11WorkerTests(unittest.TestCase):
             ("chosenEosLossWeight", 0.25),
             ("optimizerUpdatesCompleted", 1),
             ("checkpointWrites", True),
+            ("scopeSha256", "incorrect"),
+            ("scheduleSha256", "incorrect"),
         ):
             invalid = {**proof(), field: value}
             with self.subTest(field=field), patch.object(
@@ -307,7 +308,7 @@ class M11WorkerTests(unittest.TestCase):
                                "bytes": weights.stat().st_size},
                 "responsesSha256": hashlib.sha256(
                     response_path.read_bytes()).hexdigest(),
-                "candidateSha256": p["candidateSha256"],
+                "candidateSha256": p["scopeSha256"],
                 "scheduleSha256": p["scheduleSha256"],
                 "baselineResponsesSha256": p["baselineResponsesSha256"],
                 "ownerApprovalSha256": p["ownerApprovalSha256"],
