@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import sys
+from bisect import bisect_right
 from pathlib import Path
 
 REPO = "/home/quali/plex-nano"
@@ -32,49 +33,52 @@ switch this throw true try typeof var void while with yield arguments eval
 """.split())
 
 
-def rename_variable(source, old, new, expected_value):
-    """Rename a binding in a flat snippet of integer declarations and console.log calls."""
-    spans = []
+def rename_changes(source, old, new, expected_value):
+    """Locate a binding and its references within the supported flat JavaScript subset."""
+    if re.search(r"[\u2028\u2029]", source):
+        raise ValueError("Rename cannot verify JavaScript with Unicode line separators.")
+    changes = []
+    declarations = set()
     names = set()
     initial = None
-    offset = 0
-    for line in source.splitlines(keepends=True):
-        start = offset
-        offset += len(line)
-        code = line.rstrip("\r\n")
-        if not code.strip() or code.lstrip().startswith("//"):
+    for line_num, line in enumerate(re.finditer(r"[^\r\n]*(?:\r\n?|\n|$)", source), 1):
+        start = line.start()
+        code = line[0].rstrip("\r\n")
+        if not code.strip(" \t") or code.lstrip(" \t").startswith("//"):
             continue
         declaration = DECL.fullmatch(code.partition("//")[0])
         if declaration:
             name = declaration[2]
+            if name in declarations:
+                raise ValueError(f"Rename cannot verify multiple declarations of {name} (line {line_num}).")
+            if name in RESERVED or name == "console":
+                raise ValueError(f"Rename cannot verify a declaration of {name} (line {line_num}).")
+            declarations.add(name)
             names.add(name)
             if name == old:
-                if initial is not None:
-                    raise ValueError(f"Multiple declarations of {old} need separate scopes.")
                 initial = declaration[4]
-                spans.append((start + declaration.start(2), start + declaration.end(2)))
+                changes.append((start + declaration.start(2), start + declaration.end(2), new))
             continue
         call = LOG_LINE.fullmatch(code)
         if not call:
-            return None
+            raise ValueError(
+                f"Rename cannot verify syntax on line {line_num}. "
+                "Use flat integer declarations and simple console.log calls."
+            )
         names.add("console")
-        if old == "console":
-            spans.append((start + code.index("console"), start + code.index("console") + 7))
         for arg in LOG_ARG.finditer(call[1] or ""):
             if re.fullmatch(IDENTIFIER, arg[0]):
                 names.add(arg[0])
                 if arg[0] == old:
                     pos = start + call.start(1)
-                    spans.append((pos + arg.start(), pos + arg.end()))
+                    changes.append((pos + arg.start(), pos + arg.end(), new))
     if initial is None:
         raise ValueError(f"No integer declaration named {old} in this snippet.")
     if new in RESERVED or (old != new and new in names):
         raise ValueError(f"Choose an unused JavaScript variable name other than {new}.")
     if expected_value is not None and expected_value != initial:
         raise ValueError(f"The current value is {initial}.")
-    for start, end in reversed(spans):
-        source = source[:start] + new + source[end:]
-    return source
+    return changes
 
 
 COPY_REQUEST = re.compile(
@@ -83,35 +87,63 @@ COPY_REQUEST = re.compile(
 )
 
 
-def verified_edit(source, request):
+def verified_changes(source, request):
     command = request.strip()
     if command.lower() in {"copy", "copy exactly", "copy this code", "show"}:
-        return source
+        return []
     if COPY_REQUEST.fullmatch(" ".join(command.split())):
-        return source
+        return []
     rename = re.fullmatch(
         rf"(?i:rename)\s+({IDENTIFIER})\s+(?i:to)\s+({IDENTIFIER})"
         r"(?:\s+(?i:and keep its value)(?:\s+(?i:at)\s+(-?(?:0|[1-9][0-9]*)))?)?\.?",
         command,
     )
     if rename:
-        return rename_variable(source, *rename.groups())
+        return rename_changes(source, *rename.groups())
     change = re.fullmatch(r"(?i:set)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s+(?i:to)\s+(-?(?:0|[1-9][0-9]*))", command)
     if change:
         match = DECL.fullmatch(source)
         if not match or match[2] != change[1]:
             raise ValueError("Set needs one integer declaration with that exact variable name.")
-        return source[:match.start(4)] + change[2] + source[match.end(4):]
+        return [(match.start(4), match.end(4), change[2])]
     if command.lower().startswith('replace "'):
         literal = r'"(?:\\.|[^"\\])*"'
         parts = re.fullmatch(rf"(?i:replace)\s+({literal})\s+(?i:with)\s+({literal})", command)
         if not parts:
             raise ValueError('Use replace "old text" with "new text".')
         old, new = map(json.loads, parts.groups())
-        if not old or source.count(old) != 1:
+        start = source.find(old)
+        if not old or start == -1 or source.find(old, start + 1) != -1:
             raise ValueError("The original text must occur exactly once.")
-        return source.replace(old, new, 1)
+        return [(start, start + len(old), new)]
     return None
+
+
+def apply_changes(source, changes):
+    parts = []
+    offset = 0
+    for start, end, replacement in changes:
+        parts.extend((source[offset:start], replacement))
+        offset = end
+    parts.append(source[offset:])
+    return "".join(parts)
+
+
+def describe_changes(source, changes):
+    """Describe the affected ranges in the buffer before the edit."""
+    line_starts = [0, *(match.end() for match in re.finditer(r"\r\n?|\n", source))]
+
+    def position(offset):
+        line = bisect_right(line_starts, offset)
+        return f"{line}:{offset - line_starts[line - 1] + 1}"
+
+    spans = ", ".join(f"{position(start)}-{position(end)}" for start, end, _ in changes)
+    return f"Changed spans (line:column, end exclusive): {spans}"
+
+
+def show_source(source):
+    display = source.replace("\r\n", "\n").replace("\r", "\n")
+    print(display, end="" if display.endswith("\n") else "\n")
 
 
 def load_model():
@@ -290,6 +322,7 @@ class ConsoleView:
 def main():
     source = ""
     original = None
+    source_path = None
     label = "pasted code"
     bom = b""
     history = []
@@ -348,22 +381,34 @@ def main():
                     if len(name) < 2 or name[-1] != name[0]:
                         raise ValueError("Close the quote around the file path.")
                     name = name[1:-1]
+                if not name:
+                    raise ValueError("Supply a filename.")
                 path = Path(name).expanduser()
                 if action.lower() == "open":
-                    raw = path.read_bytes()
-                    decoded = raw.decode("utf-8-sig")
+                    opened_path = path.resolve()
+                    raw = opened_path.read_bytes()
+                    try:
+                        decoded = raw.decode("utf-8-sig")
+                    except UnicodeDecodeError as exc:
+                        raise ValueError(f"{path} is not a UTF-8 file.") from exc
                     source = original = decoded
+                    source_path = opened_path
                     bom = codecs.BOM_UTF8 if raw.startswith(codecs.BOM_UTF8) else b""
                     label = str(path)
                     history.clear()
                     pending = None
-                    print(f"Opened {path.resolve()}. Type show to see the code.")
+                    print(f"Opened {opened_path}. Type show to see the code.")
                 else:
                     if original is None:
                         raise ValueError("Open or paste code before saving.")
+                    if path.resolve() == source_path:
+                        raise ValueError("Save as needs a new filename. The source file is protected.")
                     data = bom + source.encode("utf-8")
-                    with path.open("xb") as stream:
-                        stream.write(data)
+                    try:
+                        with path.open("xb") as stream:
+                            stream.write(data)
+                    except FileExistsError as exc:
+                        raise ValueError(f"{path} already exists. Choose a new filename.") from exc
                     print(f"Saved {path.resolve()}")
                 continue
             if cmd == "diff":
@@ -386,6 +431,7 @@ def main():
                       '  /status               Inspect the active session\n'
                       '  /clear  /exit         Redraw the dashboard or end the session\n\n'
                       '  Try: rename value to count, set count to 3, or replace "old" with "new".\n'
+                      '  Verified rename supports flat integer declarations and simple console.log calls.\n'
                       '  Other edit requests use your local Plex 600M model.')
                 continue
             if cmd == "paste":
@@ -393,14 +439,19 @@ def main():
                 lines = []
                 while (line := input()) != ".end":
                     lines.append(line)
-                result = "".join(line + "\n" for line in lines)
-                if original is None:
-                    original = result
+                source = original = "".join(line + "\n" for line in lines)
+                source_path = None
+                label = "pasted code"
+                bom = b""
+                history.clear()
+                pending = None
+                show_source(source)
+                continue
             elif cmd == "undo":
                 if history:
                     source = history.pop()
                     pending = None
-                print(source, end="" if source.endswith("\n") else "\n")
+                show_source(source)
                 continue
             elif cmd == "accept":
                 if pending is None:
@@ -408,8 +459,8 @@ def main():
                 result = pending
                 print("Accepted suggestion from Plex 600M M11 step 200.")
             else:
-                result = verified_edit(source, request)
-                if result is None:
+                changes = verified_changes(source, request)
+                if changes is None:
                     pending = None
                     if not source:
                         raise ValueError("Paste a code snippet first.")
@@ -424,14 +475,16 @@ def main():
                         pending = answer["text"]
                         print("Type accept to use this suggestion.")
                     continue
+                result = apply_changes(source, changes)
                 if result != source:
                     print("Built-in Python edit applied.")
+                    print(describe_changes(source, changes))
                 else:
                     print("Current code (built-in command).")
             if result != source:
                 history.append(source)
                 source, pending = result, None
-            print(source, end="" if source.endswith("\n") else "\n")
+            show_source(source)
         except (ValueError, RuntimeError, OSError, ImportError) as exc:
             print(view.ink("Plex: ", "removed") + str(exc))
 
