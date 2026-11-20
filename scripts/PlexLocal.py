@@ -133,7 +133,7 @@ def phase2_plan(source, request):
     if not source:
         raise ValueError("Paste a code snippet first.")
     full = lambda pattern: re.fullmatch(pattern, command, flags=re.IGNORECASE)
-    if full(rf"rename\s+(?:it|this|that)\s+to\s+{IDENTIFIER}\\.?"):
+    if full(rf"rename\s+(?:it|this|that)\s+to\s+{IDENTIFIER}\.?"):
         raise ValueError("I can't verify that edit. Name the exact variable instead of it, this, or that.")
     rename = (
         full(rf"(?:please\s+)?(?:change|rename)\s+(?:the\s+)?(?:variable|identifier)\s+({IDENTIFIER})\s+(?:to|into)\s+({IDENTIFIER})(?:\s+instead)?\.?")
