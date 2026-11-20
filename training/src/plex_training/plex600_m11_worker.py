@@ -100,6 +100,8 @@ def _admit(paths: dict[str, Path], bundle_sha: str,
         paths["output_dir"], eos_weight)
     if (proof.get("ownerConsentGranted") is not True
             or proof.get("status") != "cpu-inputs-and-owner-consent-verified-not-executed"
+            or proof.get("scopeSha256") != core.candidate_sha256()
+            or proof.get("scheduleSha256") != core.schedule_sha256()
             or proof.get("optimizerUpdatesCompleted") != 0
             or proof.get("chosenEosLossWeight") != float(eos_weight)
             or proof.get("checkpointWrites") is not False):
@@ -225,7 +227,7 @@ def _verify_snapshot(folder: Path, step: int,
             or data.get("checkpoint", {}).get("sha256") != checkpoint_sha
             or data["checkpoint"].get("bytes") != weights.stat().st_size
             or data.get("responsesSha256") != response_sha
-            or data.get("candidateSha256") != proof["candidateSha256"]
+            or data.get("candidateSha256") != proof["scopeSha256"]
             or data.get("scheduleSha256") != proof["scheduleSha256"]
             or data.get("baselineResponsesSha256") != proof["baselineResponsesSha256"]
             or data.get("ownerApprovalSha256") != proof["ownerApprovalSha256"]
@@ -436,7 +438,7 @@ def _train_worker(paths: dict[str, Path], bundle_sha: str,
             "checkpointSha256": saved["sha256"],
             "checkpoint": saved,
             "responsesSha256": hashlib.sha256(raw).hexdigest(),
-            "candidateSha256": proof["candidateSha256"],
+            "candidateSha256": proof["scopeSha256"],
             "scheduleSha256": proof["scheduleSha256"],
             "ownerApprovalSha256": proof["ownerApprovalSha256"],
             "baselineResponsesSha256": proof["baselineResponsesSha256"],
@@ -493,7 +495,7 @@ def _check_final(result: dict[str, Any], proof: dict[str, Any],
             or result.get("trainingAuthorized") is not True
             or result.get("sourceIdentity") != identity
             or result.get("originalM9WeightsSha256") != proof["m9WeightsSha256"]
-            or result.get("candidateSha256") != proof["candidateSha256"]
+            or result.get("candidateSha256") != proof["scopeSha256"]
             or result.get("scheduleSha256") != proof["scheduleSha256"]
             or result.get("baselineReportSha256") != proof["baselineReportSha256"]
             or result.get("baselineResponsesSha256") != proof["baselineResponsesSha256"]
@@ -567,10 +569,11 @@ def run_approved(paths: dict[str, Path], bundle_sha: str,
             [sys.executable, "-m", "plex_training.plex600_m11_worker",
              "--_worker"], payload, env, timeout=HARD_TIMEOUT)
         if timed_out or return_code != 0:
-            raise Refusal(
-                "M11 supervised child did not complete: " +
-                ("hard timeout" if timed_out else "worker exited unsuccessfully") +
-                "; incomplete stage not promoted; no optimizer-state resume")
+            reason = "hard timeout" if timed_out else f"worker exited with code {return_code}"
+            detail = stderr.strip()[-2048:]
+            if detail:
+                reason += "\n" + detail
+            raise Refusal("M11 supervised child did not complete: " + reason)
         if len(stdout) > 2 * 1024**2:
             raise Refusal("M11 child report exceeds bounded output size")
         result = json.loads(stdout)
