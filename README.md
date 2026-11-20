@@ -45,7 +45,7 @@
 
 ## 💻 Try the local console
 
-From the repository root, launch `python scripts/PlexLocal.py`. Built-in edits use Python's standard library. Model suggestions use the owner's WSL environment and saved M11 weights. [Console source](scripts/PlexLocal.py) · [Pinned installation and smoke test](docs/PLEX_PHASE_0_BASELINE.md)
+Launch the installed `plex` command to open the dashboard. From a source checkout, run `npm ci`, `npm run build`, then `npm start`, or open it directly with `python scripts/PlexLocal.py`. The dashboard ships in the package and uses Python 3.12 on the tested Windows setup. Type `/clear` to redraw it, `/status` to inspect your session, or `/exit` to quit. Model suggestions use the owner's WSL environment and saved M11 weights. [Dashboard source](scripts/PlexLocal.py) · [Phase 0 smoke test](docs/PLEX_PHASE_0_BASELINE.md)
 
 Enter these lines at the Plex prompt. The line containing only `.end` finishes the paste.
 

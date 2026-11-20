@@ -3,6 +3,7 @@ name: typescript-maintenance
 on:
   pull_request:
     paths:
+      - "scripts/PlexLocal.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -15,6 +16,7 @@ on:
     branches:
       - master
     paths:
+      - "scripts/PlexLocal.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -42,3 +44,16 @@ jobs:
         run: npm ci
       - name: Build and test legacy TypeScript scaffolding
         run: npm test
+      - name: Smoke-test the installed dashboard
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive=$(npm pack --silent --pack-destination "$RUNNER_TEMP" | tail -n 1)
+          install_dir=$(mktemp -d "$RUNNER_TEMP/plex install.XXXXXX")
+          npm install --prefix "$install_dir" --ignore-scripts --no-audit --no-fund "$RUNNER_TEMP/$archive"
+          cd "$install_dir"
+          transcript=$(printf '%s\n' /paste 'let value = 1;' .end 'rename value to count' /clear /status /exit | ./node_modules/.bin/plex)
+          test "$(grep -c 'PLEX LOCAL' <<< "$transcript")" -eq 2
+          grep -Fq 'let count = 1;' <<< "$transcript"
+          grep -Fq 'Edited' <<< "$transcript"
+          ./node_modules/.bin/plex --version

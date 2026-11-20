@@ -13,8 +13,8 @@ const run = (args, cwd = root, entry = cli) => spawnSync(process.execPath, [entr
   cwd, encoding: 'utf8', timeout: 10_000,
 });
 
-test('help, short help, and no arguments show usage successfully', () => {
-  for (const args of [['--help'], ['-h'], []]) {
+test('help and short help show usage successfully', () => {
+  for (const args of [['--help'], ['-h']]) {
     const result = run(args);
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Usage:/);

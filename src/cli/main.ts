@@ -1,10 +1,13 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { detectProjectRoot, ProjectDetectionError } from '../repo/detect.js';
 
 const help = `Plex v0.1.0
 
 Usage:
+  plex              Open the local coding dashboard
   plex --help
   plex --version
   plex [--repo <directory>] "<implementation request>"
@@ -22,7 +25,25 @@ Current Plex Nano model/research commands live in the Python training workspace;
 Implementation requests are not available in this legacy CLI.
 `;
 
+function openDashboard(): number {
+  const script = fileURLToPath(new URL('../../scripts/PlexLocal.py', import.meta.url));
+  const launchers: [string, ...string[]][] = process.platform === 'win32'
+    ? [['python'], ['py', '-3']]
+    : [['python3'], ['python']];
+
+  for (const [program, ...args] of launchers) {
+    const result = spawnSync(program, [...args, script], { stdio: 'inherit' });
+    if ((result.error as NodeJS.ErrnoException | undefined)?.code === 'ENOENT') continue;
+    if (process.platform === 'win32' && program === 'python' && result.status === 9009) continue;
+    if (result.error) console.error(`Plex: ${result.error.message}`);
+    return result.status ?? 1;
+  }
+  console.error('Plex dashboard requires Python 3. Install Python and reopen your terminal.');
+  return 1;
+}
+
 async function main(): Promise<number> {
+  if (process.argv.length === 2) return openDashboard();
   let args: ReturnType<typeof parseArgs>;
   try {
     args = parseArgs({
