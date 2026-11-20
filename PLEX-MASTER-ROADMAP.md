@@ -46,6 +46,8 @@ The clean Windows installation passed all five editor cases. The owner verified 
 
 **Exit gate.** End-to-end tests demonstrate original-file preservation and correct edits across supported inputs, including deliberate refusal cases.
 
+Run the [Phase 1 console smoke test](scripts/plex_phase1_smoke.py) with `python -I -S scripts/plex_phase1_smoke.py -v`. The suite checks saved bytes and the original file alongside console output. It runs on Windows and Linux in CI.
+
 ## Phase 2 · Turn ordinary language into verified edits
 
 - Freeze a development set of user requests and expected changes, including paraphrases, ambiguous targets, and requests outside the editor's supported operations.
