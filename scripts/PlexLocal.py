@@ -3,7 +3,9 @@ import codecs
 import difflib
 import hashlib
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -188,6 +190,103 @@ def suggest(source, request):
     return json.loads(run.stdout)
 
 
+def terminal_supports_ansi():
+    if not sys.stdout.isatty() or os.environ.get("TERM") == "dumb":
+        return False
+    if os.name != "nt":
+        return True
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes
+
+    handle = wintypes.HANDLE(msvcrt.get_osfhandle(sys.stdout.fileno()))
+    mode = wintypes.DWORD()
+    kernel = ctypes.windll.kernel32
+    return bool(kernel.GetConsoleMode(handle, ctypes.byref(mode))
+                and kernel.SetConsoleMode(handle, mode.value | 0x0004))
+
+
+class ConsoleView:
+    palette = {
+        "ice": "1;38;5;159", "cyan": "1;38;5;81", "blue": "38;5;75",
+        "violet": "38;5;141", "muted": "38;5;246", "rule": "38;5;67",
+        "added": "38;5;120", "removed": "38;5;210", "changed": "38;5;222",
+    }
+    logo = (
+        "████▄   ██      █████   ██  ██",
+        "██  ██  ██      ██       ████ ",
+        "████▀   ██      ████      ██  ",
+        "██      ██      ██       ████ ",
+        "██      ██████  █████   ██  ██",
+    )
+
+    def __init__(self, ansi):
+        self.interactive = sys.stdout.isatty()
+        self.color = ansi and "NO_COLOR" not in os.environ
+        try:
+            "█▄▀─╭╰›…".encode(sys.stdout.encoding or "ascii")
+            self.graphics = self.interactive
+        except UnicodeEncodeError:
+            self.graphics = False
+
+    def ink(self, value, tone):
+        return f"\033[{self.palette[tone]}m{value}\033[0m" if self.color else value
+
+    def fit(self, value, limit):
+        value = "".join(c if c.isprintable() else " " for c in str(value))
+        if len(value) <= limit:
+            return value
+        dots = "…" if self.graphics else "..."
+        return dots + value[-max(1, limit - len(dots)):]
+
+    def dashboard(self):
+        width = min(76, shutil.get_terminal_size().columns - 2)
+        bar = "─" if self.graphics else "-"
+        print()
+        if self.graphics and width >= 56:
+            side = ("", "PLEX LOCAL", "Coding console", "600M  /  M11 step 200", "")
+            for row, tone, detail in zip(self.logo, ("ice", "cyan", "blue", "blue", "violet"), side):
+                print("  " + self.ink(row, tone) + "    " +
+                      self.ink(detail, "ice" if detail == "PLEX LOCAL" else "muted"))
+        else:
+            print("  " + self.ink("PLEX LOCAL", "cyan"))
+            print("  " + self.ink("600M  /  M11 step 200", "muted"))
+        print("  " + self.ink(bar * max(1, width - 1), "rule"))
+        print("  " + self.ink("Folder   ", "muted") + self.fit(Path.cwd(), max(6, width - 10)))
+        print("  " + self.ink("Model    ", "muted") + "Loads on request")
+        print()
+        shortcuts = (('/open "file.js"', "Open file"), ("/paste", "Paste code"), ("/help", "Commands"))
+        if width >= 62:
+            print("  " + "    ".join(self.ink(key, "cyan") + " " + hint for key, hint in shortcuts))
+        else:
+            for key, hint in shortcuts:
+                print("  " + self.ink(f"{key:<16}", "cyan") + hint)
+        print()
+
+    def prompt(self, label, source, original, pending):
+        if not self.interactive:
+            return "plex> "
+        if original is None:
+            return "  " + self.ink("plex› " if self.graphics else "plex> ", "cyan")
+        state = "edited" if source != original else "clean"
+        if pending is not None:
+            state += " / suggestion ready"
+        corner, arrow = ("╭─ ", "╰─ ") if self.graphics else ("+ ", "> ")
+        name = self.fit(Path(label).name, max(6, shutil.get_terminal_size().columns - len(state) - 12))
+        return ("\n" + self.ink(corner, "rule") + name + "  " +
+                self.ink(state, "muted" if state == "clean" else "changed") +
+                "\n" + self.ink(arrow, "rule") + self.ink("plex> ", "cyan"))
+
+    def diff_line(self, line):
+        if line.startswith(("--- ", "+++ ", "@@")):
+            return self.ink(line, "blue")
+        if line.startswith("+"):
+            return self.ink(line, "added")
+        if line.startswith("-"):
+            return self.ink(line, "removed")
+        return line
+
+
 def main():
     source = ""
     original = None
@@ -195,15 +294,50 @@ def main():
     bom = b""
     history = []
     pending = None
-    print("Plex local | Plex 600M was trained from random weights. Model suggestions use M11 step 200.")
-    print('Built-in commands run in Python. Paste code or open "file.js". Type help for commands.')
+    ansi = terminal_supports_ansi()
+    view = ConsoleView(ansi)
+    view.dashboard()
     while True:
-        request = input("plex> ").strip()
+        request = input(view.prompt(label, source, original, pending)).strip()
         if not request:
             continue
+        if request.startswith("/"):
+            parts = request[1:].split(maxsplit=1)
+            if not parts:
+                print("Type /help for commands.")
+                continue
+            command, *tail = parts
+            command = command.lower()
+            if command not in {"open", "save", "paste", "show", "diff", "undo", "accept",
+                               "status", "help", "clear", "quit", "exit"}:
+                print("Unknown command. Type /help.")
+                continue
+            request = " ".join([command, *tail])
+            if command == "save" and not re.match(r"save\s+as(?:\s|$)", request, re.I):
+                print('Use /save as "new.js".')
+                continue
+            if tail and command not in {"open", "save"}:
+                print(f"/{command} takes no arguments.")
+                continue
         cmd = request.lower()
-        if cmd == "quit":
+        if cmd in {"quit", "exit"}:
             return
+        if cmd == "clear":
+            if ansi:
+                print("\033[2J\033[H", end="")
+            view.dashboard()
+            continue
+        if cmd == "status":
+            print("\n  " + view.ink("SESSION", "cyan"))
+            for key, value in (
+                ("Folder", Path.cwd()), ("Source", label if original is not None else "(none)"),
+                ("Buffer", f"{len(source.splitlines())} lines, {len(source)} characters"),
+                ("Changes", "Edited" if original is not None and source != original else "None"),
+                ("Suggestion", "Awaiting /accept" if pending is not None else "None"),
+                ("Model", "Plex 600M / M11 step 200 (on demand)"),
+            ):
+                print("  " + view.ink(f"{key:<12}", "muted") + str(value))
+            continue
         try:
             file_command = re.fullmatch(r"(open|save as)(?:\s+(.+))?", request, re.I)
             if file_command:
@@ -239,16 +373,20 @@ def main():
                     for line in difflib.unified_diff(original.splitlines(keepends=True),
                                                      source.splitlines(keepends=True),
                                                      fromfile=label, tofile="current edit"):
-                        print(line.rstrip("\r\n"))
+                        print(view.diff_line(line.rstrip("\r\n")))
                         if not line.endswith(("\r", "\n")):
                             print(r"\ No newline at end of file")
                 continue
             if cmd == "help":
-                print('Open "file.js" or paste code ending with .end. Then describe your edit.\n'
-                      'show displays the code, diff displays changes, undo reverses the last edit.\n'
-                      'Built-in edits include rename, set, and literal replace. Other edits may ask Plex 600M.\n'
-                      'Model suggestions use the local scratch-trained M11 step-200 checkpoint.\n'
-                      'accept uses a model suggestion. Save as "new.js" writes a new file. quit exits.')
+                print('  /open "file.js"       Open a UTF-8 file\n'
+                      '  /paste                Paste code, finishing with .end on its own line\n'
+                      '  /show  /diff  /undo   Inspect the buffer, see changes, undo one edit\n'
+                      '  /save as "new.js"     Write a new file\n'
+                      '  /accept               Apply a complete model suggestion\n'
+                      '  /status               Inspect the active session\n'
+                      '  /clear  /exit         Redraw the dashboard or end the session\n\n'
+                      '  Try: rename value to count, set count to 3, or replace "old" with "new".\n'
+                      '  Other edit requests use your local Plex 600M model.')
                 continue
             if cmd == "paste":
                 print("Paste your code. End with .end on its own line.")
@@ -295,7 +433,7 @@ def main():
                 source, pending = result, None
             print(source, end="" if source.endswith("\n") else "\n")
         except (ValueError, RuntimeError, OSError, ImportError) as exc:
-            print(f"Plex: {exc}")
+            print(view.ink("Plex: ", "removed") + str(exc))
 
 
 if __name__ == "__main__":
