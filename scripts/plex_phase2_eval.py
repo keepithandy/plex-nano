@@ -3,10 +3,15 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import math
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SUITE = HERE.parent / "fixtures" / "plex_phase2_requests_v1.json"
+CHECKPOINT_SHA256 = "d7a7776de86230320f6e0e48b07dc76761c3d42ac80e4c330839e47c9ffc93dd"
+TOKENIZER_SHA256 = "9feef87bdf5fc28b3315df589e4e0b8ffcf5f40b18a4c357c91759182340a2e2"
+RUN_PROTOCOL = "plex-phase2-m11-inference-v1"
+STOP_REASONS = {"eos", "max-new-tokens", "invalid-control-token", "outside-fitted-tokenizer"}
 
 
 def editor_module():
@@ -112,12 +117,59 @@ def score_model(cases, path):
     }
 
 
+def validate_raw_pair(cases, suite_sha256, baseline, alternative):
+    """Require matching output files and the saved, frozen run receipt."""
+    baseline = baseline.resolve(strict=True)
+    alternative = alternative.resolve(strict=True)
+    if (baseline.parent != alternative.parent or baseline.name != "baseline.jsonl"
+            or alternative.name != "alternative.jsonl"):
+        raise ValueError("Raw outputs must be baseline.jsonl and alternative.jsonl in one run directory.")
+    receipt = json.loads((baseline.parent / "identity.json").read_text(encoding="utf-8"))
+    expected = {
+        "protocol": RUN_PROTOCOL, "suiteSha256": suite_sha256,
+        "checkpointSha256": CHECKPOINT_SHA256, "tokenizerSha256": TOKENIZER_SHA256,
+        "policy": "fitted-vocab-v1", "maxNewTokens": 96,
+        "trainingPerformed": False, "prompts": ["baseline", "alternative"],
+        "casesPerPrompt": len(cases),
+    }
+    if not isinstance(receipt, dict) or any(
+        type(receipt.get(k)) is not type(v) or receipt.get(k) != v
+        for k, v in expected.items()
+    ):
+        raise ValueError("Model run receipt does not match the frozen M11 Phase 2 comparison.")
+    hashes = receipt.get("responseSha256")
+    if not isinstance(hashes, dict) or set(hashes) != {"baseline", "alternative"}:
+        raise ValueError("Model run receipt lacks both response hashes.")
+    expected_ids = {case["id"] for case in cases}
+    for name, path in (("baseline", baseline), ("alternative", alternative)):
+        raw = path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != hashes[name]:
+            raise ValueError(f"{name} raw responses differ from the saved receipt.")
+        rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        if len(rows) != len(cases) or {row.get("id") for row in rows} != expected_ids:
+            raise ValueError(f"{name} raw responses are missing or repeated cases.")
+        for row in rows:
+            if (row.get("checkpointSha256") != CHECKPOINT_SHA256
+                    or row.get("stop") not in STOP_REASONS
+                    or not isinstance(row.get("text"), str)
+                    or type(row.get("generatedTokens")) is not int
+                    or not 0 <= row["generatedTokens"] <= 96
+                    or type(row.get("elapsedMs")) not in (float, int)
+                    or not math.isfinite(row["elapsedMs"])
+                    or row["elapsedMs"] < 0):
+                raise ValueError(f"{name} contains invalid or unverified generation metadata.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Score Phase 2 built-in and separately supplied raw model outputs.")
     parser.add_argument("--baseline-model-jsonl", type=Path)
     parser.add_argument("--alternative-model-jsonl", type=Path)
     args = parser.parse_args()
     cases, digest = load_cases()
+    if (args.baseline_model_jsonl is None) != (args.alternative_model_jsonl is None):
+        parser.error("Provide both raw model files from one run, or neither.")
+    if args.baseline_model_jsonl is not None:
+        validate_raw_pair(cases, digest, args.baseline_model_jsonl, args.alternative_model_jsonl)
     print(f"Phase 2 development: {len(cases)} fixed cases (SHA-256 {digest[:12]})")
     editor = score_editor(cases, editor_module())
     print(f"Built-in: {editor['edits'][0]}/{editor['edits'][1]} exact edits; "
