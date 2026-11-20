@@ -112,10 +112,17 @@ def verified_changes(source, request):
         if not parts:
             raise ValueError('Use replace "old text" with "new text".')
         old, new = map(json.loads, parts.groups())
+        if any(0xD800 <= ord(char) <= 0xDFFF for char in new):
+            raise ValueError("Replacement contains an invalid Unicode surrogate.")
         start = source.find(old)
         if not old or start == -1 or source.find(old, start + 1) != -1:
             raise ValueError("The original text must occur exactly once.")
         return [(start, start + len(old), new)]
+    if re.match(r"(?i)^(?:rename|set|replace)(?:\b|$)", command):
+        raise ValueError(
+            'Unsupported built-in edit syntax. Use "rename old to new", '
+            '"set name to integer", or \'replace "old" with "new"\'.'
+        )
     return None
 
 
@@ -327,6 +334,7 @@ def main():
     bom = b""
     history = []
     pending = None
+    last_saved = None
     ansi = terminal_supports_ansi()
     view = ConsoleView(ansi)
     view.dashboard()
@@ -341,7 +349,7 @@ def main():
                 continue
             command, *tail = parts
             command = command.lower()
-            if command not in {"open", "save", "paste", "show", "diff", "undo", "accept",
+            if command not in {"open", "save", "paste", "show", "diff", "undo", "discard", "accept",
                                "status", "help", "clear", "quit", "exit"}:
                 print("Unknown command. Type /help.")
                 continue
@@ -359,6 +367,16 @@ def main():
             if ansi:
                 print("\033[2J\033[H", end="")
             view.dashboard()
+            continue
+        if cmd == "discard":
+            if original is None:
+                print("Plex: No code is open or pasted.")
+            else:
+                source = original
+                history.clear()
+                pending = None
+                last_saved = None
+                print("Discarded in-memory edits. The original file was not changed.")
             continue
         if cmd == "status":
             print("\n  " + view.ink("SESSION", "cyan"))
@@ -385,6 +403,8 @@ def main():
                     raise ValueError("Supply a filename.")
                 path = Path(name).expanduser()
                 if action.lower() == "open":
+                    if original is not None and source != original and source != last_saved:
+                        raise ValueError('Unsaved edits: use /save as "copy.js" or /discard before opening another source.')
                     opened_path = path.resolve()
                     raw = opened_path.read_bytes()
                     try:
@@ -397,6 +417,7 @@ def main():
                     label = str(path)
                     history.clear()
                     pending = None
+                    last_saved = None
                     print(f"Opened {opened_path}. Type show to see the code.")
                 else:
                     if original is None:
@@ -409,6 +430,7 @@ def main():
                             stream.write(data)
                     except FileExistsError as exc:
                         raise ValueError(f"{path} already exists. Choose a new filename.") from exc
+                    last_saved = source
                     print(f"Saved {path.resolve()}")
                 continue
             if cmd == "diff":
@@ -426,6 +448,7 @@ def main():
                 print('  /open "file.js"       Open a UTF-8 file\n'
                       '  /paste                Paste code, finishing with .end on its own line\n'
                       '  /show  /diff  /undo   Inspect the buffer, see changes, undo one edit\n'
+                      '  /discard              Revert in-memory edits before opening new code\n'
                       '  /save as "new.js"     Write a new file\n'
                       '  /accept               Apply a complete model suggestion\n'
                       '  /status               Inspect the active session\n'
@@ -435,6 +458,8 @@ def main():
                       '  Other edit requests use your local Plex 600M model.')
                 continue
             if cmd == "paste":
+                if original is not None and source != original and source != last_saved:
+                    raise ValueError('Unsaved edits: use /save as "copy.js" or /discard before pasting new code.')
                 print("Paste your code. End with .end on its own line.")
                 lines = []
                 while (line := input()) != ".end":
@@ -445,6 +470,7 @@ def main():
                 bom = b""
                 history.clear()
                 pending = None
+                last_saved = None
                 show_source(source)
                 continue
             elif cmd == "undo":
@@ -459,6 +485,8 @@ def main():
                 result = pending
                 print("Accepted suggestion from Plex 600M M11 step 200.")
             else:
+                if original is None:
+                    raise ValueError("Paste a code snippet first.")
                 changes = verified_changes(source, request)
                 if changes is None:
                     pending = None
