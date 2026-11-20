@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "scripts/PlexLocal.py"
+      - "scripts/plex_phase*_smoke.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -17,6 +18,7 @@ on:
       - master
     paths:
       - "scripts/PlexLocal.py"
+      - "scripts/plex_phase*_smoke.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -57,3 +59,19 @@ jobs:
           grep -Fq 'let count = 1;' <<< "$transcript"
           grep -Fq 'Edited' <<< "$transcript"
           ./node_modules/.bin/plex --version
+
+  console-editing:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run Phase 0 and Phase 1 console smoke tests
+        run: |
+          python -I -S scripts/plex_phase0_smoke.py
+          python -I -S scripts/plex_phase1_smoke.py -v
