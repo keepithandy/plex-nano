@@ -1,342 +1,48 @@
-<a id="top"></a>
+# Plex
 
-<p align="center">
-  <img src="./docs/assets/plex-nano-banner.svg" alt="Plex Nano — Small model. Focused mission." width="1200">
-</p>
+Plex is a local coding assistant for code you supply. The working console can rename a variable in a supported JavaScript snippet, preserve quoted text, preview the diff, and save an edited copy. The 27M Plex Nano is the controlled research baseline. The separate 600M M11 checkpoint powers optional model suggestions.
 
-<div align="center">
+```mermaid
+flowchart LR
+    A["Paste or open code"] --> B["Request an edit"]
+    B --> C["Built-in edit or model suggestion"]
+    C --> D["Review diff"]
+    D --> E["Save a new copy"]
+```
 
-# Plex Nano
+## Try the local console
 
-**A small 27.6M-parameter coding model trained from scratch.**
-
-Request + provided code context → correct code change.
-
-![Status](https://img.shields.io/badge/status-active%20research-3567a5?style=for-the-badge&labelColor=151933)
-![Phase](https://img.shields.io/badge/phase-3%20%7C%20file--conditioned%20coding-7257a5?style=for-the-badge&labelColor=151933)
-![Model](https://img.shields.io/badge/model-27.6M%20parameters-18786c?style=for-the-badge&labelColor=151933)
-![Training](https://img.shields.io/badge/training-from%20scratch-52617c?style=for-the-badge&labelColor=151933)
-
-![Scope](https://img.shields.io/badge/scope-HTML%20%2F%20CSS%20%2F%20JavaScript-3567a5?style=flat-square&labelColor=151933)
-![Context](https://img.shields.io/badge/context-512%20tokens-7257a5?style=flat-square&labelColor=151933)
-![Vocabulary](https://img.shields.io/badge/vocab-16%2C384-18786c?style=flat-square&labelColor=151933)
-[![License](https://img.shields.io/badge/license-MIT-18786c?style=flat-square&labelColor=151933)](LICENSE)
-
-</div>
-
----
-
-**New to the repository?** Open [PROJECT-MAP.md](PROJECT-MAP.md) first. It shows exactly where the Python model, training/evaluation commands, frozen research files, legacy TypeScript code, and local checkpoints live. VS Code navigation and safe developer tasks are included under `.vscode/`.
-
-## What is Plex Nano?
-
-Plex Nano is a compact coding model built from randomly initialized weights.
-
-Its job is simple:
+Get [PlexLocal.py](https://chatgpt.com/library?file_id=libfile_27db36ce5ff881918197a4d38e485c98&account_id=personal) and run `python PlexLocal.py` from its folder. At the Plex prompt, enter:
 
 ```text
-natural-language coding request
-+ code or file context supplied by the user
-                    ↓
-                Plex Nano
-                    ↓
-             correct code change
+paste
+let value = 1;
+console.log("value", value);
+.end
+rename value to count
+diff
 ```
 
-Plex is not trying to be a general chatbot. The research goal is to make a very small model unusually useful at understanding coding requests and making accurate, minimal edits to the code it is given.
+Use `save as "plex-demo.js"` to write a new copy, or `undo` to reverse the edit. The optional model path uses the existing WSL training environment and verified M11 weights. A model suggestion is shown for review when it returns code.
 
-The current model focuses on **HTML, CSS, and JavaScript**.
+## What the checkpoint demonstrated
 
-## Current model
-
-| Item | Current value |
-|---|---:|
-| Parameters | **27,566,080** |
-| Context length | **512 tokens** |
-| Vocabulary | **16,384-token byte-level BPE** |
-| Initialization | **Random / scratch** |
-| Primary languages | **HTML / CSS / JavaScript** |
-| Local acceleration | **CUDA supported** |
-| Current phase | **Phase 3 — File-Conditioned Coding** |
-
-No pretrained model weights are used for the current Plex Nano research line.
-
-### Separate Plex 600M research track (M8 evaluation)
-
-A **600,372,480-parameter from-scratch model** is implemented in
-[`training/src/plex_training/plex600.py`](training/src/plex_training/plex600.py).
-Its [architecture review](docs/PLEX-600M-ARCHITECTURE-REVIEW.md) explains the model
-configuration and memory requirements. The owner reports a successful **four-update M7 training pilot**
-on a locally fitted 1,191-token-vocabulary bundle, with internal validation
-loss **10.5988 → 8.9729**. The original checkpoint and its independently
-verified bytes have not been uploaded to GitHub; **independent coding-edit success
-is not established**. This experiment does not change the controlled 27M Nano model.
-
-The [M8 development benchmark and read-only runner](docs/PLEX-600M-M8-RESEARCH-READINESS.md)
-are prepared, but model answers have not been collected. A
-[full-file output-budget gate](docs/PLEX-600M-M8-OUTPUT-BUDGET-DECISION-2026-11-16.md)
-now independently measures whether full files fit the historical 32/64-token
-budget, with exact frozen-tokenizer matches on both Linux and Windows. A
-[verified 96-token opt-in](docs/PLEX-600M-M8-INDEPENDENT-TOKENIZER-REPRODUCTION-2026-11-16.md)
-can fit all 36 reference files, without performing model inference. Training-source rights, benchmark independence,
-and new optimizer authorization remain separate gates. A separate
-[read-only R2 generalization-risk audit](docs/PLEX-600M-R2-GENERALIZATION-RISK-2026-11-16.md)
-found 4 of 36 M8 development cases with exact edit-operation overlaps in the
-*unapproved* 1,152-row synthetic candidate pool; no actual M7 contamination
-or training is claimed.
-
-**Work to make Plex improve:** a new [R3 source-conditioned curriculum](docs/PLEX-600M-R3-SOURCE-CONDITIONED-CURRICULUM-2026-11-16.md)
-now includes **111 draft full-file editing examples across 37 distinct task families**
-and verified target-only loss masks. CI prepares a tokenized **unapproved**
-candidate bundle using the original M7 tokenizer. The M8 runner also supports
-a separately versioned **opt-in fitted-tokenizer decoding policy** so valid
-token predictions can be compared against the original unmasked 32K-output
-baseline without changing model weights or historical scores. **The original
-M7 checkpoint has not yet been retrained or shown to generate better code.**
-New data rights and bounded optimizer training still require separate approval.
-
-See the [live 600M roadmap](docs/PLEX-600M-ROADMAP.md) for current evidence and open decisions.
-
-## What Plex is being trained to do
-
-Plex should learn to:
-
-- understand a coding request
-- understand supplied code
-- identify what behavior or structure should change
-- preserve unrelated code
-- follow explicit constraints
-- generate or edit HTML, CSS, and JavaScript
-- generalize beyond exact training examples
-- revise a code change when given useful feedback
-
-The long-term user experience is intentionally straightforward:
-
-```text
-drop in code or a file
-→ describe the change
-→ Plex edits it
-→ keep talking about the same code
+```mermaid
+xychart-beta
+    title "M11 step 200 · four distinct prompts"
+    x-axis ["Exact lines", "Correct digits", "Correct stops"]
+    y-axis "Prompts passed" 0 --> 4
+    bar [2, 4, 4]
 ```
 
-## Current research status
+Both decoders agreed. The checkpoint copied the two training lines exactly. Both development prompts used the correct digit and ended cleanly, but generated `score` in place of `value`.
 
-**October 18 merge audit:** [Audit recovery roadmap](docs/PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) reviews all 17 October 17 merges, records local reporting fixes and orders the remaining work. Saved model results remain failed; V2 tokenizer-only feasibility now matches 48 names across 384 rows, but the reviewed ten-source ancestry scan found eight proposed-name collisions. A separate revision and experimental approvals remain pending; the five P3 checks remain a partial exclusion claim.
+The verified console rename uses the built-in editor. The tested free-form rename sent to the 600M checkpoint returned EOS with empty output. Training is paused while development focuses on the local assistant.
 
-**R3 preparation update:** [V2 reselection against reviewed history](docs/PHASE-3-R3-V2-HISTORY-RESELECTION-2026-10-18.md) stopped at `prism.0` within both 2,500- and 20,000-candidate bounds. Failure receipts are frozen; no complete revised manifest exists. V1 and the original V2 remain unchanged. The comparison design remains under review.
+## Development references
 
-**Comparison recommendation:** the [R3 design review](docs/PHASE-3-R3-COMPARISON-DESIGN-REVIEW-2026-10-18.md) proposes six screened names versus 48 screened names, rebuilding both arms. A model-free witness matches all 384 paired token lengths and retains the original 96 validation rows; all 54 proposed spellings have zero matches in the ten recorded ancestor texts. This distinct protocol still requires adoption and independent review. No coding improvement or training authorization is claimed.
-
-### Phase 1 — Model foundation
-
-Complete.
-
-Plex has a working scratch-training stack with:
-
-- tokenizer training
-- deterministic initialization
-- CUDA training
-- checkpoint save/load
-- bounded experiments
-- validation loss tracking
-- deterministic generation
-- reproducible provenance and hashes
-
-### Phase 2 — Coding understanding
-
-Complete.
-
-Phase 2 established an honest capability boundary for the 27.6M scratch model.
-
-The final request-grounded experiment, **P2-48**, completed 100 bounded optimizer updates. Its held-out loss improved sharply from:
-
-```text
-6.5057104010 → 2.7775440718 at step 25
-```
-
-before rising to **3.2335089633** by the fixed step-100 endpoint, showing an overfitting signal.
-
-The final unchanged transfer gate, **P2-49**, then evaluated that step-100 endpoint on the original 18-task P2-31 structured-plan development set:
-
-| P2-49 metric | Result |
-|---|---:|
-| Complete semantic passes | **0 / 18** |
-| Schema-valid | **0 / 18** |
-| Checks passed | **36 / 162** |
-| HTML / CSS / JavaScript passes | **0 / 6 each** |
-
-All 18 responses were present and non-truncated, but none matched the legacy structured-plan schema. Phase 2 therefore closes **without claiming solved semantic transfer**.
-
-What Phase 2 did show is that Plex can learn narrow request-grounded coding representations and familiar coding intents. What it did **not** prove is reliable editing of unseen supplied files.
-
-### Phase 3 — File-conditioned coding
-
-Active.
-
-Phase 3 now tests the actual product interaction:
-
-```text
-natural-language request
-+ supplied HTML/CSS/JavaScript file
-                ↓
-             Plex Nano
-                ↓
-        correct edited result
-```
-
-The current model remains **27,566,080 parameters** so Phase 3 can measure the direct file-editing task without changing model size at the same time.
-
-### Current Phase 3 milestones
-
-| Milestone | Outcome | Where to look |
-|---|---|---|
-| **P3-01 — File + Request Contract** | Corrected, frozen 18-fixture request/edit contract; preparation and preflight complete | [P3-01 contract](training/pretraining/p3-01-file-request-contract.json) |
-| **P3-02 — Exact Small Replacements** | **Training completed, development gate failed**; 216 reviewed examples (144 train, 36 validation, 36 development) | [P3-02 experiment notes](docs/PHASE-3-P3-02-EXACT-SMALL-REPLACEMENTS.md) |
-| **Saved-response diagnosis complete** | All 36 outputs lose supplied names; 8/12 request groups repeat identical code. Source-preservation proposal prepared; **evaluation and further training not authorized** | [October 17 response review](docs/PHASE-3-P3-02-DEVELOPMENT-FAILURE-ANALYSIS.md) |
-| **P3-02-D1 — Failure diagnosis (read-only)** | Full read-only diagnosis of the existing 36 completions replayed during the October 18 audit; failed capability gate unchanged, with 8/12 contrast groups emitting identical outputs for different requests | [P3-02-D1 diagnostic](docs/PHASE-3-P3-02-D1-READ-ONLY-FAILURE-DIAGNOSTIC.md) |
-| **Source-preservation diagnostic complete** | Frozen 72-task run: 0/72 source-name passes, 0/72 requested-value passes, 0/72 exact edits; 68 target boundaries unscorable for unrelated-byte preservation | [Result and interpretation](docs/PHASE-3-REPLACEMENT-FAILURE-DECISION.md) |
-| **Copy-fidelity recovery — research FAILED and closed** | Owner's authorized 100-step run finished, independently verified at SHA `c9680028…1e470230`. Teacher-forced loss **7.1167 → 2.7984** but generated exact files **0/24 validation copies, 0/72 validation edits, 0/6 developer copies, 0/36 developer edits**; 138/138 EOS and full prompt visibility. **Source-identifier binding remains unproven; no new training authorized.** | [Evidence closeout #181](https://github.com/keepithandy/plex-nano/issues/181) · [P3-SB recovery roadmap](docs/PHASE-3-SOURCE-BINDING-RECOVERY-ROADMAP.md) · [Successor #189](https://github.com/keepithandy/plex-nano/issues/189) |
-| **Source-binding technical preparation** | Saved-output audit: all 138 omit the supplied namespace and contain training-name text. SB-02 namespace-diversity intervention **approved for preparation**; SB-03 reproducible candidate proposal uses **48 proposed replacement training names**, the unchanged 96-case validation set and a full-coverage 1,600-draw sampler. The **actual owner-local tokenizer audit failed on 240/384 paired cases** (40,439 vs 44,925 draw-weighted target positions). The V1 proposal stays frozen; V2 **48/48 real-tokenizer-matched names** and the **actual owner-local V2 proposal SHA** are verified (owner-reported) at `5f957cc30b1c58e7e22a8e2565efbc143303431526a61ecc2b65ef0e741ebb21`. The [new streaming ancestry SHA/collision audit](docs/PHASE-3-SB03-V2-TRAINING-ANCESTRY-SCREEN.md) checks explicit prior training source texts without opening final holdout. The [ten-source ancestry scan](docs/PHASE-3-R2-ANCESTOR-NAME-COLLISIONS-2026-10-18.md) verified every listed hash and confirmed **8/48 proposed names in actual ancestor training text**. The original V2 remains unchanged and fails the source-exclusion gate; the [evaluation-name review](docs/PHASE-3-R2-FROZEN-EVALUATION-NAMESPACE-REVIEW-2026-10-18.md) and explicit claim narrowing are recorded. Original artifacts are preserved as preparation/diagnostics with mixed historical spelling exposure; a revised comparison and fresh training approvals remain **blocked**. The five earlier P3 checks remain partial. No new model execution or capability pass. | [Technical evidence](docs/PHASE-3-SOURCE-BINDING-TECHNICAL-REVIEW.md) · [SB-03 candidate and gates](docs/PHASE-3-SB03-APPROVED-NAMESPACE-DIVERSITY.md) · [Audit recovery roadmap](docs/PLEX-NANO-MERGE-AUDIT-ROADMAP-2026-10-18.md) |
-
-The owner reported a completed, explicitly authorized **100-update P3-02 run**: 60,445 supervised positions in 19.91 seconds, with answer/EOS-only validation loss **10.5668 → 1.5893**. The unreselected step-100 checkpoint SHA-256 is `020d821cedd9a181be3a993cf9a306ab4d8fed6761daf962433797829afecd0d`; see the [frozen training result](training/pretraining/p3-02-first-run-result.json).
-
-**The actual development test failed:** **0/36 exact edits**, **0/36 unrelated-code preservation**, **0/12 fully correct contrast groups**, and **0/12 exact edits in each HTML/CSS/JavaScript category**. All 36 responses decoded and terminated at EOS with full prompt visibility. This does **not** establish useful unseen-file editing capability. The checkpoint is frozen, the complete per-record response audit remains local, and further optimizer updates and final-holdout access are not authorized.
-
-**To find the working code quickly in VS Code, start with [PROJECT-MAP.md](PROJECT-MAP.md).** The PyTorch model lives in `training/src/plex_training/`, not the older TypeScript `src/` folder.
-
-**Package audit:** 🟢 **24 / 24 tracked items complete** — B01–B15, G01–G06, and M01–M03. See the [Bug Atlas](BUG-ATLAS.md) for resolutions and verification, the [audit snapshot and closeout](docs/PACKAGE-BUG-AUDIT.md) for preserved findings, and the [changelog](CHANGELOG.md) for the release summary. This reliability closeout does not establish model-editing capability or authorize research training.
-
-## Roadmap
-
-The project now follows a model-first roadmap.
-
-| Phase | Goal | Status |
-|---|---|---|
-| **Phase 1 — Model Foundation** | Build and verify the scratch model/training stack | **Complete** |
-| **Phase 2 — Coding Understanding** | Improve request understanding, code semantics, binding, and transfer | **Complete** |
-| **Phase 3 — File-Conditioned Coding** | Request + supplied file/code → correct edit | **Active** |
-| **Phase 4 — Stronger Coding Ability** | Harder functions, styles, logic, bug fixes, and refactors | Planned |
-| **Phase 5 — Conversational Code Editing** | Iterate on supplied code across multiple user turns | Planned |
-| **Phase 6 — Local Plex App** | Drop in a file, chat, preview/accept edits, save | Planned |
-
-See [Plex-ROADMAP.md](Plex-ROADMAP.md) for milestone details.
-
-## Phase 3 direction
-
-Phase 3 is **file-conditioned coding**.
-
-The file is supplied to Plex. Plex's job is to understand the request and edit that supplied context correctly.
-
-Examples:
-
-```text
-"Change this button to say Save Changes."
-+ supplied HTML
-→ correct HTML edit
-```
-
-```text
-"Ignore inactive items in this function."
-+ supplied JavaScript
-→ correct function edit
-```
-
-```text
-"Make this card stack vertically below 700px."
-+ supplied CSS
-→ correct CSS edit
-```
-
-## Development guardrails
-
-Project direction is pinned in [AGENTS.md](AGENTS.md).
-
-Important rules:
-
-1. Plex Nano is a **small coding model**.
-2. The caller supplies the code/file context Plex needs.
-3. New research should improve the model's coding ability, editing accuracy, debugging, or generalization.
-4. Keep the current 27M architecture as the controlled baseline until a milestone explicitly changes it.
-5. Preserve failed experiments and capability limits.
-6. Keep training authorization separate from diagnostics, preparation, and evaluation.
-7. Keep the final project holdout closed unless a milestone explicitly authorizes it.
-8. Keep README, roadmap, prompts, package metadata, and current docs aligned with the same model-first direction.
-
-Additional scoped guardrails live in:
-
-- [training/AGENTS.md](training/AGENTS.md)
-- [docs/AGENTS.md](docs/AGENTS.md)
-
-## Training workspace
-
-The Python training workspace lives under:
-
-```text
-training/
-```
-
-Typical environment check:
-
-```powershell
-uv run --project training --no-sync python -m plex_training.cli environment
-```
-
-The current research environment uses Python/PyTorch with optional CUDA acceleration.
-
-For detailed experiment commands and retained results, see [training/README.md](training/README.md) and the milestone reports in [docs/](docs/).
-
-## Project map
-
-| Path | Purpose |
-|---|---|
-| `PROJECT-MAP.md` | **Start here in VS Code:** directory map, current code, historical archives, and safe tasks |
-| `training/src/plex_training/` | **Active Python model**: Transformer, tokenizer, checkpoint, training CLI and P3 editing experiments |
-| `training/tests/` | Python unit, regression and safety tests |
-| `training/pretraining/` | Frozen contracts, provenance manifests and measured experiment summaries |
-| `training/phase2/` | Historical Phase 2 research and retained data (do not delete or relocate) |
-| `training/` | Model training, evaluation, checkpoints, datasets, and experiment tooling |
-| `docs/` | Research reports, milestone results, and technical notes; [docs index](docs/INDEX.md) |
-| `prompts/` | Model-facing request/edit contracts |
-| `fixtures/` | Small code fixtures used by tests |
-| `src/` | **Legacy TypeScript** repository utilities; not the current Python model |
-| `tests/` | TypeScript/package tests |
-| `AGENTS.md` | Project direction and editing guardrails |
-
-## Research principles
-
-- Train and evaluate honestly.
-- Prefer small, controlled experiments.
-- Keep numeric results and hashes reproducible.
-- Do not hide failed transfer.
-- Do not claim coding ability from training loss alone.
-- Measure edits on unseen requests.
-- Preserve unrelated code.
-- Keep the model small unless evidence justifies scaling.
-- Let real coding failures guide the next training work.
-
-## Selected reports
-
-- [P1-20 — First experiment report](docs/PLEX-EXPERIMENT-REPORT-P1-20.md)
-- [P2-29 — Longer Plex Web run](docs/PHASE-2-P2-29-RESULT.md)
-- [P2-43 — Semantic bundle reuse diagnostic](docs/PHASE-2-P2-43-SEMANTIC-BUNDLE-REUSE-DIAGNOSTIC.md)
-- [P2-44 — Evidence-first semantic composition](docs/PHASE-2-P2-44-EVIDENCE-FIRST-SEMANTIC-COMPOSITION.md)
-- [P2-45 — Structured bridge re-evaluation](docs/PHASE-2-P2-45-STRUCTURED-BRIDGE-REEVALUATION.md)
-- [P2-46 — Semantic transfer failure diagnostic](docs/PHASE-2-P2-46-SEMANTIC-TRANSFER-DIAGNOSTIC.md)
-- [P2-47 — Request-grounded coding representation](docs/PHASE-2-P2-47-REQUEST-GROUNDED-CODING.md)
-- [P2-48 — Final bounded Phase 2 transfer run](docs/PHASE-2-P2-48-FINAL-TRANSFER-RUN.md)
-- [P2-49 — Unchanged bridge re-evaluation](docs/PHASE-2-P2-49-UNCHANGED-BRIDGE-REEVALUATION.md)
-- [P2-50 — Phase 2 closeout](docs/PHASE-2-P2-50-CLOSEOUT.md)
-
----
-
-<div align="center">
-
-### Small model. Coding focus.
-
-**Plex Nano is a working 27.6M-parameter scratch-trained coding-model research project.**
-
-</div>
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+- [Master development roadmap](PLEX-MASTER-ROADMAP.md)
+- [Project map](PROJECT-MAP.md)
+- [Training workspace and historical runbooks](training/README.md)
+- [M11 worker repair](https://github.com/keepithandy/plex-nano/pull/218)
+- [License](LICENSE)

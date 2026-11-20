@@ -5,7 +5,7 @@
 
 ## Goal we will not lose
 
-The [600M roadmap](PLEX-600M-ROADMAP.md) consolidates the proposed milestone
+The [600M roadmap](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PLEX-600M-ROADMAP.md) consolidates the proposed milestone
 sequence. The next planning gate is a concrete source and evaluation-split
 decision; the historical data review does not approve a 600M corpus.
 

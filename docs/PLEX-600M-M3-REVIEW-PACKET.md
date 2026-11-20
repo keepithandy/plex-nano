@@ -2,7 +2,7 @@
 
 **State:** prepared for source/split review; M3 remains open.<br>
 **Prepared:** October 31, 2026<br>
-**Roadmap:** [M3 — source and evaluation-split decision](PLEX-600M-ROADMAP.md#m3--source-and-evaluation-split-decision)
+**Roadmap:** [M3 — source and evaluation-split decision](https://github.com/keepithandy/plex-nano/blob/94fed536b9661511c312a2640dc58962096380b0/docs/PLEX-600M-ROADMAP.md#m3--source-and-evaluation-split-decision)
 
 This packet organizes the next decisions for the separate scratch 600M model.
 Its coding target remains a correct change to caller-supplied HTML, CSS or
