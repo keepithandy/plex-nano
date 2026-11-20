@@ -12,6 +12,7 @@
   },
   "files": [
     "dist",
+    "scripts/PlexLocal.py",
     "prompts",
     "README.md",
     "CHANGELOG.md",
