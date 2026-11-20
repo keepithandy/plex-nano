@@ -110,8 +110,8 @@ class EosDiagnosticSmoke(unittest.TestCase):
             probe.ARTIFACTS = root
             try:
                 good, anchored = probe.output_destination(root / "new")
-                self.assertEqual(good, root / "new")
-                self.assertEqual(anchored, root)
+                self.assertEqual(good, (root / "new").resolve())
+                self.assertEqual(anchored, root.resolve())
                 with self.assertRaisesRegex(ValueError, "NEW output"):
                     probe.output_destination(root.parent / "wrong")
                 existing = root / "exists"
