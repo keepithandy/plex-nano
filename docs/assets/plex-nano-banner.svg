@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
   <title id="title">Plex Nano</title>
-  <desc id="desc">Small model. Focused mission. A navy Plex Nano banner with teal and violet geometric connections.</desc>
+  <desc id="desc">Coding models trained from scratch. A navy Plex Nano banner with teal and violet geometric connections.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0c1224"/>
@@ -32,7 +32,7 @@
       <text x="58" y="206" fill="#f2f5ff" font-size="108" font-weight="700" letter-spacing="5">PLEX</text>
       <rect x="396" y="159" width="142" height="48" rx="10" fill="#61ead6" fill-opacity=".09" stroke="#61ead6" stroke-opacity=".4"/>
       <text x="467" y="191" text-anchor="middle" fill="#83efdf" font-size="25" font-weight="600" letter-spacing="4">NANO</text>
-      <text x="64" y="265" fill="#becbe3" font-size="23" letter-spacing=".5">Small model. Focused mission.</text>
+      <text x="64" y="265" fill="#becbe3" font-size="23" letter-spacing=".5">Coding models trained from scratch.</text>
     </g>
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path d="M844 260V106l66-38 120 69v77l-66 38-54-31" stroke="#788fb7" stroke-width="2" opacity=".35"/>
