@@ -2,7 +2,7 @@
 
 **November 20, 2026 · Active direction: improve the local coding assistant with the existing checkpoint.**
 
-Plex works on code supplied by the user. The immediate goal is a correct, reviewable edit from an ordinary-language request. The 27M Nano remains the controlled research baseline. The assistant currently connects to the separate Plex 600M M11 step-200 checkpoint. Training is paused at the owner's direction. The planned work below uses application changes and inference-only comparisons.
+Plex works on code supplied by the user. The immediate goal is a correct, reviewable edit from an ordinary-language request. Both Plex model lines began with random weights. The 27M Nano is the controlled research baseline. The assistant uses the separate Plex 600M M11 step-200 checkpoint for local model suggestions. Built-in edits run in Python. [Model origins](README.md#origins) Training is paused at the owner's direction. The planned work below uses application changes and inference-only comparisons.
 
 ## Measured starting point
 
@@ -18,7 +18,7 @@ Both decoders agreed. The checkpoint copied the two training lines exactly. Both
 
 At steps 100 and 200, both decoders passed the training pair, and the digit preference test passed on both splits with a gold answer prefix. The development pair failed autonomous exact copying at both milestones. The local run completed 200 updates in 88.051 seconds with 10,708,058,112 CUDA reserved bytes at peak. Evidence comes from the owner's worker summary and eight step-200 generations. The repaired worker ran from commit `89998f5f`. [Worker repair](https://github.com/keepithandy/plex-nano/pull/218)
 
-The console already supports paste, opening a supplied file, bounded rename and text replacement, undo, diff, and saving a new copy. You verified the two-line rename and diff. A free-form rename sent to the checkpoint returned EOS with empty text. [Local console](https://chatgpt.com/library?file_id=libfile_27db36ce5ff881918197a4d38e485c98&account_id=personal)
+The console already supports paste, opening a supplied file, bounded rename and text replacement, undo, diff, and saving a new copy. You verified the two-line rename and diff. An earlier console version sent a free-form rename to the checkpoint and received empty text at EOS. The current console labels built-in edits and identifies the checkpoint when it generates a suggestion. [Local console](https://chatgpt.com/library?file_id=libfile_27db36ce5ff881918197a4d38e485c98&account_id=personal)
 
 ```mermaid
 flowchart LR
