@@ -1,14 +1,14 @@
 <a id="top"></a>
 
 <p align="center">
-  <img src="./docs/assets/plex-nano-banner.svg" alt="Plex Nano project banner" width="1200">
+  <img src="./docs/assets/plex-nano-banner.svg" alt="Plex Nano — coding models trained from scratch" width="1200">
 </p>
 
 <div align="center">
 
-# Plex · Local coding assistant
+# Plex · Coding models trained from scratch
 
-**Paste your code, describe the edit, and inspect exactly what changed.**
+**Plex starts with random model weights. Its local coding console lets you try the trained checkpoint on code you supply.**
 
 [![Console](https://img.shields.io/badge/local_console-JavaScript_edits-3567a5?style=for-the-badge&labelColor=151933)](#console)
 [![Nano](https://img.shields.io/badge/Nano-27.6M_baseline-18786c?style=for-the-badge&labelColor=151933)](#nano)
@@ -18,13 +18,25 @@
 ![Training](https://img.shields.io/badge/training-paused-52617c?style=flat-square&labelColor=151933)
 [![License](https://img.shields.io/badge/license-MIT-18786c?style=flat-square&labelColor=151933)](LICENSE)
 
-[Try the console](#console) · [Read the M11 results](#m11) · [Trace the 600M experiments](#research) · [Explore Plex Nano](#nano) · [Find your way around](#guide)
+[Model origins](#origins) · [Try the console](#console) · [Read the M11 results](#m11) · [Trace the 600M experiments](#research) · [Explore Plex Nano](#nano) · [Find your way around](#guide)
 
 </div>
 
 ---
 
-Plex works on code you supply. Its local console combines a small set of built-in editing commands with optional suggestions from a 600M-parameter model trained from scratch. The smaller Plex Nano model is the project’s controlled baseline for studying how well a model can use the file and request in front of it.
+<a id="origins"></a>
+
+## 🧬 Where the weights come from
+
+**Both Plex models began with randomly initialized weights.** The team implemented the models in PyTorch and trained its own weights. Neither track imports pretrained weights from Qwen, GPT, or another base model. “From scratch” describes the origin of the weights. Plex uses established Transformer designs, PyTorch, and a byte-level BPE tokenizer fitted on project data. [Training workspace](training/README.md) · [600M architecture](docs/PLEX-600M-ARCHITECTURE-REVIEW.md)
+
+| What you’re using | Where its behavior comes from |
+|---|---|
+| **Plex Nano · 27,566,080 parameters** | The original scratch-trained research baseline for HTML, CSS, and JavaScript. It has its own weights and tokenizer. [Model implementation](training/src/plex_training/model.py) |
+| **Plex 600M · 600,372,480 parameters** | A separate model initialized for Plex’s M7 run. M9 continued from Plex M7 weights. The M11 run started from Plex M9 weights with a fresh optimizer. The console uses the M11 step-200 checkpoint for suggestions. [M7 initialization](training/src/plex_training/plex600_m7.py) · [M9 checkpoint lineage](docs/PLEX-600M-M9-BOUNDED-EDIT-FINETUNE-2026-11-16.md) · [M11 run receipt](#m11) |
+| **Local console · built-in commands** | Python handles supported rename, set, and replace commands directly. A successful built-in edit counts as an editor result. Free-form requests outside those rules can invoke the local 600M checkpoint. |
+
+**Evidence you can inspect.** The model definitions, training procedures, and evaluation protocols are in this repository. The reported M11 measurements come from the owner’s local run. The console checks the local checkpoint against the recorded SHA-256 before inference. The checkpoint bytes are required to independently reproduce the generations. [Four-prompt results and checkpoint digest](#m11)
 
 > [!IMPORTANT]
 > The working JavaScript rename came from the console’s built-in editor. The M11 checkpoint learned to copy two familiar lines and stop cleanly. When asked to copy the same lines with a different variable name, it kept the familiar name both times. That distinction guides the [master development roadmap](PLEX-MASTER-ROADMAP.md).
@@ -63,7 +75,7 @@ The owner’s session produced this diff. The identifier changes at its declarat
 | `show` · `diff` · `undo` | Inspect the buffer, compare it with the supplied code, or reverse an edit. |
 | `save as "plex-demo.js"` | Write the edited buffer to a new copy. |
 
-In the same session, “Rename value to count and keep its value at 1.” reached the checkpoint. It returned EOS (end of sequence) with an empty suggestion. The shorter rename command reached the built-in editor. **Which path handles the request matters**, even when both requests describe the same edit.
+In an earlier console version, “Rename value to count and keep its value at 1.” reached the checkpoint and returned EOS (end of sequence) with an empty suggestion. The current console recognizes that wording for supported snippets and prints `Built-in Python edit applied.` Requests routed to inference display `Generating locally with Plex 600M M11 step 200...`. Empty responses are reported explicitly.
 
 ```mermaid
 flowchart TD
