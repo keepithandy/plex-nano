@@ -12,6 +12,8 @@ on:
       - "scripts/Invoke-PlexPhase2Eos.ps1"
       - "scripts/plex_m11_final_evidence.py"
       - "scripts/plex_m11_final_evidence_smoke.py"
+      - "scripts/plex_m12_data_audit.py"
+      - "scripts/plex_m12_data_audit_smoke.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -33,6 +35,8 @@ on:
       - "scripts/Invoke-PlexPhase2Eos.ps1"
       - "scripts/plex_m11_final_evidence.py"
       - "scripts/plex_m11_final_evidence_smoke.py"
+      - "scripts/plex_m12_data_audit.py"
+      - "scripts/plex_m12_data_audit_smoke.py"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -101,3 +105,4 @@ jobs:
           python -I -S scripts/plex_phase2_smoke.py -v
           python -I -S scripts/plex_phase2_eos_smoke.py -v
           python -I -S scripts/plex_m11_final_evidence_smoke.py -v
+          python -I -S scripts/plex_m12_data_audit_smoke.py -v
