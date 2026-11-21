@@ -82,6 +82,10 @@ GitHub CI tests only **temporary synthetic records** to validate the auditor. No
 
 A separate [historical source inventory](PLEX_M12_A_HISTORICAL_SOURCE_SURVEY.md) verifies a prior preparation-only 600M corpus: 120 train and 24 internal validation records, including 36 and 8 JavaScript examples respectively. It is request/answer data, not the proposed exact-copy M12 corpus; historical preparation rights do not constitute M12 training permission.
 
+## Read-only model-learning diagnostics
+
+The [M12-A teacher-forced source-conditioning probe](PLEX_M12_A_SOURCE_CONDITIONING.md) provides a separate existing-M11 evaluation of target-token ranks, gold-prefix NLL and whether the score/value preference follows changes in supplied code. It does not require or approve an M12 dataset, and its GPU results remain unmeasured until run locally.
+
 ## What remains for M12-A
 
 The following work is **not complete**: owner-authored corpus collection and rights review, actual train/dev group audit, real tokenizer roundtrip audit against such a corpus, read-only starting checkpoint comparison, source-conditioned gold-prefix evaluation, and GPU memory/admission assessment.
