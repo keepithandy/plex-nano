@@ -150,9 +150,19 @@ class M12DatasetAuditTests(unittest.TestCase):
             def decode(self, ids):
                 return "".join(chr(v - 4) for v in ids)
 
-        self.assertEqual(ToyTokenizer().decode(ToyTokenizer().encode("abc")), "abc")
-        # Token budget is audited separately only when a real frozen tokenizer is supplied.
-        # No CUDA/torch import, tokenizer fitting, or text generation occurs in these tests.
+        summary = audit.audit_tokenizer_rows(ToyTokenizer(), self.data)
+        self.assertEqual(summary["checkedStrings"], 960)
+        self.assertGreater(summary["maxPositionsIncludingTargetEos"], 0)
+        class BrokenTokenizer(ToyTokenizer):
+            def decode(self, ids):
+                return super().decode(ids)[:-1]
+        with self.assertRaisesRegex(ValueError, "roundtrip failed"):
+            audit.audit_tokenizer_rows(BrokenTokenizer(), self.data)
+        self.data["train"][0]["source"] = "let x = " + "7" * 120 + ";\n"
+        self.data["train"][0]["expected"] = self.data["train"][0]["source"]
+        with self.assertRaisesRegex(ValueError, "96-token generation"):
+            audit.audit_tokenizer_rows(ToyTokenizer(), self.data)
+        # No CUDA/torch import, tokenizer fitting, or text generation occurs.
 
 
 if __name__ == "__main__":
