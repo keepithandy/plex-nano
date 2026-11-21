@@ -87,10 +87,12 @@ def checked_record(row, split):
     refuse_if(type(row["instruction"]) is str
               and 5 <= len(row["instruction"]) <= 180
               and "\n" not in row["instruction"] and "\r" not in row["instruction"]
+              and type(row["promptTemplate"]) is str
               and row["promptTemplate"] in TEMPLATES,
               "Invalid one-line copy request or template")
     refuse_if(type(row["developmentSlices"]) is list
-              and all(tag in {"unseen-identifier", "prompt-transfer"} for tag in row["developmentSlices"])
+              and all(type(tag) is str and tag in {"unseen-identifier", "prompt-transfer"}
+                      for tag in row["developmentSlices"])
               and len(row["developmentSlices"]) == len(set(row["developmentSlices"]))
               and (split == "development" or not row["developmentSlices"]),
               "Unsupported evaluation slice annotation")
@@ -174,6 +176,29 @@ def audit_manifest(path: Path):
     }, data
 
 
+def audit_tokenizer_rows(tokenizer, data: dict):
+    """Pure token roundtrip and context-boundary audit, independently testable."""
+    count, max_positions, max_new = 0, 0, 0
+    for split in EXPECTED_COUNTS:
+        for row in data[split]:
+            prompt = prompt_for(row)
+            for value in (row["source"], row["expected"], prompt):
+                ids = tokenizer.encode(value)
+                refuse_if(len(ids) > 0 and tokenizer.decode(ids) == value,
+                          "Tokenizer roundtrip failed on M12 source/target/prompt")
+                count += 1
+            prompt_ids = tokenizer.encode(prompt)
+            target_ids = tokenizer.encode(row["expected"])
+            refuse_if(len(target_ids) + 1 <= 96,
+                      "M12 copy target and EOS exceed the frozen 96-token generation budget")
+            token_positions = len(prompt_ids) + len(target_ids) + 1
+            refuse_if(token_positions <= 1024, "M12 input/target/EOS exceeds 1024 positions")
+            max_positions = max(max_positions, token_positions)
+            max_new = max(max_new, len(target_ids) + 1)
+    return {"checkedStrings": count, "maxPositionsIncludingTargetEos": max_positions,
+            "maxTargetTokensIncludingEos": max_new, "tokenizerSha256": TOKENIZER_SHA}
+
+
 def audit_tokenizer(bundle: Path, data: dict):
     """Optional, read-only check with the existing M11 tokenizer in uv/WSL."""
     refuse_if(not bundle.is_symlink() and bundle.is_dir(), "Tokenizer must be a non-symlink directory")
@@ -181,20 +206,7 @@ def audit_tokenizer(bundle: Path, data: dict):
     refuse_if(config.get("tokenizerSha256") == TOKENIZER_SHA,
               "Tokenizer differs from frozen M11 identity")
     from plex_training.tokenizer import PlexTokenizer
-    tokenizer = PlexTokenizer.load(bundle)
-    count, max_positions = 0, 0
-    for split in EXPECTED_COUNTS:
-        for row in data[split]:
-            for value in (row["source"], row["expected"], prompt_for(row)):
-                ids = tokenizer.encode(value)
-                refuse_if(len(ids) > 0 and tokenizer.decode(ids) == value,
-                          "Tokenizer roundtrip failed on M12 source/target/prompt")
-                count += 1
-            token_positions = len(tokenizer.encode(prompt_for(row))) + len(tokenizer.encode(row["expected"])) + 1
-            refuse_if(token_positions <= 1024, "M12 input/target/EOS exceeds 1024 positions")
-            max_positions = max(max_positions, token_positions)
-    return {"checkedStrings": count, "maxPositionsIncludingTargetEos": max_positions,
-            "tokenizerSha256": TOKENIZER_SHA}
+    return audit_tokenizer_rows(PlexTokenizer.load(bundle), data)
 
 
 def main():
