@@ -104,6 +104,8 @@ class FinalM11EvidenceTests(unittest.TestCase):
         self.assertEqual(eos["m11-trained"]["probeExact"], 0)
         self.assertEqual(eos["m11-newline"]["immediateEos"], 4)
         self.assertEqual(eos["console-general"]["immediateEos"], 4)
+        self.assertEqual(eos["m11-trained"]["meanEosMinusBestCodeLogit"], -1.2)
+        self.assertEqual(eos["console-general"]["meanEosMinusBestCodeLogit"], 1.2)
         self.assertEqual(edits["baseline"]["exactEdits"], 0)
         self.assertEqual(edits["baseline"]["emptyEos"], 33)
         result = subprocess.run([
@@ -111,6 +113,7 @@ class FinalM11EvidenceTests(unittest.TestCase):
             "--eos-dir", str(self.eos), "--phase2-dir", str(self.edits),
         ], capture_output=True, text=True, timeout=20, check=True)
         self.assertIn("Familiar train: 2/2; unseen development: 0/2.", result.stdout)
+        self.assertIn("Mean logit gaps: EOS minus best code", result.stdout)
         self.assertIn("0/20 model edits", result.stdout)
         self.assertIn("Training remains paused.", result.stdout)
 
