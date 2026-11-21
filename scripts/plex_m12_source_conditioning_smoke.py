@@ -69,9 +69,9 @@ class SourceConditioningSmoke(unittest.TestCase):
         self.assertEqual((i, score, value), (1, 13, 15))
         self.assertEqual(probe.contrast_logit([1, 5, 2], 4, 5), -3)
         self.assertEqual(probe.contrast_logit([1, 2, 5], 4, 5), 3)
-        with self.assertRaisesRegex(ValueError, "common answer prefix"):
-            probe.first_difference([4, 5], [6, 5])
-        with self.assertRaisesRegex(ValueError, "identifier divergence"):
+        # Different token at index zero is valid if BPE merged the shared text prefix.
+        self.assertEqual(probe.first_difference([4, 5], [6, 5]), (0, 4, 6))
+        with self.assertRaisesRegex(ValueError, "No differing target token"):
             probe.first_difference([4, 5], [4, 5])
 
     @staticmethod
