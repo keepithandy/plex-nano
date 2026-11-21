@@ -76,6 +76,8 @@ Record training and development performance **separately**, all denominators, to
 
 **M12-A: Design and data admission.** Validate owner-authored data rights, grouped splits, source hashes, tokenizer roundtrips, read-only baseline outputs, gold-prefix token diagnostics, memory feasibility on the 16 GB RTX 4080 SUPER, and a bounded optimizer update/token budget. No training entry point is needed for this stage.
 
+**Implementation progress:** [M12-A dataset structure auditor](PLEX_M12_A_DATA_ADMISSION.md) checks two owner-supplied dataset splits, copy-target SHA-256, disjoint identifier/source/prompt groups, future holdout isolation, and optional frozen M11 tokenizer roundtrips. GitHub CI uses only generated synthetic test records. No approved real M12 corpus has been ingested or created. Rights and actual data provenance remain owner-side review work; model baselines and GPU admission remain pending.
+
 **M12-B: Eight-update safety pilot.** Only after specific owner approval tied to exact executable revision, dataset hash, checkpoint identity, optimizer configuration and schedule. Measure finite gradients, weight movement, checkpoint reload parity and no protected holdout access.
 
 **M12-C: Fifty-update learning pilot.** New approval required; evaluate at updates 10, 25 and 50; stop on divergence, bad EOS behavior, provenance failure or unseen-source regression. No automatic extension.
