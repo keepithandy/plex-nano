@@ -44,7 +44,10 @@ class HistoricalInventoryTests(unittest.TestCase):
             copy = Path(folder) / "pilot"
             shutil.copytree(module.DATASET, copy)
             train = copy / "train.jsonl"
-            train.write_bytes(train.read_bytes() + b" ")
+            original = train.read_bytes()
+            altered = original.replace(b"Request: ", b"Request! ", 1)
+            self.assertNotEqual(original, altered)
+            train.write_bytes(altered)
             with self.assertRaisesRegex(ValueError, "Split hash"):
                 module.inventory(copy)
 
