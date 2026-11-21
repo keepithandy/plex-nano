@@ -16,6 +16,9 @@ on:
       - "scripts/plex_m12_data_audit_smoke.py"
       - "scripts/plex_m12_history_inventory.py"
       - "scripts/plex_m12_history_inventory_smoke.py"
+      - "scripts/plex_m12_source_conditioning.py"
+      - "scripts/plex_m12_source_conditioning_smoke.py"
+      - "scripts/Invoke-PlexM12Conditioning.ps1"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -41,6 +44,9 @@ on:
       - "scripts/plex_m12_data_audit_smoke.py"
       - "scripts/plex_m12_history_inventory.py"
       - "scripts/plex_m12_history_inventory_smoke.py"
+      - "scripts/plex_m12_source_conditioning.py"
+      - "scripts/plex_m12_source_conditioning_smoke.py"
+      - "scripts/Invoke-PlexM12Conditioning.ps1"
       - "package.json"
       - "package-lock.json"
       - "tsconfig.json"
@@ -101,6 +107,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Read-only Phase 2 launcher help failed' }
           & ./scripts/Invoke-PlexPhase2Eos.ps1
           if ($LASTEXITCODE -ne 0) { throw 'Read-only EOS launcher help failed' }
+          & ./scripts/Invoke-PlexM12Conditioning.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Read-only M12-A launcher help failed' }
       - name: Run Phase 0, Phase 1 and Phase 2 console checks
         run: |
           python -I -S scripts/plex_phase0_smoke.py
@@ -111,3 +119,4 @@ jobs:
           python -I -S scripts/plex_m11_final_evidence_smoke.py -v
           python -I -S scripts/plex_m12_data_audit_smoke.py -v
           python -I -S scripts/plex_m12_history_inventory_smoke.py -v
+          python -I -S scripts/plex_m12_source_conditioning_smoke.py -v
