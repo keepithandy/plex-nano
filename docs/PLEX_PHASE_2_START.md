@@ -56,4 +56,10 @@ After updating your WSL checkout, run this **in Windows PowerShell** from the Pl
 
 The script runs **12 inference-only probes**, prints a short diagnosis, and saves complete results to a new directory under `training/artifacts`. No optimizer, training, checkpoint overwrite, or final holdout is involved. The first-token logit checks and output-report code are covered by Windows and Linux CPU-only tests; actual GPU behavior must be measured locally.
 
-**Phase 2 remains open.** A successful familiar training copy would establish prompt sensitivity, not natural-language coding ability. A failure on the original familiar prompts would justify checking inference parity before making any model or training changes.
+## What the completed M11 diagnostic found
+
+The owner's follow-up GPU run measured **2/2 exact familiar training copies**, **0/2 exact unseen copies** with the original M11 prompt. A one-character final-delimiter change and the regular console prompt both caused **4/4 immediate EOS**. This confirms strong prompt sensitivity but does **not** establish general code understanding. The numeric EOS logits remain in the local raw report; they have not yet been individually audited in this conversation.
+
+For the **final read-only M11 evidence check** (no model generation, no training), use the documented command in [M11 final investigation and M12 proposal](PLEX_M11_FINAL_INVESTIGATION_M12_PLAN.md). The proposed M12 curriculum explicitly requires owner-authorized data, unseen-identifier evaluation and separate training approval.
+
+**Phase 2 remains open.** No new M12 training is authorized, and the 600M checkpoint remains unchanged.
