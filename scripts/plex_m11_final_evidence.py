@@ -63,7 +63,8 @@ def audit_eos(directory):
     summaries = {}
     for name in TEMPLATES:
         summaries[name] = {"exact": 0, "trainExact": 0, "probeExact": 0,
-                           "immediateEos": 0, "eosFirst": 0, "total": 0}
+                           "immediateEos": 0, "eosFirst": 0, "total": 0,
+                           "eosMarginTotal": 0.0, "goldMarginTotal": 0.0}
     for row in rows:
         case = EXPECTED_LINES.get(row.get("id"))
         template = row.get("template")
@@ -99,6 +100,8 @@ def audit_eos(directory):
         group["probeExact"] += int(exact and split == "probe-only")
         group["immediateEos"] += int(immediate)
         group["eosFirst"] += int(selected == 3)
+        group["eosMarginTotal"] += float(metrics["eosMinusBestCodeLogit"])
+        group["goldMarginTotal"] += float(metrics["goldMinusEosLogit"])
     require(len(seen) == 12 and all(group["total"] == 4 for group in summaries.values()),
             "Incomplete M11 prompt comparison")
     for name, group in summaries.items():
@@ -111,6 +114,9 @@ def audit_eos(directory):
             require(type(published.get(pub_key)) is int
                     and published[pub_key] == group[key],
                     "EOS report summary does not match raw data: " + name)
+    for group in summaries.values():
+        group["meanEosMinusBestCodeLogit"] = round(group["eosMarginTotal"] / group["total"], 3)
+        group["meanGoldMinusEosLogit"] = round(group["goldMarginTotal"] / group["total"], 3)
     return summaries
 
 
@@ -170,7 +176,11 @@ def print_report(eos, edits):
                        ("Changed delimiter", "m11-newline"),
                        ("General console prompt", "console-general")):
         item = eos[key]
-        print(f"{label}: {item['exact']}/4 exact; {item['immediateEos']}/4 immediate EOS.")
+        print(f"{label}: {item['exact']}/4 exact; {item['immediateEos']}/4 immediate EOS; "
+              f"EOS top-ranked {item['eosFirst']}/4.")
+        print(f"  Mean logit gaps: EOS minus best code = "
+              f"{item['meanEosMinusBestCodeLogit']:+.3f}; "
+              f"expected first code token minus EOS = {item['meanGoldMinusEosLogit']:+.3f}.")
     print(f"Familiar train: {eos['m11-trained']['trainExact']}/2; "
           f"unseen development: {eos['m11-trained']['probeExact']}/2.")
     for name in ("baseline", "alternative"):
