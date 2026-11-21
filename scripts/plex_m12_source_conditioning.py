@@ -61,15 +61,13 @@ def planned_cases(cases, trained_prompt, console_prompt):
 
 
 def first_difference(a, b):
-    """Earliest target token that differs. Both prefixes must be nonempty."""
+    """Earliest target token difference, even when BPE merges the shared text prefix."""
     if not a or not b:
         raise ValueError("Nonempty token targets required")
     for i, (x, y) in enumerate(zip(a, b)):
         if x != y:
-            if i == 0:
-                raise ValueError("No common answer prefix to isolate the identifier")
             return i, x, y
-    raise ValueError("No early identifier divergence found between targets")
+    raise ValueError("No differing target token found between targets")
 
 
 def score_fitted_logits(fitted_logits, expected_id):
