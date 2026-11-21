@@ -78,6 +78,10 @@ The output includes counts, digests, slice claims and trainingAuthorized: false.
 
 GitHub CI tests only **temporary synthetic records** to validate the auditor. No such synthetic data is admitted to actual training, and no owner-authored M12 corpus is asserted to exist.
 
+## Existing owner-prepared research material
+
+A separate [historical source inventory](PLEX_M12_A_HISTORICAL_SOURCE_SURVEY.md) verifies a prior preparation-only 600M corpus: 120 train and 24 internal validation records, including 36 and 8 JavaScript examples respectively. It is request/answer data, not the proposed exact-copy M12 corpus; historical preparation rights do not constitute M12 training permission.
+
 ## What remains for M12-A
 
 The following work is **not complete**: owner-authored corpus collection and rights review, actual train/dev group audit, real tokenizer roundtrip audit against such a corpus, read-only starting checkpoint comparison, source-conditioned gold-prefix evaluation, and GPU memory/admission assessment.
